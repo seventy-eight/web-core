@@ -7,8 +7,10 @@ import org.seventyeight.database.mongodb.MongoDatabase;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.web.model.AbstractItem;
+import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.Item;
 import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.themes.Default;
 
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
@@ -31,6 +33,10 @@ public class Core {
 
     private MongoDBManager dbManager;
     private MongoDatabase db;
+
+    //
+
+    private AbstractTheme defaultTheme = new Default();
 
     public Core( String dbname ) throws UnknownHostException {
         if( instance != null ) {
@@ -87,5 +93,9 @@ public class Core {
             throw new ItemInstantiationException( "Unable to get the class " + clazz, e );
         }
 
+    }
+
+    public AbstractTheme getDefaultTheme() {
+        return defaultTheme;
     }
 }

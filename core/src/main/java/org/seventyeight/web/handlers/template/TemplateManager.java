@@ -10,6 +10,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.SeventyEight;
 import org.seventyeight.web.exceptions.TemplateDoesNotExistException;
 import org.seventyeight.web.model.AbstractTheme;
+import org.seventyeight.web.model.Language;
 import org.seventyeight.web.model.Locale;
 import org.seventyeight.web.servlet.Request;
 
@@ -174,9 +175,8 @@ public class TemplateManager {
 	public class Renderer {
 		//private Writer writer = new StringWriter();
 		private AbstractTheme theme;
-		private Locale locale;
+		private Language locale;
         private VelocityContext context;
-        private Database db;
 
         public Renderer( AbstractTheme theme ) {
             this.theme = theme;
@@ -186,7 +186,6 @@ public class TemplateManager {
             this.theme = request.getTheme();
             //this.locale = request.getLocale();
             this.context = request.getContext();
-            this.db = request.getDB();
         }
 
         public Renderer setContext( VelocityContext context ) {
@@ -206,7 +205,7 @@ public class TemplateManager {
             return this;
         }
 
-        public Renderer setLocale( Locale locale ) {
+        public Renderer setLocale( Language locale ) {
             this.locale = locale;
             return this;
         }
