@@ -2,6 +2,7 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.User;
 import org.seventyeight.web.model.AbstractItem;
 import org.seventyeight.web.model.AbstractTheme;
@@ -50,7 +51,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         super( httpServletRequest );
         setRequestMethod( httpServletRequest.getMethod() );
     }
-    
+
     public void setRequestMethod( String m ) {
         this.method = RequestMethod.valueOf( m );
     }
@@ -85,38 +86,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         return transactional;
     }
 
-    /**
-     * Determine if the current {@link User} can edit/writeToFile the item
-     * @param resource
-     * @return
-     */
-    public boolean canEdit( AbstractResource resource ) {
-        return isAllowed( resource, SeventyEight.GroupEdgeType.writeAccess );
-    }
-
-    /**
-     * Determine if the current {@link User} can access the item
-     * @param resource
-     * @return
-     */
-    public boolean hasAccess( AbstractResource resource ) {
-        return isAllowed( resource, SeventyEight.GroupEdgeType.readAccess );
-    }
-
-    private boolean isAllowed( AbstractResource resource, SeventyEight.GroupEdgeType groupType ) {
-        logger.debug( resource + " allowed in " + groupType );
-        List<Group> groups = resource.getGroups( groupType );
-
-        for( Group group : groups ) {
-            if( group.isMember( user ) ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
     public boolean isAuthenticated() {
         return authenticated;
     }
@@ -147,11 +116,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public void setContext( VelocityContext context ) {
         this.context = context;
-    }
-
-    @Override
-    public Database getDB() {
-        return db;
     }
 
     @Override

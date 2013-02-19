@@ -19,7 +19,7 @@ public class MongoDBManager {
 
     public MongoDBManager( String databaseName ) throws UnknownHostException {
         if( instance != null ) {
-            throw new IllegalStateException( "Instance already defined" );
+            throw new IllegalStateException( "DB Manager instance already defined" );
         }
 
         client = new MongoClient( "localhost", PORT );

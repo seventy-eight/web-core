@@ -10,8 +10,8 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.model.resources.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.util.ClassUtils;
-import org.seventyeight.web.util.JsonUtils;
+import org.seventyeight.web.utilities.ClassUtils;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,7 +1,5 @@
 package org.seventyeight.database.mongodb.tests;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import org.junit.Rule;
 import org.junit.Test;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -28,7 +26,7 @@ public class TestMongoDB {
 
         MongoDocument d = new MongoDocument();
         d.set( "snade", "made" );
-        collection.add( d );
+        collection.save( d );
 
         collection.listDocuments();
 
@@ -47,7 +45,7 @@ public class TestMongoDB {
         d2.set( "CHILD1", d1 );
         d2.set( "CHILD1", d1 );
 
-        collection.add( d2 );
+        collection.save( d2 );
 
         collection.show();
     }
@@ -68,7 +66,7 @@ public class TestMongoDB {
         c1.set( "val1", 111 );
         parent.addToList( "childs", c1 );
 
-        collection.add( parent );
+        collection.save( parent );
 
         collection.show();
 
@@ -76,5 +74,21 @@ public class TestMongoDB {
         for( MongoDocument doc : docs ) {
             System.out.println( "DOC: " + doc);
         }
+    }
+
+    @Test
+    public void test4() {
+        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME + "2" );
+
+        MongoDocument d1 = new MongoDocument();
+        d1.set( "ONE", 1 );
+        collection.save( d1 );
+
+        collection.show();
+
+        d1.set( "ONE", 2 );
+        collection.save( d1 );
+
+        collection.show();
     }
 }

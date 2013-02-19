@@ -167,7 +167,7 @@ public class Response extends HttpServletResponseWrapper {
         // If content type is unknown, then set the default value.
         // For all content types, see:
         // http://www.w3schools.com/media/media_mimeref.asp
-        // To add new content types, add new mime-mapping entry in web.xml.
+        // To save new content types, save new mime-mapping entry in web.xml.
         if( contentType == null ) {
             contentType = "application/octet-stream";
         }
@@ -227,7 +227,7 @@ public class Response extends HttpServletResponseWrapper {
                     } else {
                         // Content length is not directly predictable in case of
                         // GZIP.
-                        // So only add it if there is no means of GZIP, else
+                        // So only save it if there is no means of GZIP, else
                         // browser will hang.
                         setHeader( "Content-Length", String.valueOf( r.length ) );
                     }

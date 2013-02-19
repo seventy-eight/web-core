@@ -20,10 +20,14 @@ public class MongoDBCollection {
         this.collection = collection;
     }
 
-    public MongoDBCollection add( MongoDocument document ) {
-        collection.insert( document.getDBObject() );
+    public MongoDBCollection save( MongoDocument document ) {
+        collection.save( document.getDBObject() );
 
         return this;
+    }
+
+    public DBCollection getCollection() {
+        return collection;
     }
 
     public void listDocuments() {

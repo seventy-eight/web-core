@@ -70,7 +70,7 @@ public class Core {
         }
 
         document.set( "class", clazz.getName() );
-        collection.add( document );
+        collection.save( document );
 
         return instance;
     }

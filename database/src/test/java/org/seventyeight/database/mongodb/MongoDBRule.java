@@ -33,7 +33,7 @@ public class MongoDBRule implements TestRule {
     }
 
     private void after() {
-        //db.remove();
+        db.remove();
         manager.close();
     }
 
