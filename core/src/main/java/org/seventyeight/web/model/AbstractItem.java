@@ -31,7 +31,7 @@ public abstract class AbstractItem implements Item {
         this.document = document;
     }
 
-    public void save( CoreRequest request ) {
+    public void save( CoreRequest request ) throws ClassNotFoundException, ItemInstantiationException {
         logger.debug( "Begin saving" );
 
         Saver saver = getSaver( request );
@@ -39,12 +39,8 @@ public abstract class AbstractItem implements Item {
         saver.save();
 
         try {
-            JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
-
-            logger.debug( "Removing actions" );
-            recursivelyRemoveActions();
-
             logger.debug( "Handling extensions" );
+            JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
             handleJsonConfigurations( request, jsonData );
         } catch( JsonException e ) {
             logger.debug( "No json element: " + e.getMessage() );
@@ -75,7 +71,7 @@ public abstract class AbstractItem implements Item {
         }
     }
 
-    public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) {
+    public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
         logger.debug( "Handling extension class Json data" );
 
         List<JsonObject> extensionsObjects = JsonUtils.getJsonObjects( jsonData, JsonUtils.JsonType.extensionClass );
@@ -86,7 +82,7 @@ public abstract class AbstractItem implements Item {
         }
     }
 
-    public void handleJsonExtensionClass( CoreRequest request, JsonObject extensionConfiguration ) {
+    public void handleJsonExtensionClass( CoreRequest request, JsonObject extensionConfiguration ) throws ClassNotFoundException, ItemInstantiationException {
         String extensionClassName = extensionConfiguration.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
         logger.debug( "Extension class name is " + extensionClassName );
 
@@ -94,49 +90,32 @@ public abstract class AbstractItem implements Item {
         List<JsonObject> configs = JsonUtils.getJsonObjects( extensionConfiguration );
         logger.debug( "I got " + configs.size() + " configurations" );
 
-        /* Prepare existing configuration nodes */
-        //List<MongoDocument> docs = document.getList( EXTENSIONS );
-
-
         document.setList( EXTENSIONS );
         for( JsonObject c : configs ) {
-            try {
-                Describable d = handleJsonConfiguration( request, c );
-                document.addToList( EXTENSIONS, d.getDocument() );
-                /**/
-                //d.getNode().set( SeventyEight.FIELD_EXTENSION_CLASS, extensionClassName ).save();
-            } catch( DescribableException e ) {
-                logger.error( e );
-            }
+            Describable d = handleJsonConfiguration( request, c );
+            document.addToList( EXTENSIONS, d.getDocument() );
         }
     }
 
 
-    public Describable handleJsonConfiguration( CoreRequest request, JsonObject jsonData ) throws DescribableException {
-        try {
-            /* Get Json configuration object class name */
-            String cls = jsonData.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
-            logger.debug( "Configuration class is " + cls );
+    public Describable handleJsonConfiguration( CoreRequest request, JsonObject jsonData ) throws ItemInstantiationException, ClassNotFoundException {
+        /* Get Json configuration object class name */
+        String cls = jsonData.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
+        logger.debug( "Configuration class is " + cls );
 
-            Class<?> clazz = Class.forName( cls );
-            Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
-            logger.debug( "Descriptor is " + d );
+        Class<?> clazz = Class.forName( cls );
+        Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
+        logger.debug( "Descriptor is " + d );
 
-            Describable e = d.newInstance();
+        Describable e = d.newInstance();
 
-            /* Remove data!? */
-            if( d.doRemoveDataItemOnConfigure() ) {
-                logger.debug( "This should remove the data attached to this item" );
-            }
-
-            return e;
-
-        } catch( Exception e ) {
-            logger.warn( "Unable to handle configuration for " + jsonData + ": " + e.getMessage() );
-            e.printStackTrace();
-            logger.warn( e );
-            throw new DescribableException( "Cannot handle configuration", e );
+        /* Remove data!? */
+        if( d.doRemoveDataItemOnConfigure() ) {
+            logger.debug( "This should remove the data attached to this item" );
         }
+
+        return e;
+
     }
 
 

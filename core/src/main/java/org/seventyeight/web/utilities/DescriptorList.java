@@ -1,6 +1,6 @@
 package org.seventyeight.web.utilities;
 
-import org.seventyeight.web.model.ResourceDescriptor;
+import org.seventyeight.web.model.Descriptor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +12,9 @@ import java.util.Comparator;
  *         Date: 12-01-13
  *         Time: 13:41
  */
-public class ResourceDescriptorList extends ArrayList<ResourceDescriptor<?>> {
+public class DescriptorList extends ArrayList<Descriptor<?>> {
 
-    public ResourceDescriptorList( Collection<? extends ResourceDescriptor<?>> c ) {
+    public DescriptorList( Collection<? extends Descriptor<?>> c ) {
         super( c );
     }
 
@@ -22,10 +22,10 @@ public class ResourceDescriptorList extends ArrayList<ResourceDescriptor<?>> {
         Collections.sort( this, new DisplayNameComparator() );
     }
 
-    private class DisplayNameComparator implements Comparator<ResourceDescriptor> {
+    private class DisplayNameComparator implements Comparator<Descriptor> {
 
         @Override
-        public int compare( ResourceDescriptor o1, ResourceDescriptor o2 ) {
+        public int compare( Descriptor o1, Descriptor o2 ) {
             return o1.getDisplayName().compareTo( o2.getDisplayName() );
         }
     }
