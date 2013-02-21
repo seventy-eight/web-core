@@ -95,37 +95,48 @@ public abstract class AbstractItem implements Item {
         logger.debug( "I got " + configs.size() + " configurations" );
 
         /* Prepare existing configuration nodes */
-        //List<Edge> extensionEdges = node.getEdges( ResourceEdgeType.extension, Direction.OUTBOUND, SeventyEight.FIELD_EXTENSION_CLASS, extensionClassName );
-        List<MongoDocument> docs = document.getList( EXTENSIONS );
-
-        Map<String, Tuple<Edge, Node>> nodeMap = new HashMap<String, Tuple<Edge, Node>>();
+        //List<MongoDocument> docs = document.getList( EXTENSIONS );
 
 
-        for( Edge edge : extensionEdges ) {
-            Node node = edge.getTargetNode();
-            String className = node.get( "class" );
-
-            if( className != null ) {
-                nodeMap.put( className, new Tuple( edge, node ) );
-            }
-        }
-
+        document.setList( EXTENSIONS );
         for( JsonObject c : configs ) {
             try {
-                Describable d = handleJsonConfiguration( request, c, nodeMap );
+                Describable d = handleJsonConfiguration( request, c );
+                document.addToList( EXTENSIONS, d.getDocument() );
                 /**/
-                d.getNode().set( SeventyEight.FIELD_EXTENSION_CLASS, extensionClassName ).save();
+                //d.getNode().set( SeventyEight.FIELD_EXTENSION_CLASS, extensionClassName ).save();
             } catch( DescribableException e ) {
                 logger.error( e );
             }
         }
+    }
 
-        /* Remove */
-        logger.debug( "Removing superfluous extensions" );
-        for( Tuple<Edge, Node> t : nodeMap.values() ) {
-            recursivelyRemoveExtensions( t.getFirst() );
+
+    public Describable handleJsonConfiguration( CoreRequest request, JsonObject jsonData ) throws DescribableException {
+        try {
+            /* Get Json configuration object class name */
+            String cls = jsonData.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
+            logger.debug( "Configuration class is " + cls );
+
+            Class<?> clazz = Class.forName( cls );
+            Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
+            logger.debug( "Descriptor is " + d );
+
+            Describable e = d.newInstance();
+
+            /* Remove data!? */
+            if( d.doRemoveDataItemOnConfigure() ) {
+                logger.debug( "This should remove the data attached to this item" );
+            }
+
+            return e;
+
+        } catch( Exception e ) {
+            logger.warn( "Unable to handle configuration for " + jsonData + ": " + e.getMessage() );
+            e.printStackTrace();
+            logger.warn( e );
+            throw new DescribableException( "Cannot handle configuration", e );
         }
-
     }
 
 

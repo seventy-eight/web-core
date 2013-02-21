@@ -89,6 +89,12 @@ public class MongoDocument implements Document {
         return this;
     }
 
+    public MongoDocument removeField( String fieldName ) {
+        document.removeField( fieldName );
+
+        return this;
+    }
+
     @Override
     public String toString() {
         return document.toString();

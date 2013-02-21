@@ -1,6 +1,7 @@
 package org.seventyeight.database.mongodb;
 
 import com.mongodb.BasicDBObject;
+import org.apache.log4j.Logger;
 
 /**
  * @author cwolfgang
@@ -8,6 +9,8 @@ import com.mongodb.BasicDBObject;
  *         Time: 21:40
  */
 public class MongoUpdate {
+
+    private static Logger logger = Logger.getLogger( MongoUpdate.class );
 
     private MongoDBCollection collection;
 
@@ -26,6 +29,8 @@ public class MongoUpdate {
         if( update.isEmpty() ) {
 
         } else {
+            logger.debug( "Criteria: " + criteria );
+            logger.debug( "Update  : " + update );
             collection.getCollection().update( criteria, update, upsert, multi );
         }
     }
@@ -40,8 +45,16 @@ public class MongoUpdate {
         return update( "$set", key, value );
     }
 
+    public MongoUpdate pull( String key, Object value ) {
+        return update( "$pull", key, value );
+    }
+
     public MongoUpdate unset( String key ) {
         return update( "$unset", key, 1 );
+    }
+
+    public MongoUpdate unset( String key, int index ) {
+        return update( "$unset", key + "." + index, 1 );
     }
 
     private MongoUpdate update( String type, String key, Object value ) {

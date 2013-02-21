@@ -75,7 +75,6 @@ public abstract class Descriptor<T extends Describable> {
         c.put( "descriptor", this );
 
         if( extension != null ) {
-            //Descriptor d = extension.getDescriptor();
             logger.debug( "Extension is " + extension );
             c.put( "enabled", true );
             c.put( "content", SeventyEight.getInstance().getTemplateManager().getRenderer( request ).renderObject( extension, "config.vm" ) );

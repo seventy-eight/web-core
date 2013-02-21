@@ -1,5 +1,7 @@
 package org.seventyeight.web.model;
 
+import org.seventyeight.database.mongodb.MongoDocument;
+
 /**
  * @author cwolfgang
  *         Date: 16-02-13
@@ -7,4 +9,5 @@ package org.seventyeight.web.model;
  */
 public interface Item {
     public String getDisplayName();
+    public MongoDocument getDocument();
 }

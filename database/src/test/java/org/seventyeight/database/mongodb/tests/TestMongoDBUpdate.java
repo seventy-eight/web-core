@@ -55,4 +55,29 @@ public class TestMongoDBUpdate {
 
         collection.show();
     }
+
+    @Test
+    public void test3() {
+        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+
+        MongoDocument d = new MongoDocument();
+        d.setList( "names" );
+
+        MongoDocument n1 = new MongoDocument().set( "name", "wolle" );
+        MongoDocument n2 = new MongoDocument().set( "name", "bolle" );
+
+        d.addToList( "names", n1 );
+        d.addToList( "names", n2 );
+
+        collection.save( d );
+
+        collection.show();
+
+        //MongoUpdate u = new MongoUpdate( collection ).pull( "names", new MongoDocument().set( "name", "bolle" ) );
+        //MongoUpdate u = new MongoUpdate( collection ).unset( "names.1" );
+        MongoUpdate u = new MongoUpdate( collection ).unset( "names", 1 );
+        u.update();
+
+        collection.show();
+    }
 }

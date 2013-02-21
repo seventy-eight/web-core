@@ -6,14 +6,14 @@ import org.seventyeight.database.mongodb.MongoDBManager;
 import org.seventyeight.database.mongodb.MongoDatabase;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
-import org.seventyeight.web.model.AbstractItem;
-import org.seventyeight.web.model.AbstractTheme;
-import org.seventyeight.web.model.Item;
-import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.themes.Default;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * @author cwolfgang
@@ -35,6 +35,24 @@ public class Core {
     private MongoDatabase db;
 
     //
+    /**
+     * A map of descriptors keyed by their super class
+     */
+    private Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
+
+    /**
+     * A map of interfaces corresponding to specific {@link Descriptor}s<br />
+     * This is used to map an extension class/interface to those {@link Describable}s {@link Descriptor}s implementing them.
+     */
+    private Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
+
+    /* Paths */
+    private File path;
+    private File orientdbPath;
+    private File pluginsPath;
+    private File uploadPath;
+    private File themesPath;
+
 
     private AbstractTheme defaultTheme = new Default();
 
@@ -94,6 +112,58 @@ public class Core {
         }
 
     }
+
+
+    public void addDescriptor( Descriptor<?> descriptor ) {
+        this.descriptors.put( descriptor.getClazz(), descriptor );
+
+        List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
+        for( Class<?> i : interfaces ) {
+            logger.debug( "INTERFACE: " + i );
+            List<Descriptor> list = null;
+            if( !descriptorList.containsKey( i ) ) {
+                descriptorList.put( i, new ArrayList<Descriptor>() );
+            }
+            list = descriptorList.get( i );
+
+            list.add( descriptor );
+        }
+
+        /**/
+        //descriptor.configureIndex( db );
+    }
+
+    public Descriptor<?> getDescriptor( String className ) throws ClassNotFoundException {
+        return getDescriptor( Class.forName( className ) );
+    }
+
+    public <T extends Descriptor> T getDescriptor( Class<?> clazz ) {
+        logger.debug( "Getting descriptor for " + clazz );
+
+        if( descriptors.containsKey( clazz ) ) {
+            return (T) descriptors.get( clazz );
+        } else {
+            return null;
+        }
+    }
+
+    public List<Descriptor> getExtensionDescriptors( String clazz ) throws ClassNotFoundException {
+        return getExtensionDescriptors( Class.forName( clazz ) );
+    }
+
+    /**
+     * Get a list of {@link Descriptor}s whose {@link Describable} implements the given interface
+     * @param clazz The interface in question
+     * @return
+     */
+    public List<Descriptor> getExtensionDescriptors( Class clazz ) {
+        if( descriptorList.containsKey( clazz ) ) {
+            return descriptorList.get( clazz );
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
 
     public AbstractTheme getDefaultTheme() {
         return defaultTheme;

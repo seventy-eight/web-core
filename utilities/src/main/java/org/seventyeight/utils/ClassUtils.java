@@ -1,6 +1,9 @@
-package org.seventyeight.web.utilities;
+package org.seventyeight.utils;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -23,4 +26,18 @@ public class ClassUtils {
 
         throw new NoSuchMethodException( method );
     }
+
+
+    public static List<Class<?>> getInterfaces( Class<?> clazz ) {
+        List<Class<?>> interfaces = new ArrayList<Class<?>>();
+        interfaces.addAll( Arrays.asList( clazz.getInterfaces() ) );
+
+        Class<?> s = clazz.getSuperclass();
+        if( s != null ) {
+            interfaces.addAll( getInterfaces( s ) );
+        }
+
+        return interfaces;
+    }
+
 }
