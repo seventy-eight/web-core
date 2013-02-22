@@ -7,6 +7,10 @@ import org.seventyeight.database.mongodb.MongoDatabase;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.web.authentication.Authentication;
+import org.seventyeight.web.authentication.SimpleAuthentication;
+import org.seventyeight.web.handlers.GizmoException;
+import org.seventyeight.web.handlers.TopLevelGizmoHandler;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.themes.Default;
@@ -15,6 +19,8 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author cwolfgang
@@ -28,6 +34,10 @@ public class Core {
     private static Core instance;
 
     private TemplateManager templateManager = new TemplateManager();
+
+    private TopLevelGizmoHandler topLevelGizmoHandler = new TopLevelGizmoHandler();
+
+    private Authentication authentication = new SimpleAuthentication();
 
     public static final String ITEM_COLLECTION_NAME = "items";
 
@@ -49,6 +59,11 @@ public class Core {
      * This is used to map an extension class/interface to those {@link Describable}s {@link Descriptor}s implementing them.
      */
     private Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
+
+    /**
+     * A {@link Map} of top level actions, given by its name
+     */
+    private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
 
     /* Paths */
     private File path;
@@ -179,5 +194,21 @@ public class Core {
 
     public TemplateManager getTemplateManager() {
         return templateManager;
+    }
+
+    public TopLevelGizmoHandler getTopLevelGizmoHandler() {
+        return topLevelGizmoHandler;
+    }
+
+    public TopLevelGizmo getTopLevelGizmo( String name ) throws GizmoException {
+        if( topLevelGizmos.containsKey( name ) ) {
+            return topLevelGizmos.get( name );
+        } else {
+            throw new GizmoException( "The GIZMO handler " + name + " does not exist" );
+        }
+    }
+
+    public Authentication getAuthentication() {
+        return authentication;
     }
 }

@@ -19,7 +19,8 @@
         <module>utilities</module>
         <module>database</module>
         <module>core</module>
-        <module>core</module>
+        <module>war</module>
+        <module>cms</module>
     </modules>
 	
 	<build>
