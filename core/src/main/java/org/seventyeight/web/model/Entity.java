@@ -14,7 +14,7 @@ import java.util.List;
  *         Date: 19-02-13
  *         Time: 13:45
  */
-public abstract class Entity extends AbstractItem implements Authorizer, Describable {
+public abstract class Entity extends AbstractItem implements Authorizer {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 
@@ -75,7 +75,7 @@ public abstract class Entity extends AbstractItem implements Authorizer, Describ
         return getField( "created" );
     }
 
-    protected void update() {
+    public void update() {
         document.set( "updated", new Date().getTime() );
     }
 

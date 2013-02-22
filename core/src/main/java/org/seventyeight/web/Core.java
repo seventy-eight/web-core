@@ -97,9 +97,13 @@ public class Core {
     }
 
     public <T extends AbstractItem> T createItem( Class<?> clazz ) throws ItemInstantiationException {
+        return createItem( clazz, ITEM_COLLECTION_NAME );
+    }
+
+    public <T extends AbstractItem> T createItem( Class<?> clazz, String collectionName ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
-        MongoDBCollection collection = db.createCollection( ITEM_COLLECTION_NAME );
+        MongoDBCollection collection = db.createCollection( collectionName );
         MongoDocument document = new MongoDocument();
 
         T instance = null;

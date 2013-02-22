@@ -8,4 +8,7 @@ public class AuthenticationException extends CoreException {
 		super( s );
 	}
 
+    public AuthenticationException( Exception e ) {
+        super( e );
+    }
 }

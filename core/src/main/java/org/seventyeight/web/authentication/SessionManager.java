@@ -7,10 +7,13 @@ import org.seventyeight.database.IndexValueType;
 import org.seventyeight.database.Node;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Utils;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.SeventyEight;
+import org.seventyeight.web.User;
 import org.seventyeight.web.authentication.exceptions.UnableToCreateSessionException;
 import org.seventyeight.web.exceptions.CouldNotLoadObjectException;
 import org.seventyeight.web.exceptions.PersistenceException;
+import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.resources.User;
 
 import java.security.NoSuchAlgorithmException;
@@ -22,53 +25,41 @@ import java.util.List;
 public class SessionManager {
 	
 	private static Logger logger = Logger.getLogger( SessionManager.class );
-	
-    public static final String INDEX_SESSIONS = "sessions";
-	
+
+    public static final String SESSIONS = "sessions";
+    public static final String SESSION = "session";
+
 	public SessionManager() {
         //db.createIndex( INDEX_SESSIONS, IndexType.UNIQUE, IndexValueType.STRING );
 		//logger.debug( "Initializing session index" );
 	}
 	
-	private MongoDocument createSessionNode( String hash, Date endDate ) {
+	private Session createSessionNode( String hash, Date endDate ) throws ItemInstantiationException {
 		logger.debug( "Creating new session" );
 		
-		Node node = null;
-	
-		node = SeventyEight.getInstance().createNode( db, Session.class );
-		node.set( "hash", hash );
-		node.set( "created", new Date().getTime() );
-		node.set( Session.__END_DATE, endDate.getTime() );
+		Session session = Core.getInstance().createItem( Session.class, SESSIONS );
+		session.getDocument().set( "hash", hash );
+        session.getDocument().set( "created", new Date().getTime() );
+        session.getDocument().set( Session.__END_DATE, endDate.getTime() );
 
-        //node.set( "identity", NetworkUtils.getNetworkIdentity() );
-
-        node.save();
-		
-		return node;
+		return session;
 	}
 	
-	public Session createSession( Database db, User user, Date date, int ttl ) throws UnableToCreateSessionException, PersistenceException {
+	public Session createSession( User user, Date date, int ttl ) throws ItemInstantiationException, AuthenticationException {
 		logger.debug( "Creating session for " + user + ", " + ttl );
 		String hash = "";
 		try {
 			hash = Utils.md5( user.getUsername() + date.getTime() );
 		} catch( NoSuchAlgorithmException e ) {
 			logger.warn( "Unable to create session: " + e.getMessage() );
-			throw new UnableToCreateSessionException( e );
+			throw new AuthenticationException( e );
 		}
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime( date );
 		calendar.add( Calendar.HOUR_OF_DAY, ttl );
 		
-		Node node = createSessionNode( db, hash, calendar.getTime() );
-		//node.setProperty( "userid", user.getIdentifier() );
-		
-		/* Add to index */
-		//sessionsIndexes.add( node, "hash", hash );
-        db.putToIndex( INDEX_SESSIONS, node, hash );
-		
-		Session session = new Session( node );
+		Session session = createSessionNode( hash, calendar.getTime() );
 
         SessionsHub hub = user.getSessionsHub();
         hub.addSession( session );
@@ -76,7 +67,7 @@ public class SessionManager {
 		return session;
 	}
 	
-	public Session getSession( Database db, String hash ) {
+	public Session getSession( String hash ) {
 		logger.debug( "Getting session for " + hash );
 
         List<Node> nodes = db.getFromIndex( INDEX_SESSIONS, hash );

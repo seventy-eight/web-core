@@ -159,4 +159,8 @@ public abstract class AbstractItem implements Item {
         return Core.getInstance().getItem( document );
     }
 
+    @Override
+    public MongoDocument getDocument() {
+        return document;
+    }
 }

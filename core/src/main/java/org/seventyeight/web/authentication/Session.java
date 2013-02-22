@@ -4,23 +4,15 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.User;
-import org.seventyeight.web.exceptions.*;
-import org.seventyeight.web.model.AbstractItem;
-import org.seventyeight.web.model.resources.User;
-
-import java.util.Collections;
-import java.util.List;
+import org.seventyeight.web.model.Entity;
 
 
-public class Session extends AbstractItem {
+public class Session extends Entity {
 	
 	private static Logger logger = Logger.getLogger( Session.class );
 
 	public static final String __END_DATE = "end";
 
-    public static final String SESSIONS = "sessions";
-    public static final String SESSION = "session";
-	
 	public Session( MongoDocument document ) {
 		super( document );
 	}
@@ -49,16 +41,10 @@ public class Session extends AbstractItem {
          }
      }
      */
-	
-	public User getUser() {
-        SessionsHub hub = getParent();
 
-        if( hub == null ) {
-            logger.debug( "No user attached to session" );
-            return null;
-        } else {
-            return hub.getParent();
-        }
+
+	public User getUser() {
+        return null;
 	}
 	
 	public String getHash() {
@@ -68,8 +54,4 @@ public class Session extends AbstractItem {
 	public Date getEndingAsDate() {
 		return new Date( (Long)document.get( __END_DATE ) );
 	}
-
-    public String getIdentity() {
-        return node.get( "identity", null );
-    }
 }
