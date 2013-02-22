@@ -2,16 +2,10 @@ package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.seventyeight.database.Database;
-import org.seventyeight.database.EdgeType;
-import org.seventyeight.database.Node;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.SeventyEight;
-import org.seventyeight.web.exceptions.TemplateDoesNotExistException;
-import org.seventyeight.web.exceptions.UnableToInstantiateObjectException;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
 
-import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
 
@@ -69,7 +63,7 @@ public abstract class Descriptor<T extends Describable> {
         return false;
     }
 
-    public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateDoesNotExistException {
+    public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateException {
         VelocityContext c = new VelocityContext();
         c.put( "class", getClazz().getName() );
         c.put( "descriptor", this );
@@ -77,18 +71,18 @@ public abstract class Descriptor<T extends Describable> {
         if( extension != null ) {
             logger.debug( "Extension is " + extension );
             c.put( "enabled", true );
-            c.put( "content", SeventyEight.getInstance().getTemplateManager().getRenderer( request ).renderObject( extension, "config.vm" ) );
+            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( extension, "config.vm" ) );
         } else {
             logger.debug( "Preparing EMPTY " + getClazz() );
             c.put( "enabled", false );
-            c.put( "content", SeventyEight.getInstance().getTemplateManager().getRenderer( request ).renderClass( getClazz(), "config.vm" ) );
+            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( getClazz(), "config.vm" ) );
         }
 
-        return SeventyEight.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
+        return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
     }
 
-    public EdgeType getRelationType() {
-        return SeventyEight.ResourceEdgeType.extension;
+    public String getRelationType() {
+        return Core.Relations.EXTENSIONS;
     }
 
     /**

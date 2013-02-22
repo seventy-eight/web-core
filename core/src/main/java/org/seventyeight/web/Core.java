@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDatabase;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.themes.Default;
 
@@ -26,11 +27,14 @@ public class Core {
 
     private static Core instance;
 
+    private TemplateManager templateManager = new TemplateManager();
+
     public static final String ITEM_COLLECTION_NAME = "items";
 
     private org.seventyeight.loader.ClassLoader classLoader = null;
     private Loader pluginLoader;
 
+    /* Database */
     private MongoDBManager dbManager;
     private MongoDatabase db;
 
@@ -55,6 +59,10 @@ public class Core {
 
 
     private AbstractTheme defaultTheme = new Default();
+
+    public static class Relations {
+        public static final String EXTENSIONS = "extensions";
+    }
 
     public Core( String dbname ) throws UnknownHostException {
         if( instance != null ) {
@@ -167,5 +175,9 @@ public class Core {
 
     public AbstractTheme getDefaultTheme() {
         return defaultTheme;
+    }
+
+    public TemplateManager getTemplateManager() {
+        return templateManager;
     }
 }

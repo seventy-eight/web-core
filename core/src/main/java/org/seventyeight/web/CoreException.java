@@ -11,6 +11,10 @@ public class CoreException extends Exception {
         super( m );
     }
 
+    public CoreException( Exception e ) {
+        super( e );
+    }
+
     public CoreException( String m, Exception e ) {
         super( m, e );
     }

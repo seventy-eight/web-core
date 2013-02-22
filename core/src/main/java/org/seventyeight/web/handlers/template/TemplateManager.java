@@ -5,13 +5,9 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.seventyeight.database.Database;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.SeventyEight;
-import org.seventyeight.web.exceptions.TemplateDoesNotExistException;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.Language;
-import org.seventyeight.web.model.Locale;
 import org.seventyeight.web.servlet.Request;
 
 import java.io.File;

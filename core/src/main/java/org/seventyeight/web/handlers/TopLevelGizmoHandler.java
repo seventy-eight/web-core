@@ -2,7 +2,10 @@ package org.seventyeight.web.handlers;
 
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
+import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.SeventyEight;
+import org.seventyeight.web.User;
 import org.seventyeight.web.exceptions.ActionHandlerException;
 import org.seventyeight.web.exceptions.CouldNotLoadItemException;
 import org.seventyeight.web.exceptions.NoSuchJsonElementException;
@@ -28,7 +31,7 @@ public class TopLevelGizmoHandler {
     // (0)/(1)handlers/(2)first((3)second/(n)last
     // n is either an actions index or an action method
 
-    public void execute( TopLevelGizmo gizmo, Request request, Response response ) throws ActionHandlerException {
+    public void execute( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException {
         if( gizmo instanceof ItemType ) {
             handleItemType( (ItemType) gizmo, request, response );
         } else if( gizmo instanceof TopLevelAction ) {
@@ -36,24 +39,24 @@ public class TopLevelGizmoHandler {
         } else if( gizmo instanceof TopLevelExecutor ) {
             handleExecutor( (TopLevelExecutor) gizmo, request, response );
         } else {
-            throw new ActionHandlerException( "WHAT??? " + gizmo );
+            throw new GizmoException( "WHAT??? " + gizmo );
         }
     }
 
-    private void handleExecutor( TopLevelExecutor executor, Request request, Response response ) throws ActionHandlerException {
+    private void handleExecutor( TopLevelExecutor executor, Request request, Response response ) {
         executor.execute( request, response );
     }
 
-    private void handleTopLevelAction( TopLevelAction action, Request request, Response response ) throws ActionHandlerException {
+    private void handleTopLevelAction( TopLevelAction action, Request request, Response response ) {
         actions( (Item) action, 2, request, response );
     }
 
-    private void handleItemType( ItemType type, Request request, Response response ) throws ActionHandlerException {
+    private void handleItemType( ItemType type, Request request, Response response ) throws GizmoException, ItemInstantiationException {
         if( request.getRequestParts().length > 2 ) {
             String name = request.getRequestParts()[2];
             AbstractItem item = null;
             try {
-                item = type.getItem( name, request.getDB() );
+                item = type.getItem( name );
             } catch( CouldNotLoadItemException e ) {
                 throw new ActionHandlerException( e );
             }
@@ -67,7 +70,7 @@ public class TopLevelGizmoHandler {
                 actions( item, 3, request, response );
             } else {
                 if( request.getRequestParts().length > 2 ) {
-                    throw new ActionHandlerException( "No such action, " + request.getRequestURI() );
+                    throw new GizmoException( "No such action, " + request.getRequestURI() );
                 } else {
                     executeThing( request, response, item, "index" );
                 }
@@ -78,7 +81,7 @@ public class TopLevelGizmoHandler {
         }
     }
 
-    private void checkAuthorization( Item item, User user, Authorizer.Authorization requiredAuthorization ) throws ActionHandlerException {
+    private void checkAuthorization( Item item, User user, Authorizer.Authorization requiredAuthorization ) throws ItemInstantiationException, GizmoException {
         logger.debug( "[Authorization check] "  + user + " for " + item );
         if( item instanceof Authorizable ) {
             Authorizable a = (Authorizable) item;
@@ -87,12 +90,12 @@ public class TopLevelGizmoHandler {
             logger.debug( authorizer.getAuthorization( user ).ordinal() + " >= " + requiredAuthorization.ordinal() );
 
             if( authorizer.getAuthorization( user ).ordinal() < requiredAuthorization.ordinal() ) {
-                throw new ActionHandlerException( user + " was not authorized" );
+                throw new GizmoException( user + " was not authorized" );
             }
         }
     }
 
-    public void actions( Item item, int uriStart, Request request, Response response ) throws ActionHandlerException {
+    public void actions( Item item, int uriStart, Request request, Response response ) throws GizmoException {
 
         int i = uriStart;
         int l = request.getRequestParts().length;
@@ -142,13 +145,13 @@ public class TopLevelGizmoHandler {
                 executeThing( request, response, lastItem, urlName );
 
             } else {
-                throw new ActionHandlerException( urlName + " not defined for " + lastItem );
+                throw new GizmoException( urlName + " not defined for " + lastItem );
             }
         }
 
     }
 
-    private void executeThing( Request request, Response response, Item item, String urlName ) throws ActionHandlerException {
+    private void executeThing( Request request, Response response, Item item, String urlName ) throws GizmoException {
         logger.debug( "EXECUTE: " + item + ", " + urlName );
 
         /* First try to find a view, if not a POST */
@@ -165,17 +168,17 @@ public class TopLevelGizmoHandler {
 
         if( !request.isRequestPost() ) {
             try {
-                request.getContext().put( "content", SeventyEight.getInstance().getTemplateManager().getRenderer( request ).renderObject( item, urlName + ".vm" ) );
-                response.getWriter().print( SeventyEight.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
+                request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( item, urlName + ".vm" ) );
+                response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
                 return;
             } catch( Exception e ) {
                 logger.debug( "Unable to view " + urlName + " for " + item + ": " + e.getMessage() );
-                throw new ActionHandlerException( e );
+                throw new GizmoException( e );
             }
         }
     }
 
-    private void executeMethod( Item item, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchJsonElementException {
+    private void executeMethod( Item item, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         logger.debug( "METHOD: " + item + ", " + actionMethod );
 
         Method method = getRequestMethod( item, actionMethod, request.isRequestPost() );
