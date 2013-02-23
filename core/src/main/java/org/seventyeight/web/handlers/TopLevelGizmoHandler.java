@@ -4,16 +4,10 @@ import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.SeventyEight;
 import org.seventyeight.web.User;
-import org.seventyeight.web.exceptions.ActionHandlerException;
-import org.seventyeight.web.exceptions.CouldNotLoadItemException;
-import org.seventyeight.web.exceptions.NoSuchJsonElementException;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.model.resources.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.ClassUtils;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,7 +25,7 @@ public class TopLevelGizmoHandler {
     // (0)/(1)handlers/(2)first((3)second/(n)last
     // n is either an actions index or an action method
 
-    public void execute( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException {
+    public void execute( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException, ItemInstantiationException {
         if( gizmo instanceof ItemType ) {
             handleItemType( (ItemType) gizmo, request, response );
         } else if( gizmo instanceof TopLevelAction ) {
@@ -47,7 +41,7 @@ public class TopLevelGizmoHandler {
         executor.execute( request, response );
     }
 
-    private void handleTopLevelAction( TopLevelAction action, Request request, Response response ) {
+    private void handleTopLevelAction( TopLevelAction action, Request request, Response response ) throws GizmoException {
         actions( (Item) action, 2, request, response );
     }
 
@@ -55,11 +49,7 @@ public class TopLevelGizmoHandler {
         if( request.getRequestParts().length > 2 ) {
             String name = request.getRequestParts()[2];
             AbstractItem item = null;
-            try {
-                item = type.getItem( name );
-            } catch( CouldNotLoadItemException e ) {
-                throw new ActionHandlerException( e );
-            }
+            item = type.getItem( name );
 
             /* Authorization */
             checkAuthorization( item, request.getUser(), Authorizer.Authorization.get( request.isRequestPost() ) );
