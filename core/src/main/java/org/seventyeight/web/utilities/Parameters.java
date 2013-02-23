@@ -1,9 +1,8 @@
 package org.seventyeight.web.utilities;
 
-import org.seventyeight.database.Database;
+import org.seventyeight.web.User;
 import org.seventyeight.web.model.AbstractItem;
 import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.model.resources.User;
 
 import java.util.HashMap;
 
@@ -15,12 +14,7 @@ import java.util.HashMap;
 public class Parameters extends HashMap<String, String> implements CoreRequest {
 
     private User user;
-    private Database database;
     private AbstractItem item;
-
-    void setDatabase( Database database ) {
-        this.database = database;
-    }
 
     @Override
     public AbstractItem getItem() {
@@ -30,11 +24,6 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     @Override
     public void setItem( AbstractItem item ) {
         this.item = item;
-    }
-
-    @Override
-    public Database getDB() {
-        return null;
     }
 
     @Override

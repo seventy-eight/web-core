@@ -29,6 +29,10 @@ public class MongoUpdate {
         return update( "$pull", key, value );
     }
 
+    public MongoUpdate push( String key, Object value ) {
+        return update( "$push", key, value );
+    }
+
     public MongoUpdate unset( String key ) {
         return update( "$unset", key, 1 );
     }

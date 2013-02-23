@@ -2,13 +2,8 @@ package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.seventyeight.database.orientdb.impl.orientdb.OrientDBManager;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
-import org.seventyeight.web.authentication.exceptions.PasswordDoesNotMatchException;
-import org.seventyeight.web.authentication.exceptions.UnableToCreateSessionException;
-import org.seventyeight.web.exceptions.ActionHandlerException;
-import org.seventyeight.web.exceptions.GizmoHandlerDoesNotExistException;
 import org.seventyeight.web.handlers.GizmoException;
 import org.seventyeight.web.model.AuthorizationException;
 import org.seventyeight.web.model.TopLevelGizmo;

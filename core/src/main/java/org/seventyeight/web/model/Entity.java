@@ -1,7 +1,11 @@
 package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.User;
@@ -128,9 +132,16 @@ public abstract class Entity extends AbstractItem implements Authorizer, Describ
         return getField( "revision", 1 );
     }
 
+    public ObjectId getObjectId() {
+        return document.get( "_id" );
+    }
 
     @Override
     public Descriptor<?> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
+    }
+
+    public void updateField( String collection, MongoUpdate update ) {
+        MongoDBCollection.get( collection ).update( update, new MongoDBQuery().is( "_id", getObjectId() ) );
     }
 }

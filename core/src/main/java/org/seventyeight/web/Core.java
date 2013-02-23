@@ -41,6 +41,8 @@ public class Core {
     private Authentication authentication = new SimpleAuthentication();
     private SessionManager sessionManager = new SessionManager();
 
+    private User anonymous;
+
     public static final String ITEM_COLLECTION_NAME = "items";
 
     private org.seventyeight.loader.ClassLoader classLoader = null;
@@ -220,5 +222,16 @@ public class Core {
 
     public SessionManager getSessionManager() {
         return sessionManager;
+    }
+
+
+    public int getNextSequence( String sequence ) {
+
+        return 1;
+    }
+
+
+    public User getAnonymousUser() {
+        return anonymous;
     }
 }

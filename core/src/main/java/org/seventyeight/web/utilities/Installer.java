@@ -1,19 +1,11 @@
 package org.seventyeight.web.utilities;
 
 import org.apache.log4j.Logger;
-import org.seventyeight.database.Database;
-import org.seventyeight.database.IndexType;
-import org.seventyeight.database.IndexValueType;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.Group;
-import org.seventyeight.web.SeventyEight;
 import org.seventyeight.web.User;
-import org.seventyeight.web.exceptions.*;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
-import org.seventyeight.web.model.resources.Group;
-import org.seventyeight.web.model.resources.User;
-import org.seventyeight.web.model.util.Parameters;
 
 /**
  * @author cwolfgang
@@ -30,7 +22,7 @@ public class Installer {
         this.core = Core.getInstance();
     }
 
-    public void install() throws ItemInstantiationException {
+    public void install() throws ItemInstantiationException, ClassNotFoundException, SavingException {
 
         logger.info( "Installing users" );
         User admin = installUser( "wolle", true );

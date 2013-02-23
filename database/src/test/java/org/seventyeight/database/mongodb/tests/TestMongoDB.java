@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBRule;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.MongoUpdate;
 
 import java.util.List;
 
@@ -88,6 +89,23 @@ public class TestMongoDB {
 
         d1.set( "ONE", 2 );
         collection.save( d1 );
+
+        collection.show();
+    }
+
+    @Test
+    public void test5() {
+        MongoDBCollection collection = env.getDatabase().createCollection( "groups" );
+
+        MongoDocument d1 = new MongoDocument();
+        d1.set( "name", "The gang" );
+        collection.save( d1 );
+
+        collection.show();
+
+        collection.update( new MongoUpdate().push( "members", "wolle" ) );
+        collection.update( new MongoUpdate().push( "members", "aee" ) );
+        collection.update( new MongoUpdate().push( "members", "robse" ) );
 
         collection.show();
     }

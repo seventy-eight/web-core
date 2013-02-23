@@ -48,8 +48,7 @@ public class User extends Entity {
     }
 
     public void setUsername( String username ) {
-        //document.set( "username", username )
-        new MongoUpdate()
+        MongoDBCollection.get( USERS ).update( new MongoUpdate().set( "username", username ), new MongoDBQuery().is( "_id", getObjectId() ) );
     }
 
     public String getUsername() {
