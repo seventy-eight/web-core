@@ -12,29 +12,13 @@ public class MongoUpdate {
 
     private static Logger logger = Logger.getLogger( MongoUpdate.class );
 
-    private MongoDBCollection collection;
-
     private BasicDBObject update = new BasicDBObject();
 
     private boolean multi = false;
     private boolean upsert = false;
 
-    public MongoUpdate( MongoDBCollection collection ) {
-        this.collection = collection;
-    }
-
-    public void update() {
-        update( new MongoDBQuery() );
-    }
-
-    public void update( MongoDBQuery query ) {
-        if( update.isEmpty() ) {
-
-        } else {
-            logger.debug( "Criteria: " + query.getDocument() );
-            logger.debug( "Update  : " + update );
-            collection.getCollection().update( query.getDocument(), update, upsert, multi );
-        }
+    public BasicDBObject getDocument() {
+        return update;
     }
 
     public MongoUpdate set( String key, Object value ) {
@@ -78,10 +62,18 @@ public class MongoUpdate {
 
         return this;
     }
+
+    public boolean isMulti() {
+        return multi;
+    }
     
     public MongoUpdate setUpsert() {
         upsert = true;
         
         return this;
+    }
+
+    public boolean isUpsert() {
+        return upsert;
     }
 }

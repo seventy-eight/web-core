@@ -29,8 +29,8 @@ public class TestMongoDBUpdate {
 
         collection.show();
 
-        MongoUpdate u = new MongoUpdate( collection ).set( "name", "Svenne oLotta" );
-        u.update();
+        MongoUpdate u = new MongoUpdate().set( "name", "Svenne oLotta" );
+        collection.update( u );
 
         collection.show();
     }
@@ -47,8 +47,8 @@ public class TestMongoDBUpdate {
 
         collection.show();
 
-        MongoUpdate u = new MongoUpdate( collection ).set( "name", "Svenne oLotta" ).unset( "crap" );
-        u.update();
+        MongoUpdate u = new MongoUpdate().set( "name", "Svenne oLotta" ).unset( "crap" );
+        collection.update( u );
 
         collection.show();
     }
@@ -72,8 +72,8 @@ public class TestMongoDBUpdate {
 
         //MongoUpdate u = new MongoUpdate( collection ).pull( "names", new MongoDocument().set( "name", "bolle" ) );
         //MongoUpdate u = new MongoUpdate( collection ).unset( "names.1" );
-        MongoUpdate u = new MongoUpdate( collection ).unset( "names", 1 );
-        u.update();
+        MongoUpdate u = new MongoUpdate().unset( "names", 1 );
+        collection.update( u );
 
         collection.show();
     }
@@ -102,8 +102,8 @@ public class TestMongoDBUpdate {
 
 
         MongoDBQuery q2 = new MongoDBQuery().gte( "age", 2 );
-        MongoUpdate u2 = new MongoUpdate( collection ).set( "name", "NAMSE" ).setMulti();
-        u2.update( q2 );
+        MongoUpdate u2 = new MongoUpdate().set( "name", "NAMSE" ).setMulti();
+        collection.update( u2, q2 );
 
         collection.show();
     }

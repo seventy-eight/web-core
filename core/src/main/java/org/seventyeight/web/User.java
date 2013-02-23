@@ -3,6 +3,7 @@ package org.seventyeight.web;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.model.*;
 
 import java.util.List;
@@ -47,7 +48,8 @@ public class User extends Entity {
     }
 
     public void setUsername( String username ) {
-        document.set( "username", username );
+        //document.set( "username", username )
+        new MongoUpdate()
     }
 
     public String getUsername() {

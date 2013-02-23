@@ -72,6 +72,20 @@ public class MongoDBCollection {
         collection.remove( query.getDocument() );
     }
 
+    public void update( MongoUpdate update ) {
+        update( update, new MongoDBQuery() );
+    }
+
+    public void update( MongoUpdate update, MongoDBQuery query ) {
+        if( update.getDocument().isEmpty() ) {
+
+        } else {
+            logger.debug( "Criteria: " + query.getDocument() );
+            logger.debug( "Update  : " + update );
+            collection.update( query.getDocument(), update.getDocument(), update.isUpsert(), update.isMulti() );
+        }
+    }
+
     public void show() {
         DBCursor cursor = collection.find();
 
