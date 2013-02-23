@@ -2,10 +2,7 @@ package org.seventyeight.database.mongodb.tests;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDBRule;
-import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.database.mongodb.*;
 
 import java.util.List;
 
@@ -77,6 +74,36 @@ public class TestMongoDBUpdate {
         //MongoUpdate u = new MongoUpdate( collection ).unset( "names.1" );
         MongoUpdate u = new MongoUpdate( collection ).unset( "names", 1 );
         u.update();
+
+        collection.show();
+    }
+
+
+    @Test
+    public void test4() {
+        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+
+        MongoDocument d1 = new MongoDocument();
+        d1.set( "name", "wolle" );
+        d1.set( "age", 1 );
+        collection.save( d1 );
+
+        MongoDocument d2 = new MongoDocument();
+        d2.set( "name", "bolle" );
+        d2.set( "age", 2 );
+        collection.save( d2 );
+
+        MongoDocument d3 = new MongoDocument();
+        d3.set( "name", "snolle" );
+        d3.set( "age", 3 );
+        collection.save( d3 );
+
+        collection.show();
+
+
+        MongoDBQuery q2 = new MongoDBQuery().gte( "age", 2 );
+        MongoUpdate u2 = new MongoUpdate( collection ).set( "name", "NAMSE" ).setMulti();
+        u2.update( q2 );
 
         collection.show();
     }

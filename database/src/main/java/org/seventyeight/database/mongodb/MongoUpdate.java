@@ -14,7 +14,6 @@ public class MongoUpdate {
 
     private MongoDBCollection collection;
 
-    private BasicDBObject criteria = new BasicDBObject();
     private BasicDBObject update = new BasicDBObject();
 
     private boolean multi = false;
@@ -25,20 +24,17 @@ public class MongoUpdate {
     }
 
     public void update() {
-        BasicDBObject u = new BasicDBObject();
+        update( new MongoDBQuery() );
+    }
+
+    public void update( MongoDBQuery query ) {
         if( update.isEmpty() ) {
 
         } else {
-            logger.debug( "Criteria: " + criteria );
+            logger.debug( "Criteria: " + query.getDocument() );
             logger.debug( "Update  : " + update );
-            collection.getCollection().update( criteria, update, upsert, multi );
+            collection.getCollection().update( query.getDocument(), update, upsert, multi );
         }
-    }
-
-    public MongoUpdate addCriteria( String key, Object value ) {
-        criteria.append( key, value );
-
-        return this;
     }
 
     public MongoUpdate set( String key, Object value ) {
