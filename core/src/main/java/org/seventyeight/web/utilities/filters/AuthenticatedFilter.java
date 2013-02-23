@@ -1,17 +1,17 @@
 package org.seventyeight.web.utilities.filters;
 
-import org.seventyeight.web.utilities.ResourceListFilter;
-import org.seventyeight.web.utilities.ResourceSet;
+import org.seventyeight.web.utilities.EntitySet;
+import org.seventyeight.web.utilities.EntitySetFilter;
 
 /**
  * @author cwolfgang
  *         Date: 31-01-13
  *         Time: 23:34
  */
-public class AuthenticatedFilter implements ResourceListFilter {
+public class AuthenticatedFilter implements EntitySetFilter {
 
     @Override
-    public void filter( ResourceSet set ) {
+    public void filter( EntitySet set ) {
     }
 
     @Override
