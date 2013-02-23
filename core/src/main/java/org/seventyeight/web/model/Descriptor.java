@@ -19,12 +19,16 @@ public abstract class Descriptor<T extends Describable> {
 		clazz = (Class<T>) getClass().getEnclosingClass();
 		logger.debug( "Descriptor class is " + clazz );
 	}
+
+    public List<String> getRequiredJavascripts() {
+        return Collections.EMPTY_LIST;
+    }
 	
 	public abstract String getDisplayName();
 
 	public T newInstance() throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
-		return (T) Core.getInstance().createItem( clazz );
+		return (T) Core.getInstance().createItem( clazz, getCollectionName() );
 	}
 
 
@@ -46,6 +50,10 @@ public abstract class Descriptor<T extends Describable> {
 
     public String getId() {
         return getClazz().getName();
+    }
+
+    public String getCollectionName() {
+        return Core.ITEM_COLLECTION_NAME;
     }
 
     public String getJsonId() {

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.User;
+import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.model.Entity;
 
 
@@ -42,16 +43,45 @@ public class Session extends Entity {
      }
      */
 
+    public void setUser( User user ) {
+        document.set( "user", user.getUsername() );
+    }
 
 	public User getUser() {
         return null;
 	}
+
+    public void setHash( String hash ) {
+        document.set( "hash", hash );
+    }
 	
 	public String getHash() {
 		return document.get( "hash", null );
 	}
+
+    public void setCreated() {
+        document.set( "created", new Date().getTime() );
+    }
+
+    public void setEndDate( Date date ) {
+        document.set( __END_DATE, date.getTime() );
+    }
 	
 	public Date getEndingAsDate() {
 		return new Date( (Long)document.get( __END_DATE ) );
 	}
+
+
+    public static class SessionsDescriptor extends Descriptor<Session> {
+
+        @Override
+        public String getCollectionName() {
+            return SessionManager.SESSIONS;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Session";
+        }
+    }
 }

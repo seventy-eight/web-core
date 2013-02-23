@@ -1,20 +1,13 @@
 package org.seventyeight.web.authentication;
 
 import org.apache.log4j.Logger;
-import org.seventyeight.database.Database;
-import org.seventyeight.database.IndexType;
-import org.seventyeight.database.IndexValueType;
-import org.seventyeight.database.Node;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.SeventyEight;
 import org.seventyeight.web.User;
-import org.seventyeight.web.authentication.exceptions.UnableToCreateSessionException;
-import org.seventyeight.web.exceptions.CouldNotLoadObjectException;
-import org.seventyeight.web.exceptions.PersistenceException;
 import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.resources.User;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -59,10 +52,14 @@ public class SessionManager {
 		calendar.setTime( date );
 		calendar.add( Calendar.HOUR_OF_DAY, ttl );
 		
-		Session session = createSessionNode( hash, calendar.getTime() );
+		//Session session = createSessionNode( hash, calendar.getTime() );
 
-        SessionsHub hub = user.getSessionsHub();
-        hub.addSession( session );
+        Session.SessionsDescriptor descriptor = Core.getInstance().getDescriptor( Session.class );
+        Session session = descriptor.newInstance();
+        session.setEndDate( new org.seventyeight.utils.Date( calendar.getTime().getTime() ) );
+        session.setCreated();
+        session.setHash( hash );
+        session.setUser( user );
 		
 		return session;
 	}
@@ -70,17 +67,17 @@ public class SessionManager {
 	public Session getSession( String hash ) {
 		logger.debug( "Getting session for " + hash );
 
-        List<Node> nodes = db.getFromIndex( INDEX_SESSIONS, hash );
+        MongoDBQuery query = new MongoDBQuery().is( "hash", hash );
+        List<MongoDocument> docs = new MongoDBCollection( SESSIONS ).find( query );
 
         Session actual = null;
-        for( Node node : nodes ) {
-            Session session = new Session( node );
-            //logger.debug( "Comparing " + session.getEndingAsDate().getTime() + " with " + new Date().getTime() + ", ident: " + session.getIdentity() );
+        for( MongoDocument doc : docs ) {
+            Session session = new Session( doc );
             logger.debug( "Comparing " + session.getEndingAsDate().getTime() + " with " + new Date().getTime() );
-            //if( session.getEndingAsDate().after( new Date() ) && ( identity == null || identity.equals( session.getIdentity() )) ) {
             if( session.getEndingAsDate().after( new Date() ) ) {
                 logger.debug( "A valid session found" );
                 actual = session;
+                break;
             } else {
                 logger.debug( "Session has expired" );
                 /* TODO remove session??? */
@@ -90,19 +87,8 @@ public class SessionManager {
 		return actual;
 	}
 	
-	public void removeSession( Database db, String hash ) {
+	public void removeSession( String hash ) {
         logger.debug( "[Removing sessions] " + hash );
-        List<Node> nodes = db.getFromIndex( INDEX_SESSIONS, hash );
-
-		for( Node node : nodes ) {
-            try {
-                Session s = SeventyEight.getInstance().getDatabaseItem( node );
-                s.remove();
-            } catch( CouldNotLoadObjectException e ) {
-                e.printStackTrace();
-            }
-		}
-
-
+        new MongoDBCollection( SESSIONS ).remove( new MongoDBQuery().is( "hash", hash ) );
 	}
 }

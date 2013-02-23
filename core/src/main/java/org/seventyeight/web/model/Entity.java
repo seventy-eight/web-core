@@ -14,7 +14,7 @@ import java.util.List;
  *         Date: 19-02-13
  *         Time: 13:45
  */
-public abstract class Entity extends AbstractItem implements Authorizer {
+public abstract class Entity extends AbstractItem implements Authorizer, Describable {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 
@@ -125,4 +125,8 @@ public abstract class Entity extends AbstractItem implements Authorizer {
     }
 
 
+    @Override
+    public Descriptor<?> getDescriptor() {
+        return Core.getInstance().getDescriptor( getClass() );
+    }
 }

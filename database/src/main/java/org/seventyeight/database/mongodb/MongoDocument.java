@@ -2,6 +2,7 @@ package org.seventyeight.database.mongodb;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.seventyeight.database.Document;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class MongoDocument implements Document {
 
-    private BasicDBObject document;
+    private DBObject document;
 
     public MongoDocument() {
         document = new BasicDBObject();
@@ -24,7 +25,11 @@ public class MongoDocument implements Document {
         this.document = document;
     }
 
-    public BasicDBObject getDBObject() {
+    public MongoDocument( DBObject document ) {
+        this.document = document;
+    }
+
+    public DBObject getDBObject() {
         return document;
     }
 

@@ -8,6 +8,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.authentication.Authentication;
+import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
 import org.seventyeight.web.handlers.GizmoException;
 import org.seventyeight.web.handlers.TopLevelGizmoHandler;
@@ -38,6 +39,7 @@ public class Core {
     private TopLevelGizmoHandler topLevelGizmoHandler = new TopLevelGizmoHandler();
 
     private Authentication authentication = new SimpleAuthentication();
+    private SessionManager sessionManager = new SessionManager();
 
     public static final String ITEM_COLLECTION_NAME = "items";
 
@@ -120,7 +122,7 @@ public class Core {
         return instance;
     }
 
-    public <T extends Item> T getItem( MongoDocument document ) throws ItemInstantiationException {
+    public <T extends AbstractItem> T getItem( MongoDocument document ) throws ItemInstantiationException {
         String clazz = (String) document.get( "class" );
 
         if( clazz == null ) {
@@ -214,5 +216,9 @@ public class Core {
 
     public Authentication getAuthentication() {
         return authentication;
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
     }
 }
