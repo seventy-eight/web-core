@@ -22,5 +22,5 @@ public interface Authorizer {
         }
     }
 
-    public Authorization getAuthorization( User user ) throws ItemInstantiationException;
+    public Authorization getAuthorization( User user ) throws AuthorizationException;
 }

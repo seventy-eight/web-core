@@ -3,11 +3,7 @@ package org.seventyeight.web;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.model.AbstractItem;
-import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.Entity;
-import org.seventyeight.web.model.EntityDescriptor;
-import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.*;
 
 import java.util.List;
 
@@ -20,8 +16,34 @@ public class User extends Entity {
 
     public static final String USERS = "users";
 
+    public enum Visibility {
+        VISIBLE,
+        HIDDEN;
+    }
+
     public User( MongoDocument document ) {
         super( document );
+    }
+
+    @Override
+    public Saver getSaver( CoreRequest request ) {
+        return new UserSaver( this, request );
+    }
+
+    public class UserSaver extends Saver {
+
+        public UserSaver( AbstractItem item, CoreRequest request ) {
+            super( item, request );
+        }
+
+        @Override
+        public void save() throws SavingException {
+            String username = request.getValue( "username", null );
+            if( username == null || username.isEmpty() ) {
+                throw new SavingException( "The username must be set" );
+            }
+            document.set( "username", username );
+        }
     }
 
     public void setUsername( String username ) {
@@ -34,6 +56,18 @@ public class User extends Entity {
 
     public String getPassword() {
         return document.get( "password" );
+    }
+
+    public void setVisibility( Visibility visibility ) {
+        document.set( "visible", visibility.equals( Visibility.VISIBLE ) );
+    }
+
+    public void setVisible( boolean visible ) {
+        document.set( "visible", visible );
+    }
+
+    public boolean isVisible() {
+        return document.get( "visible", true );
     }
 
     @Override

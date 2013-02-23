@@ -10,6 +10,7 @@ import org.seventyeight.web.authentication.exceptions.UnableToCreateSessionExcep
 import org.seventyeight.web.exceptions.ActionHandlerException;
 import org.seventyeight.web.exceptions.GizmoHandlerDoesNotExistException;
 import org.seventyeight.web.handlers.GizmoException;
+import org.seventyeight.web.model.AuthorizationException;
 import org.seventyeight.web.model.TopLevelGizmo;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -108,7 +109,7 @@ public class Rest extends HttpServlet {
         logger.info( sw.print( 1000 ) );
     }
 
-    public void parseRequest( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException {
+    public void parseRequest( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException, AuthorizationException {
         logger.debug( "Parsing request" );
         Core.getInstance().getTopLevelGizmoHandler().execute( gizmo, request, response );
     }

@@ -30,7 +30,7 @@ public abstract class Entity extends AbstractItem implements Authorizer, Describ
     }
 
     @Override
-    public Authorization getAuthorization( User user ) throws ItemInstantiationException {
+    public Authorization getAuthorization( User user ) throws AuthorizationException {
 
         /* First check ownerships */
         try {
@@ -43,7 +43,12 @@ public abstract class Entity extends AbstractItem implements Authorizer, Describ
 
         List<MongoDocument> docs = document.getList( MODERATORS );
         for( MongoDocument d : docs ) {
-            Authoritative a = (Authoritative) getItem( d );
+            Authoritative a = null;
+            try {
+                a = (Authoritative) getItem( d );
+            } catch( ItemInstantiationException e ) {
+                throw new AuthorizationException( e );
+            }
             if( a.isAuthoritative( user ) ) {
                 return Authorization.MODERATE;
             }
@@ -51,7 +56,12 @@ public abstract class Entity extends AbstractItem implements Authorizer, Describ
 
         List<MongoDocument> viewers = document.getList( VIEWERS );
         for( MongoDocument d : docs ) {
-            Authoritative a = (Authoritative) getItem( d );
+            Authoritative a = null;
+            try {
+                a = (Authoritative) getItem( d );
+            } catch( ItemInstantiationException e ) {
+                throw new AuthorizationException( e );
+            }
             if( a.isAuthoritative( user ) ) {
                 return Authorization.VIEW;
             }
@@ -59,12 +69,6 @@ public abstract class Entity extends AbstractItem implements Authorizer, Describ
 
         logger.debug( "None of the above" );
         return Authorization.NONE;
-    }
-
-
-
-    public void setCreated( Date created ) {
-        document.set( "created", created.getTime() );
     }
 
     public Date getCreatedAsDate() {

@@ -25,7 +25,7 @@ public class TopLevelGizmoHandler {
     // (0)/(1)handlers/(2)first((3)second/(n)last
     // n is either an actions index or an action method
 
-    public void execute( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException, ItemInstantiationException {
+    public void execute( TopLevelGizmo gizmo, Request request, Response response ) throws GizmoException, AuthorizationException {
         if( gizmo instanceof ItemType ) {
             handleItemType( (ItemType) gizmo, request, response );
         } else if( gizmo instanceof TopLevelAction ) {
@@ -45,7 +45,7 @@ public class TopLevelGizmoHandler {
         actions( (Item) action, 2, request, response );
     }
 
-    private void handleItemType( ItemType type, Request request, Response response ) throws GizmoException, ItemInstantiationException {
+    private void handleItemType( ItemType type, Request request, Response response ) throws GizmoException, AuthorizationException {
         if( request.getRequestParts().length > 2 ) {
             String name = request.getRequestParts()[2];
             AbstractItem item = null;
@@ -71,7 +71,7 @@ public class TopLevelGizmoHandler {
         }
     }
 
-    private void checkAuthorization( Item item, User user, Authorizer.Authorization requiredAuthorization ) throws ItemInstantiationException, GizmoException {
+    private void checkAuthorization( Item item, User user, Authorizer.Authorization requiredAuthorization ) throws GizmoException, AuthorizationException {
         logger.debug( "[Authorization check] "  + user + " for " + item );
         if( item instanceof Authorizable ) {
             Authorizable a = (Authorizable) item;

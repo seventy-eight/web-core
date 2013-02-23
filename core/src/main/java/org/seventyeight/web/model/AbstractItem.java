@@ -2,6 +2,7 @@ package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.structure.Tuple;
 import org.seventyeight.web.Core;
@@ -31,7 +32,7 @@ public abstract class AbstractItem implements Item {
         this.document = document;
     }
 
-    public void save( CoreRequest request ) throws ClassNotFoundException, ItemInstantiationException {
+    public void save( CoreRequest request ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
         logger.debug( "Begin saving" );
 
         Saver saver = getSaver( request );
@@ -47,6 +48,9 @@ public abstract class AbstractItem implements Item {
         }
 
         update();
+
+        /* Persist */
+        MongoDBCollection.get( Core.getInstance().getDescriptor( getClass() ).getCollectionName() ).save( document );
     }
 
     public Saver getSaver( CoreRequest request ) {
@@ -54,8 +58,8 @@ public abstract class AbstractItem implements Item {
     }
 
     public static class Saver {
-        private AbstractItem item;
-        private CoreRequest request;
+        protected AbstractItem item;
+        protected CoreRequest request;
 
         public Saver( AbstractItem item, CoreRequest request ) {
             this.item = item;
@@ -66,7 +70,7 @@ public abstract class AbstractItem implements Item {
             return item;
         }
 
-        public void save() {
+        public void save() throws SavingException {
 
         }
     }
