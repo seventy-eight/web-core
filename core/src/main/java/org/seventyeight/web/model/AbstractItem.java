@@ -34,20 +34,15 @@ public abstract class AbstractItem implements Item {
         this.document = document;
     }
 
-    public void save( CoreRequest request ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
+    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
         logger.debug( "Begin saving" );
 
         Saver saver = getSaver( request );
 
         saver.save();
 
-        try {
-            logger.debug( "Handling extensions" );
-            JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
-            handleJsonConfigurations( request, jsonData );
-        } catch( JsonException e ) {
-            logger.debug( "No json element: " + e.getMessage() );
-        }
+        logger.debug( "Handling extensions" );
+        handleJsonConfigurations( request, jsonData );
 
         update();
 
