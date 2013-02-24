@@ -2,9 +2,13 @@ package org.seventyeight.web.utilities;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.Database;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.SeventyEight;
 import org.seventyeight.web.exceptions.*;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractResource;
+import org.seventyeight.web.model.Descriptor;
+import org.seventyeight.web.model.Entity;
 import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -18,31 +22,31 @@ import java.net.URLDecoder;
  *         Date: 17-01-13
  *         Time: 21:24
  */
-public class ResourceUtils {
+public class EntityUtils {
 
-    private static Logger logger = Logger.getLogger( ResourceUtils.class );
+    private static Logger logger = Logger.getLogger( EntityUtils.class );
 
-    private ResourceUtils() {
+    private EntityUtils() {
 
     }
 
-    public static void getConfigureResourceView( Request request, Response response, AbstractResource resource, ResourceDescriptor descriptor ) throws TemplateDoesNotExistException, IOException {
-        logger.debug( "Configuring " + resource );
+    public static void getConfigureResourceView( Request request, Response response, Entity entity, Descriptor descriptor ) throws IOException, TemplateException {
+        logger.debug( "Configuring " + entity );
 
-        //ResourceDescriptor descriptor = (ResourceDescriptor) resource.getDescriptor();
+        //ResourceDescriptor descriptor = (ResourceDescriptor) entity.getDescriptor();
 
-        request.getContext().put( "url", "/resource/" + resource.getIdentifier() + "/configurationSubmit" );
+        request.getContext().put( "url", "/entity/" + entity.getIdentifier() + "/configurationSubmit" );
         //request.getContext().put( "url", "configurationSubmit" );
         request.getContext().put( "class", descriptor.getClazz().getName() );
-        request.getContext().put( "header", "Configuring " + resource.getDisplayName() );
+        request.getContext().put( "header", "Configuring " + entity.getDisplayName() );
         request.getContext().put( "descriptor", descriptor );
 
         /* Required javascrips */
         request.getContext().put( "javascript", descriptor.getRequiredJavascripts() );
 
         logger.fatal( "NU ER VI HER " + request.getContext().get( "item" ) );
-        request.getContext().put( "content", SeventyEight.getInstance().getTemplateManager().getRenderer( request ).renderObject( resource, "configure.vm" ) );
-        response.getWriter().print( SeventyEight.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
+        request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( entity, "configure.vm" ) );
+        response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
 
     }
 

@@ -171,7 +171,7 @@ public class TopLevelGizmoHandler {
     private void executeMethod( Item item, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         logger.debug( "METHOD: " + item + ", " + actionMethod );
 
-        Method method = getRequestMethod( item, actionMethod, request.isRequestPost() );
+        Method method = getRequestMethod( item, actionMethod );
         logger.debug( "FOUND METHOD: " + method );
 
         if( request.isRequestPost() ) {
@@ -187,15 +187,9 @@ public class TopLevelGizmoHandler {
         }
     }
 
-    private Method getRequestMethod( Item item, String method, boolean post ) throws NoSuchMethodException {
+    private Method getRequestMethod( Item item, String method ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
-        logger.debug( "Method(P:" + post + "): " + method + " = " + m );
-        if( post ) {
-            //return resource.getClass().getDeclaredMethod( m, ParameterRequest.class, JsonObject.class );
-            return ClassUtils.getEnheritedMethod( item.getClass(), m, Request.class, Response.class, JsonObject.class );
-        } else {
-            //return action.getClass().getDeclaredMethod( m, Request.class, HttpServletResponse.class );
-            return ClassUtils.getEnheritedMethod( item.getClass(), m, Request.class, Response.class );
-        }
+        logger.debug( "Method: " + method + " = " + m );
+        return ClassUtils.getEnheritedMethod( item.getClass(), m, Request.class, Response.class );
     }
 }
