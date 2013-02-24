@@ -1,6 +1,6 @@
 package org.seventyeight.web.utilities;
 
-import org.seventyeight.web.model.Entity;
+import org.seventyeight.web.model.RootedItem;
 
 import java.util.HashSet;
 
@@ -9,7 +9,7 @@ import java.util.HashSet;
  *         Date: 31-01-13
  *         Time: 23:31
  */
-public class EntitySet extends HashSet<Entity> {
+public class EntitySet extends HashSet<RootedItem> {
 
     public EntitySet applyFilter( EntitySetFilter filter ) {
         filter.filter( this );

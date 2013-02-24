@@ -9,7 +9,7 @@ import org.seventyeight.web.model.*;
  *         Date: 18-02-13
  *         Time: 22:45
  */
-public class Group extends Entity {
+public class Group extends RootedItem {
 
     public static final String GROUPS = "groups";
 

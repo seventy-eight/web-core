@@ -13,7 +13,7 @@ import java.util.List;
  *         Date: 18-02-13
  *         Time: 22:28
  */
-public class User extends Entity {
+public class User extends RootedItem {
 
     public static final String USERS = "users";
 

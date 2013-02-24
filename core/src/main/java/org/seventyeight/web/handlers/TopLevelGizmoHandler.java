@@ -42,7 +42,7 @@ public class TopLevelGizmoHandler {
     }
 
     private void handleTopLevelAction( TopLevelAction action, Request request, Response response ) throws GizmoException {
-        actions( (Item) action, 2, request, response );
+        actions( action, 2, request, response );
     }
 
     private void handleItemType( ItemType type, Request request, Response response ) throws GizmoException, AuthorizationException {

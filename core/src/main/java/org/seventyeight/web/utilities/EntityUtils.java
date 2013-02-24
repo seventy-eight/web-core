@@ -8,7 +8,7 @@ import org.seventyeight.web.exceptions.*;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractResource;
 import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.Entity;
+import org.seventyeight.web.model.RootedItem;
 import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -30,22 +30,22 @@ public class EntityUtils {
 
     }
 
-    public static void getConfigureResourceView( Request request, Response response, Entity entity, Descriptor descriptor ) throws IOException, TemplateException {
-        logger.debug( "Configuring " + entity );
+    public static void getConfigureResourceView( Request request, Response response, RootedItem rootedItem, Descriptor descriptor ) throws IOException, TemplateException {
+        logger.debug( "Configuring " + rootedItem );
 
-        //ResourceDescriptor descriptor = (ResourceDescriptor) entity.getDescriptor();
+        //ResourceDescriptor descriptor = (ResourceDescriptor) rootedItem.getDescriptor();
 
-        request.getContext().put( "url", "/entity/" + entity.getIdentifier() + "/configurationSubmit" );
+        request.getContext().put( "url", "/rootedItem/" + rootedItem.getIdentifier() + "/configurationSubmit" );
         //request.getContext().put( "url", "configurationSubmit" );
         request.getContext().put( "class", descriptor.getClazz().getName() );
-        request.getContext().put( "header", "Configuring " + entity.getDisplayName() );
+        request.getContext().put( "header", "Configuring " + rootedItem.getDisplayName() );
         request.getContext().put( "descriptor", descriptor );
 
         /* Required javascrips */
         request.getContext().put( "javascript", descriptor.getRequiredJavascripts() );
 
         logger.fatal( "NU ER VI HER " + request.getContext().get( "item" ) );
-        request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( entity, "configure.vm" ) );
+        request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( rootedItem, "configure.vm" ) );
         response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
 
     }

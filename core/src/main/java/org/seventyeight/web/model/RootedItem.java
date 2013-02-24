@@ -18,14 +18,14 @@ import java.util.List;
  *         Date: 19-02-13
  *         Time: 13:45
  */
-public abstract class Entity extends AbstractItem implements Authorizer, Describable {
+public abstract class RootedItem extends AbstractItem implements Authorizer, Describable {
 
-    private static Logger logger = Logger.getLogger( Entity.class );
+    private static Logger logger = Logger.getLogger( RootedItem.class );
 
     public static final String MODERATORS = "moderators";
     public static final String VIEWERS = "viewers";
 
-    public Entity( MongoDocument document ) {
+    public RootedItem( MongoDocument document ) {
         super( document );
     }
 
