@@ -100,11 +100,11 @@ public class Core {
         return db;
     }
 
-    public <T extends AbstractItem> T createItem( Class<?> clazz ) throws ItemInstantiationException {
+    public <T extends AbstractModelObject> T createItem( Class<?> clazz ) throws ItemInstantiationException {
         return createItem( clazz, ITEM_COLLECTION_NAME );
     }
 
-    public <T extends AbstractItem> T createItem( Class<?> clazz, String collectionName ) throws ItemInstantiationException {
+    public <T extends AbstractModelObject> T createItem( Class<?> clazz, String collectionName ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
         MongoDBCollection collection = db.createCollection( collectionName );
@@ -124,17 +124,17 @@ public class Core {
         return instance;
     }
 
-    public <T extends AbstractItem> T getItem( MongoDocument document ) throws ItemInstantiationException {
+    public <T extends AbstractModelObject> T getItem( MongoDocument document ) throws ItemInstantiationException {
         String clazz = (String) document.get( "class" );
 
         if( clazz == null ) {
             logger.warn( "Class property not found" );
             throw new ItemInstantiationException( "\"class\" property not found for " + document );
         }
-        logger.debug( "Item class: " + clazz );
+        logger.debug( "ModelObject class: " + clazz );
 
         try {
-            Class<Item> eclass = (Class<Item>) Class.forName(clazz, true, classLoader );
+            Class<ModelObject> eclass = (Class<ModelObject>) Class.forName(clazz, true, classLoader );
             Constructor<?> c = eclass.getConstructor( MongoDocument.class );
             return (T) c.newInstance( document );
         } catch( Exception e ) {

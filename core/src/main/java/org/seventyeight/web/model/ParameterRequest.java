@@ -12,6 +12,6 @@ public interface ParameterRequest {
 	public <T> T getValue( String key );
     public <T> T getValue( String key, T defaultValue );
 
-    public AbstractItem getItem();
-    public void setItem( AbstractItem item );
+    public AbstractModelObject getModelObject();
+    public void setModelObject( AbstractModelObject modelObject );
 }

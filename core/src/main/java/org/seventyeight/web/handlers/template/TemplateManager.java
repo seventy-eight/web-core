@@ -240,19 +240,19 @@ public class TemplateManager {
 		}
 
         /**
-         * Render a specific object, given as "item" in the context. Given a concrete template
+         * Render a specific object, given as "modelObject" in the context. Given a concrete template
          * @param object
          * @param template An exact template
          * @return
          * @throws TemplateException
          */
 		public String render( Object object, String template ) throws TemplateException {
-			context.put( "item", object );
+			context.put( "modelObject", object );
 			return render( template );
 		}
 
         /**
-         * Render a specific object, given as "item" in the context. <br/>
+         * Render a specific object, given as "modelObject" in the context. <br/>
          * This will render each existing view for this class.
          * @param object
          * @param method
@@ -265,7 +265,7 @@ public class TemplateManager {
 
         public String renderObject( Object object, String method, boolean trySuper ) throws TemplateException {
             Template template = getTemplate( theme, object, method, trySuper );
-            context.put( "item", object );
+            context.put( "modelObject", object );
             return render( template );
         }
 
@@ -284,13 +284,13 @@ public class TemplateManager {
 
         public String renderClass( Object object, Class clazz, String method ) throws TemplateException {
             Template template = getTemplateFile( theme, clazz, method, true );
-            context.put( "item", object );
+            context.put( "modelObject", object );
             return render( template );
         }
 
         public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws TemplateException {
             Template template = getTemplateFile( theme, clazz, method, trySuper );
-            context.put( "item", object );
+            context.put( "modelObject", object );
             return render( template );
         }
 

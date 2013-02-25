@@ -7,7 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
  *         Date: 18-02-13
  *         Time: 17:25
  */
-public abstract class AbstractExtension extends AbstractItem {
+public abstract class AbstractExtension extends AbstractModelObject {
 
     public AbstractExtension( MongoDocument document ) {
         super( document );

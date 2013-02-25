@@ -6,5 +6,5 @@ package org.seventyeight.web.model;
  *         Time: 21:05
  */
 public interface ItemType extends TopLevelGizmo {
-    public AbstractItem getItem( String name );
+    public AbstractModelObject getItem( String name );
 }

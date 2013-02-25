@@ -2,17 +2,13 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.seventyeight.web.Core;
 import org.seventyeight.web.User;
-import org.seventyeight.web.model.AbstractItem;
+import org.seventyeight.web.model.AbstractModelObject;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.Group;
-import org.seventyeight.web.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.util.List;
 
 /**
  * User: cwolfgang
@@ -29,7 +25,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private AbstractTheme theme = null;
     private VelocityContext context;
 
-    private AbstractItem item;
+    private AbstractModelObject modelObject;
 
     private String template = "org/seventyeight/web/main.vm";
 
@@ -69,13 +65,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     @Override
-    public void setItem( AbstractItem item ) {
-        this.item = item;
+    public void setModelObject( AbstractModelObject modelObject ) {
+        this.modelObject = modelObject;
     }
 
     @Override
-    public AbstractItem getItem() {
-        return item;
+    public AbstractModelObject getModelObject() {
+        return modelObject;
     }
 
     public void setTransactional( boolean t ) {

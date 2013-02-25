@@ -13,7 +13,7 @@ import java.util.List;
  *         Date: 18-02-13
  *         Time: 22:28
  */
-public class User extends RootedItem {
+public class User extends Entity {
 
     public static final String USERS = "users";
 
@@ -33,8 +33,8 @@ public class User extends RootedItem {
 
     public class UserSaver extends Saver {
 
-        public UserSaver( AbstractItem item, CoreRequest request ) {
-            super( item, request );
+        public UserSaver( AbstractModelObject modelObject, CoreRequest request ) {
+            super( modelObject, request );
         }
 
         @Override

@@ -9,7 +9,7 @@ import org.seventyeight.web.model.*;
  *         Date: 18-02-13
  *         Time: 22:45
  */
-public class Group extends RootedItem {
+public class Group extends Entity {
 
     public static final String GROUPS = "groups";
 
@@ -24,8 +24,8 @@ public class Group extends RootedItem {
 
     public class GroupSaver extends Saver {
 
-        public GroupSaver( AbstractItem item, CoreRequest request ) {
-            super( item, request );
+        public GroupSaver( AbstractModelObject modelObject, CoreRequest request ) {
+            super( modelObject, request );
         }
 
         @Override

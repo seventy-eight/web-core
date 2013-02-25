@@ -1,7 +1,7 @@
 package org.seventyeight.web.utilities;
 
 import org.seventyeight.web.User;
-import org.seventyeight.web.model.AbstractItem;
+import org.seventyeight.web.model.AbstractModelObject;
 import org.seventyeight.web.model.CoreRequest;
 
 import java.util.HashMap;
@@ -14,16 +14,16 @@ import java.util.HashMap;
 public class Parameters extends HashMap<String, String> implements CoreRequest {
 
     private User user;
-    private AbstractItem item;
+    private AbstractModelObject modelObject;
 
     @Override
-    public AbstractItem getItem() {
-        return item;
+    public AbstractModelObject getModelObject() {
+        return modelObject;
     }
 
     @Override
-    public void setItem( AbstractItem item ) {
-        this.item = item;
+    public void setModelObject( AbstractModelObject modelObject ) {
+        this.modelObject = modelObject;
     }
 
     @Override

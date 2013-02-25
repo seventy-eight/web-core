@@ -5,10 +5,10 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.User;
 import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.RootedItem;
+import org.seventyeight.web.model.AbstractItem;
 
 
-public class Session extends RootedItem {
+public class Session extends AbstractItem {
 	
 	private static Logger logger = Logger.getLogger( Session.class );
 

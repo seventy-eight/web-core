@@ -1,5 +1,5 @@
 package org.seventyeight.web.model;
 
-public interface Describable extends Item {
+public interface Describable extends ModelObject {
 	public Descriptor<?> getDescriptor();
 }

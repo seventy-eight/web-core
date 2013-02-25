@@ -48,21 +48,21 @@ public class TopLevelGizmoHandler {
     private void handleItemType( ItemType type, Request request, Response response ) throws GizmoException, AuthorizationException {
         if( request.getRequestParts().length > 2 ) {
             String name = request.getRequestParts()[2];
-            AbstractItem item = null;
-            item = type.getItem( name );
+            AbstractModelObject modelObject = null;
+            modelObject = type.getItem( name );
 
             /* Authorization */
-            checkAuthorization( item, request.getUser(), Authorizer.Authorization.get( request.isRequestPost() ) );
+            checkAuthorization( modelObject, request.getUser(), Authorizer.Authorization.get( request.isRequestPost() ) );
 
-            request.getContext().put( "title", item.getDisplayName() );
+            request.getContext().put( "title", modelObject.getDisplayName() );
 
-            if( item instanceof Actionable ) {
-                actions( item, 3, request, response );
+            if( modelObject instanceof Actionable ) {
+                actions( modelObject, 3, request, response );
             } else {
                 if( request.getRequestParts().length > 2 ) {
                     throw new GizmoException( "No such action, " + request.getRequestURI() );
                 } else {
-                    executeThing( request, response, item, "index" );
+                    executeThing( request, response, modelObject, "index" );
                 }
             }
 
@@ -71,10 +71,10 @@ public class TopLevelGizmoHandler {
         }
     }
 
-    private void checkAuthorization( Item item, User user, Authorizer.Authorization requiredAuthorization ) throws GizmoException, AuthorizationException {
-        logger.debug( "[Authorization check] "  + user + " for " + item );
-        if( item instanceof Authorizable ) {
-            Authorizable a = (Authorizable) item;
+    private void checkAuthorization( ModelObject modelObject, User user, Authorizer.Authorization requiredAuthorization ) throws GizmoException, AuthorizationException {
+        logger.debug( "[Authorization check] "  + user + " for " + modelObject );
+        if( modelObject instanceof Authorizable ) {
+            Authorizable a = (Authorizable) modelObject;
             Authorizer authorizer = a.getAuthorizer();
 
             logger.debug( authorizer.getAuthorization( user ).ordinal() + " >= " + requiredAuthorization.ordinal() );
@@ -85,29 +85,29 @@ public class TopLevelGizmoHandler {
         }
     }
 
-    public void actions( Item item, int uriStart, Request request, Response response ) throws GizmoException {
+    public void actions( ModelObject modelObject, int uriStart, Request request, Response response ) throws GizmoException {
 
         int i = uriStart;
         int l = request.getRequestParts().length;
         Action action = null;
-        Item lastItem = item;
+        ModelObject lastModelObject = modelObject;
         String urlName = "index";
         for( ; i < l ; i++ ) {
             urlName = request.getRequestParts()[i];
             logger.debug( "Url name is " + urlName );
 
-            lastItem = item;
+            lastModelObject = modelObject;
             action = null;
 
-            if( item instanceof Actionable ) {
-                for( Action a : ((Actionable)item).getActions() ) {
+            if( modelObject instanceof Actionable ) {
+                for( Action a : ((Actionable) modelObject ).getActions() ) {
                     logger.debug( "Action is " + a );
                     if( a.getUrlName().equals( urlName ) ) {
                         action = a;
                         break;
                     }
                 }
-                item = (Item) action;
+                modelObject = (ModelObject) action;
             } else {
                 i++;
                 break;
@@ -120,7 +120,7 @@ public class TopLevelGizmoHandler {
             }
         }
 
-        logger.debug( "[Action method] " + urlName + " -> " + action + "/" + lastItem );
+        logger.debug( "[Action method] " + urlName + " -> " + action + "/" + lastModelObject );
 
         if( action != null ) {
             /* Last sub space was an action, do its index method */
@@ -132,46 +132,46 @@ public class TopLevelGizmoHandler {
             if( i == l ) {
                 /* We came to an end */
                 logger.debug( "Action was null" );
-                executeThing( request, response, lastItem, urlName );
+                executeThing( request, response, lastModelObject, urlName );
 
             } else {
-                throw new GizmoException( urlName + " not defined for " + lastItem );
+                throw new GizmoException( urlName + " not defined for " + lastModelObject );
             }
         }
 
     }
 
-    private void executeThing( Request request, Response response, Item item, String urlName ) throws GizmoException {
-        logger.debug( "EXECUTE: " + item + ", " + urlName );
+    private void executeThing( Request request, Response response, ModelObject modelObject, String urlName ) throws GizmoException {
+        logger.debug( "EXECUTE: " + modelObject + ", " + urlName );
 
         /* First try to find a view, if not a POST */
         try {
-            logger.debug( "Item: " + item + " -> " + urlName );
-            executeMethod( item, request, response, urlName );
+            logger.debug( "ModelObject: " + modelObject + " -> " + urlName );
+            executeMethod( modelObject, request, response, urlName );
             return;
         } catch( Exception e ) {
             e.printStackTrace();
-            logger.debug( item + " does not not have " + urlName + ", " + e.getMessage() );
+            logger.debug( modelObject + " does not not have " + urlName + ", " + e.getMessage() );
         }
 
             logger.debug( "TRYING VIEW FILE" );
 
         if( !request.isRequestPost() ) {
             try {
-                request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( item, urlName + ".vm" ) );
+                request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( modelObject, urlName + ".vm" ) );
                 response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
                 return;
             } catch( Exception e ) {
-                logger.debug( "Unable to view " + urlName + " for " + item + ": " + e.getMessage() );
+                logger.debug( "Unable to view " + urlName + " for " + modelObject + ": " + e.getMessage() );
                 throw new GizmoException( e );
             }
         }
     }
 
-    private void executeMethod( Item item, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        logger.debug( "METHOD: " + item + ", " + actionMethod );
+    private void executeMethod( ModelObject modelObject, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        logger.debug( "METHOD: " + modelObject + ", " + actionMethod );
 
-        Method method = getRequestMethod( item, actionMethod );
+        Method method = getRequestMethod( modelObject, actionMethod );
         logger.debug( "FOUND METHOD: " + method );
 
         if( request.isRequestPost() ) {
@@ -181,15 +181,15 @@ public class TopLevelGizmoHandler {
             } catch ( Exception e ) {
                 logger.debug( e.getMessage() );
             }
-            method.invoke( item, request, response, json );
+            method.invoke( modelObject, request, response, json );
         } else {
-            method.invoke( item, request, response );
+            method.invoke( modelObject, request, response );
         }
     }
 
-    private Method getRequestMethod( Item item, String method ) throws NoSuchMethodException {
+    private Method getRequestMethod( ModelObject modelObject, String method ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
         logger.debug( "Method: " + method + " = " + m );
-        return ClassUtils.getEnheritedMethod( item.getClass(), m, Request.class, Response.class );
+        return ClassUtils.getEnheritedMethod( modelObject.getClass(), m, Request.class, Response.class );
     }
 }

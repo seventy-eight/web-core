@@ -22,7 +22,7 @@
 </tr>
 #end
 
-#macro( configureExtensions $extensionClass $item )
+#macro( configureExtensions $extensionClass $modelObject )
 
     #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )
     $descriptors
@@ -40,7 +40,7 @@
                     <input type="checkbox" name="$descriptor.getId()" onchange="Utils.toggleFormElement( '$descriptor.getId()' );">
                     $descriptor.getDisplayName()
                     <table style="width: 100%">
-                        #renderDescriptor( $descriptor $item )
+                        #renderDescriptor( $descriptor $modelObject )
                     </table>
 
                 #end
@@ -49,7 +49,7 @@
     </tr>
 #end
 
-#macro( dropdownExtensions $extensionClass $item )
+#macro( dropdownExtensions $extensionClass $modelObject )
 
     #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )
     $descriptors
@@ -79,8 +79,8 @@
     </tr>
 #end
 
-#macro( heteroRadio $item $descriptors $name $doRender )
-    ITEM= $item<br>
+#macro( heteroRadio $modelObject $descriptors $name $doRender )
+    ITEM= $modelObject<br>
     $descriptors
 
     #set( $size = $descriptors.size() + 1 )
@@ -98,7 +98,7 @@
                         </td>
                     </tr>
                     #if( $doRender )
-                        #renderDescriptor( $descriptor $item false );
+                        #renderDescriptor( $descriptor $modelObject false );
                     #else
 
                     #end
