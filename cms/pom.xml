@@ -11,12 +11,44 @@
 
     <artifactId>cms</artifactId>
 
+    <build>
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+
+                    <finalName>${project.artifactId}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>single</goal> <!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
     <dependencies>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <version>${project.version}</version>
-            <artifactId>web-app-base</artifactId>
+            <artifactId>web-core</artifactId>
+            <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
 

@@ -2,8 +2,8 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.seventyeight.web.User;
-import org.seventyeight.web.model.AbstractModelObject;
+import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.CoreRequest;
 
@@ -25,7 +25,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private AbstractTheme theme = null;
     private VelocityContext context;
 
-    private AbstractModelObject modelObject;
+    private PersistedObject modelObject;
 
     private String template = "org/seventyeight/web/main.vm";
 
@@ -65,12 +65,12 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     @Override
-    public void setModelObject( AbstractModelObject modelObject ) {
+    public void setModelObject( PersistedObject modelObject ) {
         this.modelObject = modelObject;
     }
 
     @Override
-    public AbstractModelObject getModelObject() {
+    public PersistedObject getModelObject() {
         return modelObject;
     }
 

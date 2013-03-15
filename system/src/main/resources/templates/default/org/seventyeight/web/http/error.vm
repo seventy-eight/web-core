@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>$code, $header</title>
+    </head>
+
+<body>
+<table style="width:640px;border-style: solid" align="center">
+    <tr>
+        <td style="font-size: 32px; background-color: #abcabc">
+            $code, $header
+        </td>
+    </tr>
+
+    <tr>
+        <td style="font-size: 18px">
+#evaluate($message)
+        </td>
+    </tr>
+
+</table>
+</body>
+</html>

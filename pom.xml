@@ -9,7 +9,7 @@
     <version>0.1.0</version>
 	<packaging>pom</packaging>
 	
-	<name>Seventy Eight Web App Base</name>
+	<name>Web Core</name>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,8 +19,10 @@
         <module>utilities</module>
         <module>database</module>
         <module>core</module>
-        <module>war</module>
+        <module>system</module>
         <module>cms</module>
+        <module>cms-war</module>
+        <module>server</module>
     </modules>
 	
 	<build>

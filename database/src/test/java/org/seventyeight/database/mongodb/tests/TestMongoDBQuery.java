@@ -40,10 +40,10 @@ public class TestMongoDBQuery {
         MongoDBQuery q = new MongoDBQuery().regex( "name", "^Hans.*$" );
         System.out.println( collection.find( q ) );
 
-        MongoDBQuery q2 = new MongoDBQuery().gt( "age", 10 );
+        MongoDBQuery q2 = new MongoDBQuery().greaterThan( "age", 10 );
         System.out.println( collection.find( q2 ) );
 
-        MongoDBQuery q3 = new MongoDBQuery().regex( "name", "^Hans.*$" ).gt( "age", 12 );
+        MongoDBQuery q3 = new MongoDBQuery().regex( "name", "^Hans.*$" ).greaterThan( "age", 12 );
         System.out.println( collection.find( q3 ) );
 
         MongoDBQuery q4 = new MongoDBQuery().is( "name", "Svenne" );

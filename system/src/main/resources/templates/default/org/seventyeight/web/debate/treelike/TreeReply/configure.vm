@@ -1,0 +1,9 @@
+#set( $title = "" )
+#set( $title = $item.getTitle() )
+
+#textField( "title" "Title" $title )
+
+#set( $text = "" )
+#set( $text = $item.getText() )
+
+#textarea( "reply" "Reply" $text )

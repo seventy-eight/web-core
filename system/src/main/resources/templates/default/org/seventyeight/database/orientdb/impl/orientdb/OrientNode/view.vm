@@ -1,0 +1,30 @@
+$item
+
+<table>
+    <tr>
+        <td style="font-weight: bold">Field</td>
+        <td style="font-weight: bold">Value</td>
+    </tr>
+#set ($map = $item.getFieldData() )
+#foreach ($mapEntry in $map.entrySet())
+    <tr>
+        <td style="font-weight: bold">$mapEntry.key</td>
+        <td>$mapEntry.value</td>
+    </tr>
+#end
+
+</table>
+
+
+#set( $doTargetNode = true )
+#set( $set = $item.getEdges( null, $outbound ) )
+#set( $caption = "Out bound relations" )
+#macro( getNode )
+    $l.getTargetNode()
+#end
+#parse( "edges.vm" )
+
+#set( $doTargetNode = false )
+#set( $set = $item.getEdges( null, $inbound ) )
+#set( $caption = "In bound relations" )
+#parse( "edges.vm" )

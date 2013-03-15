@@ -1,6 +1,6 @@
 package org.seventyeight.web.model;
 
-import org.seventyeight.web.User;
+import org.seventyeight.web.nodes.User;
 
 /**
  * @author cwolfgang

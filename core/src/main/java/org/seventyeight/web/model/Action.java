@@ -5,6 +5,7 @@ package org.seventyeight.web.model;
  *         Date: 02-12-12
  *         Time: 15:59
  */
-public interface Action extends ModelObject {
+public interface Action {
     public String getUrlName();
+    public String getName();
 }

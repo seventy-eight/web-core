@@ -11,6 +11,38 @@
 
     <artifactId>web-core</artifactId>
 
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+
+                    <finalName>${project.artifactId}</finalName>
+
+                    <appendAssemblyId>false</appendAssemblyId>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
         <dependency>
@@ -44,16 +76,24 @@
         </dependency>
 
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>6.0</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

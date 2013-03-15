@@ -2,6 +2,7 @@ package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
@@ -28,9 +29,8 @@ public abstract class Descriptor<T extends Describable> {
 
 	public T newInstance() throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
-		return (T) Core.getInstance().createItem( clazz, getCollectionName() );
+		return Core.getInstance().createSubItem( clazz, getCollectionName() );
 	}
-
 
     /**
      * Get the descriptors for

@@ -2,8 +2,8 @@ package org.seventyeight.web.utilities;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.Group;
-import org.seventyeight.web.User;
+import org.seventyeight.web.nodes.Group;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
 
@@ -29,8 +29,8 @@ public class Installer {
         User anonymous = installUser( "anonymous", false );
 
         logger.info( "Installing groups" );
-        Group admins = installGroup( "Admins", admin );
-        admins.addMember( admin );
+        //Group admins = installGroup( "Admins", admin );
+        //admins.addMember( admin );
 
 
     }
@@ -45,7 +45,7 @@ public class Installer {
             user.setVisible( visible );
         }
 
-        user.save( p );
+        user.save( p, null );
 
         return user;
     }
@@ -57,7 +57,7 @@ public class Installer {
         p.put( "name", name );
         p.setUser( owner );
 
-        group.save( p );
+        group.save( p, null );
 
         return group;
     }

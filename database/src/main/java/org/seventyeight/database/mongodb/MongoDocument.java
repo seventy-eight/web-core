@@ -3,9 +3,11 @@ package org.seventyeight.database.mongodb;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.bson.BSONObject;
 import org.seventyeight.database.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,7 +37,46 @@ public class MongoDocument implements Document {
 
     @Override
     public <T> T get( String key ) {
-        return (T) document.get( key );
+        Object data = (T) document.get( key );
+        if( data instanceof BasicDBList ) {
+            return (T) getList( (BasicDBList) data );
+        } else if( data instanceof DBObject ) {
+            return (T) new MongoDocument( (DBObject) data );
+        } else {
+            return (T) data;
+        }
+    }
+
+    private List<Object> getList( BasicDBList list ) {
+        if( list != null ) {
+            List<Object> docs = new ArrayList<Object>( list.size() );
+
+            for( Object o : list ) {
+                docs.add( _get( o ) );
+            }
+
+            return docs;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private <T> T _get( Object o ) {
+        if( o instanceof DBObject ) {
+            return (T) new MongoDocument( ((DBObject)o) );
+        } else {
+            return (T) o;
+        }
+    }
+
+    public <T> T get( String ... keys ) {
+        StringBuilder key = new StringBuilder();
+        key.append( keys[0] );
+        for( int i = 1 ; i < keys.length ; i++ ) {
+            key.append( "." );
+            key.append( keys[i] );
+        }
+        return (T) get( key.toString() );
     }
 
     @Override
@@ -67,6 +108,13 @@ public class MongoDocument implements Document {
     public <T> MongoDocument addToList( String key, T value ) {
         BasicDBList list = (BasicDBList) document.get( key );
 
+        if( list == null ) {
+            list = new BasicDBList();
+            document.put( key, list );
+            //list = (BasicDBList) document.get( key );
+        }
+        System.out.println( "------>" + list );
+
         if( value instanceof MongoDocument ) {
             list.add( ((MongoDocument)value).getDBObject() );
         } else {
@@ -77,15 +125,19 @@ public class MongoDocument implements Document {
     }
 
     public List<MongoDocument> getList( String key ) {
-        List<BasicDBObject> list = (List<BasicDBObject>) document.get ( key );
+        List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
 
-        List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
+        if( list != null ) {
+            List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
 
-        for( BasicDBObject o : list ) {
-            docs.add( new MongoDocument( o ) );
+            for( BasicDBObject o : list ) {
+                docs.add( new MongoDocument( o ) );
+            }
+
+            return docs;
+        } else {
+            return Collections.emptyList();
         }
-
-        return docs;
     }
 
     public MongoDocument addExtension( MongoDocument extensionData ) {

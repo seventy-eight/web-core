@@ -1,6 +1,6 @@
 package org.seventyeight.web.model;
 
-import org.seventyeight.web.User;
+import org.seventyeight.web.nodes.User;
 
 public interface ParameterRequest {	
 	public User getUser();
@@ -12,6 +12,6 @@ public interface ParameterRequest {
 	public <T> T getValue( String key );
     public <T> T getValue( String key, T defaultValue );
 
-    public AbstractModelObject getModelObject();
-    public void setModelObject( AbstractModelObject modelObject );
+    public PersistedObject getModelObject();
+    public void setModelObject( PersistedObject modelObject );
 }

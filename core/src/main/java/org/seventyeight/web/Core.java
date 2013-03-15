@@ -1,5 +1,7 @@
 package org.seventyeight.web;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBManager;
@@ -7,36 +9,48 @@ import org.seventyeight.database.mongodb.MongoDatabase;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
-import org.seventyeight.web.handlers.GizmoException;
-import org.seventyeight.web.handlers.TopLevelGizmoHandler;
+import org.seventyeight.web.extensions.footer.Footer;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.nodes.StaticFiles;
+import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.nodes.Users;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
+import org.seventyeight.web.utilities.ExecuteUtils;
+import org.seventyeight.web.utilities.Installer;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author cwolfgang
  *         Date: 16-02-13
  *         Time: 23:16
  */
-public class Core {
+public class Core extends Actionable implements NodeItem {
 
     private static Logger logger = Logger.getLogger( Core.class );
+
+    public static final String TEMPLATE_PATH_NAME = "templates";
+    public static final String THEMES_PATH_NAME = "themes";
+    public static final String PLUGINS_PATH_NAME = "plugins";
 
     private static Core instance;
 
     private TemplateManager templateManager = new TemplateManager();
-
-    private TopLevelGizmoHandler topLevelGizmoHandler = new TopLevelGizmoHandler();
 
     private Authentication authentication = new SimpleAuthentication();
     private SessionManager sessionManager = new SessionManager();
@@ -67,13 +81,29 @@ public class Core {
     /**
      * A {@link Map} of top level actions, given by its name
      */
-    private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
+    //private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
 
-    /* Paths */
+    /**
+     * A map of first level {@link NodeItem}s registered to the core
+     */
+    private ConcurrentMap<String, NodeItem> items = new ConcurrentHashMap<String, NodeItem>();
+
+    /**
+     * The list of top level {@link Action}s
+     */
+    private List<Action> actions = new CopyOnWriteArrayList<Action>();
+
+    /**
+     * Path to the ...
+     */
     private File path;
     private File orientdbPath;
     private File pluginsPath;
     private File uploadPath;
+
+    /**
+     * This path contains the themes. Each theme in a sub directory
+     */
     private File themesPath;
 
 
@@ -83,28 +113,60 @@ public class Core {
         public static final String EXTENSIONS = "extensions";
     }
 
-    public Core( String dbname ) throws UnknownHostException {
+    public Core( File path, String dbname ) {
         if( instance != null ) {
             throw new IllegalStateException( "Instance already defined" );
         }
 
-        dbManager = new MongoDBManager( dbname );
+        try {
+            dbManager = new MongoDBManager( dbname );
+        } catch( UnknownHostException e ) {
+            throw new IllegalArgumentException( e );
+        }
         db = dbManager.getDatabase();
+        this.path = path;
+
+        /* Mandatory top level Actions */
+        actions.add( new StaticFiles() );
+
+        items.put( "user", new Users( this ) );
+
+        /* Class loader */
+        classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
+        this.pluginLoader = new Loader( classLoader );
+
+        /**/
+        addDescriptor( new User.UserDescriptor() );
+
+        /* test */
+        addDescriptor( new Footer.FooterDescriptor() );
+
+        instance = this;
     }
 
     public static Core getInstance() {
         return instance;
     }
 
+    @Override
+    public NodeItem getParent() {
+        return null;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Root";
+    }
+
     public MongoDatabase getDatabase() {
         return db;
     }
 
-    public <T extends AbstractModelObject> T createItem( Class<?> clazz ) throws ItemInstantiationException {
-        return createItem( clazz, ITEM_COLLECTION_NAME );
+    public <T extends NodeItem> T createNode( Class<T> clazz ) throws ItemInstantiationException {
+        return createNode( clazz, ITEM_COLLECTION_NAME );
     }
 
-    public <T extends AbstractModelObject> T createItem( Class<?> clazz, String collectionName ) throws ItemInstantiationException {
+    public <T extends NodeItem> T createNode( Class<T> clazz, String collectionName ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
         MongoDBCollection collection = db.createCollection( collectionName );
@@ -112,8 +174,8 @@ public class Core {
 
         T instance = null;
         try {
-            Constructor<?> c = clazz.getConstructor( MongoDocument.class );
-            instance = (T) c.newInstance( document );
+            Constructor<T> c = clazz.getConstructor( NodeItem.class, MongoDocument.class );
+            instance = c.newInstance( this, document );
         } catch( Exception e ) {
             throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
         }
@@ -124,7 +186,34 @@ public class Core {
         return instance;
     }
 
-    public <T extends AbstractModelObject> T getItem( MongoDocument document ) throws ItemInstantiationException {
+    public <T extends Documented> T createSubItem( Class<T> clazz, String collectionName ) throws ItemInstantiationException {
+        logger.debug( "Creating sub item " + clazz.getName() );
+
+        MongoDocument document = new MongoDocument();
+
+        T instance = null;
+        try {
+            Constructor<T> c = clazz.getConstructor( MongoDocument.class );
+            instance = c.newInstance( document );
+        } catch( Exception e ) {
+            throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
+        }
+
+        document.set( "class", clazz.getName() );
+
+        return instance;
+    }
+
+
+
+    /**
+     * Get an object from a {@link MongoDocument}
+     * @param document
+     * @param <T>
+     * @return
+     * @throws ItemInstantiationException
+     */
+    public <T extends PersistedObject> T getItem( MongoDocument document ) throws ItemInstantiationException {
         String clazz = (String) document.get( "class" );
 
         if( clazz == null ) {
@@ -134,14 +223,182 @@ public class Core {
         logger.debug( "ModelObject class: " + clazz );
 
         try {
-            Class<ModelObject> eclass = (Class<ModelObject>) Class.forName(clazz, true, classLoader );
+            Class<PersistedObject> eclass = (Class<PersistedObject>) Class.forName(clazz, true, classLoader );
             Constructor<?> c = eclass.getConstructor( MongoDocument.class );
             return (T) c.newInstance( document );
         } catch( Exception e ) {
             logger.error( "Unable to get the class " + clazz );
             throw new ItemInstantiationException( "Unable to get the class " + clazz, e );
         }
+    }
 
+    @Override
+    public NodeItem getNode( String name ) {
+        if( items.containsKey( name ) ) {
+            return items.get( name );
+        } else {
+            return null;
+        }
+    }
+
+    public void addNode( String urlName, NodeItem node ) {
+        items.put( urlName, node );
+    }
+
+    @Override
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public Object resolve( String path ) {
+
+        return null;
+    }
+
+    /**
+     * Render the path from the URL
+     */
+    public void render( Request request, Response response ) throws TemplateException, IOException, ItemInstantiationException {
+        LinkedList<String> tokens = new LinkedList<String>();
+        NodeItem node = null;
+        Exception exception = null;
+        try {
+            node = resolveItem( request.getRequestURI(), tokens );
+
+            if( tokens.isEmpty() ) {
+                ExecuteUtils.execute( request, response, node, "index" );
+                return;
+            }
+        } catch( NotFoundException e ) {
+            logger.debug( "Exception is set to " + e );
+            exception = e;
+        }
+
+        /* End of the line, render the node it self with index */
+        if( node instanceof Actionable ) {
+            Actionable a = (Actionable) node;
+            Action action = null;
+            try {
+                action = resolveAction( request, response, a, tokens );
+            } catch( Exception e ) {
+                Response.NOT_FOUND_404.render( request, response, exception );
+            }
+
+            if( action != null ) {
+                if( action instanceof Autonomous ) {
+                   /* Don't do anything */
+                } else {
+
+                    try {
+                        switch( tokens.size() ) {
+                            case 0:
+                                ExecuteUtils.execute( request, response, action, "index" );
+                                break;
+
+                            case 1:
+                                ExecuteUtils.execute( request, response, action, tokens.get( 0 ) );
+                                break;
+
+                            default:
+                                Response.NOT_FOUND_404.render( request, response, exception );
+                        }
+                    } catch( Exception e ) {
+                        logger.log( Level.WARN, "", e );
+                        Response.NOT_FOUND_404.render( request, response, exception );
+                    }
+                }
+            } else {
+                Response.NOT_FOUND_404.render( request, response, exception );
+            }
+
+        } else {
+            Response.NOT_FOUND_404.render( request, response, exception );
+        }
+    }
+
+
+    /**
+     * Resolve the {@link org.seventyeight.web.model.NodeItem}s from a path
+     * @param path
+     * @param tokens
+     * @return
+     */
+    public NodeItem resolveItem( String path, List<String> tokens ) throws NotFoundException {
+        logger.debug( "Resolving " + path );
+        StringTokenizer tokenizer = new StringTokenizer( path, "/" );
+
+        NodeItem current = this;
+        NodeItem last = this;
+
+        while( tokenizer.hasMoreTokens() ) {
+            String token = tokenizer.nextToken();
+            logger.debug( "Url name: " + token );
+
+            current = current.getNode( token );
+
+            if( current == null ) {
+                tokens.add( token );
+                break;
+            }
+
+            /* TODO Something about authorization? */
+
+            last = current;
+        }
+
+        while( tokenizer.hasMoreTokens() ) {
+            tokens.add( tokenizer.nextToken() );
+        }
+
+        return last;
+    }
+
+    public Action resolveAction( Request request, Response response, Actionable actionable, Queue<String> urlNames ) throws ItemInstantiationException, IOException {
+        logger.debug( "Resolving actions" );
+
+        String urlName = "index";
+        PersistedObject obj = null;
+
+        Action a = null;
+        while( ( urlName = urlNames.peek() ) != null ) {
+            logger.debug( "Url name: " + urlName );
+
+            a = null;
+            for( Action action : actionable.getActions() ) {
+                if( action.getUrlName().equals( urlName ) ) {
+                    logger.debug( "Action matches " + action );
+                    a = action;
+                } else {
+                    logger.debug( "Action does NOT match: " + action );
+                }
+            }
+
+            if( a == null ) {
+                break;
+            }
+
+            /* Pop the name */
+            urlNames.remove();
+
+            /**/
+            if( a instanceof Autonomous) {
+                logger.debug( a + " is autonomous" );
+                ((Autonomous)a).autonomize( urlName, request, response );
+                return a;
+            }
+
+            if( a instanceof Actionable ) {
+                actionable = (Actionable) a;
+            } else {
+                break;
+            }
+        }
+
+        return a;
+    }
+
+    public Action getAction( Actionable actionable, String action ) {
+        return null;
     }
 
 
@@ -204,18 +461,6 @@ public class Core {
         return templateManager;
     }
 
-    public TopLevelGizmoHandler getTopLevelGizmoHandler() {
-        return topLevelGizmoHandler;
-    }
-
-    public TopLevelGizmo getTopLevelGizmo( String name ) throws GizmoException {
-        if( topLevelGizmos.containsKey( name ) ) {
-            return topLevelGizmos.get( name );
-        } else {
-            throw new GizmoException( "The GIZMO handler " + name + " does not exist" );
-        }
-    }
-
     public Authentication getAuthentication() {
         return authentication;
     }
@@ -233,5 +478,79 @@ public class Core {
 
     public User getAnonymousUser() {
         return anonymous;
+    }
+
+
+    /**
+     * From the given path, get all jars and extract them to their directories
+     * @param basePath
+     * @return
+     * @throws IOException
+     */
+    public static List<File> extractPlugins( File basePath ) throws IOException {
+        logger.debug( "Extracting plugins to " + PLUGINS_PATH_NAME );
+        File path = new File( basePath, PLUGINS_PATH_NAME );
+        File themes = new File( basePath, THEMES_PATH_NAME );
+
+        FileUtils.deleteDirectory( themes );
+        themes.mkdir();
+
+        File[] files = path.listFiles( FileUtilities.getExtension( "jar" ) );
+
+        List<File> plugins = new ArrayList<File>();
+        for( File f : files ) {
+            logger.debug( "Extracting plugin " + f );
+            String p = f.getName();
+            p = p.substring( 0, ( p.length() - 4 ) );
+            File op = new File( path, p );
+            FileUtils.deleteDirectory( op );
+
+            FileUtilities.extractArchive( f, op );
+            plugins.add( op );
+
+            /* Copy any theme directory to path */
+            File pthemes = new File( op, "themes" );
+            if( pthemes.exists() ) {
+                logger.debug( "Copying themes from " + pthemes + " to " + themes );
+                FileUtils.copyDirectory( pthemes, themes );
+            }
+        }
+
+        return plugins;
+    }
+
+    public File getThemeFile( AbstractTheme theme, String filename ) throws IOException {
+        File themePath = new File( themesPath, theme.getName() );
+        File themeFile = new File( themePath, filename );
+
+        if( themeFile.exists() ) {
+            return themeFile;
+        }
+
+        throw new IOException( "Theme file " + themeFile + " does not exist" );
+    }
+
+    public void setThemesPath( File path ) {
+        this.themesPath = path;
+    }
+
+    public org.seventyeight.loader.ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public void getPlugins( List<File> plugins ) {
+        for( File p : plugins ) {
+            logger.debug( "Plugin " + p );
+            try {
+                /* Maybe check for classes directory */
+                pluginLoader.load( p, "" );
+            } catch( Exception e ) {
+                logger.error( "Unable to load " + p, e );
+            }
+        }
+    }
+
+    public File getPath() {
+        return path;
     }
 }

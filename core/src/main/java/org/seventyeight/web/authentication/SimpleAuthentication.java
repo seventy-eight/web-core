@@ -2,7 +2,8 @@ package org.seventyeight.web.authentication;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.User;
+import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.nodes.Users;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -48,7 +49,7 @@ public class SimpleAuthentication implements Authentication {
         if( !username.isEmpty() ) {
             User user = null;
             try {
-                user = User.getUserByUsername( username );
+                user = Users.getUserByUsername( null, username );
             } catch( ItemInstantiationException e ) {
                 throw new AuthenticationException( e );
             }

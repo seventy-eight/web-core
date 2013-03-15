@@ -1,6 +1,8 @@
 package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.web.Core;
+import org.seventyeight.web.handlers.template.TemplateException;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
@@ -427,6 +429,41 @@ public class Response extends HttpServletResponseWrapper {
             this.total = total;
         }
 
+    }
+
+    public static HttpCode NOT_FOUND_404 = new HttpCode( 404, "Page not found", "$request.getRequestURI()" );
+
+    public static class HttpCode {
+        private int code;
+        private String errorHeader;
+        private String defaultMessage;
+
+        public HttpCode( int code, String errorHeader, String defaultMessage ) {
+            this.code = code;
+            this.errorHeader = errorHeader;
+            this.defaultMessage = defaultMessage;
+        }
+
+        public void render( Request request, Response response ) throws TemplateException, IOException {
+            render( request, response, defaultMessage );
+        }
+
+        public void render( Request request, Response response, Exception e ) throws TemplateException, IOException {
+            if( e != null ) {
+                render( request, response, e.getMessage() );
+            } else {
+                render( request, response, defaultMessage );
+            }
+        }
+
+        public void render( Request request, Response response, String message ) throws TemplateException, IOException {
+            request.getContext().put( "header", errorHeader );
+            request.getContext().put( "message", message );
+            request.getContext().put( "code", code );
+            request.getContext().put( "request", request );
+
+            response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
+        }
     }
 
 }

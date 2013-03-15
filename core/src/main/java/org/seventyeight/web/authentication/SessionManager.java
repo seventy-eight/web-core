@@ -6,7 +6,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.User;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.ItemInstantiationException;
 
 import java.security.NoSuchAlgorithmException;
@@ -30,7 +30,7 @@ public class SessionManager {
 	private Session createSessionNode( String hash, Date endDate ) throws ItemInstantiationException {
 		logger.debug( "Creating new session" );
 		
-		Session session = Core.getInstance().createItem( Session.class, SESSIONS );
+		Session session = Core.getInstance().createNode( Session.class, SESSIONS );
 		session.getDocument().set( "hash", hash );
         session.getDocument().set( "created", new Date().getTime() );
         session.getDocument().set( Session.__END_DATE, endDate.getTime() );
@@ -60,7 +60,7 @@ public class SessionManager {
         session.setCreated();
         session.setHash( hash );
         session.setUser( user );
-		
+
 		return session;
 	}
 	
@@ -72,7 +72,7 @@ public class SessionManager {
 
         Session actual = null;
         for( MongoDocument doc : docs ) {
-            Session session = new Session( doc );
+            Session session = new Session( Core.getInstance(), doc );
             logger.debug( "Comparing " + session.getEndingAsDate().getTime() + " with " + new Date().getTime() );
             if( session.getEndingAsDate().after( new Date() ) ) {
                 logger.debug( "A valid session found" );

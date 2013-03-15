@@ -124,8 +124,8 @@ public class TemplateManager {
 				                                       + "org.seventyeight.web.velocity.html.GroupSelectInputDirective,"
 				                                       + "org.seventyeight.web.velocity.html.ThemeSelectInputDirective,"
 				                                       + "org.seventyeight.web.velocity.html.I18NDirective,"
-				                                       + "org.seventyeight.web.velocity.html.ViewDirective,"
-				                                       + "org.seventyeight.web.velocity.html.ResourcePreviewDirective,"
+				                                       //+ "org.seventyeight.web.velocity.html.ViewDirective,"
+				                                       + "org.seventyeight.web.velocity.html.PreviewDirective,"
 				                                       + "org.seventyeight.web.velocity.html.ResourceSelectorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderDescriptorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderObject,"
@@ -247,7 +247,7 @@ public class TemplateManager {
          * @throws TemplateException
          */
 		public String render( Object object, String template ) throws TemplateException {
-			context.put( "modelObject", object );
+			context.put( "item", object );
 			return render( template );
 		}
 
@@ -265,7 +265,7 @@ public class TemplateManager {
 
         public String renderObject( Object object, String method, boolean trySuper ) throws TemplateException {
             Template template = getTemplate( theme, object, method, trySuper );
-            context.put( "modelObject", object );
+            context.put( "item", object );
             return render( template );
         }
 
@@ -284,13 +284,13 @@ public class TemplateManager {
 
         public String renderClass( Object object, Class clazz, String method ) throws TemplateException {
             Template template = getTemplateFile( theme, clazz, method, true );
-            context.put( "modelObject", object );
+            context.put( "item", object );
             return render( template );
         }
 
         public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws TemplateException {
             Template template = getTemplateFile( theme, clazz, method, trySuper );
-            context.put( "modelObject", object );
+            context.put( "item", object );
             return render( template );
         }
 
