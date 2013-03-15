@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.seventyeight</groupId>
-    <artifactId>web-app-base</artifactId>
+    <artifactId>web-core-pom</artifactId>
     <version>0.1.0</version>
 	<packaging>pom</packaging>
 	
-	<name>Web Core</name>
+	<name>Web Core Pom</name>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

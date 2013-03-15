@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>web-app-base</artifactId>
+        <artifactId>web-core-pom</artifactId>
         <groupId>org.seventyeight</groupId>
         <version>0.1.0</version>
     </parent>
