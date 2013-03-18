@@ -11,7 +11,7 @@ import java.util.List;
  *         Date: 24-02-13
  *         Time: 21:47
  */
-public abstract class Entity extends AbstractNodeItem {
+public abstract class Entity extends AbstractNodeItem implements CreatableNode {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 

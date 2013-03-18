@@ -2,7 +2,6 @@ package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
@@ -53,7 +52,7 @@ public abstract class Descriptor<T extends Describable> {
     }
 
     public String getCollectionName() {
-        return Core.ITEM_COLLECTION_NAME;
+        return Core.NODE_COLLECTION_NAME;
     }
 
     public String getJsonId() {

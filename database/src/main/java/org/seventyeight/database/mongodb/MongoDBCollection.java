@@ -1,9 +1,11 @@
 package org.seventyeight.database.mongodb;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +68,13 @@ public class MongoDBCollection {
         }
 
         return docs;
+    }
+
+    public MongoDocument getDocumentById( String id ) {
+        BasicDBObject query = new BasicDBObject();
+        query.put( "_id", new ObjectId( id ) );
+        DBObject dbObj = collection.findOne( query );
+        return new MongoDocument( dbObj );
     }
 
     public void remove( MongoDBQuery query ) {

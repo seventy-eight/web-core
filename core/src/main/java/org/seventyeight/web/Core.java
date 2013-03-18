@@ -10,6 +10,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
+import org.seventyeight.web.actions.NewContent;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
@@ -24,7 +25,6 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
 import org.seventyeight.web.utilities.ExecuteUtils;
-import org.seventyeight.web.utilities.Installer;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class Core extends Actionable implements NodeItem {
 
     private User anonymous;
 
-    public static final String ITEM_COLLECTION_NAME = "items";
+    public static final String NODE_COLLECTION_NAME = "nodes";
 
     private org.seventyeight.loader.ClassLoader classLoader = null;
     private Loader pluginLoader;
@@ -77,6 +77,8 @@ public class Core extends Actionable implements NodeItem {
      * This is used to map an extension class/interface to those {@link Describable}s {@link Descriptor}s implementing them.
      */
     private Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
+
+    private Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
 
     /**
      * A {@link Map} of top level actions, given by its name
@@ -128,6 +130,7 @@ public class Core extends Actionable implements NodeItem {
 
         /* Mandatory top level Actions */
         actions.add( new StaticFiles() );
+        actions.add( new NewContent() );
 
         items.put( "user", new Users( this ) );
 
@@ -162,14 +165,11 @@ public class Core extends Actionable implements NodeItem {
         return db;
     }
 
-    public <T extends NodeItem> T createNode( Class<T> clazz ) throws ItemInstantiationException {
-        return createNode( clazz, ITEM_COLLECTION_NAME );
-    }
 
-    public <T extends NodeItem> T createNode( Class<T> clazz, String collectionName ) throws ItemInstantiationException {
+    public <T extends NodeItem> T createNode( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
-        MongoDBCollection collection = db.createCollection( collectionName );
+        MongoDBCollection collection = db.createCollection( NODE_COLLECTION_NAME );
         MongoDocument document = new MongoDocument();
 
         T instance = null;
@@ -186,7 +186,7 @@ public class Core extends Actionable implements NodeItem {
         return instance;
     }
 
-    public <T extends Documented> T createSubItem( Class<T> clazz, String collectionName ) throws ItemInstantiationException {
+    public <T extends Documented> T createSubItem( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating sub item " + clazz.getName() );
 
         MongoDocument document = new MongoDocument();
@@ -230,6 +230,14 @@ public class Core extends Actionable implements NodeItem {
             logger.error( "Unable to get the class " + clazz );
             throw new ItemInstantiationException( "Unable to get the class " + clazz, e );
         }
+    }
+
+    public NodeItem getNodeById( String id ) throws ItemInstantiationException {
+        MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
+
+        PersistedObject obj = getItem( d );
+
+        return (NodeItem) obj;
     }
 
     @Override
@@ -452,6 +460,9 @@ public class Core extends Actionable implements NodeItem {
         }
     }
 
+    public List<Descriptor> getCreateableDescriptors() {
+        return getExtensionDescriptors( CreatableNode.class );
+    }
 
     public AbstractTheme getDefaultTheme() {
         return defaultTheme;

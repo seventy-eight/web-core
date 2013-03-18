@@ -15,9 +15,10 @@ import org.seventyeight.web.utilities.JsonUtils;
 import java.util.List;
 
 /**
+ *
+ * This is the base implementation of a node in the tree.
+ *
  * @author cwolfgang
- *         Date: 19-02-13
- *         Time: 13:45
  */
 public abstract class AbstractNodeItem extends PersistedObject implements NodeItem, Authorizer, Describable {
 
@@ -86,6 +87,10 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
 
     public Object getIdentifier() {
         return document.get( "_id" );
+    }
+
+    public String getUrl() {
+        return "/get/" + getIdentifier();
     }
 
     public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
@@ -190,6 +195,10 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
         return Authorization.NONE;
     }
 
+    public void setOwner( User owner ) {
+        document.set( "owner", owner.getIdentifier() );
+    }
+
     public Date getCreatedAsDate() {
         return new Date( (Long)getField( "created" ) );
     }
@@ -209,6 +218,10 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
         } else {
             return null;
         }
+    }
+
+    public void setTitle( String title ) {
+        document.set( "title", title );
     }
 
     public Long getUpdated() {

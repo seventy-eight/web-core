@@ -50,7 +50,7 @@ public class DatabaseContextListener implements ServletContextListener {
                 /* Paths added first is served first */
                 //gd.getTemplateManager().addStaticPath( new File( "C:/projects/graph-dragon/war/src/main/webapp/static" ) );
                 //gd.getTemplateManager().addStaticPath( new File( gd.getPath(), "static" ) );
-                core.getTemplateManager().addStaticPath( new File( "C:/Users/Christian/projects/web-app-base/cms-war/src/main/webapp/static" ) );
+                core.getTemplateManager().addStaticPath( new File( "C:/Users/Christian/projects/web-core/cms-war/src/main/webapp/static" ) );
 
 
                 //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
@@ -65,16 +65,16 @@ public class DatabaseContextListener implements ServletContextListener {
                 }
                 */
 
-                paths.add( new File( "C:/Users/Christian/projects/web-app-base/system/src/main/resources/templates" ) );
+                paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
 
                 /* LIB */
-                paths.add( new File( "C:/Users/Christian/projects/seventy-eight/system/src/main/resources/lib" ) );
+                paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
                 Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
 
                 //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
                 logger.info( "Loading plugins" );
-                core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/seventy-eight.jar" ).toURI().toURL() } );
+                core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
                 core.getPlugins( plugins );
 
                 logger.info( "Loading templates" );
@@ -102,7 +102,7 @@ public class DatabaseContextListener implements ServletContextListener {
             */
 
             /* Post actions */
-            Core.getInstance().setThemesPath( new File( "C:/Users/Christian/projects/web-app-base/system/src/main/resources/themes" ) );
+            Core.getInstance().setThemesPath( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/themes" ) );
 
 
             /* INSTALL */

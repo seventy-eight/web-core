@@ -1,0 +1,23 @@
+<form action="/new/create" method="post">
+
+    <table style="width: ; border-collapse: collapse;">
+
+        <tr>
+            <td>
+                Title
+                <input type="text" name="title">
+            </td>
+        </tr>
+
+        #heteroRadio( "" $core.getCreateableDescriptors() "className" )
+
+        <tr>
+            <td align="center">
+                <input type="submit" value="Create">
+            </td>
+        </tr>
+
+
+    </table>
+
+</form>
