@@ -28,7 +28,7 @@ public abstract class Descriptor<T extends Describable> {
 
 	public T newInstance() throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
-		return Core.getInstance().createSubItem( clazz, getCollectionName() );
+		return Core.getInstance().createSubItem( clazz );
 	}
 
     /**
@@ -49,10 +49,6 @@ public abstract class Descriptor<T extends Describable> {
 
     public String getId() {
         return getClazz().getName();
-    }
-
-    public String getCollectionName() {
-        return Core.NODE_COLLECTION_NAME;
     }
 
     public String getJsonId() {

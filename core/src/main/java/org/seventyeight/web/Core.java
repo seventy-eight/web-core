@@ -460,7 +460,7 @@ public class Core extends Actionable implements NodeItem {
         }
     }
 
-    public List<Descriptor> getCreateableDescriptors() {
+    public List<Descriptor> getCreatableDescriptors() {
         return getExtensionDescriptors( CreatableNode.class );
     }
 

@@ -56,7 +56,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
         }
 
         /* Persist */
-        MongoDBCollection.get( Core.getInstance().getDescriptor( getClass() ).getCollectionName() ).save( document );
+        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).save( document );
     }
 
     public Saver getSaver( CoreRequest request ) {
@@ -153,7 +153,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
      * Fast track saving the node
      */
     public void save() {
-        MongoDBCollection.get( Core.getInstance().getDescriptor( getClass() ).getCollectionName() ).save( document );
+        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).save( document );
     }
 
     @Override

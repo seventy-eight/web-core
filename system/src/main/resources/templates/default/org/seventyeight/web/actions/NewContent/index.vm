@@ -9,7 +9,7 @@
             </td>
         </tr>
 
-        #heteroRadio( "" $core.getCreateableDescriptors() "className" )
+        #heteroRadio( "" $core.getCreatableDescriptors() "className" )
 
         <tr>
             <td align="center">

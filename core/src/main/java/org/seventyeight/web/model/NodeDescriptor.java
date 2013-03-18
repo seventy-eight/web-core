@@ -15,6 +15,6 @@ public abstract class NodeDescriptor<T extends AbstractNodeItem> extends Descrip
     @Override
     public T newInstance() throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        return Core.getInstance().createNode( clazz, getCollectionName() );
+        return Core.getInstance().createNode( clazz );
     }
 }

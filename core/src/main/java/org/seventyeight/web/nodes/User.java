@@ -111,11 +111,6 @@ public class User extends Entity {
     public static class UserDescriptor extends NodeDescriptor<User> {
 
         @Override
-        public String getCollectionName() {
-            return USERS;
-        }
-
-        @Override
         public String getDisplayName() {
             return "User";
         }

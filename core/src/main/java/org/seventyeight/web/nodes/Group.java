@@ -54,11 +54,6 @@ public class Group extends Entity {
     public static class GroupDescriptor extends Descriptor<Group> {
 
         @Override
-        public String getCollectionName() {
-            return GROUPS;
-        }
-
-        @Override
         public String getDisplayName() {
             return "Group";
         }

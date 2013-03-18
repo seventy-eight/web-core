@@ -26,7 +26,7 @@ public class NewContent implements Action {
         return "New content";
     }
 
-    public void doCreate( Request request, Response response, JsonObject jsonData ) throws IOException {
+    public void doCreate( Request request, Response response ) throws IOException {
         String className = request.getValue( "className" );
 
         if( className == null ) {
@@ -60,7 +60,7 @@ public class NewContent implements Action {
         r.setOwner( request.getUser() );
         r.save();
 
-        response.sendRedirect( r.getUrl() + "configure" );
+        response.sendRedirect( r.getUrl() + "/configure" );
         //ResourceUtils.getConfigureResourceView( request, response, r, descriptor );
     }
 }

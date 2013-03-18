@@ -30,7 +30,7 @@ public class SessionManager {
 	private Session createSessionNode( String hash, Date endDate ) throws ItemInstantiationException {
 		logger.debug( "Creating new session" );
 		
-		Session session = Core.getInstance().createNode( Session.class, SESSIONS );
+		Session session = Core.getInstance().createNode( Session.class );
 		session.getDocument().set( "hash", hash );
         session.getDocument().set( "created", new Date().getTime() );
         session.getDocument().set( Session.__END_DATE, endDate.getTime() );

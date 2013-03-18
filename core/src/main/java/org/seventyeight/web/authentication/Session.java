@@ -85,11 +85,6 @@ public class Session extends AbstractNodeItem {
     public static class SessionsDescriptor extends Descriptor<Session> {
 
         @Override
-        public String getCollectionName() {
-            return SessionManager.SESSIONS;
-        }
-
-        @Override
         public String getDisplayName() {
             return "Session";
         }
