@@ -1,6 +1,7 @@
 package org.seventyeight.web.utilities;
 
 import com.google.gson.JsonObject;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.Core;
@@ -23,7 +24,7 @@ public class ExecuteUtils {
 
     }
 
-    public static void execute( Request request, Response response, Object object, String urlName ) throws TemplateException, IOException {
+    public static void execute( Request request, Response response, Object object, String urlName ) throws Exception {
         logger.debug( "EXECUTE: " + object + ", " + urlName );
 
         /* First try to find a view, if not a POST */
@@ -31,8 +32,11 @@ public class ExecuteUtils {
             logger.debug( "ModelObject: " + object + " -> " + urlName );
             executeMethod( object, request, response, urlName );
             return;
-        } catch( Exception e ) {
+        } catch( InvocationTargetException e ) {
+            throw (Exception)e.getCause();
+        } catch( ReflectiveOperationException e ) {
             logger.debug( object + " does not not have " + urlName + ", " + e.getMessage() );
+            logger.log( Level.WARN, "Failed", e );
         }
 
         logger.debug( "TRYING VIEW FILE" );
@@ -50,17 +54,7 @@ public class ExecuteUtils {
         Method method = getRequestMethod( object, actionMethod );
         logger.debug( "FOUND METHOD: " + method );
 
-        if( request.isRequestPost() ) {
-            JsonObject json = null;
-            try {
-                json = JsonUtils.getJsonFromRequest( request );
-            } catch ( Exception e ) {
-                logger.debug( e.getMessage() );
-            }
-            method.invoke( object, request, response, json );
-        } else {
-            method.invoke( object, request, response );
-        }
+        method.invoke( object, request, response );
     }
 
     private static Method getRequestMethod( Object object, String method ) throws NoSuchMethodException {

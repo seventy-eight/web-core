@@ -16,6 +16,17 @@ public class NewContent implements Action {
 
     private static Logger logger = Logger.getLogger( NewContent.class );
 
+    private Node parent;
+
+    public NewContent( Node parent ) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Node getParent() {
+        return parent;
+    }
+
     @Override
     public String getUrlName() {
         return "new";
@@ -51,7 +62,9 @@ public class NewContent implements Action {
         try {
             r = descriptor.newInstance();
             String title = request.getValue( "title", "" );
+            logger.debug( "Title is " + title );
             r.setTitle( title );
+            r.save();
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );
         }

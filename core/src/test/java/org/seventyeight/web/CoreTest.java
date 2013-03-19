@@ -93,7 +93,7 @@ public class CoreTest {
 
         LinkedList<String> tokens = new LinkedList<String>();
         Object o = Core.getInstance().resolveItem( "/user/wolle/footer", tokens );
-        Action action = Core.getInstance().resolveAction( null, null, (Actionable) o, tokens );
+        Object action = Core.getInstance().resolveAction( null, null, (Actionable) o, tokens );
 
         assertThat( tokens.size(), is( 0 ) );
         assertTrue( action instanceof Footer.FooterAction );

@@ -26,11 +26,11 @@ public class MongoDBCollection {
     }
 
     public MongoDBCollection( String colletionName ) {
-        this.collection = MongoDBManager.getInstance().getDatabase().createCollection( colletionName ).getCollection();
+        this.collection = MongoDBManager.getInstance().getDatabase().getCollection( colletionName ).getCollection();
     }
 
     public static MongoDBCollection get( String colletionName ) {
-        return MongoDBManager.getInstance().getDatabase().createCollection( colletionName );
+        return MongoDBManager.getInstance().getDatabase().getCollection( colletionName );
     }
 
     public MongoDBCollection save( MongoDocument document ) {

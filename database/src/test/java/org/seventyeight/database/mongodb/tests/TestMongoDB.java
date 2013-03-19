@@ -23,7 +23,7 @@ public class TestMongoDB {
 
     @Test
     public void test1() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d = new MongoDocument();
         d.set( "snade", "made" );
@@ -37,7 +37,7 @@ public class TestMongoDB {
 
     @Test
     public void test2() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d1 = new MongoDocument();
         MongoDocument d2 = new MongoDocument();
@@ -53,7 +53,7 @@ public class TestMongoDB {
 
     @Test
     public void test3() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME + "1" );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME + "1" );
 
         MongoDocument parent = new MongoDocument();
         parent.setList( "childs" );
@@ -79,7 +79,7 @@ public class TestMongoDB {
 
     @Test
     public void test4() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME + "2" );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME + "2" );
 
         MongoDocument d1 = new MongoDocument();
         d1.set( "ONE", 1 );
@@ -95,7 +95,7 @@ public class TestMongoDB {
 
     @Test
     public void test5() {
-        MongoDBCollection collection = env.getDatabase().createCollection( "groups" );
+        MongoDBCollection collection = env.getDatabase().getCollection( "groups" );
 
         MongoDocument d1 = new MongoDocument();
         d1.set( "name", "The gang" );

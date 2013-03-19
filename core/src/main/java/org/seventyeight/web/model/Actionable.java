@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 03-12-12
- *         Time: 09:56
  */
 public abstract class Actionable {
 
@@ -18,14 +16,19 @@ public abstract class Actionable {
         return Collections.emptyList();
     }
 
-    public Object getDynamic( NodeItem parent, String token ) {
+    /**
+     * Return a dynamic object, null if nothing applies
+     * @param token
+     * @return
+     */
+    public Object getDynamic( String token ) {
         for( Action a : getActions() ) {
-            if( a==null ) {
+            if( a == null ) {
                 continue;
             }
 
             String urlName = a.getUrlName();
-            if( urlName==null ) {
+            if( urlName == null ) {
                 continue;
             }
 
@@ -33,6 +36,7 @@ public abstract class Actionable {
                 return a;
             }
         }
+
         return null;
     }
 }

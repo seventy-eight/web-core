@@ -9,8 +9,6 @@ import org.seventyeight.web.model.SavingException;
 
 /**
  * @author cwolfgang
- *         Date: 01-12-12
- *         Time: 22:29
  */
 public class Installer {
 
@@ -27,6 +25,7 @@ public class Installer {
         logger.info( "Installing users" );
         User admin = installUser( "wolle", true );
         User anonymous = installUser( "anonymous", false );
+        Core.getInstance().setAnonymous( anonymous );
 
         logger.info( "Installing groups" );
         //Group admins = installGroup( "Admins", admin );
@@ -35,7 +34,7 @@ public class Installer {
 
     }
 
-    public  User installUser( String name, boolean visible ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
+    public User installUser( String name, boolean visible ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
         User user = (User) core.getDescriptor( User.class ).newInstance();
 
         Parameters p = new Parameters();

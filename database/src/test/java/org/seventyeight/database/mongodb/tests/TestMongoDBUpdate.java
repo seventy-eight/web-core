@@ -4,8 +4,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.seventyeight.database.mongodb.*;
 
-import java.util.List;
-
 /**
  * @author cwolfgang
  *         Date: 16-02-13
@@ -20,7 +18,7 @@ public class TestMongoDBUpdate {
 
     @Test
     public void test1() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d = new MongoDocument();
         d.set( "name", "Svenne" );
@@ -37,7 +35,7 @@ public class TestMongoDBUpdate {
 
     @Test
     public void test2() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d = new MongoDocument();
         d.set( "name", "Svenne" );
@@ -55,7 +53,7 @@ public class TestMongoDBUpdate {
 
     @Test
     public void test3() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d = new MongoDocument();
         d.setList( "names" );
@@ -81,7 +79,7 @@ public class TestMongoDBUpdate {
 
     @Test
     public void test4() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d1 = new MongoDocument();
         d1.set( "name", "wolle" );

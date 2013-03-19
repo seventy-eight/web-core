@@ -6,6 +6,7 @@ import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Descriptor;
+import org.seventyeight.web.model.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,11 @@ public class Footer extends NodeExtension {
     }
 
     public class FooterAction implements Action {
+
+        @Override
+        public Node getParent() {
+            return null;
+        }
 
         @Override
         public String getUrlName() {

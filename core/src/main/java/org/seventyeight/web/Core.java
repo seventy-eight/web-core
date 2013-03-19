@@ -10,12 +10,12 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
+import org.seventyeight.web.actions.Get;
 import org.seventyeight.web.actions.NewContent;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
 import org.seventyeight.web.extensions.footer.Footer;
-import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.StaticFiles;
@@ -40,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *         Date: 16-02-13
  *         Time: 23:16
  */
-public class Core extends Actionable implements NodeItem {
+public class Core extends Actionable implements NodeItem, RootNode {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
@@ -130,7 +130,8 @@ public class Core extends Actionable implements NodeItem {
 
         /* Mandatory top level Actions */
         actions.add( new StaticFiles() );
-        actions.add( new NewContent() );
+        actions.add( new NewContent( this ) );
+        actions.add( new Get( this ) );
 
         items.put( "user", new Users( this ) );
 
@@ -165,11 +166,10 @@ public class Core extends Actionable implements NodeItem {
         return db;
     }
 
-
     public <T extends NodeItem> T createNode( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
-        MongoDBCollection collection = db.createCollection( NODE_COLLECTION_NAME );
+        MongoDBCollection collection = MongoDBCollection.get( NODE_COLLECTION_NAME ); // db.getCollection( NODE_COLLECTION_NAME );
         MongoDocument document = new MongoDocument();
 
         T instance = null;
@@ -213,7 +213,7 @@ public class Core extends Actionable implements NodeItem {
      * @return
      * @throws ItemInstantiationException
      */
-    public <T extends PersistedObject> T getItem( MongoDocument document ) throws ItemInstantiationException {
+    public <T extends PersistedObject> T getItem( Node parent, MongoDocument document ) throws ItemInstantiationException {
         String clazz = (String) document.get( "class" );
 
         if( clazz == null ) {
@@ -224,8 +224,8 @@ public class Core extends Actionable implements NodeItem {
 
         try {
             Class<PersistedObject> eclass = (Class<PersistedObject>) Class.forName(clazz, true, classLoader );
-            Constructor<?> c = eclass.getConstructor( MongoDocument.class );
-            return (T) c.newInstance( document );
+            Constructor<?> c = eclass.getConstructor( Node.class, MongoDocument.class );
+            return (T) c.newInstance( parent, document );
         } catch( Exception e ) {
             logger.error( "Unable to get the class " + clazz );
             throw new ItemInstantiationException( "Unable to get the class " + clazz, e );
@@ -233,6 +233,7 @@ public class Core extends Actionable implements NodeItem {
     }
 
     public NodeItem getNodeById( String id ) throws ItemInstantiationException {
+        logger.debug( "Getting node by id: " + id );
         MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
 
         PersistedObject obj = getItem( d );
@@ -266,7 +267,7 @@ public class Core extends Actionable implements NodeItem {
     /**
      * Render the path from the URL
      */
-    public void render( Request request, Response response ) throws TemplateException, IOException, ItemInstantiationException {
+    public void render( Request request, Response response ) throws Exception {
         LinkedList<String> tokens = new LinkedList<String>();
         NodeItem node = null;
         Exception exception = null;
@@ -285,7 +286,7 @@ public class Core extends Actionable implements NodeItem {
         /* End of the line, render the node it self with index */
         if( node instanceof Actionable ) {
             Actionable a = (Actionable) node;
-            Action action = null;
+            Object action = null;
             try {
                 action = resolveAction( request, response, a, tokens );
             } catch( Exception e ) {
@@ -310,7 +311,7 @@ public class Core extends Actionable implements NodeItem {
                             default:
                                 Response.NOT_FOUND_404.render( request, response, exception );
                         }
-                    } catch( Exception e ) {
+                    } catch( NotFoundException e ) {
                         logger.log( Level.WARN, "", e );
                         Response.NOT_FOUND_404.render( request, response, exception );
                     }
@@ -361,27 +362,19 @@ public class Core extends Actionable implements NodeItem {
         return last;
     }
 
-    public Action resolveAction( Request request, Response response, Actionable actionable, Queue<String> urlNames ) throws ItemInstantiationException, IOException {
+    public Object resolveAction( Request request, Response response, Actionable actionable, Queue<String> urlNames ) throws ItemInstantiationException, IOException {
         logger.debug( "Resolving actions" );
 
         String urlName = "index";
-        PersistedObject obj = null;
 
-        Action a = null;
+        Object object = null;
         while( ( urlName = urlNames.peek() ) != null ) {
             logger.debug( "Url name: " + urlName );
 
-            a = null;
-            for( Action action : actionable.getActions() ) {
-                if( action.getUrlName().equals( urlName ) ) {
-                    logger.debug( "Action matches " + action );
-                    a = action;
-                } else {
-                    logger.debug( "Action does NOT match: " + action );
-                }
-            }
+            object = actionable.getDynamic( urlName );
+            logger.debug( "Found object is " + object );
 
-            if( a == null ) {
+            if( object == null ) {
                 break;
             }
 
@@ -389,20 +382,20 @@ public class Core extends Actionable implements NodeItem {
             urlNames.remove();
 
             /**/
-            if( a instanceof Autonomous) {
-                logger.debug( a + " is autonomous" );
-                ((Autonomous)a).autonomize( urlName, request, response );
-                return a;
+            if( object instanceof Autonomous ) {
+                logger.debug( object + " is autonomous" );
+                ((Autonomous)object).autonomize( urlName, request, response );
+                return object;
             }
 
-            if( a instanceof Actionable ) {
-                actionable = (Actionable) a;
+            if( object instanceof Actionable ) {
+                actionable = (Actionable) object;
             } else {
                 break;
             }
         }
 
-        return a;
+        return object;
     }
 
     public Action getAction( Actionable actionable, String action ) {
@@ -486,6 +479,9 @@ public class Core extends Actionable implements NodeItem {
         return 1;
     }
 
+    public void setAnonymous( User anonymous ) {
+        this.anonymous = anonymous;
+    }
 
     public User getAnonymousUser() {
         return anonymous;

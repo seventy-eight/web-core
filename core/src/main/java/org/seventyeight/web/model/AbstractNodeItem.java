@@ -153,6 +153,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
      * Fast track saving the node
      */
     public void save() {
+        logger.debug( "BEFORE SAVING: " + document );
         MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).save( document );
     }
 

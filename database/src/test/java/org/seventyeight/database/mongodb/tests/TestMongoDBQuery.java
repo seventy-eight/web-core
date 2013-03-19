@@ -18,7 +18,7 @@ public class TestMongoDBQuery {
 
     @Test
     public void test1() {
-        MongoDBCollection collection = env.getDatabase().createCollection( COLLECTION_NAME );
+        MongoDBCollection collection = env.getDatabase().getCollection( COLLECTION_NAME );
 
         MongoDocument d = new MongoDocument();
         d.set( "name", "Svenne" );

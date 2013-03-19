@@ -5,6 +5,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Autonomous;
+import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeItem;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -20,6 +21,11 @@ import java.net.URLDecoder;
 public class StaticFiles implements Action, Autonomous {
 
     private static Logger logger = Logger.getLogger( StaticFiles.class );
+
+    @Override
+    public Node getParent() {
+        return Core.getInstance();
+    }
 
     @Override
     public String getUrlName() {

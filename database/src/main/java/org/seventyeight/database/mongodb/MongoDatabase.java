@@ -24,9 +24,9 @@ public class MongoDatabase {
         this.db = db;
     }
 
-    public MongoDBCollection createCollection( String name ) {
-        logger.debug( "Creating the collection " + name );
-        DBCollection collection = db.createCollection( name, null );
+    public MongoDBCollection getCollection( String name ) {
+        logger.debug( "Getting collection " + name );
+        DBCollection collection = db.getCollection( name );
 
         return new MongoDBCollection( collection );
     }

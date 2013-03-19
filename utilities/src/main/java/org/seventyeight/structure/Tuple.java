@@ -2,8 +2,6 @@ package org.seventyeight.structure;
 
 /**
  * @author cwolfgang
- *         Date: 24-01-13
- *         Time: 15:29
  */
 public class Tuple<T1, T2> {
     public T1 first;
