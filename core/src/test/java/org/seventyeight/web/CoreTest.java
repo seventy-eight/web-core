@@ -32,7 +32,7 @@ public class CoreTest {
     public void test01() throws NotFoundException {
 
         List<String> tokens = new ArrayList<String>();
-        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveNode( "/user/wolle", tokens );
 
         System.out.println( tokens );
 
@@ -48,7 +48,7 @@ public class CoreTest {
         Core.getInstance().addNode( "user", new DummyNode( Core.getInstance() ) );
 
         LinkedList<String> tokens = new LinkedList<String>();
-        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveNode( "/user/wolle", tokens );
 
         System.out.println( tokens );
     }
@@ -61,7 +61,7 @@ public class CoreTest {
         User user = createUser( "wolle" );
 
         LinkedList<String> tokens = new LinkedList<String>();
-        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveNode( "/user/wolle", tokens );
 
         assertThat( (User) nodeItem, is( user ) );
 
@@ -76,27 +76,10 @@ public class CoreTest {
         createUser( "wolle" );
 
         LinkedList<String> tokens = new LinkedList<String>();
-        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveNode( "/user/wolle", tokens );
 
         assertThat( tokens.size(), is( 1 ) );
         assertThat( tokens.get( 0 ), is( "wolle" ) );
-    }
-
-    @Test
-    public void test05() throws ClassNotFoundException, SavingException, ItemInstantiationException, IOException, NotFoundException {
-        Users users = new Users( Core.getInstance() );
-        Core.getInstance().addNode( "user", users );
-        User u = createUser( "wolle" );
-        Footer footer = (Footer) Core.getInstance().getDescriptor( Footer.class ).newInstance();
-        u.addExtension( footer );
-        u.save();
-
-        LinkedList<String> tokens = new LinkedList<String>();
-        Object o = Core.getInstance().resolveItem( "/user/wolle/footer", tokens );
-        Object action = Core.getInstance().resolveAction( null, null, (Actionable) o, tokens );
-
-        assertThat( tokens.size(), is( 0 ) );
-        assertTrue( action instanceof Footer.FooterAction );
     }
 
 

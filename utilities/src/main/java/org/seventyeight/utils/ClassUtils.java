@@ -1,5 +1,6 @@
 package org.seventyeight.utils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +15,21 @@ public class ClassUtils {
     private ClassUtils() {}
 
     public static Method getEnheritedMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
+        return getEnheritedMethod( clazz, method, null, args );
+    }
+
+    public static Method getEnheritedMethod( Class<?> clazz, String method, Class<? extends Annotation> annotationClass, Class<?>... args ) throws NoSuchMethodException {
         while( clazz != null ) {
             try {
-                return clazz.getDeclaredMethod( method, args );
+                Method m = clazz.getDeclaredMethod( method, args );
+                if( annotationClass != null ) {
+                    Annotation a = m.getAnnotation( annotationClass );
+                    if( a != null ) {
+                        return m;
+                    }
+                } else {
+                    return m;
+                }
             } catch( NoSuchMethodException e ) {
 
             }

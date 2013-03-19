@@ -21,7 +21,7 @@ public abstract class Actionable {
      * @param token
      * @return
      */
-    public Object getDynamic( String token ) {
+    public Node getDynamic( String token ) {
         for( Action a : getActions() ) {
             if( a == null ) {
                 continue;

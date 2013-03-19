@@ -9,5 +9,5 @@ import java.io.IOException;
  * @author cwolfgang
  */
 public interface Autonomous {
-    public void autonomize( String token, Request request, Response response ) throws IOException;
+    public void autonomize( Request request, Response response ) throws IOException;
 }

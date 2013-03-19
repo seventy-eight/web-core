@@ -18,7 +18,7 @@
 
                     <tr>
                         <td style="width:100%" colspan="2">
-                            <input type="hidden" name="class" value="$class" />
+                            <input type="hidden" name="class" value="$descriptor.getClazz()" />
                             <table style="width:100%">
                                 #if( $descriptor.inputTitle() )
 

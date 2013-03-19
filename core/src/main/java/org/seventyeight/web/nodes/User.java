@@ -82,7 +82,7 @@ public class User extends Entity {
 
     @Override
     public String getDisplayName() {
-        return getUsername();
+        return getTitle();
     }
 
     /*

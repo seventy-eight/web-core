@@ -265,7 +265,7 @@ public class Core extends Actionable implements Node, RootNode {
         if( items.containsKey( name ) ) {
             return items.get( name );
         } else {
-            return null;
+            return getDynamic( name );
         }
     }
 
@@ -291,57 +291,44 @@ public class Core extends Actionable implements Node, RootNode {
         Node node = null;
         Exception exception = null;
         try {
-            node = resolveItem( request.getRequestURI(), tokens );
+            node = resolveNode( request.getRequestURI(), tokens );
+            logger.debug( "Found node " + node );
 
-            if( tokens.isEmpty() ) {
-                ExecuteUtils.execute( request, response, node, "index" );
-                return;
-            }
         } catch( NotFoundException e ) {
             logger.debug( "Exception is set to " + e );
             exception = e;
         }
 
-        /* End of the line, render the node it self with index */
-        if( node instanceof Actionable ) {
-            Actionable a = (Actionable) node;
-            Object action = null;
-            try {
-                action = resolveAction( request, response, a, tokens );
-            } catch( Exception e ) {
-                Response.NOT_FOUND_404.render( request, response, exception );
+        if( node instanceof Autonomous ) {
+            logger.debug( node + " is autonomous" );
+            ((Autonomous)node).autonomize( request, response );
+            return;
+        }
+
+        if( tokens.isEmpty() ) {
+            logger.debug( "Executing last node" );
+            ExecuteUtils.execute( request, response, node, "index" );
+            return;
+        }
+
+        try {
+            switch( tokens.size() ) {
+                case 0:
+                    ExecuteUtils.execute( request, response, node, "index" );
+                    break;
+
+                case 1:
+                    ExecuteUtils.execute( request, response, node, tokens.get( 0 ) );
+                    break;
+
+                default:
+                    Response.NOT_FOUND_404.render( request, response, exception );
             }
-
-            if( action != null ) {
-                if( action instanceof Autonomous ) {
-                   /* Don't do anything */
-                } else {
-
-                    try {
-                        switch( tokens.size() ) {
-                            case 0:
-                                ExecuteUtils.execute( request, response, action, "index" );
-                                break;
-
-                            case 1:
-                                ExecuteUtils.execute( request, response, action, tokens.get( 0 ) );
-                                break;
-
-                            default:
-                                Response.NOT_FOUND_404.render( request, response, exception );
-                        }
-                    } catch( NotFoundException e ) {
-                        logger.log( Level.WARN, "", e );
-                        Response.NOT_FOUND_404.render( request, response, exception );
-                    }
-                }
-            } else {
-                Response.NOT_FOUND_404.render( request, response, exception );
-            }
-
-        } else {
+        } catch( NotFoundException e ) {
+            logger.log( Level.WARN, "", e );
             Response.NOT_FOUND_404.render( request, response, exception );
         }
+
     }
 
 
@@ -351,7 +338,7 @@ public class Core extends Actionable implements Node, RootNode {
      * @param tokens
      * @return
      */
-    public Node resolveItem( String path, List<String> tokens ) throws NotFoundException {
+    public Node resolveNode( String path, List<String> tokens ) throws NotFoundException {
         logger.debug( "Resolving " + path );
         StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
@@ -369,6 +356,11 @@ public class Core extends Actionable implements Node, RootNode {
                 break;
             }
 
+            if( current instanceof Autonomous ) {
+                logger.debug( current + " is autonomous" );
+                return current;
+            }
+
             /* TODO Something about authorization? */
 
             last = current;
@@ -379,42 +371,6 @@ public class Core extends Actionable implements Node, RootNode {
         }
 
         return last;
-    }
-
-    public Object resolveAction( Request request, Response response, Actionable actionable, Queue<String> urlNames ) throws ItemInstantiationException, IOException {
-        logger.debug( "Resolving actions" );
-
-        String urlName = "index";
-
-        Object object = null;
-        while( ( urlName = urlNames.peek() ) != null ) {
-            logger.debug( "Url name: " + urlName );
-
-            object = actionable.getDynamic( urlName );
-            logger.debug( "Found object is " + object );
-
-            if( object == null ) {
-                break;
-            }
-
-            /* Pop the name */
-            urlNames.remove();
-
-            /**/
-            if( object instanceof Autonomous ) {
-                logger.debug( object + " is autonomous" );
-                ((Autonomous)object).autonomize( urlName, request, response );
-                return object;
-            }
-
-            if( object instanceof Actionable ) {
-                actionable = (Actionable) object;
-            } else {
-                break;
-            }
-        }
-
-        return object;
     }
 
     public Action getAction( Actionable actionable, String action ) {

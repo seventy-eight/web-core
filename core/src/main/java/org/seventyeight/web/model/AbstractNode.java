@@ -10,8 +10,12 @@ import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -225,6 +229,10 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
         document.set( "title", title );
     }
 
+    public String getTitle() {
+        return getField( "title" );
+    }
+
     public Long getUpdated() {
         return getField( "updated", null );
     }
@@ -263,6 +271,13 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
 
     public ObjectId getObjectId() {
         return document.get( "_id" );
+    }
+
+    @PostMethod
+    public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
+        JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
+        save( request, jsonData );
+        response.sendRedirect( getUrl() );
     }
 
     @Override

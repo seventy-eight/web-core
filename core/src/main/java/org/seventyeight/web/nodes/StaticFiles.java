@@ -42,7 +42,7 @@ public class StaticFiles implements Action, Autonomous {
     }
 
     @Override
-    public void autonomize( String token, Request request, Response response ) throws IOException {
+    public void autonomize( Request request, Response response ) throws IOException {
         String requestedFile = request.getPathInfo();
 
         requestedFile = requestedFile.replaceFirst( "^/?.*?/", "" );

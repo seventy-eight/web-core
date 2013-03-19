@@ -35,8 +35,7 @@ public class ExecuteUtils {
         } catch( InvocationTargetException e ) {
             throw (Exception)e.getCause();
         } catch( ReflectiveOperationException e ) {
-            logger.debug( object + " does not not have " + urlName + ", " + e.getMessage() );
-            logger.log( Level.WARN, "Failed", e );
+            logger.debug( object + " does not have " + urlName + ", " + e.getMessage() );
         }
 
         logger.debug( "TRYING VIEW FILE" );
