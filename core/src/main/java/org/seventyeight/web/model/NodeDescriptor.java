@@ -8,7 +8,7 @@ import org.seventyeight.web.Core;
  *         Date: 06-03-13
  *         Time: 08:55
  */
-public abstract class NodeDescriptor<T extends AbstractNodeItem> extends Descriptor<T> {
+public abstract class NodeDescriptor<T extends AbstractNode> extends Descriptor<T> {
 
     private static Logger logger = Logger.getLogger( NodeDescriptor.class );
 

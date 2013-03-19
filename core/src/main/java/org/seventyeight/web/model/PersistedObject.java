@@ -1,11 +1,8 @@
 package org.seventyeight.web.model;
 
-import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.utilities.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +39,7 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
 
         for( MongoDocument doc : docs ) {
             try {
-                extensions.add( (AbstractExtension) Core.getInstance().getItem( doc ) );
+                extensions.add( (AbstractExtension) Core.getInstance().getSubDocument( doc ) );
             } catch( ItemInstantiationException e ) {
                 logger.error( e );
             }
@@ -80,8 +77,8 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
     }
 
 
-    public static <T extends PersistedObject> T getItem( MongoDocument document ) throws ItemInstantiationException {
-        return Core.getInstance().getItem( document );
+    public static <T extends PersistedObject> T getSubDocument( MongoDocument document ) throws ItemInstantiationException {
+        return Core.getInstance().getSubDocument( document );
     }
 
     @Override

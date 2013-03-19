@@ -3,19 +3,19 @@ package org.seventyeight.web.authentication;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
+import org.seventyeight.web.model.AbstractNode;
+import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.model.AbstractNodeItem;
 import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.NodeItem;
 
 
-public class Session extends AbstractNodeItem {
+public class Session extends AbstractNode {
 	
 	private static Logger logger = Logger.getLogger( Session.class );
 
 	public static final String __END_DATE = "end";
 
-	public Session( NodeItem parent, MongoDocument document ) {
+	public Session( Node parent, MongoDocument document ) {
 		super( parent, document );
 	}
 
@@ -25,12 +25,12 @@ public class Session extends AbstractNodeItem {
     }
 
     @Override
-    public NodeItem getParent() {
+    public Node getParent() {
         return null;
     }
 
     @Override
-    public NodeItem getNode( String name ) {
+    public Node getChild( String name ) {
         return null;
     }
 
@@ -38,7 +38,7 @@ public class Session extends AbstractNodeItem {
      public void bindToUser( User user ) {
          removeBindings();
          logger.debug( "Binding session to " + user );
-         //user.getNode().createRelationshipTo( node, SessionEdge.session );
+         //user.getChild().createRelationshipTo( node, SessionEdge.session );
          user.createRelation( this, SessionEdge.session );
      }
 

@@ -11,11 +11,11 @@ import java.util.List;
  *         Date: 24-02-13
  *         Time: 21:47
  */
-public abstract class Entity extends AbstractNodeItem implements CreatableNode {
+public abstract class Entity extends AbstractNode implements CreatableNode {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 
-    public Entity( NodeItem parent, MongoDocument document ) {
+    public Entity( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -36,12 +36,12 @@ public abstract class Entity extends AbstractNodeItem implements CreatableNode {
     }
 
     @Override
-    public NodeItem getParent() {
+    public Node getParent() {
         return parent;
     }
 
     @Override
-    public NodeItem getNode( String name ) {
+    public Node getChild( String name ) {
         return null;
     }
 

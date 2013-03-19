@@ -3,10 +3,7 @@ package org.seventyeight.web.extensions.footer;
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.extensions.NodeExtension;
-import org.seventyeight.web.model.Action;
-import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +38,11 @@ public class Footer extends NodeExtension {
     public class FooterAction implements Action {
 
         @Override
+        public Node getChild( String name ) throws NotFoundException {
+            return null;
+        }
+
+        @Override
         public Node getParent() {
             return null;
         }
@@ -51,7 +53,7 @@ public class Footer extends NodeExtension {
         }
 
         @Override
-        public String getName() {
+        public String getDisplayName() {
             return "Footer";
         }
     }

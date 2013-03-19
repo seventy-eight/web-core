@@ -20,16 +20,16 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNodeItem extends PersistedObject implements NodeItem, Authorizer, Describable {
+public abstract class AbstractNode extends PersistedObject implements Node, Authorizer, Describable {
 
-    private static Logger logger = Logger.getLogger( AbstractNodeItem.class );
+    private static Logger logger = Logger.getLogger( AbstractNode.class );
 
     public static final String MODERATORS = "moderators";
     public static final String VIEWERS = "viewers";
 
-    protected NodeItem parent;
+    protected Node parent;
 
-    public AbstractNodeItem( NodeItem parent, MongoDocument document ) {
+    public AbstractNode( Node parent, MongoDocument document ) {
         super( document );
 
         this.parent = parent;
@@ -141,7 +141,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
     }
 
     @Override
-    public NodeItem getParent() {
+    public Node getParent() {
         return parent;
     }
 
@@ -170,7 +170,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
         for( MongoDocument d : docs ) {
             Authoritative a = null;
             try {
-                a = (Authoritative) getItem( d );
+                a = (Authoritative) getSubDocument( d );
             } catch( ItemInstantiationException e ) {
                 throw new AuthorizationException( e );
             }
@@ -183,7 +183,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
         for( MongoDocument d : docs ) {
             Authoritative a = null;
             try {
-                a = (Authoritative) getItem( d );
+                a = (Authoritative) getSubDocument( d );
             } catch( ItemInstantiationException e ) {
                 throw new AuthorizationException( e );
             }
@@ -272,7 +272,7 @@ public abstract class AbstractNodeItem extends PersistedObject implements NodeIt
         }
 
         if( getClass().isInstance( obj ) ) {
-            AbstractNodeItem n = (AbstractNodeItem) obj;
+            AbstractNode n = (AbstractNode) obj;
             if( getIdentifier().equals( n.getIdentifier() ) ) {
                 return true;
             } else {

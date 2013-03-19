@@ -5,7 +5,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.NodeItem;
+import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
 
 import java.util.List;
@@ -15,23 +15,23 @@ import java.util.List;
  *         Date: 26-02-13
  *         Time: 21:59
  */
-public class Users implements NodeItem {
+public class Users implements Node {
 
     private static Logger logger = Logger.getLogger( Users.class );
 
-    protected NodeItem parent;
+    protected Node parent;
 
-    public Users( NodeItem parent ) {
+    public Users( Node parent ) {
         this.parent = parent;
     }
 
     @Override
-    public NodeItem getParent() {
+    public Node getParent() {
         return parent;
     }
 
     @Override
-    public NodeItem getNode( String name ) throws NotFoundException {
+    public Node getChild( String name ) throws NotFoundException {
         try {
             return getUserByUsername( this, name );
         } catch( ItemInstantiationException e ) {
@@ -47,7 +47,7 @@ public class Users implements NodeItem {
     }
 
 
-    public static User getUserByUsername( NodeItem parent, String username ) throws ItemInstantiationException {
+    public static User getUserByUsername( Node parent, String username ) throws ItemInstantiationException {
         List<MongoDocument> docs = MongoDBCollection.get( User.USERS ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {

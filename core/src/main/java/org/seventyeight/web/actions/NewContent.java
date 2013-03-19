@@ -1,6 +1,5 @@
 package org.seventyeight.web.actions;
 
-import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
@@ -23,6 +22,11 @@ public class NewContent implements Action {
     }
 
     @Override
+    public Node getChild( String name ) throws NotFoundException {
+        return null;
+    }
+
+    @Override
     public Node getParent() {
         return parent;
     }
@@ -33,7 +37,7 @@ public class NewContent implements Action {
     }
 
     @Override
-    public String getName() {
+    public String getDisplayName() {
         return "New content";
     }
 
@@ -58,7 +62,7 @@ public class NewContent implements Action {
 
         /* First of all we need to create the resource node */
         logger.debug( "Newing resource" );
-        AbstractNodeItem r = null;
+        AbstractNode r = null;
         try {
             r = descriptor.newInstance();
             String title = request.getValue( "title", "" );

@@ -13,7 +13,7 @@ public class Group extends Entity {
 
     public static final String GROUPS = "groups";
 
-    public Group( NodeItem parent, MongoDocument document ) {
+    public Group( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 

@@ -32,11 +32,11 @@ public class CoreTest {
     public void test01() throws NotFoundException {
 
         List<String> tokens = new ArrayList<String>();
-        NodeItem nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
 
         System.out.println( tokens );
 
-        assertThat( nodeItem, is( (NodeItem)env.getCore() ) );
+        assertThat( nodeItem, is( (Node)env.getCore() ) );
         assertThat( tokens.size(), is( 2 ) );
         assertThat( tokens.get( 0 ), is( "user" ) );
         assertThat( tokens.get( 1 ), is( "wolle" ) );
@@ -48,7 +48,7 @@ public class CoreTest {
         Core.getInstance().addNode( "user", new DummyNode( Core.getInstance() ) );
 
         LinkedList<String> tokens = new LinkedList<String>();
-        NodeItem nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
 
         System.out.println( tokens );
     }
@@ -61,7 +61,7 @@ public class CoreTest {
         User user = createUser( "wolle" );
 
         LinkedList<String> tokens = new LinkedList<String>();
-        NodeItem nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
 
         assertThat( (User) nodeItem, is( user ) );
 
@@ -76,7 +76,7 @@ public class CoreTest {
         createUser( "wolle" );
 
         LinkedList<String> tokens = new LinkedList<String>();
-        NodeItem nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
+        Node nodeItem = Core.getInstance().resolveItem( "/user/wolle", tokens );
 
         assertThat( tokens.size(), is( 1 ) );
         assertThat( tokens.get( 0 ), is( "wolle" ) );

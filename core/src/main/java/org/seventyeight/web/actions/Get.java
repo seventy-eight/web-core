@@ -8,7 +8,7 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class Get extends Actionable implements Action {
+public class Get implements Action {
 
     private Logger logger = Logger.getLogger( Get.class );
 
@@ -16,6 +16,11 @@ public class Get extends Actionable implements Action {
 
     public Get( Node parent ) {
         this.parent = parent;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Get node";
     }
 
     @Override
@@ -29,15 +34,10 @@ public class Get extends Actionable implements Action {
     }
 
     @Override
-    public String getName() {
-        return "Get node";
-    }
-
-    @Override
-    public Object getDynamic( String token ) {
+    public Node getChild( String token ) {
         logger.debug( "Token is " + token );
         try {
-            return Core.getInstance().getNodeById( token );
+            return Core.getInstance().getNodeById( this, token );
         } catch( ItemInstantiationException e ) {
             logger.log( Level.DEBUG, "Unable to get " + token, e );
             return null;

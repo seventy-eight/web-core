@@ -6,13 +6,12 @@ import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NodeItem;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 /**
@@ -21,6 +20,11 @@ import java.net.URLDecoder;
 public class StaticFiles implements Action, Autonomous {
 
     private static Logger logger = Logger.getLogger( StaticFiles.class );
+
+    @Override
+    public Node getChild( String name ) throws NotFoundException {
+        return null;
+    }
 
     @Override
     public Node getParent() {
@@ -33,7 +37,7 @@ public class StaticFiles implements Action, Autonomous {
     }
 
     @Override
-    public String getName() {
+    public String getDisplayName() {
         return "Static files";
     }
 

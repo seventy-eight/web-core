@@ -28,7 +28,7 @@ public abstract class Descriptor<T extends Describable> {
 
 	public T newInstance() throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
-		return Core.getInstance().createSubItem( clazz );
+		return Core.getInstance().createSubDocument( clazz );
 	}
 
     /**

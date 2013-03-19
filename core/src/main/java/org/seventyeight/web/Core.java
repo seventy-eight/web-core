@@ -40,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *         Date: 16-02-13
  *         Time: 23:16
  */
-public class Core extends Actionable implements NodeItem, RootNode {
+public class Core extends Actionable implements Node, RootNode {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
@@ -86,9 +86,9 @@ public class Core extends Actionable implements NodeItem, RootNode {
     //private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
 
     /**
-     * A map of first level {@link NodeItem}s registered to the core
+     * A map of first level {@link org.seventyeight.web.model.Node}s registered to the core
      */
-    private ConcurrentMap<String, NodeItem> items = new ConcurrentHashMap<String, NodeItem>();
+    private ConcurrentMap<String, Node> items = new ConcurrentHashMap<String, Node>();
 
     /**
      * The list of top level {@link Action}s
@@ -153,7 +153,7 @@ public class Core extends Actionable implements NodeItem, RootNode {
     }
 
     @Override
-    public NodeItem getParent() {
+    public Node getParent() {
         return null;
     }
 
@@ -166,7 +166,7 @@ public class Core extends Actionable implements NodeItem, RootNode {
         return db;
     }
 
-    public <T extends NodeItem> T createNode( Class<T> clazz ) throws ItemInstantiationException {
+    public <T extends Node> T createNode( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
         MongoDBCollection collection = MongoDBCollection.get( NODE_COLLECTION_NAME ); // db.getCollection( NODE_COLLECTION_NAME );
@@ -174,7 +174,7 @@ public class Core extends Actionable implements NodeItem, RootNode {
 
         T instance = null;
         try {
-            Constructor<T> c = clazz.getConstructor( NodeItem.class, MongoDocument.class );
+            Constructor<T> c = clazz.getConstructor( Node.class, MongoDocument.class );
             instance = c.newInstance( this, document );
         } catch( Exception e ) {
             throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
@@ -186,7 +186,7 @@ public class Core extends Actionable implements NodeItem, RootNode {
         return instance;
     }
 
-    public <T extends Documented> T createSubItem( Class<T> clazz ) throws ItemInstantiationException {
+    public <T extends Documented> T createSubDocument( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating sub item " + clazz.getName() );
 
         MongoDocument document = new MongoDocument();
@@ -202,6 +202,25 @@ public class Core extends Actionable implements NodeItem, RootNode {
         document.set( "class", clazz.getName() );
 
         return instance;
+    }
+
+    public <T extends Documented> T getSubDocument( MongoDocument document ) throws ItemInstantiationException {
+        String clazz = (String) document.get( "class" );
+
+        if( clazz == null ) {
+            logger.warn( "Class property not found" );
+            throw new ItemInstantiationException( "\"class\" property not found for " + document );
+        }
+        logger.debug( "ModelObject class: " + clazz );
+
+        try {
+            Class<Documented> eclass = (Class<Documented>) Class.forName(clazz, true, classLoader );
+            Constructor<?> c = eclass.getConstructor( MongoDocument.class );
+            return (T) c.newInstance( document );
+        } catch( Exception e ) {
+            logger.error( "Unable to get the class " + clazz );
+            throw new ItemInstantiationException( "Unable to get the class " + clazz, e );
+        }
     }
 
 
@@ -232,17 +251,17 @@ public class Core extends Actionable implements NodeItem, RootNode {
         }
     }
 
-    public NodeItem getNodeById( String id ) throws ItemInstantiationException {
+    public Node getNodeById( Node parent, String id ) throws ItemInstantiationException {
         logger.debug( "Getting node by id: " + id );
         MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
 
-        PersistedObject obj = getItem( d );
+        PersistedObject obj = getItem( parent, d );
 
-        return (NodeItem) obj;
+        return (Node) obj;
     }
 
     @Override
-    public NodeItem getNode( String name ) {
+    public Node getChild( String name ) {
         if( items.containsKey( name ) ) {
             return items.get( name );
         } else {
@@ -250,7 +269,7 @@ public class Core extends Actionable implements NodeItem, RootNode {
         }
     }
 
-    public void addNode( String urlName, NodeItem node ) {
+    public void addNode( String urlName, Node node ) {
         items.put( urlName, node );
     }
 
@@ -269,7 +288,7 @@ public class Core extends Actionable implements NodeItem, RootNode {
      */
     public void render( Request request, Response response ) throws Exception {
         LinkedList<String> tokens = new LinkedList<String>();
-        NodeItem node = null;
+        Node node = null;
         Exception exception = null;
         try {
             node = resolveItem( request.getRequestURI(), tokens );
@@ -327,23 +346,23 @@ public class Core extends Actionable implements NodeItem, RootNode {
 
 
     /**
-     * Resolve the {@link org.seventyeight.web.model.NodeItem}s from a path
+     * Resolve the {@link org.seventyeight.web.model.Node}s from a path
      * @param path
      * @param tokens
      * @return
      */
-    public NodeItem resolveItem( String path, List<String> tokens ) throws NotFoundException {
+    public Node resolveItem( String path, List<String> tokens ) throws NotFoundException {
         logger.debug( "Resolving " + path );
         StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
-        NodeItem current = this;
-        NodeItem last = this;
+        Node current = this;
+        Node last = this;
 
         while( tokenizer.hasMoreTokens() ) {
             String token = tokenizer.nextToken();
             logger.debug( "Url name: " + token );
 
-            current = current.getNode( token );
+            current = current.getChild( token );
 
             if( current == null ) {
                 tokens.add( token );

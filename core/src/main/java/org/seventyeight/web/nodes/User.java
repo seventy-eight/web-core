@@ -23,7 +23,7 @@ public class User extends Entity {
         HIDDEN;
     }
 
-    public User( NodeItem parent, MongoDocument document ) {
+    public User( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -87,7 +87,7 @@ public class User extends Entity {
 
     /*
     @Override
-    public Object getDynamic( NodeItem parent, String token ) {
+    public Object getDynamic( Node parent, String token ) {
         User user = null;
         try {
             user = Users.getUserByUsername( parent, token );
