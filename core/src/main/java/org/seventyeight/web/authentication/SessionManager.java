@@ -30,7 +30,7 @@ public class SessionManager {
 	private Session createSessionNode( String hash, Date endDate ) throws ItemInstantiationException {
 		logger.debug( "Creating new session" );
 		
-		Session session = Core.getInstance().createNode( Session.class );
+		Session session = Core.getInstance().createNode( Session.class, SESSIONS );
 		session.getDocument().set( "hash", hash );
         session.getDocument().set( "created", new Date().getTime() );
         session.getDocument().set( Session.__END_DATE, endDate.getTime() );
@@ -55,7 +55,7 @@ public class SessionManager {
 		//Session session = createSessionNode( hash, calendar.getTime() );
 
         Session.SessionsDescriptor descriptor = Core.getInstance().getDescriptor( Session.class );
-        Session session = descriptor.newInstance();
+        Session session = descriptor.newInstance( "" );
         session.setEndDate( new org.seventyeight.utils.Date( calendar.getTime().getTime() ) );
         session.setCreated();
         session.setHash( hash );

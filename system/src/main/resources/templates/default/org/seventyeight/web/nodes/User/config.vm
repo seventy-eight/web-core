@@ -7,7 +7,7 @@ ITEM=$item
 
 <tr>
 	<td>Username</td>
-	<td>#inputtext( "username", $username, 32 )</td>
+	<td>#inputtext( "username", $username, 32, false, true )</td>
 </tr>
 
 <tr>
@@ -20,8 +20,4 @@ ITEM=$item
 	<td>#inputtext( "password_again" )</td>
 </tr>
 
-
-#foreach( $c in $configurations )
-	$c
-#end
 

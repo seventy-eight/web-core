@@ -57,12 +57,12 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
 
         if( saver.getId() != null ) {
             logger.debug( "Setting id to " + saver.getId() );
-            //document.set( "_id", saver.getId() );
+            document.set( "_id", saver.getId() );
             //document.set( "_id", getUniqueIdentifier() );
         }
 
         /* Persist */
-        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).save( document );
+        MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
     }
 
     public Saver getSaver( CoreRequest request ) {
@@ -96,7 +96,8 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     public String getUrl() {
-        return "/get/" + getIdentifier();
+        //return "/get/" + getIdentifier();
+        return "/" + getDescriptor().getType() + "/" + getTitle();
     }
 
     public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
@@ -135,7 +136,7 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
         Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
-        Describable e = d.newInstance();
+        Describable e = d.newInstance( "" );
 
         /* Remove data!? */
         if( d.doRemoveDataItemOnConfigure() ) {
@@ -160,7 +161,7 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
      */
     public void save() {
         logger.debug( "BEFORE SAVING: " + document );
-        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).save( document );
+        MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
     }
 
     @Override
@@ -308,7 +309,7 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     @Override
-    public Descriptor<?> getDescriptor() {
+    public NodeDescriptor<?> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
 

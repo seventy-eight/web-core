@@ -64,10 +64,9 @@ public class NewContent implements Action {
         logger.debug( "Newing resource" );
         AbstractNode r = null;
         try {
-            r = descriptor.newInstance();
             String title = request.getValue( "title", "" );
             logger.debug( "Title is " + title );
-            r.setTitle( title );
+            r = descriptor.newInstance( title );
             r.save();
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );

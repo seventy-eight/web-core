@@ -84,7 +84,7 @@ public class CoreTest {
 
 
     public User createUser( String username ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
-        User user = Core.getInstance().createNode( User.class );
+        User user = Core.getInstance().createNode( User.class, "users" );
 
         Parameters p = new Parameters();
         p.put( "username", username );

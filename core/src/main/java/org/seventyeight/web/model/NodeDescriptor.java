@@ -16,13 +16,18 @@ public abstract class NodeDescriptor<T extends AbstractNode> extends Descriptor<
     }
 
     @Override
-    public T newInstance() throws ItemInstantiationException {
+    public T newInstance( String title ) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        T node = Core.getInstance().createNode( clazz );
+        T node = Core.getInstance().createNode( clazz, getCollectionName() );
 
         node.getDocument().set( "type", getType() );
+        node.getDocument().set( "title", title );
 
         return node;
+    }
+
+    public String getCollectionName() {
+        return Core.NODE_COLLECTION_NAME;
     }
 
     public abstract String getType();

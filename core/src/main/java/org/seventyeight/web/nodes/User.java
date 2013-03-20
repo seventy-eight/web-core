@@ -113,6 +113,20 @@ public class User extends Entity {
         }
 
         @Override
+        public String getCollectionName() {
+            return USERS;
+        }
+
+        @Override
+        public User newInstance( String title ) throws ItemInstantiationException {
+            User u = super.newInstance( title );
+            u.getDocument().set( "username", title );
+            u.getDocument().set( "_id", title );
+
+            return u;
+        }
+
+        @Override
         public Node getChild( String name ) throws NotFoundException {
             try {
                 return getUserByUsername( this, name );

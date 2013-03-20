@@ -166,10 +166,10 @@ public class Core extends Actionable implements Node, RootNode {
         return db;
     }
 
-    public <T extends Node> T createNode( Class<T> clazz ) throws ItemInstantiationException {
+    public <T extends Node> T createNode( Class<T> clazz, String collectioName ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
-        MongoDBCollection collection = MongoDBCollection.get( NODE_COLLECTION_NAME ); // db.getCollection( NODE_COLLECTION_NAME );
+        MongoDBCollection collection = MongoDBCollection.get( collectioName ); // db.getCollection( NODE_COLLECTION_NAME );
         MongoDocument document = new MongoDocument();
 
         T instance = null;

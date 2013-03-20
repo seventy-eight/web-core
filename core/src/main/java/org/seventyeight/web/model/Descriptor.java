@@ -5,6 +5,7 @@ import org.apache.velocity.VelocityContext;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,7 @@ public abstract class Descriptor<T extends Describable> {
 	
 	public abstract String getDisplayName();
 
-	public T newInstance() throws ItemInstantiationException {
+	public T newInstance( String title ) throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
 		return Core.getInstance().createSubDocument( clazz );
 	}
