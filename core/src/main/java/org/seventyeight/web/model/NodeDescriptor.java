@@ -5,16 +5,25 @@ import org.seventyeight.web.Core;
 
 /**
  * @author cwolfgang
- *         Date: 06-03-13
- *         Time: 08:55
  */
-public abstract class NodeDescriptor<T extends AbstractNode> extends Descriptor<T> {
+public abstract class NodeDescriptor<T extends AbstractNode> extends Descriptor<T> implements Node {
 
     private static Logger logger = Logger.getLogger( NodeDescriptor.class );
 
     @Override
+    public Node getParent() {
+        return Core.getInstance();
+    }
+
+    @Override
     public T newInstance() throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        return Core.getInstance().createNode( clazz );
+        T node = Core.getInstance().createNode( clazz );
+
+        node.getDocument().set( "type", getType() );
+
+        return node;
     }
+
+    public abstract String getType();
 }

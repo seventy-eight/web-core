@@ -77,6 +77,10 @@ public class MongoDBCollection {
         return new MongoDocument( dbObj );
     }
 
+    public void createIndex( String name, MongoDocument index ) {
+        collection.ensureIndex( index.getDBObject(), name );
+    }
+
     public void remove( MongoDBQuery query ) {
         collection.remove( query.getDocument() );
     }

@@ -133,7 +133,7 @@ public class Core extends Actionable implements Node, RootNode {
         actions.add( new NewContent( this ) );
         actions.add( new Get( this ) );
 
-        items.put( "user", new Users( this ) );
+        //items.put( "user", new Users( this ) );
 
         /* Class loader */
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
@@ -391,6 +391,11 @@ public class Core extends Actionable implements Node, RootNode {
             list = descriptorList.get( i );
 
             list.add( descriptor );
+        }
+
+        if( descriptor instanceof NodeDescriptor ) {
+            NodeDescriptor nd = (NodeDescriptor) descriptor;
+            items.put( nd.getType(), nd );
         }
 
         /**/

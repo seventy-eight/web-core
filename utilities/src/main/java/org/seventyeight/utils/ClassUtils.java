@@ -8,30 +8,34 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 14-01-13
- *         Time: 22:26
  */
 public class ClassUtils {
     private ClassUtils() {}
 
-    public static Method getEnheritedMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
-        return getEnheritedMethod( clazz, method, null, args );
-    }
-
-    public static Method getEnheritedMethod( Class<?> clazz, String method, Class<? extends Annotation> annotationClass, Class<?>... args ) throws NoSuchMethodException {
+    public static Method getInheritedMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
         while( clazz != null ) {
             try {
                 Method m = clazz.getDeclaredMethod( method, args );
-                if( annotationClass != null ) {
-                    Annotation a = m.getAnnotation( annotationClass );
-                    if( a != null ) {
-                        return m;
-                    }
-                } else {
+                /* If null, the method is NOT annotated as a post method */
+                if( m.getAnnotation( PostMethod.class ) == null ) {
                     return m;
                 }
             } catch( NoSuchMethodException e ) {
+                /* Just carry on */
+            }
 
+            clazz = clazz.getSuperclass();
+        }
+
+        throw new NoSuchMethodException( method );
+    }
+
+    public static Method getInheritedPostMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
+        while( clazz != null ) {
+            try {
+                return clazz.getDeclaredMethod( method, args );
+            } catch( NoSuchMethodException e ) {
+                /* Just carry on */
             }
 
             clazz = clazz.getSuperclass();

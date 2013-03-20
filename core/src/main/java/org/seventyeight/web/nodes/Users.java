@@ -12,8 +12,7 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 26-02-13
- *         Time: 21:59
+ * @deprecated
  */
 public class Users implements Node {
 

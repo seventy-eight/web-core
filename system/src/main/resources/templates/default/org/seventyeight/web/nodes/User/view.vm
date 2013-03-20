@@ -1,3 +1,5 @@
 PORTRIAT = $portrait
 
+$item.getDocument().getDBObject()
+
 <div>$item.getUsername() - $item.getTitle()</div>

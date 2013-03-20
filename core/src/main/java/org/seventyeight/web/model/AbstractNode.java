@@ -8,6 +8,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -56,7 +57,8 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
 
         if( saver.getId() != null ) {
             logger.debug( "Setting id to " + saver.getId() );
-            document.set( "_oid", saver.getId() );
+            //document.set( "_id", saver.getId() );
+            //document.set( "_id", getUniqueIdentifier() );
         }
 
         /* Persist */
@@ -230,7 +232,7 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     public String getTitle() {
-        return getField( "title" );
+        return getField( "title", "" );
     }
 
     public Long getUpdated() {
@@ -273,8 +275,15 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
         return document.get( "_id" );
     }
 
+    public MongoDocument getUniqueIdentifier() {
+        MongoDocument d = new MongoDocument().set( "type", ((NodeDescriptor)getDescriptor()).getType() ).set( "name", getTitle() );
+        return d;
+    }
+
     @PostMethod
     public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
+        logger.debug( "Configuration submit" );
+
         JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
         save( request, jsonData );
         response.sendRedirect( getUrl() );

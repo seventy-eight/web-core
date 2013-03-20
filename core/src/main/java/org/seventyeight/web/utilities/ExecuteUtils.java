@@ -1,15 +1,12 @@
 package org.seventyeight.web.utilities;
 
-import com.google.gson.JsonObject;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -50,15 +47,19 @@ public class ExecuteUtils {
     private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         logger.debug( "METHOD: " + object + ", " + actionMethod );
 
-        Method method = getRequestMethod( object, actionMethod );
+        Method method = getRequestMethod( object, actionMethod, request.isRequestPost() );
         logger.debug( "FOUND METHOD: " + method );
 
         method.invoke( object, request, response );
     }
 
-    private static Method getRequestMethod( Object object, String method ) throws NoSuchMethodException {
+    private static Method getRequestMethod( Object object, String method, boolean isPost ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
         logger.debug( "Method: " + method + " = " + m );
-        return ClassUtils.getEnheritedMethod( object.getClass(), m, Request.class, Response.class );
+        if( isPost ) {
+            return ClassUtils.getInheritedPostMethod( object.getClass(), m, Request.class, Response.class );
+        } else {
+            return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
+        }
     }
 }

@@ -7,10 +7,10 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.model.*;
 
+import java.util.List;
+
 /**
  * @author cwolfgang
- *         Date: 18-02-13
- *         Time: 22:28
  */
 public class User extends Entity {
 
@@ -85,27 +85,19 @@ public class User extends Entity {
         return getTitle();
     }
 
-    /*
-    @Override
-    public Object getDynamic( Node parent, String token ) {
-        User user = null;
-        try {
-            user = Users.getUserByUsername( parent, token );
-        } catch( ItemInstantiationException e ) {
-            logger.debug( e );
-        }
-
-        if( user == null ) {
-            return super.getDynamic( parent, token );
-        } else {
-            return user;
-        }
-    }
-    */
-
     @Override
     public String toString() {
         return "User[" + getUsername() + "]" ;
+    }
+
+    public static User getUserByUsername( Node parent, String username ) throws ItemInstantiationException {
+        List<MongoDocument> docs = MongoDBCollection.get( User.USERS ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
+
+        if( docs != null && !docs.isEmpty() ) {
+            return new User( parent, docs.get( 0 ) );
+        } else {
+            throw new ItemInstantiationException( "The user " + username + " not found" );
+        }
     }
 
     public static class UserDescriptor extends NodeDescriptor<User> {
@@ -113,6 +105,22 @@ public class User extends Entity {
         @Override
         public String getDisplayName() {
             return "User";
+        }
+
+        @Override
+        public String getType() {
+            return "user";
+        }
+
+        @Override
+        public Node getChild( String name ) throws NotFoundException {
+            try {
+                return getUserByUsername( this, name );
+            } catch( ItemInstantiationException e ) {
+                logger.debug( e );
+            }
+
+            throw new NotFoundException( "The user " + name + " was not found" );
         }
     }
 }

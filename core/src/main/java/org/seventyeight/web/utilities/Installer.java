@@ -1,6 +1,8 @@
 package org.seventyeight.web.utilities;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
@@ -31,6 +33,8 @@ public class Installer {
         //Group admins = installGroup( "Admins", admin );
         //admins.addMember( admin );
 
+        MongoDocument d = new MongoDocument().set( "type", 1 ).set( "title", 1 );
+        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).createIndex( "title", d );
 
     }
 

@@ -1,4 +1,4 @@
-package org.seventyeight.web.model;
+package org.seventyeight.utils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
