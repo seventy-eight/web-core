@@ -1,5 +1,6 @@
-PORTRIAT = $portrait
+
+
+<div class="header">$item.getUsername()</div>
+
 
 $item.getDocument().getDBObject()
-
-<div>$item.getUsername() - $item.getTitle()</div>

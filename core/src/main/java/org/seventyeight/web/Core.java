@@ -19,6 +19,7 @@ import org.seventyeight.web.extensions.footer.Footer;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.StaticFiles;
+import org.seventyeight.web.nodes.ThemeFiles;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.nodes.Users;
 import org.seventyeight.web.servlet.Request;
@@ -130,6 +131,7 @@ public class Core extends Actionable implements Node, RootNode {
 
         /* Mandatory top level Actions */
         actions.add( new StaticFiles() );
+        actions.add( new ThemeFiles() );
         actions.add( new NewContent( this ) );
         actions.add( new Get( this ) );
 

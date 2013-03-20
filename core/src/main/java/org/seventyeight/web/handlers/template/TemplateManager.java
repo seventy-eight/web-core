@@ -88,17 +88,17 @@ public class TemplateManager {
 		}
 	}
 	
-	public File getThemeFile( String filename ) {
+	public File getThemeFile( AbstractTheme theme, String filename ) throws IOException {
 		logger.debug( "Scanning " + templatePaths );
 		for( File path : templatePaths ) {
-			File file = new File( path, filename );
+			File file = new File( new File( path, theme.getName() ), filename );
 			if( file.exists() ) {
 				logger.debug( "Returning " + file );
 				return file;
 			}
 		}
-		
-		return null;
+
+        throw new IOException( "File does not exist, " + filename );
 	}
 	
 	public void initialize() {
