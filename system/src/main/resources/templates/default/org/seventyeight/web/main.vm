@@ -47,8 +47,7 @@ $(function() {
 
 	<tr>
 		<td valign="top" style="border-style:solid;border-width:1px;border-color:#000000;width:180px">
-			Some menu-ish thingy<br>
-			<div id="test">hej</div>
+#include()
 		</td>
 		
 		<td valign="top" rowspan="2" style="border-style:solid;border-width:1px;border-color:#000000">
