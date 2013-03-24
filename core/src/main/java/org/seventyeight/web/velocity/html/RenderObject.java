@@ -57,7 +57,6 @@ public class RenderObject extends Directive {
 
 		} catch( Exception e ) {
             logger.debug( e );
-            logger.log( Level.WARN, "Failed", e );
 		}
 
         Request request = (Request) context.get( "request" );

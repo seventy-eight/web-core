@@ -316,4 +316,9 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     public void updateField( String collection, MongoUpdate update ) {
         MongoDBCollection.get( collection ).update( update, new MongoDBQuery().is( "_id", getObjectId() ) );
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

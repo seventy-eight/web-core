@@ -79,4 +79,9 @@ public class NewContent implements Action {
         response.sendRedirect( r.getUrl() + "/configure" );
         //ResourceUtils.getConfigureResourceView( request, response, r, descriptor );
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

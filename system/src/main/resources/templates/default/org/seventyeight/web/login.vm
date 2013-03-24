@@ -4,16 +4,16 @@
 	
 		<tr>
 			<td>Username</td>
-			<td><td>#inputtext( "username" )</td></td>
+			<td>#inputtext( "username" )</td>
 		</tr>
 		
 		<tr>
 			<td>Password</td>
-			<td><td>#inputtext( "password" )<input type="hidden" name="login-form" value=""><input type="hidden" name="url" value="$!url"></td></td>
+			<td>#inputtext( "password" )<input type="hidden" name="login-form" value=""><input type="hidden" name="url" value="$!url"></td>
 		</tr>
 		
 		<tr>
-			<td colspan="2" align="center"><input type="submit" value="OK"></td>
+			<td colspan="2" align="center"><input type="submit" value="Login"></td>
 		</tr>
 		
 	</table>

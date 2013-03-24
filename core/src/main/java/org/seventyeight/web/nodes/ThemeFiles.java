@@ -42,6 +42,11 @@ public class ThemeFiles implements Action, Autonomous {
     }
 
     @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
+    @Override
     public void autonomize( Request request, Response response ) throws IOException {
         String requestedFile = request.getPathInfo();
 
@@ -62,5 +67,7 @@ public class ThemeFiles implements Action, Autonomous {
         }
 
         response.deliverFile( request, themeFile, true );
+
+
     }
 }

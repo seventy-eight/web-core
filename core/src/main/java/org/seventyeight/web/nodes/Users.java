@@ -55,4 +55,9 @@ public class Users implements Node {
             throw new ItemInstantiationException( "The user " + username + " not found" );
         }
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

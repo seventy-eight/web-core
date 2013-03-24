@@ -71,4 +71,9 @@ public class StaticFiles implements Action, Autonomous {
             }
         }
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

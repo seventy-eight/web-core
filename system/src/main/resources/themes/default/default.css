@@ -47,6 +47,22 @@ tr.listing:hover {
     font-weight: bold;
 }
 
+ul.menu {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+li.menu {
+    clear: both;
+}
+
+li.menu a {
+    float: left;
+    display:block;
+    background-color:#abdabd;
+}
+
 a:link {
     color: #94a2b2;
 }
