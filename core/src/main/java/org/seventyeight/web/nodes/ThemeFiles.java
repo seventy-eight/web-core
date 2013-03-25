@@ -66,6 +66,8 @@ public class ThemeFiles implements Action, Autonomous {
             return;
         }
 
+        logger.debug( "[Delivering] " + themeFile.getAbsolutePath() );
+
         response.deliverFile( request, themeFile, true );
 
 
