@@ -1,13 +1,9 @@
-
 .header {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
 }
 
-li {
-    font-size: 300px;
-}
 
-ul {
-    font-weight: bold;
+.snade {
+    font-size: 121px;
 }
