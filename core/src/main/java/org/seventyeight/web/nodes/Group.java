@@ -51,6 +51,11 @@ public class Group extends Entity {
         updateField( GROUPS, new MongoUpdate().push( "members", user.getObjectId() ) );
     }
 
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
     public static class GroupDescriptor extends Descriptor<Group> {
 
         @Override

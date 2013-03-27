@@ -372,6 +372,9 @@ public class TemplateManager {
 		return clazz.replace( '.', '/' ).replace( '$', '/' ) + "/" + method;
 	}
 
+    public static String getUrlFromClass( Class clazz, String method ) {
+        return clazz.getCanonicalName().replace( '.', '/' ).replace( '$', '/' ) + "/" + method;
+    }
 
     public static String getUrlFromClass( String clazz ) {
         return clazz.replace( '.', '/' ).replace( '$', '/' );

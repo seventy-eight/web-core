@@ -34,6 +34,11 @@ public class Session extends AbstractNode {
         return null;
     }
 
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
 /*
      public void bindToUser( User user ) {
          removeBindings();

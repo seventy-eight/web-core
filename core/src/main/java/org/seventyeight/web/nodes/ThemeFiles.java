@@ -63,4 +63,9 @@ public class ThemeFiles implements Action, Autonomous {
 
         response.deliverFile( request, themeFile, true );
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

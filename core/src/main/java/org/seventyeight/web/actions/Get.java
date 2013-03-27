@@ -43,4 +43,9 @@ public class Get implements Action {
             return null;
         }
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

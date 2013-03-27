@@ -45,9 +45,15 @@ $(function() {
         </td>
     </tr>
 
-	<tr>
+    <tr>
+        <td align="center" colspan="2">
+            #render($core.getMainMenu() "mainMenu")
+        </td>
+    </tr>
+
+    <tr>
 		<td valign="top" style="border-style:solid;border-width:1px;border-color:#000000;width:180px">
-#include()
+
 		</td>
 		
 		<td valign="top" rowspan="2" style="border-style:solid;border-width:1px;border-color:#000000">

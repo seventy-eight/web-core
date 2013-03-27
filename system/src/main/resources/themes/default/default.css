@@ -50,3 +50,33 @@ tr.listing:hover {
 a:link {
     color: #94a2b2;
 }
+
+.mainMenu {
+    float:left;
+    width:100%;
+    background:#fff;
+    border-bottom:4px solid #000;
+    overflow:hidden;
+    position:relative;
+}
+
+.mainMenu ul {
+    clear:left;
+    float:left;
+    list-style:none;
+    margin:0;
+    padding:0;
+    position:relative;
+    left:50%;
+    text-align:center;
+}
+
+.mainMenu ul li {
+    display:block;
+    float:left;
+    list-style:none;
+    margin:0;
+    padding:0;
+    position:relative;
+    right:50%;
+}

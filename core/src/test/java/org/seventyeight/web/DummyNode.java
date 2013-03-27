@@ -29,4 +29,9 @@ public class DummyNode implements Node {
     public String getDisplayName() {
         return "Dummy";
     }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

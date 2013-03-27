@@ -31,4 +31,9 @@ public abstract class NodeDescriptor<T extends AbstractNode> extends Descriptor<
     }
 
     public abstract String getType();
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
 }

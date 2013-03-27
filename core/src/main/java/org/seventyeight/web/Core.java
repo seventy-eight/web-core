@@ -67,6 +67,8 @@ public class Core extends Actionable implements Node, RootNode {
     private MongoDBManager dbManager;
     private MongoDatabase db;
 
+    private Menu mainMenu = new Menu();
+
     //
     /**
      * A map of descriptors keyed by their super class
@@ -146,6 +148,9 @@ public class Core extends Actionable implements Node, RootNode {
 
         /* test */
         addDescriptor( new Footer.FooterDescriptor() );
+
+        mainMenu.add( new Menu.MenuItem( "New Content", "/new" ) );
+        mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle" ) );
 
         instance = this;
     }
@@ -541,5 +546,14 @@ public class Core extends Actionable implements Node, RootNode {
 
     public File getPath() {
         return path;
+    }
+
+    public Menu getMainMenu() {
+        return mainMenu;
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return TemplateManager.getUrlFromClass( Core.class, "main.vm" );
     }
 }

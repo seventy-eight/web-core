@@ -100,6 +100,11 @@ public class User extends Entity {
         }
     }
 
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
     public static class UserDescriptor extends NodeDescriptor<User> {
 
         @Override

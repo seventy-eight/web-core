@@ -41,6 +41,11 @@ public class NewContent implements Action {
         return "New content";
     }
 
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
     public void doCreate( Request request, Response response ) throws IOException {
         String className = request.getValue( "className" );
 

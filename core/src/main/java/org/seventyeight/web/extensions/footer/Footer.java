@@ -56,6 +56,11 @@ public class Footer extends NodeExtension {
         public String getDisplayName() {
             return "Footer";
         }
+
+        @Override
+        public String getMainTemplate() {
+            return "org/seventyeight/web/main.vm";
+        }
     }
 
     public static class FooterDescriptor extends Descriptor<Footer> {
