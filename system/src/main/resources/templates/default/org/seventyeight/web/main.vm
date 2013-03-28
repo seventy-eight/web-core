@@ -46,8 +46,10 @@ $(function() {
     </tr>
 
     <tr>
-        <td align="center" colspan="2">
+        <td colspan="2">
+            <div class="mainMenu">
             #render($core.getMainMenu() "mainMenu")
+            </div>
         </td>
     </tr>
 
