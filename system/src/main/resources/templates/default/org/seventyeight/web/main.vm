@@ -37,19 +37,15 @@ $(function() {
 
 <body>
 
+<img src="/theme/logo.png">
+
+
+
 <table style="width:100%">
 
     <tr>
         <td colspan="2" align="center">
-            <img src="/theme/logo.png">
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2">
-            <div class="mainMenu">
-            #render($core.getMainMenu() "mainMenu")
-            </div>
+                #render($core.getMainMenu() "mainMenu")
         </td>
     </tr>
 
