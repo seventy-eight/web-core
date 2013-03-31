@@ -91,8 +91,8 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
         }
     }
 
-    public Object getIdentifier() {
-        return document.get( "_id" );
+    public String getIdentifier() {
+        return document.get( "_id" ).toString();
     }
 
     public String getUrl() {

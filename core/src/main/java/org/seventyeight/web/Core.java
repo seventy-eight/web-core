@@ -12,16 +12,14 @@ import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.web.actions.Get;
 import org.seventyeight.web.actions.NewContent;
+import org.seventyeight.web.actions.Upload;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
 import org.seventyeight.web.extensions.footer.Footer;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.nodes.StaticFiles;
-import org.seventyeight.web.nodes.ThemeFiles;
-import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.nodes.Users;
+import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
@@ -136,6 +134,7 @@ public class Core extends Actionable implements Node, RootNode {
         actions.add( new ThemeFiles() );
         actions.add( new NewContent( this ) );
         actions.add( new Get( this ) );
+        actions.add( new Upload() );
 
         //items.put( "user", new Users( this ) );
 
@@ -145,11 +144,13 @@ public class Core extends Actionable implements Node, RootNode {
 
         /**/
         addDescriptor( new User.UserDescriptor() );
+        addDescriptor( new FileNode.FileDescriptor() );
 
         /* test */
         addDescriptor( new Footer.FooterDescriptor() );
 
         mainMenu.add( new Menu.MenuItem( "New Content", "/new" ) );
+        mainMenu.add( new Menu.MenuItem( "Upload", "/upload" ) );
         mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle" ) );
 
         instance = this;

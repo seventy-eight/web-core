@@ -139,7 +139,7 @@
             /* Changed by Wolle */
             if( e.timeStamp > settings.lastCheck ) {
                 settings.lastCheck = e.timeStamp + 1000000; // 500.000
-                $.get('/upload/' + settings.uid, function(data) {
+                $.get('/upload/info?id=' + settings.uid, function(data) {
                     queued.progress(data);
                 }, "html");
             }
