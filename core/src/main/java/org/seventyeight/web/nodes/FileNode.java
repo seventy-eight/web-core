@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class FileNode extends Entity {
+public class FileNode extends UploadableNode {
 
     private static Logger logger = Logger.getLogger( FileNode.class );
 
@@ -20,20 +20,9 @@ public class FileNode extends Entity {
         super( parent, document );
     }
 
-    public void setUploadIdentity( String uid ) {
-        document.set( "uploadID", uid );
-    }
-
-    public String getUploadIdentity() {
-        return document.get( "uploadID" );
-    }
-
-    public void setFilename( String filename ) {
-        document.set( "filename", filename );
-    }
-
-    public String getFilename() {
-        return document.get( "filename" );
+    @Override
+    public String getPortrait() {
+        return null;
     }
 
     @Override

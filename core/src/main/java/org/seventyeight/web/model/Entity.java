@@ -8,10 +8,8 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 24-02-13
- *         Time: 21:47
  */
-public abstract class Entity extends AbstractNode implements CreatableNode {
+public abstract class Entity extends AbstractNode implements CreatableNode, Portraitable {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 

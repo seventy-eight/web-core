@@ -6,10 +6,7 @@ import org.seventyeight.structure.Tuple;
 import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.Action;
-import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.FileNode;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -19,6 +16,7 @@ import javax.servlet.AsyncContext;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -49,10 +47,16 @@ public class Upload implements Action {
 
         String filename = request.getValue( "ax-file-name" );
 
+        /* Somehow get the right uploadable descriptor */
+        List<Descriptor> descriptors = Core.getInstance().getExtensionDescriptors( Uploadable.class );
+        for( Descriptor d : descriptors ) {
+
+        }
+
         /* Create new file */
-        FileNode f = null;
+        UploadableNode f = null;
         try {
-            f = (FileNode) Core.getInstance().getDescriptor( FileNode.class ).newInstance( filename );
+            f = (UploadableNode) Core.getInstance().getDescriptor( FileNode.class ).newInstance( filename );
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );
         }

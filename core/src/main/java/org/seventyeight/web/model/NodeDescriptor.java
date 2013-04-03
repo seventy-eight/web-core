@@ -6,7 +6,7 @@ import org.seventyeight.web.Core;
 /**
  * @author cwolfgang
  */
-public abstract class NodeDescriptor<T extends AbstractNode> extends Descriptor<T> implements Node {
+public abstract class NodeDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node {
 
     private static Logger logger = Logger.getLogger( NodeDescriptor.class );
 

@@ -10,7 +10,7 @@ import org.seventyeight.web.servlet.Response;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Descriptor<T extends Describable> {
+public abstract class Descriptor<T extends Describable<T>> {
 	
 	private static Logger logger = Logger.getLogger( Descriptor.class );
 	

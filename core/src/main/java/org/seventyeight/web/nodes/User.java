@@ -105,6 +105,15 @@ public class User extends Entity {
         return "org/seventyeight/web/main.vm";
     }
 
+    @Override
+    public String getPortrait() {
+        if( false ) {
+            return "/theme/default/unknown-person.png";
+        } else {
+            return "/theme/default/unknown-person.png";
+        }
+    }
+
     public static class UserDescriptor extends NodeDescriptor<User> {
 
         @Override
