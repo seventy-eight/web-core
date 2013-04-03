@@ -45,7 +45,7 @@ public class FileNode extends UploadableNode {
         }
     }
 
-    public static class FileDescriptor extends NodeDescriptor<FileNode> {
+    public static class FileDescriptor extends UploadableDescriptor<FileNode> {
 
         @Override
         public String getType() {

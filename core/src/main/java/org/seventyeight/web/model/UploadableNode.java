@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 
 /**
  * @author cwolfgang
@@ -27,4 +28,8 @@ public abstract class UploadableNode extends Entity implements Uploadable {
         return document.get( "filename" );
     }
 
+    @Override
+    public UploadableDescriptor getDescriptor() {
+        return Core.getInstance().getDescriptor( getClass() );
+    }
 }
