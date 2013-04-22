@@ -5,10 +5,8 @@ import org.seventyeight.web.model.AbstractExtension;
 
 /**
  * @author cwolfgang
- *         Date: 06-03-13
- *         Time: 19:50
  */
-public abstract class NodeExtension extends AbstractExtension {
+public abstract class NodeExtension<T extends NodeExtension<T>> extends AbstractExtension<T> {
 
     public NodeExtension( MongoDocument document ) {
         super( document );

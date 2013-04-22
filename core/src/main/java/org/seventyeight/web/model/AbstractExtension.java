@@ -5,17 +5,15 @@ import org.seventyeight.web.Core;
 
 /**
  * @author cwolfgang
- *         Date: 18-02-13
- *         Time: 17:25
  */
-public abstract class AbstractExtension extends PersistedObject implements Describable {
+public abstract class AbstractExtension<T extends AbstractExtension<T>> extends PersistedObject implements Describable<T> {
 
     public AbstractExtension( MongoDocument document ) {
         super( document );
     }
 
     @Override
-    public Descriptor<?> getDescriptor() {
+    public Descriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
 }

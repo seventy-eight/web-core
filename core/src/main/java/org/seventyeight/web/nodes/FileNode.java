@@ -5,6 +5,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.filetype.FileType;
 import org.seventyeight.web.model.*;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class FileNode extends UploadableNode {
+public class FileNode extends UploadableNode<FileNode> {
 
     private static Logger logger = Logger.getLogger( FileNode.class );
 
@@ -43,6 +44,10 @@ public class FileNode extends UploadableNode {
         } else {
             throw new ItemInstantiationException( "The file " + filename + " not found" );
         }
+    }
+
+    public Class<?> getFileTypeClass() {
+        List<Descriptor> descriptors = Core.getInstance().getExtensionDescriptors( FileType.class );
     }
 
     public static class FileDescriptor extends UploadableDescriptor<FileNode> {

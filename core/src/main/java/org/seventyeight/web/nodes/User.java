@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class User extends Entity {
+public class User extends Entity<User> {
 
     private static Logger logger = Logger.getLogger( User.class );
 

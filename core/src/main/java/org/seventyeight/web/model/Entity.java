@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class Entity extends AbstractNode implements CreatableNode, Portraitable {
+public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implements CreatableNode, Portraitable {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 

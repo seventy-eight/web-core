@@ -5,8 +5,6 @@ import org.seventyeight.web.model.AbstractExtension;
 
 /**
  * @author cwolfgang
- *         Date: 05-03-13
- *         Time: 23:05
  */
 public abstract class EntityExtension extends NodeExtension {
 

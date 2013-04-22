@@ -3,5 +3,6 @@ package org.seventyeight.web.model;
 /**
  * @author cwolfgang
  */
-public interface Uploadable {
+public interface ExtensionPoint {
+
 }

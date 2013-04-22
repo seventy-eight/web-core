@@ -7,7 +7,7 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class Group extends Entity {
+public class Group extends Entity<Group> {
 
     public static final String GROUPS = "groups";
 

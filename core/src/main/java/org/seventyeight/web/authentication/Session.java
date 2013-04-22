@@ -9,7 +9,7 @@ import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.Descriptor;
 
 
-public class Session extends AbstractNode {
+public class Session extends AbstractNode<Session> {
 	
 	private static Logger logger = Logger.getLogger( Session.class );
 

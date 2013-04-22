@@ -71,7 +71,7 @@ public class NewContent implements Action {
         try {
             String title = request.getValue( "title", "" );
             logger.debug( "Title is " + title );
-            r = descriptor.newInstance( title );
+            r = (AbstractNode) descriptor.newInstance( title );
             r.save();
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );

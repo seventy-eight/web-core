@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNode extends PersistedObject implements Node, Authorizer, Describable<AbstractNode> {
+public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements Node, Authorizer, Describable<T> {
 
     private static Logger logger = Logger.getLogger( AbstractNode.class );
 
@@ -309,7 +309,7 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     @Override
-    public NodeDescriptor<AbstractNode> getDescriptor() {
+    public NodeDescriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
 

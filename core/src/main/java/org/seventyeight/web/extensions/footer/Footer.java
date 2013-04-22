@@ -11,10 +11,8 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 06-03-13
- *         Time: 19:50
  */
-public class Footer extends NodeExtension {
+public class Footer extends NodeExtension<Footer> {
 
     public Footer( MongoDocument document ) {
         super( document );
