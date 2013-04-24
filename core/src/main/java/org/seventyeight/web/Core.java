@@ -47,6 +47,9 @@ public class Core extends Actionable implements Node, RootNode {
     public static final String THEMES_PATH_NAME = "themes";
     public static final String PLUGINS_PATH_NAME = "plugins";
 
+    /**
+     * The instance of {@link Core}
+     */
     private static Core instance;
 
     private TemplateManager templateManager = new TemplateManager();
@@ -54,6 +57,9 @@ public class Core extends Actionable implements Node, RootNode {
     private Authentication authentication = new SimpleAuthentication();
     private SessionManager sessionManager = new SessionManager();
 
+    /**
+     * The default anonymous {@link User}
+     */
     private User anonymous;
 
     public static final String NODE_COLLECTION_NAME = "nodes";
