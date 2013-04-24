@@ -36,10 +36,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author cwolfgang
- *         Date: 16-02-13
- *         Time: 23:16
  */
-public class Core extends Actionable implements Node, RootNode {
+public abstract class Core extends Actionable implements Node, RootNode {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
@@ -162,8 +160,8 @@ public class Core extends Actionable implements Node, RootNode {
         instance = this;
     }
 
-    public static Core getInstance() {
-        return instance;
+    public static <T extends Core> T getInstance() {
+        return (T) instance;
     }
 
     @Override
@@ -306,7 +304,7 @@ public class Core extends Actionable implements Node, RootNode {
         Exception exception = null;
         try {
             node = resolveNode( request.getRequestURI(), tokens );
-            logger.debug( "Found node " + node );
+            logger.debug("Found node " + node);
 
         } catch( NotFoundException e ) {
             logger.debug( "Exception is set to " + e );

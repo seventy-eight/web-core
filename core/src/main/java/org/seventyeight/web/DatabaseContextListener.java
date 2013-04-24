@@ -16,45 +16,46 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 02-12-12
- *         Time: 15:39
  */
 @WebListener
-public class DatabaseContextListener implements ServletContextListener {
-        private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
+public abstract class DatabaseContextListener<T extends Core> implements ServletContextListener {
+    private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
 
-        public void contextDestroyed( ServletContextEvent arg0 ) {
-            synchronized( DatabaseContextListener.class ) {
-                System.out.println( "Shutting down" );
-            }
+    private long seconds;
+
+    public void contextDestroyed( ServletContextEvent arg0 ) {
+        synchronized( DatabaseContextListener.class ) {
+            long duration = System.currentTimeMillis() - seconds;
+            System.out.println( "Shutting down after " + ( duration / 1000 ) + " seconds" );
         }
+    }
 
-        public void contextInitialized( ServletContextEvent sce ) {
+    public abstract T getCore( File path, String dbname );
 
-            String spath = sce.getServletContext().getRealPath( "" );
-            logger.info( "Path: " + spath );
+    public void contextInitialized( ServletContextEvent sce ) {
 
-            //logger.setLevel( Level.WARN );
-            //LogManager.shutdown();
+        String spath = sce.getServletContext().getRealPath( "" );
+        logger.info( "Path: " + spath );
 
-            /* Debugging system */
-            List<File> paths = new ArrayList<File>();
+        seconds = System.currentTimeMillis();
 
-            File path = new File( spath );
+        List<File> paths = new ArrayList<File>();
 
-            Core core = new Core( path, "seventyeight" );
+        File path = new File( spath );
 
-            try {
-                List<File> plugins = core.extractPlugins( core.getPath() );
+        Core core = getCore( path, "seventyeight" );
+
+        try {
+            List<File> plugins = core.extractPlugins( core.getPath() );
 
                 /* Paths added first is served first */
-                //gd.getTemplateManager().addStaticPath( new File( "C:/projects/graph-dragon/war/src/main/webapp/static" ) );
-                //gd.getTemplateManager().addStaticPath( new File( gd.getPath(), "static" ) );
-                core.getTemplateManager().addStaticPath( new File( "C:/Users/Christian/projects/web-core/cms-war/src/main/webapp/static" ) );
+            //gd.getTemplateManager().addStaticPath( new File( "C:/projects/graph-dragon/war/src/main/webapp/static" ) );
+            //gd.getTemplateManager().addStaticPath( new File( gd.getPath(), "static" ) );
+            core.getTemplateManager().addStaticPath( new File( "C:/Users/Christian/projects/web-core/cms-war/src/main/webapp/static" ) );
 
 
-                //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
-                //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
+            //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
+            //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
 
 
@@ -65,25 +66,25 @@ public class DatabaseContextListener implements ServletContextListener {
                 }
                 */
 
-                paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
+            paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
 
                 /* LIB */
-                paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
-                Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
+            paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
+            Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
 
-                //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
+            //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
-                logger.info( "Loading plugins" );
-                core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
-                core.getPlugins( plugins );
+            logger.info( "Loading plugins" );
+            core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
+            core.getPlugins( plugins );
 
-                logger.info( "Loading templates" );
-                core.getTemplateManager().setTemplateDirectories( paths );
-                logger.debug( core.getTemplateManager().toString() );
-                core.getTemplateManager().initialize();
-            } catch( IOException e ) {
-                e.printStackTrace();
-            }
+            logger.info( "Loading templates" );
+            core.getTemplateManager().setTemplateDirectories( paths );
+            logger.debug( core.getTemplateManager().toString() );
+            core.getTemplateManager().initialize();
+        } catch( IOException e ) {
+            e.printStackTrace();
+        }
 
             /* Adding action handlers */
             /*
@@ -102,15 +103,15 @@ public class DatabaseContextListener implements ServletContextListener {
             */
 
             /* Post actions */
-            Core.getInstance().setThemesPath( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/themes" ) );
+        Core.getInstance().setThemesPath( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/themes" ) );
 
 
             /* INSTALL */
-            Installer installer = new Installer();
-            try {
-                installer.install();
-            } catch( Exception e ) {
-                throw new IllegalStateException( e );
-            }
+        Installer installer = new Installer();
+        try {
+            installer.install();
+        } catch( Exception e ) {
+            throw new IllegalStateException( e );
         }
+    }
 }
