@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-@WebListener
+//@WebListener
 public abstract class DatabaseContextListener<T extends Core> implements ServletContextListener {
     private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
 
@@ -51,8 +51,17 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                 /* Paths added first is served first */
             //gd.getTemplateManager().addStaticPath( new File( "C:/projects/graph-dragon/war/src/main/webapp/static" ) );
             //gd.getTemplateManager().addStaticPath( new File( gd.getPath(), "static" ) );
-            core.getTemplateManager().addStaticPath( new File( "C:/Users/Christian/projects/web-core/cms-war/src/main/webapp/static" ) );
 
+            String staticPathStr = System.getProperty( "static", null );
+            File staticPath = null;
+            if( staticPathStr != null ) {
+                staticPath = new File( staticPathStr );
+            } else {
+                staticPath = new File( path, staticPathStr );
+            }
+
+
+            core.getTemplateManager().addStaticPath( staticPath );
 
             //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
             //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
@@ -66,7 +75,12 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                 }
                 */
 
-            paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
+            //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
+            String templatePathStr = System.getProperty( "path", null );
+            if( templatePathStr != null ) {
+                logger.info( "Template path: " + templatePathStr );
+                paths.add( new File( templatePathStr ) );
+            }
 
                 /* LIB */
             paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
@@ -86,24 +100,17 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             e.printStackTrace();
         }
 
-            /* Adding action handlers */
-            /*
-            //GraphDragon.getInstance().addActionHandler( "system", new SystemHandler() );
-            SeventyEight.getInstance().addTopLevelGizmo( new ResourceAction() );
-            SeventyEight.getInstance().addTopLevelGizmo( new ResourcesAction() );
-            SeventyEight.getInstance().addTopLevelGizmo( new StaticFileHandler() );
-            SeventyEight.getInstance().addTopLevelGizmo( new UploadHandler() );
+        /* Themes path */
+        String themePathStr = System.getProperty( "theme", null );
+        File themePath = null;
+        if( themePathStr != null ) {
+            themePath = new File( themePathStr );
+        } else {
+            themePath = new File( path, "themes" );
+        }
 
-            //SeventyEight.getInstance().addTopLevelGizmo( "debate", new DebateHandler() );
-
-            SeventyEight.getInstance().addTopLevelGizmo( new DatabaseBrowser() );
-
-            SeventyEight.getInstance().addTopLevelGizmo( new ThemeFileHandler() );
-            SeventyEight.getInstance().addTopLevelGizmo( new LoginHandler() );
-            */
-
-            /* Post actions */
-        Core.getInstance().setThemesPath( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/themes" ) );
+        logger.info( "Themes path: " + themePath.getAbsolutePath() );
+        Core.getInstance().setThemesPath( themePath );
 
 
             /* INSTALL */

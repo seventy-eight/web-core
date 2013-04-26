@@ -24,7 +24,7 @@ public class WebCoreEnv implements TestRule {
     }
 
     protected void before( File path ) throws UnknownHostException {
-        this.core = new Core( path, databaseName );
+        this.core = new DummyCore( path, databaseName );
         db = core.getDatabase();
 
     }
