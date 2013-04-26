@@ -1,3 +1,5 @@
+package org.seventyeight.web;
+
 import org.seventyeight.web.Core;
 
 import java.io.File;

@@ -1,3 +1,5 @@
+package org.seventyeight.web;
+
 import org.seventyeight.web.DatabaseContextListener;
 
 import javax.servlet.annotation.WebListener;
