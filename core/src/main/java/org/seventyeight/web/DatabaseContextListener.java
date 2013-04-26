@@ -9,6 +9,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         seconds = System.currentTimeMillis();
 
-        List<File> paths = new ArrayList<File>();
+        List<File> templatePaths = new ArrayList<File>();
 
         File path = new File( spath );
 
@@ -67,33 +68,43 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
 
-
-                /*
-                for( File plugin : plugins ) {
-                    logger.debug( "Adding " + plugin );
-                    paths.add( new File( plugin, "themes" ) );
+            for( File plugin : plugins ) {
+                File f1 = new File( plugin, "templates" );
+                if( f1.exists() ) {
+                    templatePaths.add( f1 );
                 }
-                */
+
+                File f2 = new File( plugin, "lib" );
+                if( f2.exists() ) {
+                    templatePaths.add( f2 );
+
+                    File[] libs = f2.listFiles( new FF() );
+                    for( File lib : libs ) {
+                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                    }
+                }
+
+            }
 
             //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
             String templatePathStr = System.getProperty( "templatePath", null );
             if( templatePathStr != null ) {
                 logger.info( "Template path: " + templatePathStr );
-                paths.add( new File( templatePathStr ) );
+                templatePaths.add( new File( templatePathStr ) );
             }
 
             /* LIB */
-            paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
-            Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
+            //templatePaths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
+            //Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
 
             //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
             logger.info( "Loading plugins" );
-            core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
+            //core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
             core.getPlugins( plugins );
 
             logger.info( "Loading templates" );
-            core.getTemplateManager().setTemplateDirectories( paths );
+            core.getTemplateManager().setTemplateDirectories( templatePaths );
             logger.debug( core.getTemplateManager().toString() );
             core.getTemplateManager().initialize();
         } catch( IOException e ) {
@@ -119,6 +130,14 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             installer.install();
         } catch( Exception e ) {
             throw new IllegalStateException( e );
+        }
+    }
+
+
+    protected class FF implements FilenameFilter {
+        @Override
+        public boolean accept( File dir, String name ) {
+            return name.endsWith( ".vm" );
         }
     }
 }
