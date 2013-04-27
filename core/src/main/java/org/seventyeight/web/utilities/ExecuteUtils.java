@@ -26,7 +26,6 @@ public class ExecuteUtils {
 
         /* First try to find a view, if not a POST */
         try {
-            logger.debug( "ModelObject: " + object + " -> " + urlName );
             executeMethod( object, request, response, urlName );
             return;
         } catch( InvocationTargetException e ) {
@@ -34,8 +33,6 @@ public class ExecuteUtils {
         } catch( ReflectiveOperationException e ) {
             logger.debug( object + " does not have " + urlName + ", " + e.getMessage() );
         }
-
-        logger.debug( "TRYING VIEW FILE" );
 
         if( !request.isRequestPost() ) {
             request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( object, urlName + ".vm" ) );
@@ -45,17 +42,16 @@ public class ExecuteUtils {
     }
 
     private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        logger.debug( "METHOD: " + object + ", " + actionMethod );
+        logger.debug( "Executing method : " + actionMethod + " on " + object );
 
         Method method = getRequestMethod( object, actionMethod, request.isRequestPost() );
-        logger.debug( "FOUND METHOD: " + method );
 
         method.invoke( object, request, response );
     }
 
     private static Method getRequestMethod( Object object, String method, boolean isPost ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
-        logger.debug( "Method: " + method + " = " + m );
+
         if( isPost ) {
             return ClassUtils.getInheritedPostMethod( object.getClass(), m, Request.class, Response.class );
         } else {

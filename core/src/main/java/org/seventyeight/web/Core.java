@@ -132,6 +132,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
         }
         db = dbManager.getDatabase();
         this.path = path;
+        this.uploadPath = new File( path, "upload" );
 
         /* Mandatory top level Actions */
         actions.add( new StaticFiles() );
@@ -153,9 +154,9 @@ public abstract class Core extends Actionable implements Node, RootNode {
         /* test */
         addDescriptor( new Footer.FooterDescriptor() );
 
-        mainMenu.add( new Menu.MenuItem( "New Content", "/new" ) );
-        mainMenu.add( new Menu.MenuItem( "Upload", "/upload" ) );
-        mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle" ) );
+        mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
+        mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
+        mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle/" ) );
 
         instance = this;
     }
@@ -359,7 +360,6 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
         while( tokenizer.hasMoreTokens() ) {
             String token = tokenizer.nextToken();
-            logger.debug( "Url name: " + token );
 
             current = current.getChild( token );
 
@@ -553,6 +553,10 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
     public File getPath() {
         return path;
+    }
+
+    public File getUploadPath() {
+        return uploadPath;
     }
 
     public Menu getMainMenu() {

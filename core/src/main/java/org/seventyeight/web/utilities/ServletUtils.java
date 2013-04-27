@@ -60,14 +60,13 @@ public class ServletUtils {
 
             logger.fatal( "TOIIIIIIIIIIITLOTLLTELE: " + obj.getTitle() );
             Tuple<File, File> files = Upload.generateFile( obj.getTitle(), pathPrefix );
+            obj.getDocument().set( "file", files.getFirst().toString() );
+            obj.save();
 
             FileOutputStream out = null;
             try {
-                //FileUtilities.writeToFile( request.getInputStream(), files.getSecond() );
                 out = new FileOutputStream( files.getSecond() );
                 out.write( IOUtils.readFully( request.getInputStream(), -1, false ) );
-                obj.getDocument().set( "file", files.getFirst().toString() );
-                obj.save();
             } catch( IOException e ) {
                 logger.error( "Unable to copy file", e );
             } finally {
@@ -78,6 +77,8 @@ public class ServletUtils {
                         e.printStackTrace();
                     }
                 }
+
+                logger.info( "File was written, " + files.getFirst().toString() );
             }
         }
     }
