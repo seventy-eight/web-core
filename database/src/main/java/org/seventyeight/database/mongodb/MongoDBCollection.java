@@ -70,6 +70,10 @@ public class MongoDBCollection {
         return docs;
     }
 
+    public MongoDocument findOne( MongoDBQuery query ) {
+        return new MongoDocument( collection.findOne( query.getDocument() ) );
+    }
+
     public MongoDocument getDocumentById( String id ) {
         BasicDBObject query = new BasicDBObject();
         query.put( "_id", new ObjectId( id ) );
