@@ -26,7 +26,7 @@ public class TemplateManager {
 	private VelocityEngine engine = new VelocityEngine();
 	private Properties velocityProperties = new Properties();
 	
-	private String paths = "";
+	private String templatePathsStr = "";
 	
 	private List<File> templatePaths = new ArrayList<File>();
 	private List<File> staticPaths = new ArrayList<File>();
@@ -53,7 +53,7 @@ public class TemplateManager {
 
 	
 	public void addTemplatePath( File path ) {
-		this.paths += path.toString() + ", ";
+		this.templatePathsStr += path.toString() + ", ";
 		templatePaths.add( path );
 	}
 	
@@ -75,15 +75,20 @@ public class TemplateManager {
 		
 		throw new IOException( "File does not exist, " + filename );
 	}
-	
+
+    /**
+     * Reset template templatePathsStr
+     */
 	public void resetPaths() {
-		this.paths = "";
+		this.templatePathsStr = "";
 	}
-	
+
+    /**
+     * Add a {@link List} of {@link File} templatePathsStr to the template path
+     * @param directories
+     */
 	public void setTemplateDirectories( List<File> directories ) {
 		for( File dir : directories ) {
-			logger.debug( "[Template directory] " + dir );
-			this.paths += dir.toString() + ", ";
 			templatePaths.add( dir );
 		}
 	}
@@ -100,19 +105,23 @@ public class TemplateManager {
 
         throw new IOException( "File does not exist, " + filename );
 	}
-	
+
+    /**
+     * Initialize velocity
+     */
 	public void initialize() {
 		
-		/* Generate paths */
-		this.paths = "";
+		/* Generate templatePathsStr */
+		this.templatePathsStr = "";
 		for( File f : templatePaths ) {
-			this.paths += f.toString() + ", ";
+            logger.info( "[Template directory] " + f.getAbsoluteFile() );
+			this.templatePathsStr += f.toString() + ", ";
 		}
 		
-		this.paths = paths.substring( 0, ( paths.length() - 2 ) );
+		this.templatePathsStr = templatePathsStr.substring( 0, ( templatePathsStr.length() - 2 ) );
 		
 		velocityProperties.setProperty( "resource.loader", "file" );
-		velocityProperties.setProperty( "file.resource.loader.path", this.paths );
+		velocityProperties.setProperty( "file.resource.loader.path", this.templatePathsStr );
 				
 		velocityProperties.setProperty( "file.resource.loader.modificationCheckInterval", "2" );
         velocityProperties.setProperty( "eventhandler.include.class", "org.apache.velocity.app.event.implement.IncludeRelativePath" );
@@ -384,7 +393,7 @@ public class TemplateManager {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append( "Paths: " + this.paths + "\n" );
+		sb.append( "Paths: " + this.templatePathsStr + "\n" );
 		
 		return sb.toString();
 	}
