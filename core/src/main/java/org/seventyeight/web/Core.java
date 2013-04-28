@@ -12,6 +12,7 @@ import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.web.actions.Get;
 import org.seventyeight.web.actions.NewContent;
+import org.seventyeight.web.actions.Nodes;
 import org.seventyeight.web.actions.Upload;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
@@ -140,6 +141,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
         actions.add( new NewContent( this ) );
         actions.add( new Get( this ) );
         actions.add( new Upload() );
+        actions.add( new Nodes() );
 
         //items.put( "user", new Users( this ) );
 
