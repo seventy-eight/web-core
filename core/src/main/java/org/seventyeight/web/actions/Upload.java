@@ -77,7 +77,7 @@ public class Upload implements Action {
     }
 
     @PostMethod
-    public void doUpload( Request request, Response response ) throws IOException {
+    public void doUpload( Request request, Response response ) throws IOException, SavingException, ItemInstantiationException, ClassNotFoundException {
         AsyncContext aCtx = request.startAsync( request, response );
 
 
@@ -102,7 +102,9 @@ public class Upload implements Action {
         f.setUploadIdentity( uid );
         f.setFilename( filename );
         f.setExpectedFileSize( byteSize );
-        f.save();
+        //f.setOwner( request.getUser() );
+        //f.save();
+        f.save( request, null );
 
         logger.debug( "File identifier: " + f.getIdentifier() );
 
