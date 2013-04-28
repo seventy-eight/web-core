@@ -47,14 +47,16 @@ public class Upload implements Action {
 
             File file = fileNode.getFile();
             long currentSize = file.length();
-            Double ratio = Math.floor( ( (double)currentSize / fileNode.getExpectedFileSize() ) * 100 );
+            Double ratio = Math.floor( ( (double)currentSize / (double)fileNode.getExpectedFileSize() ) * 10000 ) / 100.0;
 
+            /*
             logger.fatal( "File: " + file );
             logger.fatal( "Exists: " + file.exists() );
             logger.fatal( "File node: " + fileNode );
             logger.fatal( "Current: " + currentSize );
             logger.fatal( "Expected: " + fileNode.getExpectedFileSize() );
             logger.fatal( "Ratio: " + ratio );
+            */
 
             response.getWriter().write( ratio.toString() );
         } catch( Exception e ) {
