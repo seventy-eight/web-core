@@ -126,7 +126,6 @@ public class FileUtilities {
             try {
                 byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                 for( int length = 0; ( ( length = input.read( buffer ) ) > 0 ); ) {
-                    System.out.println( "-------LENGTH: " + length );
                     os.write( buffer, 0, length );
 
                     /*
