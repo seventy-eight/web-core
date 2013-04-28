@@ -3,6 +3,7 @@ package org.seventyeight.web.model;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.nodes.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
         }
     }
 
-    public void update() {
+    public void update( User owner ) {
         /* Default implementation is no op */
     }
 

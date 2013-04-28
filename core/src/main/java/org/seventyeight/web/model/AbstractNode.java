@@ -7,7 +7,6 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
-import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
@@ -16,7 +15,9 @@ import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
             handleJsonConfigurations( request, jsonData );
         }
 
-        update();
+        update( request.getUser() );
 
         if( saver.getId() != null ) {
             logger.debug( "Setting id to " + saver.getId() );
@@ -70,10 +71,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public static class Saver {
-        protected PersistedObject modelObject;
+        protected AbstractNode modelObject;
         protected CoreRequest request;
 
-        public Saver( PersistedObject modelObject, CoreRequest request ) {
+        public Saver( AbstractNode modelObject, CoreRequest request ) {
             this.modelObject = modelObject;
             this.request = request;
         }
@@ -83,7 +84,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
 
         public void save() throws SavingException {
-
         }
 
         public Object getId() {
@@ -207,22 +207,50 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         document.set( "owner", owner.getIdentifier() );
     }
 
-    public Date getCreatedAsDate() {
-        return new Date( (Long)getField( "created" ) );
+    public User getOwner() throws ItemInstantiationException {
+        return User.getUserByUsername( this, (String) document.get( "owner" ) );
     }
 
-    public Long getCreated() {
+    public String getOwnerName() {
+        return document.get( "owner" );
+    }
+
+    public Date getCreatedAsDate() {
+        //return new Date( (Long)getField( "created" ) );
+        return DatatypeConverter.parseDateTime( (String) getField( "created" ) ).getTime();
+    }
+
+    public String getType() {
+        return document.get( "type", "unknown" );
+    }
+
+    public Date getCreated() {
         return getField( "created" );
     }
 
-    public void update() {
-        document.set( "updated", new Date().getTime() );
+    public void update( User owner ) {
+        logger.debug( "Updating " + this );
+
+        Date now = new Date();
+
+        Date date = document.get( "created", null );
+        if( date == null ) {
+            logger.debug( "Was created" );
+            document.set( "created", now );
+        }
+
+        if( document.get( "owner", null ) == null ) {
+            logger.debug( "Owner was set to " + owner );
+            setOwner( owner );
+        }
+
+        document.set( "updated", now );
     }
 
     public Date getUpdatedAsDate() {
-        Long l = getField( "updated", null );
-        if( l != null ) {
-            return new Date( l );
+        String d = getField( "updated", null );
+        if( d != null ) {
+            return DatatypeConverter.parseDateTime( d).getTime();
         } else {
             return null;
         }
@@ -235,11 +263,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     public String getTitle() {
         return getField( "title", "" );
     }
-
-    public Long getUpdated() {
-        return getField( "updated", null );
-    }
-
 
     public void delete() {
         document.set( "deleted", new Date().getTime() );

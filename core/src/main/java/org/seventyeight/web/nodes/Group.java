@@ -27,7 +27,7 @@ public class Group extends Entity<Group> {
 
     public class GroupSaver extends Saver {
 
-        public GroupSaver( PersistedObject modelObject, CoreRequest request ) {
+        public GroupSaver( AbstractNode modelObject, CoreRequest request ) {
             super( modelObject, request );
         }
 

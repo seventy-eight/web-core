@@ -37,7 +37,7 @@ public class User extends Entity<User> {
 
         private String username;
 
-        public UserSaver( PersistedObject modelObject, CoreRequest request ) {
+        public UserSaver( AbstractNode modelObject, CoreRequest request ) {
             super( modelObject, request );
         }
 
@@ -54,6 +54,11 @@ public class User extends Entity<User> {
         public Object getId() {
             return username;
         }
+    }
+
+    @Override
+    public void setOwner( User owner ) {
+        /* No op for users */
     }
 
     public void setUsername( String username ) {
