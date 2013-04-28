@@ -34,9 +34,6 @@ public class Upload implements Action {
     private static SimpleDateFormat formatYear = new SimpleDateFormat( "yyyy" );
     private static SimpleDateFormat formatMonth = new SimpleDateFormat( "MM" );
 
-    private static Executor uploadExecutor = Executors.newCachedThreadPool();
-    private static ExecutorService service = Executors.newCachedThreadPool();
-
     /*
     public void doMulti( Request request, Response response ) throws IOException {
 
@@ -52,14 +49,12 @@ public class Upload implements Action {
             long currentSize = file.length();
             Double ratio = Math.floor( ( (double)currentSize / fileNode.getExpectedFileSize() ) * 100 );
 
-            /*
             logger.fatal( "File: " + file );
             logger.fatal( "Exists: " + file.exists() );
             logger.fatal( "File node: " + fileNode );
             logger.fatal( "Current: " + currentSize );
             logger.fatal( "Expected: " + fileNode.getExpectedFileSize() );
             logger.fatal( "Ratio: " + ratio );
-            */
 
             response.getWriter().write( ratio.toString() );
         } catch( Exception e ) {
@@ -111,11 +106,11 @@ public class Upload implements Action {
 
         logger.debug( "SERVLET THREAD: " + Thread.currentThread().getId() + " - " + Thread.currentThread().getName() );
         //uploadExecutor.execute( new ServletUtils.FileUploader( aCtx, request.getUser().getIdentifier().toString(), (String) f.getIdentifier() ) );
-        uploadExecutor.execute( new ServletUtils.Copier( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
+
+        Executor executor = (Executor)request.getServletContext().getAttribute("executor");
+        executor.execute( new ServletUtils.Copier( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
 
         logger.debug( "Executed: " + f.getIdentifier() );
-
-        uploadExecutor.
 
         response.getWriter().println( "done" );
     }

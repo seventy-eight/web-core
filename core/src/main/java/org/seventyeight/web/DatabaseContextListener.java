@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * @author cwolfgang
@@ -131,6 +133,11 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         } catch( Exception e ) {
             throw new IllegalStateException( e );
         }
+
+        /* Asynch */
+        //Executor executor = new ThreadPoolExecutor(10, 10, 50000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100));
+        Executor executor =  Executors.newCachedThreadPool();
+        sce.getServletContext().setAttribute( "executor", executor );
     }
 
 

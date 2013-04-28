@@ -66,7 +66,8 @@ public class ServletUtils {
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream( files.getSecond() );
-                out.write( IOUtils.readFully( request.getInputStream(), -1, false ) );
+                //out.write( IOUtils.readFully( request.getInputStream(), -1, false ) );
+                FileUtilities.writeToFile( request.getInputStream(), files.getSecond() );
             } catch( IOException e ) {
                 logger.error( "Unable to copy file", e );
             } finally {
@@ -79,6 +80,7 @@ public class ServletUtils {
                 }
 
                 logger.info( "File was written, " + files.getFirst().toString() );
+                ctx.complete();
             }
         }
     }
