@@ -69,6 +69,12 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
             //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
+            /* Specialized templates paths comes first */
+            String templatePathStr = System.getProperty( "templatePath", null );
+            if( templatePathStr != null ) {
+                logger.debug( "Template path: " + templatePathStr );
+                templatePaths.add( new File( templatePathStr ) );
+            }
 
             for( File plugin : plugins ) {
                 File f1 = new File( plugin, "templates" );
@@ -89,11 +95,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             }
 
             //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
-            String templatePathStr = System.getProperty( "templatePath", null );
-            if( templatePathStr != null ) {
-                logger.info( "Template path: " + templatePathStr );
-                templatePaths.add( new File( templatePathStr ) );
-            }
+
 
             /* LIB */
             //templatePaths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
