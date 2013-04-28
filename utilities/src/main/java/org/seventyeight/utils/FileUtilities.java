@@ -122,8 +122,6 @@ public class FileUtilities {
         try {
             InputStream input = new BufferedInputStream( is, DEFAULT_BUFFER_SIZE );
             OutputStream os = new BufferedOutputStream( new FileOutputStream( file ), DEFAULT_BUFFER_SIZE );
-            logger.debug( "----INPUT: " + input );
-            logger.debug( "----INPUT: " + input.read() );
             int i = 0;
             try {
                 byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
