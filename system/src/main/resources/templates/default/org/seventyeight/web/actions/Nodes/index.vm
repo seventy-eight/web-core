@@ -1,1 +1,20 @@
-HER!!!!!...adwadw
+HER!!!!!...adwadw<br>
+
+<table>
+#foreach( $it in $item.getNodes(0,10) )
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <td>$it.getType().toUpperCase()</td>
+                    <td>$it.getDisplayName()</td>
+                </tr>
+                <tr>
+                    <td>$it.getOwnerName()</td>
+                    <td>$it.getCreated()</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+#end
+</table>
