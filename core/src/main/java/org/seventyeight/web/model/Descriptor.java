@@ -101,4 +101,15 @@ public abstract class Descriptor<T extends Describable<T>> {
         return "application/x-www-form-urlencoded";
     }
 
+    public boolean hasGlobalConfiguration() {
+        //Core.getInstance().getTemplateManager().getTemplateFile(  )
+        return true;
+    }
+
+    /*
+    public String getGlobalConfigurationPage() {
+
+    }
+    */
+
 }

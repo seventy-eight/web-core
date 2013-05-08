@@ -10,13 +10,11 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
-import org.seventyeight.web.actions.Get;
-import org.seventyeight.web.actions.NewContent;
-import org.seventyeight.web.actions.Nodes;
-import org.seventyeight.web.actions.Upload;
+import org.seventyeight.web.actions.*;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
+import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.footer.Footer;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
@@ -41,6 +39,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class Core extends Actionable implements Node, RootNode {
 
     private static Logger logger = Logger.getLogger( Core.class );
+
+    public static final String MAIN_TEMPLATE = "org/seventyeight/web/main.vm";
 
     public static final String TEMPLATE_PATH_NAME = "templates";
     public static final String THEMES_PATH_NAME = "themes";
@@ -74,7 +74,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
     //
     /**
-     * A map of descriptors keyed by their super class
+     * A map of descriptors keyed by their supers class
      */
     private Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
 
@@ -85,6 +85,8 @@ public abstract class Core extends Actionable implements Node, RootNode {
     private Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
 
     private Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
+
+    private Map<Class<?>, List> extensionsList = new HashMap<Class<?>, List>();
 
     /**
      * A {@link Map} of top level actions, given by its name
@@ -142,6 +144,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
         actions.add( new Get( this ) );
         actions.add( new Upload() );
         actions.add( new Nodes() );
+        actions.add( new GlobalConfiguration() );
 
         //items.put( "user", new Users( this ) );
 
@@ -152,6 +155,11 @@ public abstract class Core extends Actionable implements Node, RootNode {
         /**/
         addDescriptor( new User.UserDescriptor() );
         addDescriptor( new FileNode.FileDescriptor() );
+
+        addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
+
+
+        //addExtension( ImageFileType.class, new ImageFileType(  ) );
 
         /* test */
         addDescriptor( new Footer.FooterDescriptor() );
@@ -396,6 +404,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
+        interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
         for( Class<?> i : interfaces ) {
             logger.debug( "INTERFACE: " + i );
             List<Descriptor> list = null;
@@ -449,8 +458,29 @@ public abstract class Core extends Actionable implements Node, RootNode {
         }
     }
 
+    public Collection<Descriptor<?>> getAllDescriptors() {
+        return descriptors.values();
+    }
+
     public List<Descriptor> getCreatableDescriptors() {
         return getExtensionDescriptors( CreatableNode.class );
+    }
+
+
+    public <T> void addExtension( Class<T> clazz, Object extension ) {
+        if( !extensionsList.containsKey( clazz ) ) {
+            extensionsList.put( clazz, new ArrayList<T>() );
+        }
+
+        extensionsList.get( clazz ).add( extension );
+    }
+
+    public <T> List<T> getExtension( Class<T> type ) {
+        if( extensionsList.containsKey( type ) ) {
+            return extensionsList.get( type );
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public AbstractTheme getDefaultTheme() {

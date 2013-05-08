@@ -41,6 +41,11 @@ public class TemplateManager {
 		}
 	}
 
+    /**
+     * Given a template name and a {@link AbstractTheme}, return the {@link Template}.
+     * If the {@link AbstractTheme} does not have the {@link Template}, try to find it in the default theme.
+     * Throws a TemplateException if not found.
+     */
     public Template getTemplate( AbstractTheme theme, String template ) throws TemplateException {
         logger.debug( "[Finding] " + template + " for " + theme.getName() );
         try {

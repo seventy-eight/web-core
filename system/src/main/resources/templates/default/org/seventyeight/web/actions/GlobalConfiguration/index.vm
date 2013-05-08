@@ -1,0 +1,6 @@
+BAM!!!!
+
+#foreach( $d in $core.getAllDescriptors() )
+    RENDER: $d.getClazz()
+    #render( $d "global" 0 $d.getClazz() )
+#end

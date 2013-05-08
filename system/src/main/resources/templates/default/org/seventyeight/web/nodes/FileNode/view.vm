@@ -3,4 +3,8 @@
 
 <br>
 
+$item.getFileTypeClass()
+
+<br>
+
 $item.getDocument().getDBObject()

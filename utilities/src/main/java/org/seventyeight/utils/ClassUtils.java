@@ -57,4 +57,15 @@ public class ClassUtils {
         return interfaces;
     }
 
+    public static List<Class<?>> getClasses( Class<?> clazz ) {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+
+        while( clazz != null && !clazz.equals( Object.class ) ) {
+            classes.add( clazz );
+            clazz = clazz.getSuperclass();
+        }
+
+        return classes;
+    }
+
 }

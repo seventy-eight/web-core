@@ -31,10 +31,11 @@ public class RenderObject extends Directive {
 
 	@Override
 	public boolean render( InternalContextAdapter context, Writer writer, Node node ) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-        logger.debug( "Rendering descriptor" );
+        logger.debug( "Rendering object" );
 		Object obj = null;
         String template = null;
         int superClass = 0;
+        Class<?> clazz2 = null;
 
 		try {
 			if( node.jjtGetChild( 0 ) != null ) {
@@ -55,6 +56,12 @@ public class RenderObject extends Directive {
                 throw new IOException( "Third argument is not a string" );
             }
 
+            if( node.jjtGetChild( 3 ) != null ) {
+                clazz2 = (Class<?>) node.jjtGetChild( 3 ).value( context );
+            } else {
+                throw new IOException( "Fourth argument is not a class" );
+            }
+
 		} catch( Exception e ) {
             logger.debug( e );
 		}
@@ -64,7 +71,8 @@ public class RenderObject extends Directive {
         if( template == null ) {
             return false;
         } else {
-            if( superClass == 0 ) {
+            /* Default behaviour */
+            if( superClass == 0 && clazz2 == null ) {
                 try {
                     writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( obj, template + ".vm", false ) );
                 } catch( TemplateException e ) {
@@ -72,7 +80,7 @@ public class RenderObject extends Directive {
                 }
             } else {
                 try {
-                    Class<?> clazz = obj.getClass();
+                    Class<?> clazz = clazz2 != null ? clazz2 : obj.getClass();
                     int c = 0;
                     logger.debug("BASE IS " + clazz);
                     while( clazz != null && clazz != Object.class && c < superClass ) {

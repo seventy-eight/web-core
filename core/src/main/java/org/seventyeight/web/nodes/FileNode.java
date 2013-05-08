@@ -49,6 +49,8 @@ public class FileNode extends UploadableNode<FileNode> {
     public Class<?> getFileTypeClass() {
         List<Descriptor> descriptors = Core.getInstance().getExtensionDescriptors( FileType.class );
 
+        logger.debug( "List is " + descriptors );
+
         return null;
     }
 

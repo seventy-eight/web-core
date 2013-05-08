@@ -10,8 +10,6 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 16-02-13
- *         Time: 23:14
  */
 public abstract class PersistedObject extends Actionable implements Savable, Documented {
 

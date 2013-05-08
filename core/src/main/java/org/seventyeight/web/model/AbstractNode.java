@@ -97,7 +97,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     public String getUrl() {
         //return "/get/" + getIdentifier();
-        return "/" + getDescriptor().getType() + "/" + getTitle();
+        return "/" + getDescriptor().getType() + "/" + getTitle() + "/";
     }
 
     public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
@@ -250,7 +250,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     public Date getUpdatedAsDate() {
         String d = getField( "updated", null );
         if( d != null ) {
-            return DatatypeConverter.parseDateTime( d).getTime();
+            return DatatypeConverter.parseDateTime( d ).getTime();
         } else {
             return null;
         }

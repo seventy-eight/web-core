@@ -1,13 +1,12 @@
-HER!!!!!...adwadw<br>
-
 <table>
 #foreach( $it in $item.getNodes(0,10) )
     <tr>
         <td>
             <table>
                 <tr>
+                    <td><input type="checkbox" name="" id=""></td>
                     <td>$it.getType().toUpperCase()</td>
-                    <td>$it.getDisplayName()</td>
+                    <td><a href="$it.getUrl()">$it.getDisplayName()</a></td>
                 </tr>
                 <tr>
                     <td>$it.getOwnerName()</td>
