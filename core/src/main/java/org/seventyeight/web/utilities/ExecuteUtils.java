@@ -22,7 +22,15 @@ public class ExecuteUtils {
     }
 
     public static void execute( Request request, Response response, Object object, String urlName ) throws Exception {
+        execute( request, response, object, urlName, object.getClass() );
+    }
+
+    public static void execute( Request request, Response response, Object object, String urlName, Class<?> imposter ) throws Exception {
         logger.debug( "EXECUTE: " + object + ", " + urlName );
+
+        if( imposter == null ) {
+            imposter = object.getClass();
+        }
 
         /* First try to find a view, if not a POST */
         try {
@@ -35,7 +43,7 @@ public class ExecuteUtils {
         }
 
         if( !request.isRequestPost() ) {
-            request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( object, urlName + ".vm" ) );
+            request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( object, imposter, urlName + ".vm" ) );
             response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
             return;
         }
