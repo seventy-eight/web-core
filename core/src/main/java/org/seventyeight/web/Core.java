@@ -3,10 +3,7 @@ package org.seventyeight.web;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDBManager;
-import org.seventyeight.database.mongodb.MongoDatabase;
-import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
@@ -61,7 +58,15 @@ public abstract class Core extends Actionable implements Node, RootNode {
      */
     private User anonymous;
 
+    /**
+     * The collection name for {@link Node}s
+     */
     public static final String NODE_COLLECTION_NAME = "nodes";
+
+    /**
+     * The collection name for {@link Descriptor}s
+     */
+    public static final String DESCRIPTOR_COLLECTION_NAME = "nodes";
 
     private org.seventyeight.loader.ClassLoader classLoader = null;
     private Loader pluginLoader;
@@ -399,9 +404,11 @@ public abstract class Core extends Actionable implements Node, RootNode {
         return null;
     }
 
-
     public void addDescriptor( Descriptor<?> descriptor ) {
         this.descriptors.put( descriptor.getClazz(), descriptor );
+
+        /* Determine if the descriptor has something to be loaded */
+        
 
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );

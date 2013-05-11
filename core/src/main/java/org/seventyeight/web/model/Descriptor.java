@@ -2,6 +2,10 @@ package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
+import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.orm.SimpleORM;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
@@ -115,9 +119,26 @@ public abstract class Descriptor<T extends Describable<T>> {
 
     public void doSubmit( Request request, Response response ) throws IOException {
         save( request, response );
+        MongoDocument doc = getDescriptorDocument();
+        try {
+            SimpleORM.storeFromObject( this, doc );
+        } catch( IllegalAccessException e ) {
+            throw new IOException( e );
+        }
+
+        MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).save( doc );
 
         /* TODO get a better URL */
         response.sendRedirect( "/" );
+    }
+
+    public MongoDocument getDescriptorDocument() {
+        MongoDocument doc = MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "class", this.getClazz().getName() ) );
+        if( doc != null ) {
+            return doc;
+        } else {
+            return new MongoDocument();
+        }
     }
 
     /**
