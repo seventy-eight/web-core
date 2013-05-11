@@ -7,6 +7,7 @@ import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -112,4 +113,19 @@ public abstract class Descriptor<T extends Describable<T>> {
     }
     */
 
+    public void doSubmit( Request request, Response response ) throws IOException {
+        save( request, response );
+
+        /* TODO get a better URL */
+        response.sendRedirect( "/" );
+    }
+
+    /**
+     * Base class that does nothing
+     * @param request
+     * @param response
+     */
+    public void save( Request request, Response response ) {
+        logger.debug( "Saving " + getClass() );
+    }
 }
