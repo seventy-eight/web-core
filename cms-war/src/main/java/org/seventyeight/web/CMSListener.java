@@ -11,7 +11,7 @@ import java.io.File;
 @WebListener
 public class CMSListener extends DatabaseContextListener<CMSCore> {
     @Override
-    public CMSCore getCore( File path, String dbname ) {
+    public CMSCore getCore( File path, String dbname ) throws CoreException {
         return new CMSCore( path, dbname );
     }
 }

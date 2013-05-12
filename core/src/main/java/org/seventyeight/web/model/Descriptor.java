@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.orm.SimpleORM;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.CoreException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -126,18 +127,37 @@ public abstract class Descriptor<T extends Describable<T>> {
             throw new IOException( e );
         }
 
+        logger.debug( "SAVING " + doc );
         MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).save( doc );
 
         /* TODO get a better URL */
         response.sendRedirect( "/" );
     }
 
+    public void loadFromDisk() throws CoreException {
+        MongoDocument doc = getDescriptorDocument();
+        logger.debug( "Configuration for " + this.getDisplayName() + ": " + doc );
+        try {
+            SimpleORM.bindToObject( this, doc );
+        } catch( IllegalAccessException e ) {
+            throw new CoreException( "Unable to load " + this, e );
+        }
+    }
+
+    /**
+     * Get the {@link MongoDocument} for the {@link Descriptor}. Will never return null.
+     * @return
+     */
     public MongoDocument getDescriptorDocument() {
         MongoDocument doc = MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "class", this.getClazz().getName() ) );
-        if( doc != null ) {
+        if( !doc.isNull() ) {
+            logger.debug( "Had a configuration" );
             return doc;
         } else {
-            return new MongoDocument();
+            logger.debug( "New empty document" );
+            MongoDocument newdoc = new MongoDocument();
+            newdoc.set( "class", getId() );
+            return newdoc;
         }
     }
 

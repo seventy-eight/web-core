@@ -20,8 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author cwolfgang
- *         Date: 26-02-13
- *         Time: 16:13
  */
 public class CoreTest {
 

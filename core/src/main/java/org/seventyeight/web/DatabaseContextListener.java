@@ -33,7 +33,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         }
     }
 
-    public abstract T getCore( File path, String dbname );
+    public abstract T getCore( File path, String dbname ) throws CoreException;
 
     public void contextInitialized( ServletContextEvent sce ) {
 
@@ -46,7 +46,13 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         File path = new File( spath );
 
-        Core core = getCore( path, "seventyeight" );
+        Core core = null;
+        try {
+            core = getCore( path, "seventyeight" );
+        } catch( CoreException e ) {
+            e.printStackTrace();
+            logger.fatal( "Failed to initialize core", e );
+        }
 
         try {
             List<File> plugins = core.extractPlugins( core.getPath() );

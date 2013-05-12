@@ -128,7 +128,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
         public static final String EXTENSIONS = "extensions";
     }
 
-    public Core( File path, String dbname ) {
+    public Core( File path, String dbname ) throws CoreException {
         if( instance != null ) {
             throw new IllegalStateException( "Instance already defined" );
         }
@@ -404,11 +404,11 @@ public abstract class Core extends Actionable implements Node, RootNode {
         return null;
     }
 
-    public void addDescriptor( Descriptor<?> descriptor ) {
+    public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         /* Determine if the descriptor has something to be loaded */
-        
+        descriptor.loadFromDisk();
 
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );

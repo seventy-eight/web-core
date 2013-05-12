@@ -8,7 +8,7 @@ import java.io.File;
  * @author cwolfgang
  */
 public class CMSCore extends Core {
-    public CMSCore( File path, String dbname ) {
+    public CMSCore( File path, String dbname ) throws CoreException {
         super( path, dbname );
     }
 }

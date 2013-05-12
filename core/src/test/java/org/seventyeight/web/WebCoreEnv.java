@@ -23,7 +23,7 @@ public class WebCoreEnv implements TestRule {
         this.databaseName = databaseName;
     }
 
-    protected void before( File path ) throws UnknownHostException {
+    protected void before( File path ) throws UnknownHostException, CoreException {
         this.core = new DummyCore( path, databaseName );
         db = core.getDatabase();
 

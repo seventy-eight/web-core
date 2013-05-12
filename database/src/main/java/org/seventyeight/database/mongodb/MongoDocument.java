@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 15-02-13
- *         Time: 21:00
  */
 public class MongoDocument implements Document {
 
@@ -150,6 +148,10 @@ public class MongoDocument implements Document {
         document.removeField( fieldName );
 
         return this;
+    }
+
+    public boolean isNull() {
+        return document == null;
     }
 
     @Override

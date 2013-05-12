@@ -1,11 +1,14 @@
 package org.seventyeight.web.nodes;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.annotations.Persisted;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
 import java.util.List;
 
@@ -121,6 +124,9 @@ public class User extends Entity<User> {
 
     public static class UserDescriptor extends NodeDescriptor<User> {
 
+        @Persisted
+        public String testString;
+
         @Override
         public String getDisplayName() {
             return "User";
@@ -154,6 +160,13 @@ public class User extends Entity<User> {
             }
 
             throw new NotFoundException( "The user " + name + " was not found" );
+        }
+
+        @Override
+        public void save( Request request, Response response ) {
+            logger.debug( "Saving " + this );
+
+            testString = "The millis: " + System.currentTimeMillis();
         }
     }
 }
