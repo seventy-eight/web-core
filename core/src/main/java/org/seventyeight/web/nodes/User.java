@@ -124,7 +124,6 @@ public class User extends Entity<User> {
 
     public static class UserDescriptor extends NodeDescriptor<User> {
 
-        @Persisted
         public String testString;
 
         @Override

@@ -20,7 +20,7 @@ public abstract class Descriptor<T extends Describable<T>> {
 	
 	private static Logger logger = Logger.getLogger( Descriptor.class );
 	
-	protected Class<T> clazz;
+	protected transient Class<T> clazz;
 	
 	protected Descriptor() {
 		clazz = (Class<T>) getClass().getEnclosingClass();
@@ -149,14 +149,14 @@ public abstract class Descriptor<T extends Describable<T>> {
      * @return
      */
     public MongoDocument getDescriptorDocument() {
-        MongoDocument doc = MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "class", this.getClazz().getName() ) );
+        MongoDocument doc = MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "_id", this.getId() ) );
         if( !doc.isNull() ) {
             logger.debug( "Had a configuration" );
             return doc;
         } else {
             logger.debug( "New empty document" );
             MongoDocument newdoc = new MongoDocument();
-            newdoc.set( "class", getId() );
+            newdoc.set( "_id", getId() );
             return newdoc;
         }
     }

@@ -66,7 +66,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
     /**
      * The collection name for {@link Descriptor}s
      */
-    public static final String DESCRIPTOR_COLLECTION_NAME = "nodes";
+    public static final String DESCRIPTOR_COLLECTION_NAME = "descriptors";
 
     private org.seventyeight.loader.ClassLoader classLoader = null;
     private Loader pluginLoader;
@@ -162,7 +162,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
         addDescriptor( new FileNode.FileDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
-
+        //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );
 
@@ -405,11 +405,12 @@ public abstract class Core extends Actionable implements Node, RootNode {
     }
 
     public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
+        logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         /* Determine if the descriptor has something to be loaded */
         descriptor.loadFromDisk();
-
+        logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
         for( Class<?> i : interfaces ) {

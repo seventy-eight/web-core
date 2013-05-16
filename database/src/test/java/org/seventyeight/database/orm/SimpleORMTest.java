@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -52,6 +53,39 @@ public class SimpleORMTest {
     }
 
     @Test
+    public void incompleteDocument() throws IllegalAccessException {
+        MongoDocument doc = new MongoDocument(  );
+        doc.set( "string", "2" );
+
+        Testing t = new Testing();
+
+        System.out.println( "t1=" + t );
+
+        SimpleORM.bindToObject( t, doc );
+
+        System.out.println( "t2=" + t );
+
+        assertThat( t.bar, is( nullValue() ) );
+        assertThat( t.string, is( "2" ) );
+    }
+
+    @Test
+    public void incompleteDocumentInt() throws IllegalAccessException {
+        MongoDocument doc = new MongoDocument(  );
+        doc.set( "myint", 1 );
+
+        TestingInt t = new TestingInt();
+
+        System.out.println( "t1=" + t );
+
+        SimpleORM.bindToObject( t, doc );
+
+        System.out.println( "t2=" + t );
+
+        assertThat( t.myint, is( 1 ) );
+    }
+
+    @Test
     public void test04() throws IllegalAccessException {
         MongoDocument doc = new MongoDocument(  );
         Testing t = new Testing();
@@ -68,14 +102,15 @@ public class SimpleORMTest {
         assertThat( (String)doc.get( "string" ), is( "2" ) );
     }
 
+    public class TestingInt {
+        private Integer myint;
+    }
 
     public class Testing {
-        public String foo;
+        public transient String foo;
 
-        @Persisted( fieldName = "bar" )
         public String bar;
 
-        @Persisted( fieldName = "string" )
         private String string;
 
         @Override
@@ -85,7 +120,6 @@ public class SimpleORMTest {
     }
 
     public class SubTesting extends Testing {
-        @Persisted
-        public int myInt;
+        public Integer myInt;
     }
 }

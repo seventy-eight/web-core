@@ -74,6 +74,7 @@ public class Rest extends HttpServlet {
         try {
             Core.getInstance().render( request, response );
         } catch( Exception e ) {
+            logger.error( "CAUGHT ERROR" );
             e.printStackTrace();
             generateException( request, rsp.getWriter(), e, e.getMessage() );
         }
@@ -83,7 +84,7 @@ public class Rest extends HttpServlet {
     }
 
     private void generateException( Request request, PrintWriter writer, Throwable e, String message ) {
-        logger.error( e.getMessage() );
+        logger.error( "Generating error: " + e.getMessage() );
         try {
             VelocityContext vc = new VelocityContext();
             vc.put( "stacktrace", e.getStackTrace() );

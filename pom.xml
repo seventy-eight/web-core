@@ -17,6 +17,7 @@
 
 	<modules>
         <module>utilities</module>
+		<module>loader</module>
         <module>database</module>
         <module>core</module>
         <module>system</module>

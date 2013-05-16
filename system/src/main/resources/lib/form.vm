@@ -108,3 +108,34 @@
         </td>
     </tr>
 #end
+
+
+#macro( descriptorConfiguration $descriptor )
+    <table>
+
+        <tr>
+            <td>
+
+                <form action="configurationSubmit" method="post" id="configure" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );">
+
+                    <table>
+
+
+                        <tr>
+                            <td colspan="2" align="center" style="font-size: 18px;font-weight: bold">Configuring global $descriptor.getDisplayName()</td>
+                        </tr>
+
+                        #render( $descriptor "global" 0 $descriptor.getClazz() )
+
+                        <tr>
+                            <td colspan="2">
+                                <input type="submit" value="save">
+                            </td>
+                        </tr>
+
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+#end

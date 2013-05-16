@@ -4,6 +4,7 @@ import org.seventyeight.database.annotations.Persisted;
 import org.seventyeight.database.mongodb.MongoDocument;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +26,16 @@ public class SimpleORM {
             Field[] fs = clazz.getDeclaredFields();
 
             for( Field f : fs ) {
-                Persisted p = f.getAnnotation( Persisted.class );
-                if( p != null ) {
-                    String name = p.fieldName().isEmpty() ? f.getName() : p.fieldName();
+                //System.out.println( "--->" + f.getName() + ", " + f.getModifiers() + ", " + ( f.getModifiers() | 4096 ) );
+
+                if( !Modifier.isTransient( f.getModifiers() ) && !Modifier.isStatic( f.getModifiers() ) && !isSynthetic( f.getModifiers() )  ) {
+                    System.out.println( "Setting " + f.getName() );
+                    String name = f.getName();
                     f.setAccessible( true );
                     f.set( object, f.getType().cast( document.get( name ) ) );
                 }
+
+                //System.out.println( f.getName() + " = " + f.get( object ) );
             }
 
             clazz = clazz.getSuperclass();
@@ -46,9 +51,10 @@ public class SimpleORM {
             Field[] fs = clazz.getDeclaredFields();
 
             for( Field f : fs ) {
-                Persisted p = f.getAnnotation( Persisted.class );
-                if( p != null ) {
-                    String name = p.fieldName().isEmpty() ? f.getName() : p.fieldName();
+                //System.out.println( "--->" + f.getName() + ", " + f.getModifiers() + ", " + ( f.getModifiers() | 4096 ) );
+                //System.out.println( "--->" + f.getName() + ", " + f.getModifiers() + ", " + ( f.getModifiers() | 8192 ) );
+                if( !Modifier.isTransient( f.getModifiers() ) && !Modifier.isStatic( f.getModifiers() ) && !isSynthetic( f.getModifiers() ) ) {
+                    String name = f.getName();
                     f.setAccessible( true );
                     document.set( name, f.get( object ) );
                 }
@@ -56,6 +62,11 @@ public class SimpleORM {
 
             clazz = clazz.getSuperclass();
         }
+    }
+
+
+    public static boolean isSynthetic( int i ) {
+        return ( i & 4096 ) == 4096;
     }
 
     public static List<Field> getFields( Object object ) {

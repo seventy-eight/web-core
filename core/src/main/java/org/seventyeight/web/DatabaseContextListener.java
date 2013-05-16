@@ -134,7 +134,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         Core.getInstance().setThemesPath( themePath );
 
 
-            /* INSTALL */
+        /* INSTALL */
         Installer installer = new Installer();
         try {
             installer.install();

@@ -88,10 +88,8 @@ public class ViewWrapper implements Node, Autonomous {
                 //request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( node, offset, template + ".vm" ) );
             }
             //response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
-        } catch( TemplateException e ) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch( Exception e ) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new IOException( e );
         }
     }
 }
