@@ -32,17 +32,26 @@ public class Loader extends HashMap<Class<? extends Annotation>, Handler> {
 		
 		for( String className : classes ) {
 			try {
-				load( path, className );
+				load( className );
 			} catch( ClassNotFoundException e ) {
 				System.out.println( e.getMessage() );
 			}
 		}
 	}
 
+    /**
+     * @deprecated
+     */
 	public void load( File path, String className ) throws IOException, ClassNotFoundException {
+        load( className );
+    }
 
-		Class<?> eclass = Class.forName( className, true, cl );
-		
+    public void load( String className ) throws IOException, ClassNotFoundException {
+        Class<?> eclass = Class.forName( className, true, cl );
+        load( eclass );
+    }
+
+    public void load( Class<?> eclass ) throws IOException, ClassNotFoundException {
 		Annotation[] as = eclass.getAnnotations();
 		for( Annotation a : as ) {
 			if( this.containsKey( a.annotationType() ) ) {

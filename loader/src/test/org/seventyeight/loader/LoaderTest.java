@@ -21,6 +21,13 @@ public class LoaderTest {
 
         List<String> s = loader.getClasses( path, "" );
 
+        TestClass01 tc = new TestClass01();
+        tc.s = "Wolle";
+
         System.out.println( "S: " + s );
+    }
+
+    public static class TestClass01 {
+        public String s;
     }
 }
