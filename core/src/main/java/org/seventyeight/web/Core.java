@@ -46,17 +46,17 @@ public abstract class Core extends Actionable implements Node, RootNode {
     /**
      * The instance of {@link Core}
      */
-    private static Core instance;
+    protected static Core instance;
 
-    private TemplateManager templateManager = new TemplateManager();
+    protected TemplateManager templateManager = new TemplateManager();
 
-    private Authentication authentication = new SimpleAuthentication();
-    private SessionManager sessionManager = new SessionManager();
+    protected Authentication authentication = new SimpleAuthentication();
+    protected SessionManager sessionManager = new SessionManager();
 
     /**
      * The default anonymous {@link User}
      */
-    private User anonymous;
+    protected User anonymous;
 
     /**
      * The collection name for {@link Node}s
@@ -68,30 +68,30 @@ public abstract class Core extends Actionable implements Node, RootNode {
      */
     public static final String DESCRIPTOR_COLLECTION_NAME = "descriptors";
 
-    private org.seventyeight.loader.ClassLoader classLoader = null;
-    private Loader pluginLoader;
+    protected org.seventyeight.loader.ClassLoader classLoader = null;
+    protected Loader pluginLoader;
 
     /* Database */
-    private MongoDBManager dbManager;
-    private MongoDatabase db;
+    protected MongoDBManager dbManager;
+    protected MongoDatabase db;
 
-    private Menu mainMenu = new Menu();
+    protected Menu mainMenu = new Menu();
 
     //
     /**
      * A map of descriptors keyed by their supers class
      */
-    private Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
+    protected Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
 
     /**
      * A map of interfaces corresponding to specific {@link Descriptor}s<br />
      * This is used to map an extension class/interface to those {@link Describable}s {@link Descriptor}s implementing them.
      */
-    private Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
+    protected Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
 
-    private Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
+    protected Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
 
-    private Map<Class<?>, List> extensionsList = new HashMap<Class<?>, List>();
+    protected Map<Class<?>, List> extensionsList = new HashMap<Class<?>, List>();
 
     /**
      * A {@link Map} of top level actions, given by its name
@@ -101,28 +101,28 @@ public abstract class Core extends Actionable implements Node, RootNode {
     /**
      * A map of first level {@link org.seventyeight.web.model.Node}s registered to the core
      */
-    private ConcurrentMap<String, Node> items = new ConcurrentHashMap<String, Node>();
+    protected ConcurrentMap<String, Node> items = new ConcurrentHashMap<String, Node>();
 
     /**
      * The list of top level {@link Action}s
      */
-    private List<Action> actions = new CopyOnWriteArrayList<Action>();
+    protected List<Action> actions = new CopyOnWriteArrayList<Action>();
 
     /**
      * Path to the ...
      */
-    private File path;
-    private File orientdbPath;
-    private File pluginsPath;
-    private File uploadPath;
+    protected File path;
+    protected File orientdbPath;
+    protected File pluginsPath;
+    protected File uploadPath;
 
     /**
      * This path contains the themes. Each theme in a sub directory
      */
-    private File themesPath;
+    protected File themesPath;
 
 
-    private AbstractTheme defaultTheme = new Default();
+    protected AbstractTheme defaultTheme = new Default();
 
     public static class Relations {
         public static final String EXTENSIONS = "extensions";
@@ -133,47 +133,32 @@ public abstract class Core extends Actionable implements Node, RootNode {
             throw new IllegalStateException( "Instance already defined" );
         }
 
+        /* Initialize database */
         try {
             dbManager = new MongoDBManager( dbname );
         } catch( UnknownHostException e ) {
             throw new IllegalArgumentException( e );
         }
         db = dbManager.getDatabase();
+
+        /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
-
-        /* Mandatory top level Actions */
-        actions.add( new StaticFiles() );
-        actions.add( new ThemeFiles() );
-        actions.add( new NewContent( this ) );
-        actions.add( new Get( this ) );
-        actions.add( new Upload() );
-        actions.add( new Nodes() );
-        actions.add( new GlobalConfiguration() );
-
-        //items.put( "user", new Users( this ) );
 
         /* Class loader */
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
         this.pluginLoader = new Loader( classLoader );
 
-        /**/
-        addDescriptor( new User.UserDescriptor() );
-        addDescriptor( new FileNode.FileDescriptor() );
-
-        addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
-        //addDescriptor( new  );
-
-        //addExtension( ImageFileType.class, new ImageFileType(  ) );
-
-        /* test */
-        addDescriptor( new Footer.FooterDescriptor() );
-
-        mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
-        mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
-        mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle/" ) );
-
         instance = this;
+    }
+
+    public Core initialize() {
+
+        /* TODO somthing with install */
+
+        /* Other stuff */
+
+        return this;
     }
 
     public static <T extends Core> T getInstance() {

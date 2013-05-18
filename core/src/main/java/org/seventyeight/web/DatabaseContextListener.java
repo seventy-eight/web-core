@@ -48,7 +48,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         Core core = null;
         try {
-            core = getCore( path, "seventyeight" );
+            core = getCore( path, "seventyeight" ).initialize();
         } catch( CoreException e ) {
             e.printStackTrace();
             logger.fatal( "Failed to initialize core", e );

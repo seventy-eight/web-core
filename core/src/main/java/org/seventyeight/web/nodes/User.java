@@ -15,16 +15,9 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class User extends Entity<User> {
+public class User extends BaseUser<User> {
 
     private static Logger logger = Logger.getLogger( User.class );
-
-    public static final String USERS = "users";
-
-    public enum Visibility {
-        VISIBLE,
-        HIDDEN;
-    }
 
     public User( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -60,40 +53,6 @@ public class User extends Entity<User> {
     }
 
     @Override
-    public void setOwner( User owner ) {
-        /* No op for users */
-    }
-
-    public void setUsername( String username ) {
-        MongoDBCollection.get( USERS ).update( new MongoUpdate().set( "username", username ), new MongoDBQuery().is( "_id", getObjectId() ) );
-    }
-
-    public String getUsername() {
-        return document.get( "username" );
-    }
-
-    public String getPassword() {
-        return document.get( "password" );
-    }
-
-    public void setVisibility( Visibility visibility ) {
-        document.set( "visible", visibility.equals( Visibility.VISIBLE ) );
-    }
-
-    public void setVisible( boolean visible ) {
-        document.set( "visible", visible );
-    }
-
-    public boolean isVisible() {
-        return document.get( "visible", true );
-    }
-
-    @Override
-    public String getDisplayName() {
-        return getTitle();
-    }
-
-    @Override
     public String toString() {
         return "User[" + getUsername() + "]" ;
     }
@@ -108,38 +67,7 @@ public class User extends Entity<User> {
         }
     }
 
-    @Override
-    public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
-    }
-
-    @Override
-    public String getPortrait() {
-        if( false ) {
-            return "/theme/default/unknown-person.png";
-        } else {
-            return "/theme/default/unknown-person.png";
-        }
-    }
-
-    public static class UserDescriptor extends NodeDescriptor<User> {
-
-        public String testString;
-
-        @Override
-        public String getDisplayName() {
-            return "User";
-        }
-
-        @Override
-        public String getType() {
-            return "user";
-        }
-
-        @Override
-        public String getCollectionName() {
-            return USERS;
-        }
+    public static class UserDescriptor extends BaseUserDescriptor<User> {
 
         @Override
         public User newInstance( String title ) throws ItemInstantiationException {
