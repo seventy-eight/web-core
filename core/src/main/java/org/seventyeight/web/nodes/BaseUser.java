@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class BaseUser<T extends Entity> extends Entity<T> {
+public abstract class BaseUser<T extends BaseUser<T>> extends Entity<T> {
 
     private static Logger logger = Logger.getLogger( BaseUser.class );
 
@@ -29,6 +29,19 @@ public abstract class BaseUser<T extends Entity> extends Entity<T> {
         super( parent, document );
     }
 
+    /**
+     * Return the document corresponding to the given username,
+     */
+    public static MongoDocument getUserDocumentByUsername( String username ) {
+        MongoDocument doc = MongoDBCollection.get( User.USERS ).findOne( new MongoDBQuery().is( "username", username ) );
+
+        if( doc != null ) {
+            return doc;
+        } else {
+            logger.debug( "The username " + username + " was not found" );
+            return null;
+        }
+    }
 
     @Override
     public Saver getSaver( CoreRequest request ) {

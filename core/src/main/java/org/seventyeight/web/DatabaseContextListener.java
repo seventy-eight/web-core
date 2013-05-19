@@ -1,6 +1,7 @@
 package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
 import org.seventyeight.web.utilities.Installer;
@@ -25,6 +26,8 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
     private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
 
     private long seconds;
+
+    protected List<String> extraTemplatePaths = new ArrayList<String>(  );
 
     public void contextDestroyed( ServletContextEvent arg0 ) {
         synchronized( DatabaseContextListener.class ) {
@@ -82,6 +85,14 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                 templatePaths.add( new File( templatePathStr ) );
             }
 
+            /**/
+            logger.debug( "Adding extra template paths" );
+            for( String tpath : extraTemplatePaths ) {
+                File f = new File( path, tpath );
+                logger.debug( "Extra template path: " + f.getAbsoluteFile() );
+                templatePaths.add( f );
+            }
+
             for( File plugin : plugins ) {
                 File f1 = new File( plugin, "templates" );
                 if( f1.exists() ) {
@@ -133,13 +144,10 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         logger.info( "Themes path: " + themePath.getAbsolutePath() );
         Core.getInstance().setThemesPath( themePath );
 
-
-        /* INSTALL */
-        Installer installer = new Installer();
         try {
-            installer.install();
-        } catch( Exception e ) {
-            throw new IllegalStateException( e );
+            install();
+        } catch( DatabaseException e ) {
+            logger.fatal( "Unable to install", e );
         }
 
         /* Asynch */
@@ -148,6 +156,18 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         sce.getServletContext().setAttribute( "executor", executor );
     }
 
+    /**
+     * Default implementation of install. Could/should be overridden.
+     */
+    protected void install() throws DatabaseException {
+        /* INSTALL */
+        Installer installer = new Installer();
+        try {
+            installer.install();
+        } catch( Exception e ) {
+            throw new IllegalStateException( e );
+        }
+    }
 
     protected class FF implements FilenameFilter {
         @Override

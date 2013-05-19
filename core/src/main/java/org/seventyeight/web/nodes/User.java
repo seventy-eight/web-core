@@ -57,13 +57,17 @@ public class User extends BaseUser<User> {
         return "User[" + getUsername() + "]" ;
     }
 
-    public static User getUserByUsername( Node parent, String username ) throws ItemInstantiationException {
+    /**
+     * Get a {@link User} by Username. Returns null if not found.
+     */
+    public static User getUserByUsername( Node parent, String username ) {
         List<MongoDocument> docs = MongoDBCollection.get( User.USERS ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
             return new User( parent, docs.get( 0 ) );
         } else {
-            throw new ItemInstantiationException( "The user " + username + " not found" );
+            logger.debug( "The user " + username + " was not found" );
+            return null;
         }
     }
 
@@ -80,13 +84,12 @@ public class User extends BaseUser<User> {
 
         @Override
         public Node getChild( String name ) throws NotFoundException {
-            try {
-                return getUserByUsername( this, name );
-            } catch( ItemInstantiationException e ) {
-                logger.debug( e );
+            User user = getUserByUsername( this, name );
+            if( user != null ) {
+                return user;
+            } else {
+                throw new NotFoundException( "The user " + name + " was not found" );
             }
-
-            throw new NotFoundException( "The user " + name + " was not found" );
         }
 
         @Override

@@ -5,7 +5,7 @@ package org.seventyeight.database;
  */
 public interface DBInstallable {
 
-    public void install();
+    public void install() throws DatabaseException;
 
-    public boolean isInstalled();
+    public boolean isInstalled() throws DatabaseException;
 }

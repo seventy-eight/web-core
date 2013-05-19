@@ -22,18 +22,25 @@ public class Profile extends BaseUser<Profile> {
         super( parent, document );
     }
 
+    @Override
+    public String toString() {
+        return "Profile[" + getDisplayName() + "]";
+    }
+
+    public static Profile getProfileByUsername( String username, Node parent ) throws NotFoundException {
+        MongoDocument doc = BaseUser.getUserDocumentByUsername( username );
+        if( doc != null ) {
+            return new Profile( parent, doc );
+        } else {
+            throw new NotFoundException( "The profile " + username + " was not found" );
+        }
+    }
 
     public static class ProfileDescriptor extends BaseUserDescriptor<Profile> {
 
         @Override
         public Node getChild( String name ) throws NotFoundException {
-            try {
-                return User.getUserByUsername( this, name );
-            } catch( ItemInstantiationException e ) {
-                logger.debug( e );
-            }
-
-            throw new NotFoundException( "The user " + name + " was not found" );
+            return getProfileByUsername( name, this );
         }
 
         @Override
