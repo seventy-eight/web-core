@@ -1,7 +1,10 @@
 package org.seventyeight.web.project.model;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
@@ -10,6 +13,9 @@ import org.seventyeight.web.nodes.BaseUser;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -34,6 +40,22 @@ public class Profile extends BaseUser<Profile> {
         } else {
             throw new NotFoundException( "The profile " + username + " was not found" );
         }
+    }
+
+    public List<Certificate> getCertificates( int offset, int number ) {
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE_STRING ), offset, number );
+
+        List<Certificate> certificates = new ArrayList<Certificate>( docs.size() );
+
+        for( MongoDocument d : docs ) {
+            certificates.add( new Certificate( this, d ) );
+        }
+
+        return certificates;
+    }
+
+    public void addCertificate( Certificate certificate ) {
+        document.addToList( Certificate.CERTIFICATE_STRING_PL, certificate.getIdentifier() );
     }
 
     public static class ProfileDescriptor extends BaseUserDescriptor<Profile> {
