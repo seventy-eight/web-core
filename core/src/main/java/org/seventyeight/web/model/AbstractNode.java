@@ -89,6 +89,20 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         public Object getId() {
             return null;
         }
+
+        protected String set( String key ) throws SavingException {
+            return set( key, true );
+        }
+
+        protected String set( String key, boolean mandatory ) throws SavingException {
+            String v = request.getValue( key, null );
+            if( mandatory && ( v == null || v.isEmpty() ) ) {
+                throw new SavingException( "The " + key + " must be set" );
+            }
+            modelObject.document.set( key, v );
+
+            return v;
+        }
     }
 
     public String getIdentifier() {

@@ -5,8 +5,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -23,6 +22,27 @@ public class Profile extends User {
 
     public Profile( Node parent, MongoDocument document ) {
         super( parent, document );
+    }
+
+    @Override
+    public Saver getSaver( CoreRequest request ) {
+        return new ProfileSaver( this, request );
+    }
+
+    public class ProfileSaver extends UserSaver {
+        public ProfileSaver( AbstractNode modelObject, CoreRequest request ) {
+            super( modelObject, request );
+        }
+
+        @Override
+        public void save() throws SavingException {
+            super.save();
+
+            logger.debug( "SAVING PROFILE" );
+
+            set( "firstName" );
+            set( "lastName" );
+        }
     }
 
     @Override

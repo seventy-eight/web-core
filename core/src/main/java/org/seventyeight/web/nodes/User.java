@@ -51,7 +51,8 @@ public class User extends Entity<User> {
 
     public class UserSaver extends Saver {
 
-        private String username;
+        protected String username;
+        protected String email;
 
         public UserSaver( AbstractNode modelObject, CoreRequest request ) {
             super( modelObject, request );
@@ -59,11 +60,20 @@ public class User extends Entity<User> {
 
         @Override
         public void save() throws SavingException {
+
+            /* Set username */
             username = request.getValue( "username", null );
             if( username == null || username.isEmpty() ) {
                 throw new SavingException( "The username must be set" );
             }
             document.set( "username", username );
+
+            /* Set email */
+            email = request.getValue( "email", null );
+            if( email == null || email.isEmpty() ) {
+                throw new SavingException( "The email must be set" );
+            }
+            document.set( "email", email );
         }
 
         @Override
@@ -99,6 +109,10 @@ public class User extends Entity<User> {
 
     public boolean isVisible() {
         return document.get( "visible", true );
+    }
+
+    public String getEmail() {
+        return document.get( "email", null );
     }
 
     @Override

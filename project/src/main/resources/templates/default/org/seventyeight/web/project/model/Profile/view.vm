@@ -1,1 +1,7 @@
-YEAH
+<table>
+    <tr>
+        <td>$item.getDisplayName()</td>
+    </tr>
+</table>
+
+<img src="$item.getPortrait()">
