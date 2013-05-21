@@ -9,7 +9,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.nodes.BaseUser;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -204,7 +203,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         return Authorization.NONE;
     }
 
-    public void setOwner( BaseUser owner ) {
+    public void setOwner( User owner ) {
         document.set( "owner", owner.getIdentifier() );
     }
 

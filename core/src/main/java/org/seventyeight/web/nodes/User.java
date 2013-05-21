@@ -15,14 +15,34 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class User extends BaseUser<User> {
+public class User extends Entity<User> {
 
     private static Logger logger = Logger.getLogger( User.class );
+
+    public static final String USERS = "users";
+
+    public enum Visibility {
+        VISIBLE,
+        HIDDEN;
+    }
 
     public User( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
+    /**
+     * Return the document corresponding to the given username,
+     */
+    public static MongoDocument getUserDocumentByUsername( String username ) {
+        MongoDocument doc = MongoDBCollection.get( User.USERS ).findOne( new MongoDBQuery().is( "username", username ) );
+
+        if( doc != null ) {
+            return doc;
+        } else {
+            logger.debug( "The username " + username + " was not found" );
+            return null;
+        }
+    }
 
     @Override
     public Saver getSaver( CoreRequest request ) {
@@ -53,8 +73,56 @@ public class User extends BaseUser<User> {
     }
 
     @Override
+    public void setOwner( User owner ) {
+        /* No op for users */
+    }
+
+    public void setUsername( String username ) {
+        MongoDBCollection.get( USERS ).update( new MongoUpdate().set( "username", username ), new MongoDBQuery().is( "_id", getObjectId() ) );
+    }
+
+    public String getUsername() {
+        return document.get( "username" );
+    }
+
+    public String getPassword() {
+        return document.get( "password" );
+    }
+
+    public void setVisibility( Visibility visibility ) {
+        document.set( "visible", visibility.equals( Visibility.VISIBLE ) );
+    }
+
+    public void setVisible( boolean visible ) {
+        document.set( "visible", visible );
+    }
+
+    public boolean isVisible() {
+        return document.get( "visible", true );
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getTitle();
+    }
+
+    @Override
     public String toString() {
         return "User[" + getUsername() + "]" ;
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
+    @Override
+    public String getPortrait() {
+        if( false ) {
+            return "/theme/default/unknown-person.png";
+        } else {
+            return "/theme/default/unknown-person.png";
+        }
     }
 
     /**
@@ -71,15 +139,23 @@ public class User extends BaseUser<User> {
         }
     }
 
-    public static class UserDescriptor extends BaseUserDescriptor<User> {
+    public static class UserDescriptor extends NodeDescriptor<User> {
+
+        public String testString;
 
         @Override
-        public User newInstance( String title ) throws ItemInstantiationException {
-            User u = super.newInstance( title );
-            u.getDocument().set( "username", title );
-            u.getDocument().set( "_id", title );
+        public String getDisplayName() {
+            return "User";
+        }
 
-            return u;
+        @Override
+        public String getType() {
+            return "user";
+        }
+
+        @Override
+        public String getCollectionName() {
+            return USERS;
         }
 
         @Override
@@ -90,6 +166,15 @@ public class User extends BaseUser<User> {
             } else {
                 throw new NotFoundException( "The user " + name + " was not found" );
             }
+        }
+
+        @Override
+        public User newInstance( String title ) throws ItemInstantiationException {
+            User u = super.newInstance( title );
+            u.getDocument().set( "username", title );
+            u.getDocument().set( "_id", title );
+
+            return u;
         }
 
         @Override
