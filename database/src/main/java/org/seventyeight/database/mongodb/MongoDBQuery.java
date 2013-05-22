@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author cwolfgang
- *         Date: 23-02-13
- *         Time: 10:48
  */
 public class MongoDBQuery {
     private QueryBuilder query = new QueryBuilder();

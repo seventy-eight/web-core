@@ -24,12 +24,12 @@ public class AdminInstall implements DBInstallable {
         try {
             Profile profile = (Profile) Core.getInstance().getDescriptor( Profile.class ).newInstance( ADMIN_NAME );
 
-            logger.debug( "PROFILE: " + profile.getClass() );
-
             Parameters p = new Parameters();
+
             p.put( "username", ADMIN_NAME );
             p.put( "email", "admin@mysite.dk" );
-            p.put( "firstName", "Christian" );
+            p.put( Profile.FIRST_NAME, "Christian" );
+            p.put( Profile.LAST_NAME, "Wolfgang" );
 
             profile.setVisible( true );
 

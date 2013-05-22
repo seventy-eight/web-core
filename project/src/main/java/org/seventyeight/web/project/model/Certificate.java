@@ -1,5 +1,7 @@
 package org.seventyeight.web.project.model;
 
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Entity;
@@ -33,6 +35,18 @@ public class Certificate extends Entity<Certificate> {
     @Override
     public String getPortrait() {
         return null;
+    }
+
+    /**
+     * Get a {@link Certificate} by its title
+     */
+    public static Certificate getCertificateByTitle( String title, Node parent ) throws NotFoundException {
+        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
+        if( doc != null ) {
+            return new Certificate( parent, doc );
+        } else {
+            throw new NotFoundException( "The certificate \"" + title + "\" was not found" );
+        }
     }
 
     public static class CertificateDescriptor extends NodeDescriptor<Certificate> {
