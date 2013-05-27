@@ -109,6 +109,16 @@ public abstract class Core extends Actionable implements Node, RootNode {
     protected List<Action> actions = new CopyOnWriteArrayList<Action>();
 
     /**
+     * Default {@link Group} that has no one in it
+     */
+    protected Group noneGroup;
+
+    /**
+     * Default {@link Group} that has all in it
+     */
+    protected Group addGroup;
+
+    /**
      * Path to the ...
      */
     protected File path;
@@ -144,6 +154,9 @@ public abstract class Core extends Actionable implements Node, RootNode {
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
+
+        /* Default groups */
+        // Group.de Maybe not???!?!?!?!
 
         /* Class loader */
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
@@ -246,7 +259,13 @@ public abstract class Core extends Actionable implements Node, RootNode {
      * @throws ItemInstantiationException
      */
     public <T extends PersistedObject> T getItem( Node parent, MongoDocument document ) throws ItemInstantiationException {
-        String clazz = (String) document.get( "class" );
+        String clazz = null;
+        try {
+            clazz = document.get( "class" );
+        } catch( Exception e ) {
+            throw new ItemInstantiationException( "Field \"class\" not found.", e );
+        }
+
 
         if( clazz == null ) {
             logger.warn( "Class property not found" );

@@ -34,6 +34,7 @@ public class MongoDBCollection {
     }
 
     public MongoDBCollection save( MongoDocument document ) {
+        logger.debug( "Saving " + document );
         collection.save( document.getDBObject() );
 
         return this;
@@ -71,6 +72,7 @@ public class MongoDBCollection {
     }
 
     public MongoDocument findOne( MongoDBQuery query ) {
+        logger.debug( "Query is " + query.getDocument() );
         return new MongoDocument( collection.findOne( query.getDocument() ) );
     }
 

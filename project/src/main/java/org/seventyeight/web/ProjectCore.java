@@ -4,12 +4,19 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.footer.Footer;
+import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.FileNode;
 import org.seventyeight.web.nodes.StaticFiles;
 import org.seventyeight.web.nodes.ThemeFiles;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.project.actions.AddCertificate;
+import org.seventyeight.web.project.actions.AddNode;
+import org.seventyeight.web.project.actions.CertificateSearch;
+import org.seventyeight.web.project.actions.Search;
+import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Profile;
+import org.seventyeight.web.project.model.Role;
 
 import java.io.File;
 
@@ -30,9 +37,30 @@ public class ProjectCore extends Core {
         actions.add( new Nodes() );
         actions.add( new GlobalConfiguration() );
 
+        /* Adding search action */
+        Search search = new Search();
+        CertificateSearch cs = new CertificateSearch( search );
+        NodeSearch ns = new NodeSearch( search );
+
+        search.addAction( cs );
+        search.addAction( ns );
+
+        actions.add( search );
+
+        /* Adders */
+        AddNode add = new AddNode();
+
+        AddCertificate ac = new AddCertificate( add );
+
+        add.addAction( ac );
+
+        actions.add( add );
+
         /**/
         addDescriptor( new Profile.ProfileDescriptor() );
+        addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileNode.FileDescriptor() );
+        addDescriptor( new Certificate.CertificateDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
         //addDescriptor( new  );

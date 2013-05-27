@@ -16,8 +16,6 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * @author cwolfgang
- *         Date: 03-02-13
- *         Time: 00:03
  */
 public class Response extends HttpServletResponseWrapper {
 

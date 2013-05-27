@@ -3,9 +3,11 @@ package org.seventyeight.database;
 /**
  * @author cwolfgang
  */
-public interface DBInstallable {
+public interface DBInstallable<T> {
 
     public void install() throws DatabaseException;
+
+    public T getValue();
 
     public boolean isInstalled() throws DatabaseException;
 }

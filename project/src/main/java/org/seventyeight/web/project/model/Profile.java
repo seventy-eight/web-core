@@ -20,8 +20,8 @@ public class Profile extends User {
 
     private static Logger logger = Logger.getLogger( Profile.class );
 
-    public static final String FIRST_NAME = "FIRST_NAME";
-    public static final String LAST_NAME = "LAST_NAME";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
 
     public Profile( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -47,6 +47,18 @@ public class Profile extends User {
             set( LAST_NAME );
         }
     }
+
+    public static Profile getProfileByUsername( Node parent, String username ) {
+        List<MongoDocument> docs = MongoDBCollection.get( User.USERS ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
+
+        if( docs != null && !docs.isEmpty() ) {
+            return new Profile( parent, docs.get( 0 ) );
+        } else {
+            logger.debug( "The user " + username + " was not found" );
+            return null;
+        }
+    }
+
 
     @Override
     public String toString() {
@@ -82,6 +94,7 @@ public class Profile extends User {
     public void addCertificate( Certificate certificate ) {
         MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE_STRING, certificate.getIdentifier() );
         document.addToList( Certificate.CERTIFICATE_STRING_PL, d );
+        this.save();
     }
 
     public static class ProfileDescriptor extends UserDescriptor {

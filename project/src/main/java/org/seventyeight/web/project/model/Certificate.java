@@ -4,10 +4,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.Entity;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NodeDescriptor;
-import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.model.*;
 
 /**
  * @author cwolfgang
@@ -35,6 +32,11 @@ public class Certificate extends Entity<Certificate> {
     @Override
     public String getPortrait() {
         return null;
+    }
+
+    public static Certificate createCertificate( String certName ) throws ItemInstantiationException {
+        Certificate cert = (Certificate) Core.getInstance().getDescriptor( Certificate.class ).newInstance( certName );
+        return cert;
     }
 
     /**

@@ -45,7 +45,7 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
         }
 
         document.set( "class", clazz.getName() );
-        collection.save( document );
+        //collection.save( document );
 
         return instance;
     }

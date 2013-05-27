@@ -2,7 +2,11 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF8">
-	<script language="javascript" type="text/javascript" src="/static/javascript/jquery/jquery-1.8.3.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
     <script language="javascript" type="text/javascript" src="/static/javascript/ajaxupload.js"></script>
 
 	<script language="javascript" type="text/javascript" src="/static/javascript/utils.js"></script>
@@ -31,6 +35,22 @@ $(function() {
 	}, "html");
 });
 */
+
+$(function() {
+    $( "#search" ).autocomplete({
+        source: "/search/node",
+        select: function( event, ui ) {
+            this.value = ui.item.title;
+            return false;
+        }
+    })
+    .data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+                .append( "<a>" + item.title + "</a>" )
+                .appendTo( ul );
+    };
+});
+
 </script>
 
 </head>
@@ -39,15 +59,23 @@ $(function() {
 
 <img src="/theme/logo.png">
 
+<table style="width: 100%">
+
+    <tr>
+        <td align="center">
+            #render($core.getMainMenu() "mainMenu")
+
+        </td>
+        <td style="width: 250px" align="right" class="ui-widget">
+            <input id="search">
+        </td>
+
+    </tr>
+</table>
 
 
 <table style="width:100%">
 
-    <tr>
-        <td colspan="2" align="center">
-                #render($core.getMainMenu() "mainMenu")
-        </td>
-    </tr>
 
     <tr>
 		<td valign="top" style="border-style:solid;border-width:1px;border-color:#000000;width:180px">

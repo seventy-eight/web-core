@@ -156,6 +156,10 @@ public class MongoDocument implements Document {
 
     @Override
     public String toString() {
-        return document.toString();
+        if( document != null ) {
+            return document.toString();
+        } else {
+            return "Internal document is null";
+        }
     }
 }

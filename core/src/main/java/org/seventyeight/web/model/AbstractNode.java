@@ -91,15 +91,19 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
 
         protected String set( String key ) throws SavingException {
-            return set( key, true );
+            return set( key, key, true );
         }
 
-        protected String set( String key, boolean mandatory ) throws SavingException {
-            String v = request.getValue( key, null );
+        protected String set( String formkey, String dbkey ) throws SavingException {
+            return set( formkey, dbkey, true );
+        }
+
+        protected String set( String formkey, String dbkey, boolean mandatory ) throws SavingException {
+            String v = request.getValue( formkey, null );
             if( mandatory && ( v == null || v.isEmpty() ) ) {
-                throw new SavingException( "The " + key + " must be set" );
+                throw new SavingException( "The " + formkey + " must be set" );
             }
-            modelObject.document.set( key, v );
+            modelObject.document.set( dbkey, v );
 
             return v;
         }
@@ -352,5 +356,23 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     public void updateField( String collection, MongoUpdate update ) {
         MongoDBCollection.get( collection ).update( update, new MongoDBQuery().is( "_id", getObjectId() ) );
+    }
+
+
+    public static Node getNodeByTitle( Node parent, String title ) {
+        MongoDocument docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
+        logger.debug( "DOC IS: " + docs );
+
+        if( docs != null ) {
+            try {
+                return (Node) Core.getInstance().getItem( parent, docs );
+            } catch( ItemInstantiationException e ) {
+                logger.warn( e.getMessage() );
+                return null;
+            }
+        } else {
+            logger.debug( "The user " + title + " was not found" );
+            return null;
+        }
     }
 }

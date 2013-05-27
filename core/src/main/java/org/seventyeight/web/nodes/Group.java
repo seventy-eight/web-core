@@ -10,6 +10,7 @@ import org.seventyeight.web.model.*;
 public class Group extends Entity<Group> {
 
     public static final String GROUPS = "groups";
+    public static final String GROUP = "group";
 
     public Group( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -33,11 +34,13 @@ public class Group extends Entity<Group> {
 
         @Override
         public void save() throws SavingException {
-            String name = request.getValue( "name", null );
+            /*
+            String name = request.getValue( "title", null );
             if( name == null || name.isEmpty() ) {
-                throw new SavingException( "The name must be set" );
+                throw new SavingException( "The title must be set" );
             }
-            document.set( "name", name );
+            document.set( "title", name );
+            */
         }
     }
 
@@ -59,11 +62,21 @@ public class Group extends Entity<Group> {
         return "org/seventyeight/web/main.vm";
     }
 
-    public static class GroupDescriptor extends Descriptor<Group> {
+    public static class GroupDescriptor extends NodeDescriptor<Group> {
+
+        @Override
+        public Node getChild( String name ) throws NotFoundException {
+            return null;
+        }
 
         @Override
         public String getDisplayName() {
             return "Group";
+        }
+
+        @Override
+        public String getType() {
+            return "group";
         }
     }
 }
