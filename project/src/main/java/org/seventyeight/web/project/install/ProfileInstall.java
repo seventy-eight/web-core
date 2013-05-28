@@ -4,6 +4,8 @@ import org.seventyeight.database.DBInstallable;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
+import org.seventyeight.web.installers.NodeInstaller;
+import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.project.model.Profile;
 import org.seventyeight.web.utilities.Parameters;
@@ -11,58 +13,36 @@ import org.seventyeight.web.utilities.Parameters;
 /**
  * @author cwolfgang
  */
-public class ProfileInstall implements DBInstallable<Profile> {
+public class ProfileInstall extends NodeInstaller<User> {
 
-    protected String name;
     protected String firstName;
     protected String lastName;
     protected String email;
 
     protected Profile profile;
 
-    public ProfileInstall( String name, String firstName, String lastName, String email ) {
-        this.name = name;
+    public ProfileInstall( String title, String firstName, String lastName, String email ) {
+        super( title );
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
     @Override
-    public void install() throws DatabaseException {
-        try {
-            Profile profile = (Profile) Core.getInstance().getDescriptor( Profile.class ).newInstance( name );
-
-            Parameters p = new Parameters();
-
-            p.put( "username", name );
-            p.put( "email", email );
-            p.put( Profile.FIRST_NAME, firstName );
-            p.put( Profile.LAST_NAME, lastName );
-
-            profile.setVisible( true );
-
-            profile.save( p, null );
-            this.profile = profile;
-        } catch( CoreException e ) {
-            throw new DatabaseException( "Unable to create wolfgang, " + e.getMessage(), e );
-        } catch( ClassNotFoundException e ) {
-            throw new DatabaseException( e );
-        }
+    protected Descriptor<User> getDescriptor() {
+        return Core.getInstance().getDescriptor( Profile.class );
     }
 
     @Override
-    public Profile getValue() {
-        return profile;
+    protected void setParameters( Parameters parameters ) {
+        parameters.put( "username", title );
+        parameters.put( "email", email );
+        parameters.put( Profile.FIRST_NAME, firstName );
+        parameters.put( Profile.LAST_NAME, lastName );
     }
 
     @Override
-    public boolean isInstalled() throws DatabaseException {
-        Profile profile = Profile.getProfileByUsername( Core.getInstance(), name );
-        if( profile != null ) {
-            this.profile = profile;
-            return true;
-        } else {
-            return false;
-        }
+    protected Profile getNodeFromDB() {
+        return Profile.getProfileByUsername( Core.getInstance(), title );
     }
 }

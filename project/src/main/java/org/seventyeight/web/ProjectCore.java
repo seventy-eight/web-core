@@ -6,10 +6,7 @@ import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.footer.Footer;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Menu;
-import org.seventyeight.web.nodes.FileNode;
-import org.seventyeight.web.nodes.StaticFiles;
-import org.seventyeight.web.nodes.ThemeFiles;
-import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.project.actions.AddCertificate;
 import org.seventyeight.web.project.actions.AddNode;
 import org.seventyeight.web.project.actions.CertificateSearch;
@@ -58,7 +55,7 @@ public class ProjectCore extends Core {
 
         /**/
         addDescriptor( new Profile.ProfileDescriptor() );
-        addDescriptor( new Role.RoleDescriptor() );
+        addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new FileNode.FileDescriptor() );
         addDescriptor( new Certificate.CertificateDescriptor() );
 

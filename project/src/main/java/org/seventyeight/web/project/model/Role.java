@@ -39,7 +39,7 @@ public class Role extends Group {
     }
 
     public String getName() {
-        return document.get( "name", "UNKNOWN" );
+        return document.get( "title", "UNKNOWN" );
     }
 
 

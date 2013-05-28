@@ -83,8 +83,8 @@ public class User extends Entity<User> {
     }
 
     public void addGroup( Group group ) {
-        MongoDocument d = new MongoDocument().set( Group.GROUP, group.getIdentifier() );
-        document.addToList( Group.GROUPS, d );
+        //MongoDocument d = new MongoDocument().set( Group.GROUP, group.getIdentifier() );
+        document.addToList( Group.GROUPS, group.getIdentifier() );
         this.save();
     }
 

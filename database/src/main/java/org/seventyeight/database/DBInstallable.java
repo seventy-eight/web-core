@@ -8,6 +8,4 @@ public interface DBInstallable<T> {
     public void install() throws DatabaseException;
 
     public T getValue();
-
-    public boolean isInstalled() throws DatabaseException;
 }

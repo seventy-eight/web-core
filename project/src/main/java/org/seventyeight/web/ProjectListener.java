@@ -2,6 +2,7 @@ package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
+import org.seventyeight.web.installers.GroupInstall;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.project.install.*;
 import org.seventyeight.web.project.model.Profile;
@@ -24,59 +25,29 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
 
     @Override
     protected void install() throws DatabaseException {
-        AdminInstall ai = new AdminInstall();
-        if( ai.isInstalled() ) {
-            logger.debug( "Admin was already installed." );
-        } else {
-            logger.debug( "Installing admin" );
-            ai.install();
-        }
 
-        WolfgangInstall wolfgang = new WolfgangInstall();
-        if( wolfgang.isInstalled() ) {
-            logger.debug( "wolfgang was already installed." );
-        } else {
-            logger.debug( "Installing wolfgang" );
-            wolfgang.install();
-        }
+        ProfileInstall cwInstall = new ProfileInstall( "cwolfgang", "Christian", "Wolfgang", "cwolfgang@seventyeight.org" );
+        cwInstall.install();
 
-        AnonymousInstall ani = new AnonymousInstall();
-        if( ani.isInstalled() ) {
-            logger.debug( "Anonymous was already installed." );
-        } else {
-            logger.debug( "Installing Anonymous" );
-            ani.install();
-        }
+        ProfileInstall anInstall = new ProfileInstall( "anonymous", "Anonymous", "Anonymous", "anonymous@seventyeight.org" );
+        anInstall.install();
 
-        Core.getInstance().setAnonymous( ani.getUser() );
+        GroupInstall agInstall = new GroupInstall( "Administrators", cwInstall.getValue() );
+        agInstall.install();
 
-
-        Profile admin = null;
-        try {
-            admin = Profile.getProfileByUsername( AdminInstall.ADMIN_NAME, Core.getInstance() );
-        } catch( NotFoundException e ) {
-            e.printStackTrace();
-        }
+        Core.getInstance().setAnonymous( anInstall.getValue() );
+        cwInstall.getValue().addGroup( agInstall.getValue() );
 
 
 
-        AdminRoleInstall ari = new AdminRoleInstall( admin );
-        if( ari.isInstalled() ) {
-            logger.debug( "Admin role already installed." );
-        } else {
-            logger.debug( "Installing admin role" );
-            ari.install();
-        }
-        Role adminRole = ari.getRole();
-        wolfgang.getProfile().addGroup( adminRole );
+        CertificateInstall cert1 = new CertificateInstall( "Test certificate", cwInstall.getValue() );
+        cert1.install();
 
-        CertificateInstall tci = new CertificateInstall( admin );
-        if( tci.isInstalled() ) {
-            logger.debug( "Test cert was already installed." );
-        } else {
-            logger.debug( "Installing test cert" );
-            tci.install();
-        }
+        CertificateInstall cert2 = new CertificateInstall( "Cookie jar", cwInstall.getValue() );
+        cert2.install();
+
+        CertificateInstall cert3 = new CertificateInstall( "Drivers license", cwInstall.getValue() );
+        cert3.install();
     }
 
     @Override
