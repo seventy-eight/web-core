@@ -49,7 +49,7 @@ public class Profile extends User {
     }
 
     public static Profile getProfileByUsername( Node parent, String username ) {
-        List<MongoDocument> docs = MongoDBCollection.get( User.USERS ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
             return new Profile( parent, docs.get( 0 ) );

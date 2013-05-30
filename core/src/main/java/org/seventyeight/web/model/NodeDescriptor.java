@@ -2,10 +2,12 @@ package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -21,13 +23,24 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
 
     @Override
     public T newInstance( String title ) throws ItemInstantiationException {
-        logger.debug( "New instance for " + clazz );
+        logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
+        if( !allowIdenticalNaming() ) {
+            if( titleExists( title, getType() ) ) {
+                throw new ItemInstantiationException( "Multiple instances of " + getType() + " with the same title is not allowed." );
+            }
+        }
+
         T node = createNode();
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
 
         return node;
+    }
+
+    private boolean titleExists( String title, String type ) {
+        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ) );
+        return !doc.isNull();
     }
 
     protected T createNode( ) throws ItemInstantiationException {
@@ -55,6 +68,14 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
     }
 
     public abstract String getType();
+
+    /**
+     * Determine whether to allow identical names or not.<br />
+     * Default is true.
+     */
+    public boolean allowIdenticalNaming() {
+        return true;
+    }
 
     @Override
     public String getMainTemplate() {

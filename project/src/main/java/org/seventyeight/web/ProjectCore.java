@@ -58,6 +58,7 @@ public class ProjectCore extends Core {
         addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new FileNode.FileDescriptor() );
         addDescriptor( new Certificate.CertificateDescriptor() );
+        addDescriptor( new Article.ArticleDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
         //addDescriptor( new  );

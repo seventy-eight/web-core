@@ -6,6 +6,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -34,7 +35,7 @@ public class User extends Entity<User> {
      * Return the document corresponding to the given username,
      */
     public static MongoDocument getUserDocumentByUsername( String username ) {
-        MongoDocument doc = MongoDBCollection.get( User.USERS ).findOne( new MongoDBQuery().is( "username", username ) );
+        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
 
         if( doc != null ) {
             return doc;
@@ -94,7 +95,7 @@ public class User extends Entity<User> {
     }
 
     public void setUsername( String username ) {
-        MongoDBCollection.get( USERS ).update( new MongoUpdate().set( "username", username ), new MongoDBQuery().is( "_id", getObjectId() ) );
+        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( new MongoUpdate().set( "username", username ), new MongoDBQuery().is( "_id", getObjectId() ) );
     }
 
     public String getUsername() {
@@ -149,7 +150,7 @@ public class User extends Entity<User> {
      * Get a {@link User} by Username. Returns null if not found.
      */
     public static User getUserByUsername( Node parent, String username ) {
-        List<MongoDocument> docs = MongoDBCollection.get( User.USERS ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
             return new User( parent, docs.get( 0 ) );
@@ -173,10 +174,12 @@ public class User extends Entity<User> {
             return "user";
         }
 
+        /*
         @Override
         public String getCollectionName() {
             return USERS;
         }
+        */
 
         @Override
         public Node getChild( String name ) throws NotFoundException {
@@ -202,6 +205,11 @@ public class User extends Entity<User> {
             logger.debug( "Saving " + this );
 
             testString = "The millis: " + System.currentTimeMillis();
+        }
+
+        @Override
+        public boolean allowIdenticalNaming() {
+            return false;
         }
     }
 }

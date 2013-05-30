@@ -2,6 +2,7 @@ package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
+import org.seventyeight.web.installers.ArticleInstall;
 import org.seventyeight.web.installers.GroupInstall;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.project.install.*;
@@ -48,6 +49,11 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
 
         CertificateInstall cert3 = new CertificateInstall( "Drivers license", cwInstall.getValue() );
         cert3.install();
+
+
+        ArticleInstall ai1 = new ArticleInstall( "Article number 1", cwInstall.getValue() );
+        ai1.install();
+
     }
 
     @Override

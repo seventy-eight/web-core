@@ -37,6 +37,8 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
+    public static final String NAME_FIELD = "title";
+
     public static final String MAIN_TEMPLATE = "org/seventyeight/web/main.vm";
 
     public static final String TEMPLATE_PATH_NAME = "templates";
