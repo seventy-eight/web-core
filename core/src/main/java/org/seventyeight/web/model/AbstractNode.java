@@ -56,13 +56,13 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
         update( request.getUser() );
 
-        String docId = getIdentifier();
-
+        /*
         if( saver.getId() != null ) {
             logger.debug( "Setting id to " + saver.getId() );
             document.set( "_id", saver.getId() );
             //document.set( "_id", getUniqueIdentifier() );
         }
+        */
 
         /* Persist */
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
@@ -86,10 +86,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
 
         public void save() throws SavingException {
-        }
-
-        public Object getId() {
-            return modelObject.getType() + ":" + modelObject.getTitle();
         }
 
         protected String set( String key ) throws SavingException {
@@ -321,7 +317,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public ObjectId getObjectId() {
-        return document.get( "_id" );
+        Object o = document.get( "_id" );
+        logger.info( "OBJECT: " + o );
+        return ObjectId.massageToObjectId( o.toString() );
     }
 
     public MongoDocument getUniqueIdentifier() {
@@ -381,5 +379,15 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
             logger.debug( "The user " + title + " was not found" );
             return null;
         }
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getTitle();
+    }
+
+    @Override
+    public String toString() {
+        return getDisplayName();
     }
 }

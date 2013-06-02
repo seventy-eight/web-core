@@ -3,7 +3,12 @@ package org.seventyeight.web;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.seventyeight.database.DatabaseException;
 import org.seventyeight.database.mongodb.MongoDatabase;
+import org.seventyeight.web.installers.GroupInstall;
+import org.seventyeight.web.installers.UserInstall;
+import org.seventyeight.web.nodes.Group;
+import org.seventyeight.web.nodes.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +40,18 @@ public class WebCoreEnv implements TestRule {
 
     public Core getCore() {
         return core;
+    }
+
+    public User createUser( String name ) throws DatabaseException {
+        UserInstall ui = new UserInstall( name, name + "@seventyeight.org" );
+        ui.install();
+        return ui.getValue();
+    }
+
+    public Group createGroup( String name, User owner ) throws DatabaseException {
+        GroupInstall i = new GroupInstall( name, owner );
+        i.install();
+        return i.getValue();
     }
 
     @Override

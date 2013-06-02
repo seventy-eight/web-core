@@ -1,13 +1,18 @@
 package org.seventyeight.web.nodes;
 
+import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.model.*;
+
+import java.util.List;
 
 /**
  * @author cwolfgang
  */
 public class Group extends Entity<Group> {
+
+    private static Logger logger = Logger.getLogger( Group.class );
 
     public static final String GROUPS = "groups";
     public static final String GROUP = "group";
@@ -53,8 +58,40 @@ public class Group extends Entity<Group> {
         return getName();
     }
 
+    /**
+     * Add a {@link User} to this {@link Group}.
+     */
     public void addMember( User user ) {
-        updateField( GROUPS, new MongoUpdate().push( "members", user.getObjectId() ) );
+        user.addGroup( this );
+        /*
+        if( !isMember( user ) ) {
+            logger.debug( "Adding " + user + " to " + this );
+            updateField( GROUPS, new MongoUpdate().push( "members", user.getObjectId() ) );
+            save();
+        } else {
+            logger.debug( user + " is already a member of " + this );
+        }
+        */
+    }
+
+    /**
+     * Determine whether or not the {@link User} is member of this {@link Group}.
+     */
+    public boolean isMember( User user ) {
+        List<Group> groups = user.getGroups();
+
+        for( Group g : groups ) {
+            if( this.equals( g ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return getTitle();
     }
 
     @Override

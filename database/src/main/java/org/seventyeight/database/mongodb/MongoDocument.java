@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.bson.BSONObject;
+import org.bson.types.ObjectId;
 import org.seventyeight.database.Document;
 
 import java.util.ArrayList;
@@ -152,6 +153,11 @@ public class MongoDocument implements Document {
 
     public boolean isNull() {
         return document == null;
+    }
+
+    public String getIdentifier() {
+        ObjectId id = get( "_id" );
+        return id.toString();
     }
 
     @Override

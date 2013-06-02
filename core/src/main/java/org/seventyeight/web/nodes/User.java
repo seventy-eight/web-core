@@ -11,6 +11,7 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,17 +77,31 @@ public class User extends Entity<User> {
             }
             document.set( "email", email );
         }
+    }
 
-        @Override
-        public Object getId() {
-            return username;
+    public List<Group> getGroups() {
+        logger.debug( "Listing groups for " + this );
+
+        List<MongoDocument> docs = document.getList( Group.GROUPS );
+
+        List<Group> groups = new ArrayList<Group>( docs.size() );
+
+        for( MongoDocument d : docs ) {
+            logger.debug( "GDOC: " + d );
+            groups.add( new Group( this, d ) );
         }
+
+        return groups;
     }
 
     public void addGroup( Group group ) {
-        //MongoDocument d = new MongoDocument().set( Group.GROUP, group.getIdentifier() );
-        document.addToList( Group.GROUPS, group.getIdentifier() );
-        this.save();
+        if( !group.isMember( this ) ) {
+            logger.debug( "Adding " + this + " to " + group );
+            document.addToList( Group.GROUPS, group.getIdentifier() );
+            save();
+        } else {
+            logger.debug( this + " is already a member of " + group );
+        }
     }
 
     @Override
