@@ -1,19 +1,27 @@
 package org.seventyeight.web.project.model;
 
+import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author cwolfgang
  */
 public class Certificate extends Entity<Certificate> {
 
-    public static final String CERTIFICATE_STRING = "certificate";
-    public static final String CERTIFICATE_STRING_PL = "certificates";
+    private static Logger logger = Logger.getLogger( Certificate.class );
+
+    public static final String CERTIFICATE = "certificate";
+    public static final String CERTIFICATES = "certificates";
     public static final String CERTIFICATE_NAME = "Certificate";
+
+    public static final String CERTIFICATE_DOTTED = CERTIFICATES + "." + CERTIFICATE;
 
     public Certificate( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -39,6 +47,23 @@ public class Certificate extends Entity<Certificate> {
         return cert;
     }
 
+    public List<Profile> getProfiles() {
+        logger.debug( "Getting members for " + this );
+
+        MongoDBQuery q = new MongoDBQuery().is( CERTIFICATES + "." + CERTIFICATE, getIdentifier() );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q );
+
+        logger.debug( "DOCS ARE: " + docs );
+
+        List<Profile> users = new ArrayList<Profile>( docs.size() );
+
+        for( MongoDocument d : docs ) {
+            users.add( new Profile( this, d ) );
+        }
+
+        return users;
+    }
+
     /**
      * Get a {@link Certificate} by its title
      */
@@ -55,7 +80,7 @@ public class Certificate extends Entity<Certificate> {
 
         @Override
         public String getType() {
-            return CERTIFICATE_STRING;
+            return CERTIFICATE;
         }
 
         @Override

@@ -1,7 +1,6 @@
 package org.seventyeight.web.nodes;
 
 import org.apache.log4j.Logger;
-import org.seventyeight.database.annotations.Persisted;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -82,12 +81,11 @@ public class User extends Entity<User> {
     public List<Group> getGroups() {
         logger.debug( "Listing groups for " + this );
 
-        List<MongoDocument> docs = document.getList( Group.GROUPS );
+        List<MongoDocument> docs = document.getMappedList( Group.GROUPS, Core.NODE_COLLECTION_NAME );
 
         List<Group> groups = new ArrayList<Group>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            logger.debug( "GDOC: " + d );
             groups.add( new Group( this, d ) );
         }
 
@@ -110,7 +108,7 @@ public class User extends Entity<User> {
     }
 
     public void setUsername( String username ) {
-        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( new MongoUpdate().set( "username", username ), new MongoDBQuery().is( "_id", getObjectId() ) );
+        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( new MongoDBQuery().is( "_id", getObjectId() ), new MongoUpdate().set( "username", username ) );
     }
 
     public String getUsername() {
@@ -210,7 +208,7 @@ public class User extends Entity<User> {
         public User newInstance( String title ) throws ItemInstantiationException {
             User u = super.newInstance( title );
             u.getDocument().set( "username", title );
-            u.getDocument().set( "_id", title );
+            //u.getDocument().set( "_id", title );
 
             return u;
         }

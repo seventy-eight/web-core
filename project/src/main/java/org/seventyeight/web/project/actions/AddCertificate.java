@@ -1,6 +1,5 @@
 package org.seventyeight.web.project.actions;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
@@ -9,7 +8,6 @@ import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
-import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Profile;
 import org.seventyeight.web.servlet.Request;
@@ -73,7 +71,7 @@ public class AddCertificate extends AddAction {
 
     @Override
     public String getUrlName() {
-        return Certificate.CERTIFICATE_STRING;
+        return Certificate.CERTIFICATE;
     }
 
     @Override

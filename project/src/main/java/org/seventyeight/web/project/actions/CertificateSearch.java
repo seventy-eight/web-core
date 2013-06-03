@@ -25,7 +25,7 @@ public class CertificateSearch extends SearchAction {
 
     @Override
     public String getUrlName() {
-        return Certificate.CERTIFICATE_STRING;
+        return Certificate.CERTIFICATE;
     }
 
     @Override

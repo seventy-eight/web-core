@@ -1,10 +1,14 @@
 package org.seventyeight.web.nodes;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,6 +91,23 @@ public class Group extends Entity<Group> {
         }
 
         return false;
+    }
+
+    public List<User> getMembers() {
+        logger.debug( "Getting members for " + this );
+
+        MongoDBQuery q = new MongoDBQuery().is( GROUPS, getIdentifier() );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q );
+
+        logger.debug( "DOCS ARE: " + docs );
+
+        List<User> users = new ArrayList<User>( docs.size() );
+
+        for( MongoDocument d : docs ) {
+            users.add( new User( this, d ) );
+        }
+
+        return users;
     }
 
     @Override

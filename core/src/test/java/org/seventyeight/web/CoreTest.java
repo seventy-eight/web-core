@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class CoreTest {
 
     @ClassRule
-    public static WebCoreEnv env = new WebCoreEnv( "coreTest" );
+    public static DummyCoreEnvironment env = new DummyCoreEnvironment( "coreTest" );
 
     @Test
     public void test01() throws NotFoundException {

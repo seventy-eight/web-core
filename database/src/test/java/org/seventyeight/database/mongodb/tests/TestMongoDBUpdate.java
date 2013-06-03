@@ -101,7 +101,7 @@ public class TestMongoDBUpdate {
 
         MongoDBQuery q2 = new MongoDBQuery().greaterThanEquals( "age", 2 );
         MongoUpdate u2 = new MongoUpdate().set( "name", "NAMSE" ).setMulti();
-        collection.update( u2, q2 );
+        collection.update( q2, u2 );
 
         collection.show();
     }

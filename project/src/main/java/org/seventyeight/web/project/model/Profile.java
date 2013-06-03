@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
@@ -80,7 +82,7 @@ public class Profile extends User {
     }
 
     public List<Certificate> getCertificates( int offset, int number ) {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE_STRING ), offset, number );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
 
         List<Certificate> certificates = new ArrayList<Certificate>( docs.size() );
 
@@ -92,9 +94,19 @@ public class Profile extends User {
     }
 
     public void addCertificate( Certificate certificate ) {
-        MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE_STRING, certificate.getIdentifier() );
-        document.addToList( Certificate.CERTIFICATE_STRING_PL, d );
+        /* TODO Should only one instance of the certificate be allowed?! */
+        MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        document.addToList( Certificate.CERTIFICATES, d );
         this.save();
+    }
+
+    public void validateCertificate( Certificate certificate, Profile profile ) {
+        logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
+
+        MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
+        MongoDBQuery q = new MongoDBQuery().is( Certificate.CERTIFICATE_DOTTED, certificate.getIdentifier() );
+        MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
+        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( q, u );
     }
 
     public static class ProfileDescriptor extends UserDescriptor {

@@ -17,21 +17,22 @@ import java.net.UnknownHostException;
 /**
  * @author cwolfgang
  */
-public class WebCoreEnv implements TestRule {
+public abstract class WebCoreEnv<C extends Core> implements TestRule {
 
     protected File path;
     protected String databaseName;
     protected MongoDatabase db;
-    protected Core core;
+    protected C core;
 
     public WebCoreEnv( String databaseName ) {
         this.databaseName = databaseName;
     }
 
-    protected void before( File path ) throws UnknownHostException, CoreException {
-        this.core = new DummyCore( path, databaseName );
-        db = core.getDatabase();
+    public abstract C getCore( File path, String databaseName ) throws CoreException;
 
+    protected void before( File path ) throws UnknownHostException, CoreException {
+        this.core = getCore( path, databaseName );
+        db = core.getDatabase();
     }
 
     protected void after() {

@@ -50,6 +50,8 @@ public class MongoDBCollection {
 
 
     public List<MongoDocument> find( MongoDBQuery query ) {
+        logger.debug( "Finding with " + query.getDocument().toString() );
+
         List<DBObject> objs = collection.find( query.getDocument() ).toArray();
         List<MongoDocument> docs = new ArrayList<MongoDocument>( objs.size() );
 
@@ -92,15 +94,15 @@ public class MongoDBCollection {
     }
 
     public void update( MongoUpdate update ) {
-        update( update, new MongoDBQuery() );
+        update( new MongoDBQuery(), update );
     }
 
-    public void update( MongoUpdate update, MongoDBQuery query ) {
+    public void update( MongoDBQuery query, MongoUpdate update ) {
         if( update.getDocument().isEmpty() ) {
 
         } else {
             logger.debug( "Criteria: " + query.getDocument() );
-            logger.debug( "Update  : " + update );
+            logger.debug( "Update  : " + update.getDocument() );
             collection.update( query.getDocument(), update.getDocument(), update.isUpsert(), update.isMulti() );
         }
     }

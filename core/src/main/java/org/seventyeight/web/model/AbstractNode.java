@@ -360,7 +360,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public void updateField( String collection, MongoUpdate update ) {
-        MongoDBCollection.get( collection ).update( update, new MongoDBQuery().is( "_id", getObjectId() ) );
+        MongoDBCollection.get( collection ).update( new MongoDBQuery().is( "_id", getObjectId() ), update );
     }
 
 
