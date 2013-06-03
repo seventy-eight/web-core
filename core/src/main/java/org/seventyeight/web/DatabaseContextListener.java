@@ -2,6 +2,7 @@ package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
+import org.seventyeight.utils.TimeUtils;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
 import org.seventyeight.web.utilities.Installer;
@@ -34,6 +35,18 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             long duration = System.currentTimeMillis() - seconds;
             System.out.println( "Shutting down after " + ( duration / 1000 ) + " seconds" );
         }
+    }
+
+    private void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook( new Thread() {
+            @Override
+            public void run() {
+                long duration = System.currentTimeMillis() - seconds;
+                //System.out.println( "Shutting down after " + ( duration / 1000 ) + " seconds" );
+                System.out.println( "Shutting down after " + TimeUtils.getTimeString( duration ) );
+
+            }
+        } );
     }
 
     public abstract T getCore( File path, String dbname ) throws CoreException;
@@ -154,6 +167,9 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         //Executor executor = new ThreadPoolExecutor(10, 10, 50000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100));
         Executor executor =  Executors.newCachedThreadPool();
         sce.getServletContext().setAttribute( "executor", executor );
+
+
+        registerShutdownHook();
     }
 
     /**
