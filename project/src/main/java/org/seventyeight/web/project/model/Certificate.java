@@ -68,8 +68,8 @@ public class Certificate extends Entity<Certificate> {
      * Get a {@link Certificate} by its title
      */
     public static Certificate getCertificateByTitle( String title, Node parent ) throws NotFoundException {
-        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
-        if( doc != null ) {
+        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ).is( "type", CERTIFICATE ) );
+        if( !doc.isNull() ) {
             return new Certificate( parent, doc );
         } else {
             throw new NotFoundException( "The certificate \"" + title + "\" was not found" );
@@ -90,7 +90,12 @@ public class Certificate extends Entity<Certificate> {
 
         @Override
         public Node getChild( String name ) throws NotFoundException {
-            return null;
+            Certificate cert = getCertificateByTitle( name, this );
+            if( cert != null ) {
+                return cert;
+            } else {
+                throw new NotFoundException( "The certificate " + cert + " was not found" );
+            }
         }
     }
 }

@@ -23,7 +23,9 @@ import org.seventyeight.web.utilities.ExecuteUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
+import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -169,7 +171,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
     public Core initialize() {
 
-        /* TODO somthing with install */
+        /* TODO something with install */
 
         /* Other stuff */
 
@@ -339,27 +341,31 @@ public abstract class Core extends Actionable implements Node, RootNode {
             return;
         }
 
-        if( tokens.isEmpty() ) {
-            logger.debug( "Executing last node" );
-            ExecuteUtils.execute( request, response, node, "index" );
-            return;
-        }
-
-        try {
-            switch( tokens.size() ) {
-                case 0:
-                    ExecuteUtils.execute( request, response, node, "index" );
-                    break;
-
-                case 1:
-                    ExecuteUtils.execute( request, response, node, tokens.get( 0 ) );
-                    break;
-
-                default:
-                    Response.NOT_FOUND_404.render( request, response, exception );
+        if( node != null ) {
+            if( tokens.isEmpty() && exception == null ) {
+                logger.debug( "Executing last node" );
+                ExecuteUtils.execute( request, response, node, "index" );
+                return;
             }
-        } catch( NotFoundException e ) {
-            logger.log( Level.WARN, "", e );
+
+            try {
+                switch( tokens.size() ) {
+                    case 0:
+                        ExecuteUtils.execute( request, response, node, "index" );
+                        break;
+
+                    case 1:
+                        ExecuteUtils.execute( request, response, node, tokens.get( 0 ) );
+                        break;
+
+                    default:
+                        Response.NOT_FOUND_404.render( request, response, exception );
+                }
+            } catch( NotFoundException e ) {
+                logger.log( Level.WARN, "", e );
+                Response.NOT_FOUND_404.render( request, response, exception );
+            }
+        } else {
             Response.NOT_FOUND_404.render( request, response, exception );
         }
 
@@ -372,9 +378,9 @@ public abstract class Core extends Actionable implements Node, RootNode {
      * @param tokens
      * @return
      */
-    public Node resolveNode( String path, List<String> tokens ) throws NotFoundException {
+    public Node resolveNode( String path, List<String> tokens ) throws NotFoundException, UnsupportedEncodingException {
         logger.debug( "Resolving " + path );
-        StringTokenizer tokenizer = new StringTokenizer( path, "/" );
+        StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
 
         Node current = this;
         Node last = this;

@@ -78,6 +78,14 @@ public class MongoDocument implements Document {
         return (T) get( key.toString() );
     }
 
+    public MongoDocument getSubDocument( String key, MongoDocument defaultDoc ) {
+        if( document.containsField( key ) ) {
+            return new MongoDocument( (DBObject) document.get( key ) );
+        } else {
+            return defaultDoc;
+        }
+    }
+
     @Override
     public <T> T get( String key, T defaultValue ) {
         if( document.containsField( key ) ) {

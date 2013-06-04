@@ -16,6 +16,7 @@ import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.nodes.FileNode;
+import org.seventyeight.web.servlet.Request;
 import sun.misc.IOUtils;
 
 import javax.servlet.AsyncContext;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,6 +85,35 @@ public class ServletUtils {
                 ctx.complete();
             }
         }
+    }
+
+    /**
+     * Upload files from a form, return the filenames.
+     */
+    public static List<String> upload( Request request, File destinationPath, boolean useFieldName, int limit ) throws Exception {
+        FileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload( factory );
+        List<FileItem> items = upload.parseRequest( request );
+
+        List<String> uploadedFiles = new ArrayList<String>( items.size() );
+
+        //for( FileItem item : items ) {
+        int size = limit > 0 ? limit : items.size();
+        for( int i = 0 ; i < size ; ++i ) {
+            FileItem item = items.get( i );
+            if( !item.isFormField() ) {
+                String filename = useFieldName ? replace( item.getName(), item.getFieldName() ) : item.getName();
+                File destination = new File( destinationPath, filename );
+                item.write( destination );
+                uploadedFiles.add( filename );
+            }
+        }
+
+        return uploadedFiles;
+    }
+
+    public static String replace( String filename, String replace ) {
+        return filename.replaceAll( "^.*?(\\..*)?$", replace + "$1" );
     }
 
     public static class FileUploader implements Runnable {

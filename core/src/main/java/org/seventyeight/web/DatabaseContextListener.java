@@ -44,7 +44,6 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                 long duration = System.currentTimeMillis() - seconds;
                 //System.out.println( "Shutting down after " + ( duration / 1000 ) + " seconds" );
                 System.out.println( "Shutting down after " + TimeUtils.getTimeString( duration ) );
-
             }
         } );
     }

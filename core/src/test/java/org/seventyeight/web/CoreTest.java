@@ -9,6 +9,7 @@ import org.seventyeight.web.nodes.Users;
 import org.seventyeight.web.utilities.Parameters;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class CoreTest {
     public static DummyCoreEnvironment env = new DummyCoreEnvironment( "coreTest" );
 
     @Test
-    public void test01() throws NotFoundException {
+    public void test01() throws NotFoundException, UnsupportedEncodingException {
 
         List<String> tokens = new ArrayList<String>();
         Node nodeItem = Core.getInstance().resolveNode( "/user/wolle", tokens );
@@ -41,7 +42,7 @@ public class CoreTest {
     }
 
     @Test
-    public void test02() throws NotFoundException {
+    public void test02() throws NotFoundException, UnsupportedEncodingException {
 
         Core.getInstance().addNode( "user", new DummyNode( Core.getInstance() ) );
 
@@ -52,7 +53,7 @@ public class CoreTest {
     }
 
     @Test
-    public void test03() throws ClassNotFoundException, SavingException, ItemInstantiationException, NoSuchMethodException, NotFoundException {
+    public void test03() throws ClassNotFoundException, SavingException, ItemInstantiationException, NoSuchMethodException, NotFoundException, UnsupportedEncodingException {
 
         Users users = new Users( Core.getInstance() );
         Core.getInstance().addNode( "user", users );
@@ -67,7 +68,7 @@ public class CoreTest {
     }
 
     @Test
-    public void test04() throws ClassNotFoundException, SavingException, ItemInstantiationException, NoSuchMethodException, NotFoundException {
+    public void test04() throws ClassNotFoundException, SavingException, ItemInstantiationException, NoSuchMethodException, NotFoundException, UnsupportedEncodingException {
 
         Users users = new Users( Core.getInstance() );
         Core.getInstance().addNode( "user", users );

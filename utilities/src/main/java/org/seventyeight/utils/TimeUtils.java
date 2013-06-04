@@ -45,6 +45,24 @@ public class TimeUtils {
         return t;
     }
 
+    public static String getSmallTimeString( long millis ) {
+        if( millis < MINUTES ) {
+            return "Just now";
+        } else if( millis < HOURS ) {
+            long m = millis / MINUTES;
+            return m + ( m == 1 ? " minute" : " minutes" );
+        } else if( millis < DAYS ) {
+            long m = millis / HOURS;
+            return m + ( m == 1 ? " hour" : " hours" );
+        } else if( millis < WEEKS ) {
+            long m = millis / DAYS;
+            return m + ( m == 1 ? " day" : " days" );
+        } else {
+            long m = millis / WEEKS;
+            return m + ( m == 1 ? " week" : " weeks" );
+        }
+    }
+
     public static String getTimeString( long millis ) {
         Time t = getTime( millis );
 

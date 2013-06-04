@@ -22,8 +22,12 @@ import java.io.File;
  */
 public class ProjectCore extends Core {
 
+    private File signaturePath;
+
     public ProjectCore( File path, String dbname ) throws CoreException {
         super( path, dbname );
+
+        signaturePath = new File( path, "signatures" );
 
         /* Mandatory top level Actions */
         actions.add( new StaticFiles() );
@@ -71,6 +75,11 @@ public class ProjectCore extends Core {
         mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
         mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
         mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle/" ) );
+        mainMenu.add( new Menu.MenuItem( "Configure", "/configuration/" ) );
+    }
+
+    public File getSignaturePath() {
+        return signaturePath;
     }
 
 }

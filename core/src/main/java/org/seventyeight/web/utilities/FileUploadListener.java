@@ -4,8 +4,6 @@ import org.apache.commons.fileupload.ProgressListener;
 
 /**
  * @author cwolfgang
- *         Date: 30-01-13
- *         Time: 23:12
  */
 public class FileUploadListener implements ProgressListener {
 
