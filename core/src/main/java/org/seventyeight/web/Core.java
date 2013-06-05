@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.utils.EncodingUtils;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.authentication.Authentication;
@@ -27,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -380,14 +382,20 @@ public abstract class Core extends Actionable implements Node, RootNode {
      */
     public Node resolveNode( String path, List<String> tokens ) throws NotFoundException, UnsupportedEncodingException {
         logger.debug( "Resolving " + path );
-        StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
+        //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
+        StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
         Node current = this;
         Node last = this;
 
         while( tokenizer.hasMoreTokens() ) {
             String token = tokenizer.nextToken();
+            logger.debug( "Current token: \"" + token + "\"" );
+            //token = EncodingUtils.decode( token );
+            token = URLDecoder.decode( token, "UTF-8" );
+            logger.debug( "Translated token: " + token );
 
+            /* Fetch the child for this token */
             current = current.getChild( token );
 
             if( current == null ) {

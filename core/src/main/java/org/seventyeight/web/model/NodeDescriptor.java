@@ -81,4 +81,14 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
     public String getMainTemplate() {
         return "org/seventyeight/web/main.vm";
     }
+
+    @Override
+    public Node getChild( String name ) throws NotFoundException {
+        Node node = AbstractNode.getNodeByTitle( this, name, getType() );
+        if( node != null ) {
+            return node;
+        } else {
+            throw new NotFoundException( "The child " + name + " was not found" );
+        }
+    }
 }

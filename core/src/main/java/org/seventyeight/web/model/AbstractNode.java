@@ -363,9 +363,16 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         MongoDBCollection.get( collection ).update( new MongoDBQuery().is( "_id", getObjectId() ), update );
     }
 
-
     public static Node getNodeByTitle( Node parent, String title ) {
-        MongoDocument docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
+        return getNodeByTitle( parent, title, null );
+    }
+
+    public static Node getNodeByTitle( Node parent, String title, String type ) {
+        MongoDBQuery q = new MongoDBQuery().is( "title", title );
+        if( type != null && !type.isEmpty() ) {
+            q.is( "type", type );
+        }
+        MongoDocument docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( q );
         logger.debug( "DOC IS: " + docs );
 
         if( docs != null ) {

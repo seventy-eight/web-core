@@ -56,6 +56,8 @@ public abstract class AbstractUploadAction implements Action {
         } else {
             throw new IllegalStateException( "No file uploaded" );
         }
+
+        response.sendRedirect( "" );
     }
 
     public void setFile( String file ) {
