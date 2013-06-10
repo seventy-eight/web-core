@@ -343,6 +343,7 @@ public abstract class Core extends Actionable implements Node, RootNode {
             return;
         }
 
+        /* Only try to find a valid view if there was a valid node found on the path */
         if( node != null ) {
             if( tokens.isEmpty() && exception == null ) {
                 logger.debug( "Executing last node" );
@@ -352,14 +353,17 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
             try {
                 switch( tokens.size() ) {
+                    /* If the last token on the path is a valid node */
                     case 0:
                         ExecuteUtils.execute( request, response, node, "index" );
                         break;
 
+                    /* Typically, this happens if a node has an action, either as a view or doSomething */
                     case 1:
                         ExecuteUtils.execute( request, response, node, tokens.get( 0 ) );
                         break;
 
+                    /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
                     default:
                         Response.NOT_FOUND_404.render( request, response, exception );
                 }
@@ -375,10 +379,10 @@ public abstract class Core extends Actionable implements Node, RootNode {
 
 
     /**
-     * Resolve the {@link org.seventyeight.web.model.Node}s from a path
+     * Resolve the {@link org.seventyeight.web.model.Node}s from a path. <br />
      * @param path
      * @param tokens
-     * @return
+     * @return The last valid {@link Node} on the path, adding the extra tokens, if any, to the the token list.
      */
     public Node resolveNode( String path, List<String> tokens ) throws NotFoundException, UnsupportedEncodingException {
         logger.debug( "Resolving " + path );
@@ -494,7 +498,9 @@ public abstract class Core extends Actionable implements Node, RootNode {
         return getExtensionDescriptors( CreatableNode.class );
     }
 
-
+    /**
+     * Add an extension implementing a certain interface.
+     */
     public <T> void addExtension( Class<T> clazz, Object extension ) {
         if( !extensionsList.containsKey( clazz ) ) {
             extensionsList.put( clazz, new ArrayList<T>() );
@@ -503,7 +509,10 @@ public abstract class Core extends Actionable implements Node, RootNode {
         extensionsList.get( clazz ).add( extension );
     }
 
-    public <T> List<T> getExtension( Class<T> type ) {
+    /**
+     * Get a list of extensions implementing a certain interface.
+     */
+    public <T> List<T> getExtensions( Class<T> type ) {
         if( extensionsList.containsKey( type ) ) {
             return extensionsList.get( type );
         } else {
