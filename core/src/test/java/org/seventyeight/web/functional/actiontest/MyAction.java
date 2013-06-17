@@ -34,24 +34,9 @@ public class MyAction implements Action {
     public String getUrlName() {
         return "mya";
     }
-
-    @Override
-    public Node getParent() {
-        return parent;
-    }
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
     @Override
     public String getDisplayName() {
         return "Mya";
     }
 
-    @Override
-    public String getMainTemplate() {
-        return null;
-    }
 }

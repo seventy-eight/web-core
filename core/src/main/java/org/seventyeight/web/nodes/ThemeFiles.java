@@ -17,7 +17,7 @@ import java.net.URLDecoder;
 /**
  * @author cwolfgang
  */
-public class ThemeFiles implements Action, Autonomous {
+public class ThemeFiles implements Action, Autonomous, Node {
 
     private static Logger logger = Logger.getLogger( ThemeFiles.class );
 

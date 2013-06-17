@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Nodes implements Action {
+public class Nodes implements Action, Node {
 
     private static Logger logger = Logger.getLogger( Nodes.class );
 

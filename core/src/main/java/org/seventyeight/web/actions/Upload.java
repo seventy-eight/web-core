@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 /**
  * @author cwolfgang
  */
-public class Upload implements Action {
+public class Upload implements Action, Node {
 
     private static Logger logger = Logger.getLogger( Upload.class );
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author cwolfgang
  */
-public class GlobalConfiguration implements Action {
+public class GlobalConfiguration implements Action, Node {
 
     private static Logger logger = Logger.getLogger( GlobalConfiguration.class );
 

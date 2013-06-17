@@ -17,7 +17,7 @@ import java.net.URLDecoder;
 /**
  * @author cwolfgang
  */
-public class StaticFiles implements Action, Autonomous {
+public class StaticFiles implements Action, Autonomous, Node {
 
     private static Logger logger = Logger.getLogger( StaticFiles.class );
 

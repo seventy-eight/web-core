@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class UserExtension extends NodeExtension<User> {
+public class UserExtension extends NodeExtension<UserExtension> {
     public UserExtension( MongoDocument document ) {
         super( document );
     }

@@ -2,8 +2,12 @@ package org.seventyeight.web.functional.actiontest;
 
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.AbstractNode;
+import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -29,7 +33,8 @@ public class MyNode extends AbstractNode<MyNode> {
             doc = new MongoDocument();
             document.set( "actions", new MongoDocument().set( name, doc ) );
         }
-        return new MyAction( this, doc );
+        //return new MyAction( this, doc );
+        return null;
     }
 
     @Override

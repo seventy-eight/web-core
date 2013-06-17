@@ -8,7 +8,7 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class Get implements Action {
+public class Get implements Action, Node {
 
     private Logger logger = Logger.getLogger( Get.class );
 

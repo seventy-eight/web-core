@@ -36,16 +36,6 @@ public class Footer extends NodeExtension<Footer> {
     public class FooterAction implements Action {
 
         @Override
-        public Node getChild( String name ) throws NotFoundException {
-            return null;
-        }
-
-        @Override
-        public Node getParent() {
-            return null;
-        }
-
-        @Override
         public String getUrlName() {
             return "footer";
         }
@@ -53,11 +43,6 @@ public class Footer extends NodeExtension<Footer> {
         @Override
         public String getDisplayName() {
             return "Footer";
-        }
-
-        @Override
-        public String getMainTemplate() {
-            return "org/seventyeight/web/main.vm";
         }
     }
 

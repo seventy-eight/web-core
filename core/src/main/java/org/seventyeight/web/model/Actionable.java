@@ -17,11 +17,11 @@ public abstract class Actionable {
     }
 
     /**
-     * Return a dynamic object, null if nothing applies
+     * Return a single {@link Action}, null if nothing applies
      * @param token
      * @return
      */
-    public Node getDynamic( String token ) {
+    public Action getAction( String token ) {
         for( Action a : getActions() ) {
             if( a == null ) {
                 continue;

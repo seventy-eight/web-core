@@ -3,7 +3,6 @@ package org.seventyeight.web.actions;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
-import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
@@ -11,7 +10,6 @@ import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.ServletUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,17 +19,16 @@ public abstract class AbstractUploadAction implements Action {
 
     private static Logger logger = Logger.getLogger( AbstractUploadAction.class );
 
-    private Node parent;
+    private Node node;
     private MongoDocument document;
 
-    protected AbstractUploadAction( Node parent, MongoDocument document ) {
-        this.parent = parent;
+    protected AbstractUploadAction( Node node, MongoDocument document ) {
+        this.node = node;
         this.document = document;
     }
 
-    @Override
-    public Node getParent() {
-        return parent;
+    public Node getNode() {
+        return node;
     }
 
     public abstract File getPath();

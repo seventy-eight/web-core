@@ -20,17 +20,6 @@ public class NewContent implements Action {
     public NewContent( Node parent ) {
         this.parent = parent;
     }
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
-    public Node getParent() {
-        return parent;
-    }
-
     @Override
     public String getUrlName() {
         return "new";
@@ -39,11 +28,6 @@ public class NewContent implements Action {
     @Override
     public String getDisplayName() {
         return "New content";
-    }
-
-    @Override
-    public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
     }
 
     public void doCreate( Request request, Response response ) throws IOException {

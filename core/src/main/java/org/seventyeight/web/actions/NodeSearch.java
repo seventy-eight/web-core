@@ -53,17 +53,7 @@ public class NodeSearch extends SearchAction {
     }
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public String getDisplayName() {
         return "Search nodes";
-    }
-
-    @Override
-    public String getMainTemplate() {
-        return Core.MAIN_TEMPLATE;
     }
 }

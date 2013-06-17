@@ -37,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * @author cwolfgang
  */
-public abstract class Core extends Actionable implements Node, RootNode {
+public abstract class Core extends Actionable implements Node, RootNode, Parent {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
@@ -303,8 +303,13 @@ public abstract class Core extends Actionable implements Node, RootNode {
         if( items.containsKey( name ) ) {
             return items.get( name );
         } else {
-            return getDynamic( name );
+            return null;
         }
+    }
+
+    @Override
+    public List<Node> getChildren() {
+        return Collections.emptyList(); // TODO for now!
     }
 
     public void addNode( String urlName, Node node ) {
@@ -351,30 +356,39 @@ public abstract class Core extends Actionable implements Node, RootNode {
                 return;
             }
 
-            try {
-                switch( tokens.size() ) {
-                    /* If the last token on the path is a valid node */
-                    case 0:
-                        ExecuteUtils.execute( request, response, node, "index" );
-                        break;
-
-                    /* Typically, this happens if a node has an action, either as a view or doSomething */
-                    case 1:
-                        ExecuteUtils.execute( request, response, node, tokens.get( 0 ) );
-                        break;
-
-                    /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
-                    default:
-                        Response.NOT_FOUND_404.render( request, response, exception );
-                }
-            } catch( NotFoundException e ) {
-                logger.log( Level.WARN, "", e );
-                Response.NOT_FOUND_404.render( request, response, exception );
+            Object object = node;
+            if( tokens.size() > 0 && node instanceof Actionable ) {
+                object = resolveObject( (Actionable) node, tokens );
             }
+
+            renderObject( object, exception, request, response, tokens );
         } else {
             Response.NOT_FOUND_404.render( request, response, exception );
         }
 
+    }
+
+    private void renderObject( Object obj, Exception exception, Request request, Response response, LinkedList<String> tokens ) throws Exception {
+        try {
+            switch( tokens.size() ) {
+                    /* If the last token on the path is a valid node */
+                case 0:
+                    ExecuteUtils.execute( request, response, obj, "index" );
+                    break;
+
+                    /* Typically, this happens if a node has an action, either as a view or doSomething */
+                case 1:
+                    ExecuteUtils.execute( request, response, obj, tokens.get( 0 ) );
+                    break;
+
+                    /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
+                default:
+                    Response.NOT_FOUND_404.render( request, response, exception );
+            }
+        } catch( NotFoundException e ) {
+            logger.log( Level.WARN, "", e );
+            Response.NOT_FOUND_404.render( request, response, exception );
+        }
     }
 
 
@@ -399,7 +413,6 @@ public abstract class Core extends Actionable implements Node, RootNode {
             token = URLDecoder.decode( token, "UTF-8" );
             logger.debug( "Translated token: " + token );
 
-            /* Fetch the child for this token */
             current = current.getChild( token );
 
             if( current == null ) {
@@ -418,10 +431,36 @@ public abstract class Core extends Actionable implements Node, RootNode {
         }
 
         while( tokenizer.hasMoreTokens() ) {
-            tokens.add( tokenizer.nextToken() );
+            tokens.add( URLDecoder.decode( tokenizer.nextToken(), "UTF-8" ) );
         }
 
         return last;
+    }
+
+    public Object resolveObject( Actionable parent, LinkedList<String> tokens ) {
+        Action action = null;
+        Object lastObject = parent;
+        //for( String token : tokens ) {
+        while( !tokens.isEmpty() ) {
+            String token = tokens.peek();
+            logger.debug( "Popped " + token );
+
+            action = parent.getAction( token );
+
+            if( action == null ) {
+                return lastObject;
+            }
+
+            if( action instanceof Actionable ) {
+                parent = (Actionable) action;
+            }
+
+            lastObject = action;
+
+            tokens.pop();
+        }
+
+        return lastObject;
     }
 
     public Action getAction( Actionable actionable, String action ) {

@@ -1,11 +1,11 @@
 package org.seventyeight.web.model;
 
+import java.util.List;
+
 /**
  * @author cwolfgang
  */
-public interface Node {
-    public Node getParent();
-    public String getDisplayName();
+public interface Parent {
     public Node getChild( String name ) throws NotFoundException;
-    public String getMainTemplate();
+    public List<Node> getChildren();
 }

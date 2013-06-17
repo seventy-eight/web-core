@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implements CreatableNode, Portraitable {
+public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 
@@ -43,4 +43,8 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
         return null;
     }
 
+    @Override
+    public List<Node> getChildren() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

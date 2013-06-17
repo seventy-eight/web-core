@@ -10,9 +10,4 @@ public abstract class SearchAction implements Action {
     public SearchAction( Node parent ) {
         this.parent = parent;
     }
-
-    @Override
-    public Node getParent() {
-        return parent;
-    }
 }
