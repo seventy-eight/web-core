@@ -3,6 +3,7 @@ package org.seventyeight.web;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.seventyeight.TokenList;
 import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
@@ -307,11 +308,6 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
         }
     }
 
-    @Override
-    public List<Node> getChildren() {
-        return Collections.emptyList(); // TODO for now!
-    }
-
     public void addNode( String urlName, Node node ) {
         items.put( urlName, node );
     }
@@ -330,11 +326,11 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
      * Render the path from the URL
      */
     public void render( Request request, Response response ) throws Exception {
-        LinkedList<String> tokens = new LinkedList<String>();
+        TokenList tokens = new TokenList( request.getRequestURI() );
         Node node = null;
         Exception exception = null;
         try {
-            node = resolveNode( request.getRequestURI(), tokens );
+            node = resolveNode( tokens );
             logger.debug("Found node " + node);
 
         } catch( NotFoundException e ) {
@@ -356,21 +352,16 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
                 return;
             }
 
-            Object object = node;
-            if( tokens.size() > 0 && node instanceof Actionable ) {
-                object = resolveObject( (Actionable) node, tokens );
-            }
-
-            renderObject( object, exception, request, response, tokens );
+            renderObject( node, exception, request, response, tokens );
         } else {
             Response.NOT_FOUND_404.render( request, response, exception );
         }
 
     }
 
-    private void renderObject( Object obj, Exception exception, Request request, Response response, LinkedList<String> tokens ) throws Exception {
+    private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Exception {
         try {
-            switch( tokens.size() ) {
+            switch( tokens.left() ) {
                     /* If the last token on the path is a valid node */
                 case 0:
                     ExecuteUtils.execute( request, response, obj, "index" );
@@ -378,7 +369,7 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
 
                     /* Typically, this happens if a node has an action, either as a view or doSomething */
                 case 1:
-                    ExecuteUtils.execute( request, response, obj, tokens.get( 0 ) );
+                    ExecuteUtils.execute( request, response, obj, tokens.next() );
                     break;
 
                     /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
@@ -394,44 +385,61 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
 
     /**
      * Resolve the {@link org.seventyeight.web.model.Node}s from a path. <br />
-     * @param path
      * @param tokens
      * @return The last valid {@link Node} on the path, adding the extra tokens, if any, to the the token list.
      */
-    public Node resolveNode( String path, List<String> tokens ) throws NotFoundException, UnsupportedEncodingException {
-        logger.debug( "Resolving " + path );
+    public Node resolveNode( TokenList tokens ) throws NotFoundException, UnsupportedEncodingException {
+        //logger.debug( "Resolving " + path );
         //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
-        StringTokenizer tokenizer = new StringTokenizer( path, "/" );
+        //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
         Node current = this;
+        Node temp = null;
         Node last = this;
 
-        while( tokenizer.hasMoreTokens() ) {
-            String token = tokenizer.nextToken();
+        while( tokens.hasMore() ) {
+            String token = tokens.next();
             logger.debug( "Current token: \"" + token + "\"" );
-            //token = EncodingUtils.decode( token );
-            token = URLDecoder.decode( token, "UTF-8" );
-            logger.debug( "Translated token: " + token );
 
-            current = current.getChild( token );
+            /* Find a child node */
 
-            if( current == null ) {
-                tokens.add( token );
-                break;
+            temp = null;
+            if( current instanceof Parent ) {
+                temp = ((Parent)current).getChild( token );
+            }
+            logger.debug( "TEMP: " + temp );
+
+            /* If there's no child, try an action */
+            if( temp == null ) {
+
+                if( current instanceof Actionable ) {
+                    temp = ((Actionable)current).getAction( token );
+                }
+
+                /* If there ain't any actions */
+                if( temp == null ) {
+                    tokens.backup();
+                    break;
+                }
             }
 
-            if( current instanceof Autonomous ) {
+            if( temp instanceof Autonomous ) {
                 logger.debug( current + " is autonomous" );
-                return current;
+                return temp;
+            }
+
+            if( current instanceof Parent ) {
+            } else if( current instanceof Actionable ) {
+
+            } else {
+                tokens.backup();
+                break;
             }
 
             /* TODO Something about authorization? */
 
-            last = current;
-        }
-
-        while( tokenizer.hasMoreTokens() ) {
-            tokens.add( URLDecoder.decode( tokenizer.nextToken(), "UTF-8" ) );
+            current = temp;
+            last = temp;
         }
 
         return last;

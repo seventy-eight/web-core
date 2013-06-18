@@ -3,7 +3,7 @@ package org.seventyeight.web.model;
 /**
  * @author cwolfgang
  */
-public abstract class SearchAction implements Action {
+public abstract class SearchAction implements Action, Parent {
 
     protected Node parent;
 

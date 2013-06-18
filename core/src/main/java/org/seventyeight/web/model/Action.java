@@ -3,7 +3,7 @@ package org.seventyeight.web.model;
 /**
  * @author cwolfgang
  */
-public interface Action {
+public interface Action extends Node {
     public String getUrlName();
     public String getDisplayName();
 }

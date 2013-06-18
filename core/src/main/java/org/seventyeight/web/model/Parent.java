@@ -7,5 +7,4 @@ import java.util.List;
  */
 public interface Parent {
     public Node getChild( String name ) throws NotFoundException;
-    public List<Node> getChildren();
 }

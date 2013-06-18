@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class NodeDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node {
+public abstract class NodeDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node, Parent {
 
     private static Logger logger = Logger.getLogger( NodeDescriptor.class );
 

@@ -6,6 +6,6 @@ package org.seventyeight.web.model;
 public interface Node {
     public Node getParent();
     public String getDisplayName();
-    public Node getChild( String name ) throws NotFoundException;
+    //public Node getChild( String name ) throws NotFoundException;
     public String getMainTemplate();
 }
