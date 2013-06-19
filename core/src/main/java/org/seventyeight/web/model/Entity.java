@@ -42,9 +42,4 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
     public Node getChild( String name ) {
         return null;
     }
-
-    @Override
-    public List<Node> getChildren() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

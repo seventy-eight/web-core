@@ -29,11 +29,6 @@ public class ProfileSignatureAction extends AbstractUploadAction {
     }
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public String getDisplayName() {
         return "Signature";
     }

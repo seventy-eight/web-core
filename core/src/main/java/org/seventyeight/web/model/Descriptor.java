@@ -108,7 +108,7 @@ public abstract class Descriptor<T extends Describable<T>> {
     }
 
     public boolean hasGlobalConfiguration() {
-        //Core.getInstance().getTemplateManager().getTemplateFile(  )
+        //Core.getInstance().getTemplateManager().getTemplateFromClass(  )
         return true;
     }
 

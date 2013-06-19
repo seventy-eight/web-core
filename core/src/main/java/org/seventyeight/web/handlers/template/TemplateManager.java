@@ -143,6 +143,7 @@ public class TemplateManager {
 				                                       + "org.seventyeight.web.velocity.html.ResourceSelectorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderDescriptorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderObject,"
+                                                       + "org.seventyeight.web.velocity.html.RenderView,"
 				                                       + "org.seventyeight.web.velocity.html.FileInputDirective" );
 
         String l = getListAsCommaString( libsList );
@@ -291,19 +292,19 @@ public class TemplateManager {
         }
 
         public String renderClass( Class clazz, String method, boolean trySuper ) throws TemplateException {
-            Template template = getTemplateFile( theme, clazz, method, trySuper );
+            Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             return render( template );
         }
 
 
         public String renderClass( Object object, Class clazz, String method ) throws TemplateException {
-            Template template = getTemplateFile( theme, clazz, method, true );
+            Template template = getTemplateFromClass( theme, clazz, method, true );
             context.put( "item", object );
             return render( template );
         }
 
         public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws TemplateException {
-            Template template = getTemplateFile( theme, clazz, method, trySuper );
+            Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             context.put( "item", object );
             return render( template );
         }
@@ -311,7 +312,7 @@ public class TemplateManager {
 	}
 
     /**
-     * Given a class, get the corresponding list of templates
+     * Given a class, get the corresponding template
      * @param object
      * @param method
      * @param trySuper If true, try objects super classes
@@ -335,16 +336,25 @@ public class TemplateManager {
 		throw new TemplateException( method + " for " + object.getClass().getName() + " not found" );
 	}
 
+    public boolean templateExists( AbstractTheme theme, Object object, String method ) {
+        try {
+            getTemplate( theme, getUrlFromClass( object.getClass().getCanonicalName(), method ) );
+            return true;
+        } catch( TemplateException e ) {
+            return false;
+        }
+    }
+
 
 
     /**
-     * Given a class, get the corresponding list of templates
+     * Given a class, get the corresponding template
      * @param clazz
      * @param method
      * @param trySuper If true, try objects super classes
      * @return
      */
-	public Template getTemplateFile( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws TemplateException {
+	public Template getTemplateFromClass( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws TemplateException {
 		/* Resolve template */
 		int cnt = 0;
 		while( clazz != null && clazz != Object.class ) {

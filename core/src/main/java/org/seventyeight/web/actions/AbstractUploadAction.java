@@ -31,6 +31,11 @@ public abstract class AbstractUploadAction implements Action {
         return node;
     }
 
+    @Override
+    public Node getParent() {
+        return node;
+    }
+
     public abstract File getPath();
 
     @PostMethod

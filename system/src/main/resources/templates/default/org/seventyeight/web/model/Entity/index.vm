@@ -13,9 +13,12 @@
 
     <tr>
         <td style="width:100%">
+            BOOM
             <div style="width: 100%" align="center">
 
-                #foreach( $child in $item.getChilds() )
+                ---- $item.getActions() ----
+                #foreach( $action in $item.getActions() )
+                    #render( $action "bottom" )
                 #end
 
                 <!--
