@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Nodes implements Action, Node {
+public class Nodes implements Node {
 
     private static Logger logger = Logger.getLogger( Nodes.class );
 
@@ -37,18 +37,8 @@ public class Nodes implements Action, Node {
     }
 
     @Override
-    public String getUrlName() {
-        return "nodes";
-    }
-
-    @Override
     public Node getParent() {
         return Core.getInstance();
-    }
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
     }
 
     @Override

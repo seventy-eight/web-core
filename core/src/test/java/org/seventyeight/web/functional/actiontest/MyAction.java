@@ -8,7 +8,7 @@ import org.seventyeight.web.model.NotFoundException;
 /**
  * @author cwolfgang
  */
-public class MyAction implements Action {
+public class MyAction implements Node {
 
     private Node parent;
     private MongoDocument document;
@@ -31,12 +31,18 @@ public class MyAction implements Action {
     }
 
     @Override
-    public String getUrlName() {
-        return "mya";
+    public Node getParent() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
     @Override
     public String getDisplayName() {
         return "Mya";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

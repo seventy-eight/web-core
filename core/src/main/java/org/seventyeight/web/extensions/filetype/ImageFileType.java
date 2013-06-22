@@ -42,11 +42,6 @@ public class ImageFileType extends FileType<ImageFileType> {
         }
 
         @Override
-        public Node getChild( String name ) throws NotFoundException {
-            return null;
-        }
-
-        @Override
         public String getMainTemplate() {
             return Core.MAIN_TEMPLATE;
         }

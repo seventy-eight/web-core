@@ -24,16 +24,6 @@ public class CertificateSearch extends SearchAction {
     }
 
     @Override
-    public String getUrlName() {
-        return Certificate.CERTIFICATE;
-    }
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public String getDisplayName() {
         return Certificate.CERTIFICATE_NAME + " search";
     }

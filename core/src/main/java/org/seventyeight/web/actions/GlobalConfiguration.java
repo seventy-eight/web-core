@@ -11,14 +11,9 @@ import java.io.IOException;
 /**
  * @author cwolfgang
  */
-public class GlobalConfiguration implements Action, Node {
+public class GlobalConfiguration implements Node, Parent {
 
     private static Logger logger = Logger.getLogger( GlobalConfiguration.class );
-
-    @Override
-    public String getUrlName() {
-        return "configuration";
-    }
 
     @Override
     public Node getParent() {

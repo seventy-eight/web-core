@@ -50,11 +50,6 @@ public class ViewWrapper implements Node, Autonomous {
     }
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public String getDisplayName() {
         return "View wrapper for " + node;
     }

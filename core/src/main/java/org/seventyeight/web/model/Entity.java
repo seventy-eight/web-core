@@ -21,22 +21,6 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
     }
 
     @Override
-    public List<Action> getActions() {
-        logger.debug( "Getting actions for " + this );
-
-        List<Action> actions = new ArrayList<Action>();
-        List<AbstractExtension> extensions = getExtensions();
-
-        /* For all extensions */
-        for( AbstractExtension e : extensions ) {
-            actions.addAll( e.getActions() );
-        }
-
-        logger.debug( "Found: " + actions );
-        return actions;
-    }
-
-    @Override
     public List<AbstractExtension> getExtensions() {
         List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
         es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );

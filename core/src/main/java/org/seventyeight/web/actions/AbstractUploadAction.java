@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class AbstractUploadAction implements Action {
+public abstract class AbstractUploadAction implements Node {
 
     private static Logger logger = Logger.getLogger( AbstractUploadAction.class );
 

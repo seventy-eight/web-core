@@ -48,12 +48,13 @@ public class NodeSearch extends SearchAction {
     }
 
     @Override
-    public String getUrlName() {
-        return "node";
-    }
-
-    @Override
     public String getDisplayName() {
         return "Search nodes";
     }
+
+    @Override
+    public String getMainTemplate() {
+        return null;
+    }
+
 }

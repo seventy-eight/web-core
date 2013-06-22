@@ -1,9 +1,5 @@
 package org.seventyeight.web.model;
 
-import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.Core;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

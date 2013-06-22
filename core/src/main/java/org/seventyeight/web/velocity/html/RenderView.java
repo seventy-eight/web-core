@@ -1,7 +1,6 @@
 package org.seventyeight.web.velocity.html;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.Template;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;

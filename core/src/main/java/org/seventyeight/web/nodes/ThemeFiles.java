@@ -17,23 +17,13 @@ import java.net.URLDecoder;
 /**
  * @author cwolfgang
  */
-public class ThemeFiles implements Action, Autonomous, Node {
+public class ThemeFiles implements Autonomous, Node {
 
     private static Logger logger = Logger.getLogger( ThemeFiles.class );
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public Node getParent() {
         return Core.getInstance();
-    }
-
-    @Override
-    public String getUrlName() {
-        return "theme";
     }
 
     @Override

@@ -9,17 +9,12 @@ import java.util.Map;
 /**
  * @author cwolfgang
  */
-public class Search implements Action, Parent {
+public class Search implements Node, Parent {
 
     private Map<String, SearchAction> actions = new HashMap<String, SearchAction>(  );
 
-    public void addAction( SearchAction a ) {
-        actions.put( a.getUrlName(), a );
-    }
-
-    @Override
-    public String getUrlName() {
-        return "search";
+    public void addAction( String name, SearchAction a ) {
+        actions.put( name, a );
     }
 
     @Override

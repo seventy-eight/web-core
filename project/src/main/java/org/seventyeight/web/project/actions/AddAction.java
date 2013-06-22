@@ -6,7 +6,7 @@ import org.seventyeight.web.model.Node;
 /**
  * @author cwolfgang
  */
-public abstract class AddAction implements Action {
+public abstract class AddAction implements Node {
 
     protected Node parent;
 

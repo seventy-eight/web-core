@@ -1,10 +1,7 @@
 package org.seventyeight.web.project.actions;
 
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.Action;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
-import org.seventyeight.web.model.SearchAction;
+import org.seventyeight.web.model.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,17 +9,12 @@ import java.util.Map;
 /**
  * @author cwolfgang
  */
-public class AddNode implements Action {
+public class AddNode implements Node, Parent {
 
     private Map<String, AddAction> actions = new HashMap<String, AddAction>(  );
 
-    public void addAction( AddAction a ) {
-        actions.put( a.getUrlName(), a );
-    }
-
-    @Override
-    public String getUrlName() {
-        return "add";
+    public void addAction( String name, AddAction a ) {
+        actions.put( name, a );
     }
 
     @Override

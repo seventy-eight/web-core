@@ -8,7 +8,7 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class Get implements Action, Node {
+public class Get implements Node, Parent {
 
     private Logger logger = Logger.getLogger( Get.class );
 
@@ -26,11 +26,6 @@ public class Get implements Action, Node {
     @Override
     public Node getParent() {
         return parent;
-    }
-
-    @Override
-    public String getUrlName() {
-        return "get";
     }
 
     @Override

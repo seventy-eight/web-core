@@ -1,10 +1,7 @@
 package org.seventyeight.web;
 
-import org.seventyeight.web.Core;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
-import org.seventyeight.web.extensions.footer.Footer;
-import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.project.actions.AddCertificate;
@@ -13,7 +10,6 @@ import org.seventyeight.web.project.actions.CertificateSearch;
 import org.seventyeight.web.project.actions.Search;
 import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Profile;
-import org.seventyeight.web.project.model.Role;
 
 import java.io.File;
 
@@ -30,32 +26,32 @@ public class ProjectCore extends Core {
         signaturePath = new File( path, "signatures" );
 
         /* Mandatory top level Actions */
-        actions.add( new StaticFiles() );
-        actions.add( new ThemeFiles() );
-        actions.add( new NewContent( this ) );
-        actions.add( new Get( this ) );
-        actions.add( new Upload() );
-        actions.add( new Nodes() );
-        actions.add( new GlobalConfiguration() );
+        children.put( "static", new StaticFiles() );
+        children.put( "theme", new ThemeFiles() );
+        children.put( "new", new NewContent( this ) );
+        children.put( "get", new Get( this ) );
+        children.put( "upload", new Upload() );
+        children.put( "nodes", new Nodes() );
+        children.put( "configuration", new GlobalConfiguration() );
 
         /* Adding search action */
         Search search = new Search();
         CertificateSearch cs = new CertificateSearch( search );
         NodeSearch ns = new NodeSearch( search );
 
-        search.addAction( cs );
-        search.addAction( ns );
+        search.addAction( Certificate.CERTIFICATE, cs );
+        search.addAction( "node", ns );
 
-        actions.add( search );
+        children.put( "search", search );
 
         /* Adders */
         AddNode add = new AddNode();
 
         AddCertificate ac = new AddCertificate( add );
 
-        add.addAction( ac );
+        add.addAction( Certificate.CERTIFICATE, ac );
 
-        actions.add( add );
+        children.put( "add", add );
 
         /**/
         addDescriptor( new Profile.ProfileDescriptor() );
@@ -68,9 +64,6 @@ public class ProjectCore extends Core {
         //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );
-
-        /* test */
-        addDescriptor( new Footer.FooterDescriptor() );
 
         mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
         mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );

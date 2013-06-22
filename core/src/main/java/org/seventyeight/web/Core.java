@@ -7,14 +7,10 @@ import org.seventyeight.TokenList;
 import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
-import org.seventyeight.utils.EncodingUtils;
 import org.seventyeight.utils.FileUtilities;
-import org.seventyeight.web.actions.*;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.SessionManager;
 import org.seventyeight.web.authentication.SimpleAuthentication;
-import org.seventyeight.web.extensions.filetype.ImageFileType;
-import org.seventyeight.web.extensions.footer.Footer;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.*;
@@ -27,9 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
-import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -106,14 +100,9 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
     //private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
 
     /**
-     * A map of first level {@link org.seventyeight.web.model.Node}s registered to the core
+     * The Map of top level {@link Node}s
      */
-    protected ConcurrentMap<String, Node> items = new ConcurrentHashMap<String, Node>();
-
-    /**
-     * The list of top level {@link Action}s
-     */
-    protected List<Action> actions = new CopyOnWriteArrayList<Action>();
+    protected ConcurrentMap<String, Node> children = new ConcurrentHashMap<String, Node>();
 
     /**
      * Default {@link Group} that has no one in it
@@ -301,20 +290,15 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
 
     @Override
     public Node getChild( String name ) {
-        if( items.containsKey( name ) ) {
-            return items.get( name );
+        if( children.containsKey( name ) ) {
+            return children.get( name );
         } else {
             return null;
         }
     }
 
     public void addNode( String urlName, Node node ) {
-        items.put( urlName, node );
-    }
-
-    @Override
-    public List<Action> getActions() {
-        return actions;
+        children.put( urlName, node );
     }
 
     public Object resolve( String path ) {
@@ -497,7 +481,7 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
 
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
-            items.put( nd.getType(), nd );
+            children.put( nd.getType(), nd );
         }
 
         /**/

@@ -3,7 +3,6 @@ package org.seventyeight.web.authentication;
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.nodes.Users;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -47,11 +46,10 @@ public class SimpleAuthentication implements Authentication {
 
     public Session login( String username, String password ) throws AuthenticationException {
         if( !username.isEmpty() ) {
-            User user = null;
-            try {
-                user = Users.getUserByUsername( null, username );
-            } catch( ItemInstantiationException e ) {
-                throw new AuthenticationException( e );
+            User user = User.getUserByUsername( null, username );
+
+            if( user == null ) {
+                throw new AuthenticationException( "The user " + username + " does not exist!" );
             }
 
             if( user.getPassword() != null && !password.equals( user.getPassword() ) ) {

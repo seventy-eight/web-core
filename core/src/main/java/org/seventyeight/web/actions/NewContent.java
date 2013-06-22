@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author cwolfgang
  */
-public class NewContent implements Action {
+public class NewContent implements Node {
 
     private static Logger logger = Logger.getLogger( NewContent.class );
 
@@ -20,14 +20,20 @@ public class NewContent implements Action {
     public NewContent( Node parent ) {
         this.parent = parent;
     }
+
     @Override
-    public String getUrlName() {
-        return "new";
+    public Node getParent() {
+        return parent;
     }
 
     @Override
     public String getDisplayName() {
         return "New content";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;
     }
 
     public void doCreate( Request request, Response response ) throws IOException {

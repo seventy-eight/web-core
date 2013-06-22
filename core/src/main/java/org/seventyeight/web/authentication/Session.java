@@ -30,11 +30,6 @@ public class Session extends AbstractNode<Session> {
     }
 
     @Override
-    public Node getChild( String name ) {
-        return null;
-    }
-
-    @Override
     public String getMainTemplate() {
         return "org/seventyeight/web/main.vm";
     }

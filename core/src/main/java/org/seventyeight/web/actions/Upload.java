@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 /**
  * @author cwolfgang
  */
-public class Upload implements Action, Node {
+public class Upload implements Node {
 
     private static Logger logger = Logger.getLogger( Upload.class );
 
@@ -155,18 +155,8 @@ public class Upload implements Action, Node {
     }
 
     @Override
-    public String getUrlName() {
-        return "upload";
-    }
-
-    @Override
     public Node getParent() {
         return Core.getInstance();
-    }
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
     }
 
     @Override

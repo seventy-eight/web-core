@@ -70,16 +70,6 @@ public class AddCertificate extends AddAction {
     }
 
     @Override
-    public String getUrlName() {
-        return Certificate.CERTIFICATE;
-    }
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public String getDisplayName() {
         return "Add certificate";
     }

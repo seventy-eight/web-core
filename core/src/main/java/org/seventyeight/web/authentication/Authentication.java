@@ -5,8 +5,6 @@ import org.seventyeight.web.servlet.Response;
 
 /**
  * @author cwolfgang
- *         Date: 03-12-12
- *         Time: 16:49
  */
 public interface Authentication {
     public static final String __SESSION_ID = "session";
