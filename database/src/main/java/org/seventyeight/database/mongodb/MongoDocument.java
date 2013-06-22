@@ -68,14 +68,31 @@ public class MongoDocument implements Document {
         }
     }
 
-    public <T> T get( String ... keys ) {
-        StringBuilder key = new StringBuilder();
-        key.append( keys[0] );
-        for( int i = 1 ; i < keys.length ; i++ ) {
-            key.append( "." );
-            key.append( keys[i] );
+    public MongoDocument getr( String ... keys ) {
+
+        DBObject current = document;
+        int i = 0;
+        for( ; i < keys.length ; i++ ) {
+            String key = keys[i];
+            Object o = current.get( key );
+
+            if( o == null ) {
+                break;
+            } else {
+                if( o instanceof DBObject ) {
+                    current = (DBObject) o;
+                }
+            }
         }
-        return (T) get( key.toString() );
+
+        for( ; i < keys.length ; i++ ) {
+            String key = keys[i];
+            DBObject o = new BasicDBObject(  );
+            current.put( key, o );
+            current = o;
+        }
+
+        return new MongoDocument( current );
     }
 
     public MongoDocument getSubDocument( String key, MongoDocument defaultDoc ) {

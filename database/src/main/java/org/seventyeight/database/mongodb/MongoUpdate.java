@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 
 /**
  * @author cwolfgang
- *         Date: 19-02-13
- *         Time: 21:40
  */
 public class MongoUpdate {
 

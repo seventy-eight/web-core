@@ -19,6 +19,10 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
 
     protected MongoDocument document;
 
+    public PersistedObject() {
+
+    }
+
     public PersistedObject( MongoDocument document ) {
         this.document = document;
     }
@@ -26,6 +30,24 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
     public List<AbstractExtension> getExtensions() {
 
         return new ArrayList<AbstractExtension>();
+    }
+
+    protected void setDocument( MongoDocument document ) {
+        this.document = document;
+    }
+
+    public static MongoDocument getSubDocument( MongoDocument document, String type, Class<?> clazz ) {
+        MongoDocument extensionClassDocument = document.getr( EXTENSIONS, type, clazz.getCanonicalName() );
+
+        for( MongoDocument doc : docs ) {
+            if( doc.get( "class", null ) != null ) {
+                return doc;
+            }
+        }
+
+        MongoDocument d = new MongoDocument(  );
+        extensionClassDocument.addToList( type, d );
+        return d;
     }
 
     /**

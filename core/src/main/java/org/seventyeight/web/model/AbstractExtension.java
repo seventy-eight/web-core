@@ -15,6 +15,11 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         super( document );
     }
 
+    public AbstractExtension( Node node ) {
+        super();
+        node.get
+    }
+
     public List<Action> getActions( AbstractNode<?> node ) {
         return Collections.EMPTY_LIST;
     }

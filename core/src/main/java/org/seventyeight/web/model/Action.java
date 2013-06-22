@@ -7,8 +7,15 @@ import org.seventyeight.database.mongodb.MongoDocument;
  */
 public abstract class Action<T extends Action<T>> extends AbstractExtension<T> implements Node {
 
-    public Action( MongoDocument document ) {
-        super( document );
+    private Node parent;
+
+    public Action( Node parent ) {
+        super( parent );
+    }
+
+    @Override
+    public Node getParent() {
+        return parent;
     }
 
     public abstract String getUrlName();
