@@ -23,4 +23,12 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
     public Descriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
+
+    public abstract String getUrlName();
+
+    public abstract String getDisplayName();
+
+    public boolean isApplicable( Node node ) {
+        return true;
+    }
 }

@@ -25,7 +25,7 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
 
     public List<AbstractExtension> getExtensions() {
 
-        return null;
+        return new ArrayList<AbstractExtension>();
     }
 
     /**
