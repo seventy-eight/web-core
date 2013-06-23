@@ -61,6 +61,7 @@ public class Profile extends User {
         }
     }
 
+    /*
     @Override
     public Node getChild( String name ) {
         if( name.equalsIgnoreCase( "signature" ) ) {
@@ -70,6 +71,7 @@ public class Profile extends User {
             return super.getChild( name );
         }
     }
+    */
 
     @Override
     public String toString() {

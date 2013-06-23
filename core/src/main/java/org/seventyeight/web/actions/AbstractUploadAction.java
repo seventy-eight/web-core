@@ -15,25 +15,13 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class AbstractUploadAction implements Node {
+public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> extends Action<T> {
 
     private static Logger logger = Logger.getLogger( AbstractUploadAction.class );
 
-    private Node node;
-    private MongoDocument document;
 
     protected AbstractUploadAction( Node node, MongoDocument document ) {
-        this.node = node;
-        this.document = document;
-    }
-
-    public Node getNode() {
-        return node;
-    }
-
-    @Override
-    public Node getParent() {
-        return node;
+        super( node, document );
     }
 
     public abstract File getPath();
