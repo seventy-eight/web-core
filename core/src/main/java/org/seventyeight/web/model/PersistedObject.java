@@ -39,11 +39,13 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
     public static MongoDocument getSubDocument( MongoDocument document, String type, Class<?> clazz ) {
         MongoDocument extensionClassDocument = document.getr( EXTENSIONS, type, clazz.getCanonicalName() );
 
+        /*
         for( MongoDocument doc : docs ) {
             if( doc.get( "class", null ) != null ) {
                 return doc;
             }
         }
+        */
 
         MongoDocument d = new MongoDocument(  );
         extensionClassDocument.addToList( type, d );

@@ -11,14 +11,29 @@ import java.util.List;
  */
 public abstract class AbstractExtension<T extends AbstractExtension<T>> extends PersistedObject implements Describable<T> {
 
-    public AbstractExtension( MongoDocument document ) {
+    protected Node parent;
+
+    public AbstractExtension( Node parent, MongoDocument document ) {
         super( document );
+
+        this.parent = parent;
     }
 
+    public Node getParent() {
+        return parent;
+    }
+
+    /*
     public AbstractExtension( Node node ) {
         super();
-        node.get
+        if( node instanceof Documented ) {
+            MongoDocument d = ((Documented)node).getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
+            this.setDocument( d );
+        } else {
+            this.setDocument( new MongoDocument(  ) );
+        }
     }
+    */
 
     public List<Action> getActions( AbstractNode<?> node ) {
         return Collections.EMPTY_LIST;
@@ -29,7 +44,23 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         return Core.getInstance().getDescriptor( getClass() );
     }
 
-    public boolean isApplicable( Node node ) {
-        return true;
+    public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
+
+        public abstract String getDisplayName();
+
+        public abstract String getExtensionName();
+
+        public abstract String getTypeName();
+
+        public T get( AbstractNode node ) throws ItemInstantiationException {
+            MongoDocument d = node.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
+            return Core.getInstance().getItem( node, d );
+        }
+
+        public boolean isApplicable( Node node ) {
+            return true;
+        }
     }
+
+
 }

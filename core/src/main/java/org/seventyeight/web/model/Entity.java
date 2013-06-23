@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
-import org.seventyeight.web.extensions.PermanentExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
     @Override
     public List<AbstractExtension> getExtensions() {
         List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
-        es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );
+        //es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );
         return es;
     }
 

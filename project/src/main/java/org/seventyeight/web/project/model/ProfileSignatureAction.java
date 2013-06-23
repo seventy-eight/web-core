@@ -24,11 +24,6 @@ public class ProfileSignatureAction extends AbstractUploadAction {
     }
 
     @Override
-    public String getUrlName() {
-        return "signature";
-    }
-
-    @Override
     public String getDisplayName() {
         return "Signature";
     }

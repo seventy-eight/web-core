@@ -6,6 +6,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.SavingException;
 
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.List;
  * @author cwolfgang
  */
 public class UserExtension extends NodeExtension<UserExtension> {
-    public UserExtension( MongoDocument document ) {
-        super( document );
+    public UserExtension( Node parent, MongoDocument document ) {
+        super( parent, document );
     }
 
     public static List<UserExtension> all() {

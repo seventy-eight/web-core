@@ -9,8 +9,8 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
 
     private Node parent;
 
-    public Action( Node parent ) {
-        super( parent );
+    public Action( Node parent, MongoDocument document ) {
+        super( parent, document );
     }
 
     @Override
@@ -20,4 +20,11 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
 
     public abstract String getUrlName();
     public abstract String getDisplayName();
+
+    public static abstract class ActionDescriptor<T extends Action<T>> extends ExtensionDescriptor<T> {
+        @Override
+        public final String getTypeName() {
+            return "action";
+        }
+    }
 }

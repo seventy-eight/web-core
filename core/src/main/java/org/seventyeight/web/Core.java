@@ -84,6 +84,8 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
      */
     protected Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
 
+    protected Map<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>> extensionDescriptors = new HashMap<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>>();
+
     /**
      * A map of interfaces corresponding to specific {@link Descriptor}s<br />
      * This is used to map an extension class/interface to those {@link Describable}s {@link Descriptor}s implementing them.
@@ -482,6 +484,15 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
             children.put( nd.getType(), nd );
+        }
+
+        if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
+            AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
+            logger.debug( "Adding extension descriptor " + ed.getTypeName() + ", " + ed.getExtensionName() );
+            if( !extensionDescriptors.containsKey( ed.getTypeName() ) ) {
+                extensionDescriptors.put( ed.getTypeName(), new HashMap<String, AbstractExtension.ExtensionDescriptor<?>>() );
+            }
+            extensionDescriptors.get( ed.getTypeName() ).put( ed.getExtensionName(), ed );
         }
 
         /**/

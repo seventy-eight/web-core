@@ -5,6 +5,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.SavingException;
 
 /**
@@ -12,8 +13,8 @@ import org.seventyeight.web.model.SavingException;
  */
 public class DummyExtension extends NodeExtension {
 
-    public DummyExtension( MongoDocument document ) {
-        super( document );
+    public DummyExtension( Node parent, MongoDocument document ) {
+        super( parent, document );
     }
 
     @Override

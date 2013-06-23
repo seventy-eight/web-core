@@ -10,6 +10,7 @@ import org.seventyeight.web.project.actions.CertificateSearch;
 import org.seventyeight.web.project.actions.Search;
 import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Profile;
+import org.seventyeight.web.project.model.Signature;
 
 import java.io.File;
 
@@ -61,6 +62,8 @@ public class ProjectCore extends Core {
         addDescriptor( new Article.ArticleDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
+
+        addDescriptor( new Signature.SignatureDescriptor() );
         //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );
