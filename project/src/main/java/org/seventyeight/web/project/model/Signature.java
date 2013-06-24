@@ -25,6 +25,11 @@ public class Signature extends AbstractUploadAction<Signature> {
     }
 
     @Override
+    public Authorizer.Authorization getUploadAuthorization() {
+        return Authorizer.Authorization.MODERATE;
+    }
+
+    @Override
     public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -37,6 +42,10 @@ public class Signature extends AbstractUploadAction<Signature> {
     @Override
     public String getDisplayName() {
         return "Signature";
+    }
+
+    public File getSignature() {
+        return new File( new File( getPath(), ((Profile)parent).getIdentifier() ), "signature.jpg" );
     }
 
     @Override

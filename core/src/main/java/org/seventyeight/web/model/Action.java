@@ -7,8 +7,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
  */
 public abstract class Action<T extends Action<T>> extends AbstractExtension<T> implements Node {
 
-    private Node parent;
-
     public Action( Node parent, MongoDocument document ) {
         super( parent, document );
     }

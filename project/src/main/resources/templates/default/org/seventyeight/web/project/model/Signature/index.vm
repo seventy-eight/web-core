@@ -1,0 +1,7 @@
+$item.getParent().getIdentifier()
+
+#if( $item.getSignature().exists() )
+    <img src="$item.getSignature()">
+#else
+    DAMMIT!!!!$item.getSignature()
+#end

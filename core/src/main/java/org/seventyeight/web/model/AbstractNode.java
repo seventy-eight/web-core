@@ -188,7 +188,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
             return Authorization.MODERATE;
         }
 
-
         List<MongoDocument> docs = document.getList( MODERATORS );
         for( MongoDocument d : docs ) {
             Authoritative a = null;

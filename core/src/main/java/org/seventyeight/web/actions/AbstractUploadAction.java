@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.model.Action;
+import org.seventyeight.web.model.Authorizer;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -19,15 +20,17 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
 
     private static Logger logger = Logger.getLogger( AbstractUploadAction.class );
 
-
-    protected AbstractUploadAction( Node node, MongoDocument document ) {
-        super( node, document );
+    protected AbstractUploadAction( Node parent, MongoDocument document ) {
+        super( parent, document );
     }
 
     public abstract File getPath();
 
+    public abstract Authorizer.Authorization getUploadAuthorization();
+
     @PostMethod
     public void doUpload( Request request, Response response ) throws Exception {
+        request.checkAuthorization( getParent(), getUploadAuthorization() );
         logger.debug( "Uploading file" );
 
         String relativePath = request.getUser().getIdentifier();

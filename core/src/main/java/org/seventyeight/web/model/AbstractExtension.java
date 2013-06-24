@@ -1,5 +1,6 @@
 package org.seventyeight.web.model;
 
+import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
@@ -10,6 +11,8 @@ import java.util.List;
  * @author cwolfgang
  */
 public abstract class AbstractExtension<T extends AbstractExtension<T>> extends PersistedObject implements Describable<T> {
+
+    private static Logger logger = Logger.getLogger( AbstractExtension.class );
 
     protected Node parent;
 
@@ -54,6 +57,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         public T get( AbstractNode node ) throws ItemInstantiationException {
             MongoDocument d = node.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
+            if( d.get( "class", null ) == null ) {
+                d.set( "class", getId() );
+            }
+            logger.debug( "FROM NODE " + node );
             return Core.getInstance().getItem( node, d );
         }
 

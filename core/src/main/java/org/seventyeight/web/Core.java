@@ -270,6 +270,7 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
             throw new ItemInstantiationException( "\"class\" property not found for " + document );
         }
         logger.debug( "ModelObject class: " + clazz );
+        logger.debug( "PARENT: " + parent );
 
         try {
             Class<PersistedObject> eclass = (Class<PersistedObject>) Class.forName(clazz, true, classLoader );
@@ -374,7 +375,7 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
      * @param tokens
      * @return The last valid {@link Node} on the path, adding the extra tokens, if any, to the the token list.
      */
-    public Node resolveNode( TokenList tokens ) throws NotFoundException, UnsupportedEncodingException {
+    public Node resolveNode( TokenList tokens ) throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
         //logger.debug( "Resolving " + path );
         //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
         //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
@@ -398,8 +399,14 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
             /* If there's no child, try an action */
             if( temp == null ) {
 
-                if( current instanceof Actionable ) {
-                    temp = ((Actionable)current).getAction( token );
+                AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
+                if( d != null && current instanceof AbstractNode ) {
+                    if( d.isApplicable( current ) ) {
+                        logger.debug( "CURRENT IS " + current );
+                        temp = (Node) d.get( (AbstractNode) current );
+                        logger.debug( "TEMP: " + temp );
+                        logger.debug( "TEMP PARENT: " + temp.getParent() );
+                    }
                 }
 
                 /* If there ain't any actions */

@@ -66,7 +66,7 @@ public class Profile extends User {
     public Node getChild( String name ) {
         if( name.equalsIgnoreCase( "signature" ) ) {
             MongoDocument doc = document.get( "signature", new MongoDocument() );
-            return new ProfileSignatureAction( this, doc );
+            return new Signature( this, doc );
         } else {
             return super.getChild( name );
         }

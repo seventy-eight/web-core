@@ -2,18 +2,15 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.model.PersistedObject;
-import org.seventyeight.web.model.AbstractTheme;
-import org.seventyeight.web.model.CoreRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * User: cwolfgang
- * Date: 16-11-12
- * Time: 21:43
+ * @author cwolfgang
  */
 public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
@@ -88,6 +85,31 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public void setAuthenticated( boolean authenticated ) {
         this.authenticated = authenticated;
+    }
+
+    public void checkAuthorization( Node node, Authorizer.Authorization authorization ) throws NoAuthorizationException {
+        while( node != null ) {
+            if( node instanceof Authorizer ) {
+                checkAuthorization( (Authorizer)node, authorization );
+            }
+
+            node = node.getParent();
+        }
+    }
+
+    public void checkAuthorization( Authorizer authorizer, Authorizer.Authorization authorization ) throws NoAuthorizationException {
+        Authorizer.Authorization auth = null;
+        try {
+            auth = authorizer.getAuthorization( this.user );
+        } catch( AuthorizationException e ) {
+            throw new NoAuthorizationException( e );
+        }
+
+        if( auth.ordinal() > authorization.ordinal() ) {
+            return;
+        } else {
+            throw new NoAuthorizationException( user + " was not authorized to " + authorizer );
+        }
     }
 
     public String getTemplate() {

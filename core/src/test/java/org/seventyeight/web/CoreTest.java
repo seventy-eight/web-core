@@ -26,7 +26,7 @@ public class CoreTest {
     public static DummyCoreEnvironment env = new DummyCoreEnvironment( "coreTest" );
 
     @Test
-    public void test01() throws NotFoundException, UnsupportedEncodingException {
+    public void test01() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
 
         TokenList tokens = new TokenList( "/user/wolle" );
         Node nodeItem = Core.getInstance().resolveNode( tokens );
@@ -38,7 +38,7 @@ public class CoreTest {
     }
 
     @Test
-    public void test02() throws NotFoundException, UnsupportedEncodingException {
+    public void test02() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
 
         Core.getInstance().addNode( "user", new DummyNode( Core.getInstance() ) );
 
