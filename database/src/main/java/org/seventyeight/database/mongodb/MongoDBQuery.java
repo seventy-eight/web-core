@@ -1,6 +1,7 @@
 package org.seventyeight.database.mongodb;
 
 import com.mongodb.*;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,12 @@ public class MongoDBQuery {
         } else {
             query.put( field ).is( value );
         }
+
+        return this;
+    }
+
+    public MongoDBQuery getId( String id ) {
+        query.put( "_id" ).is( new ObjectId( id ) );
 
         return this;
     }

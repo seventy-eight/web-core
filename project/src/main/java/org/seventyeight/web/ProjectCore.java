@@ -34,6 +34,7 @@ public class ProjectCore extends Core {
         children.put( "upload", new Upload() );
         children.put( "nodes", new Nodes() );
         children.put( "configuration", new GlobalConfiguration() );
+        //children.put( "login", new Login( this ) );
 
         /* Adding search action */
         Search search = new Search();

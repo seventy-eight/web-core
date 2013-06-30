@@ -27,10 +27,10 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
     @Override
     protected void install() throws DatabaseException {
 
-        ProfileInstall cwInstall = new ProfileInstall( "cwolfgang", "Christian", "Wolfgang", "cwolfgang@seventyeight.org" );
+        ProfileInstall cwInstall = new ProfileInstall( "cwolfgang", "Christian", "Wolfgang", "cwolfgang@seventyeight.org", "pass" );
         cwInstall.install();
 
-        ProfileInstall anInstall = new ProfileInstall( "anonymous", "Anonymous", "Anonymous", "anonymous@seventyeight.org" );
+        ProfileInstall anInstall = new ProfileInstall( "anonymous", "Anonymous", "Anonymous", "anonymous@seventyeight.org", "pass" );
         anInstall.install();
 
         GroupInstall agInstall = new GroupInstall( "Administrators", cwInstall.getValue() );

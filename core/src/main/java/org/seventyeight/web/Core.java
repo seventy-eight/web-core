@@ -8,9 +8,8 @@ import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
-import org.seventyeight.web.authentication.Authentication;
-import org.seventyeight.web.authentication.SessionManager;
-import org.seventyeight.web.authentication.SimpleAuthentication;
+import org.seventyeight.utils.PostMethod;
+import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.*;
@@ -19,6 +18,7 @@ import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
 import org.seventyeight.web.utilities.ExecuteUtils;
 
+import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -152,6 +152,8 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
+
+        addDescriptor( new Session.SessionsDescriptor() );
 
         /* Default groups */
         // Group.de Maybe not???!?!?!?!
@@ -679,6 +681,24 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
 
     public Menu getMainMenu() {
         return mainMenu;
+    }
+
+    @PostMethod
+    public void doLogin( Request request, Response response ) throws AuthenticationException, IOException {
+
+        String username = request.getValue( Authentication.__NAME_KEY );
+        String password = request.getValue( Authentication.__PASS_KEY );
+        logger.debug( "U: " + username + ", P:" + password );
+
+        Session session = getAuthentication().login( username, password );
+
+        session.save();
+
+        Cookie c = new Cookie( Authentication.__SESSION_ID, session.getIdentifier() );
+        c.setMaxAge( session.getTimeToLive() );
+        response.addCookie( c );
+
+        response.sendRedirect( request.getValue( "url", "/" ) );
     }
 
     @Override

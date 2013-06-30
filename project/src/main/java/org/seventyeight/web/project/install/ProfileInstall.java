@@ -18,14 +18,16 @@ public class ProfileInstall extends NodeInstaller<User> {
     protected String firstName;
     protected String lastName;
     protected String email;
+    protected String password;
 
     protected Profile profile;
 
-    public ProfileInstall( String title, String firstName, String lastName, String email ) {
+    public ProfileInstall( String title, String firstName, String lastName, String email, String password ) {
         super( title );
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
     }
 
     @Override
@@ -39,6 +41,8 @@ public class ProfileInstall extends NodeInstaller<User> {
         parameters.put( "email", email );
         parameters.put( Profile.FIRST_NAME, firstName );
         parameters.put( Profile.LAST_NAME, lastName );
+        parameters.put( "password", password );
+        parameters.put( "password_again", password );
     }
 
     @Override

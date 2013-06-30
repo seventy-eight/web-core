@@ -5,11 +5,13 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,24 @@ public class User extends Entity<User> {
                 throw new SavingException( "The email must be set" );
             }
             document.set( "email", email );
+
+            /* Password */
+            String password1 = request.getValue( "password", null );
+            String password2 = request.getValue( "password_again", null );
+            if( ( password1 == null || password1.isEmpty() ) || ( password2 == null || password2.isEmpty() ) ) {
+                throw new SavingException( "The password cannot be empty" );
+            }
+
+            if( !password1.equals( password2 ) ) {
+                throw new SavingException( "Passwords does not match" );
+            }
+            String hashed = "";
+            try {
+                hashed = Utils.md5( password1 );
+            } catch( NoSuchAlgorithmException e ) {
+                throw new SavingException( "Unable to hash password" );
+            }
+            document.set( "password", hashed );
         }
     }
 

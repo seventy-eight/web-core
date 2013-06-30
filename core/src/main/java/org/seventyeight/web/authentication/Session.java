@@ -2,11 +2,13 @@ package org.seventyeight.web.authentication;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.utils.Date;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.NodeDescriptor;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.Descriptor;
+
+import java.util.Date;
 
 
 public class Session extends AbstractNode<Session> {
@@ -57,10 +59,11 @@ public class Session extends AbstractNode<Session> {
         document.set( "user", user.getUsername() );
     }
 
-	public User getUser() {
-        return null;
+	public String getUser() {
+        return document.get( "user" );
 	}
 
+    /*
     public void setHash( String hash ) {
         document.set( "hash", hash );
     }
@@ -68,25 +71,41 @@ public class Session extends AbstractNode<Session> {
 	public String getHash() {
 		return document.get( "hash", null );
 	}
+	*/
 
+    public void setTimeToLive( int seconds ) {
+        this.document.set( "ttl", seconds );
+    }
+
+    public int getTimeToLive() {
+        return document.get( "ttl" );
+    }
+
+    /*
     public void setCreated() {
         document.set( "created", new Date().getTime() );
     }
+    */
 
     public void setEndDate( Date date ) {
-        document.set( __END_DATE, date.getTime() );
+        document.set( __END_DATE, date );
     }
 	
 	public Date getEndingAsDate() {
-		return new Date( (Long)document.get( __END_DATE ) );
+		//return new Date( (Long)document.get( __END_DATE ) );
+        return document.get( __END_DATE );
 	}
 
-
-    public static class SessionsDescriptor extends Descriptor<Session> {
+    public static class SessionsDescriptor extends NodeDescriptor<Session> {
 
         @Override
         public String getDisplayName() {
             return "Session";
+        }
+
+        @Override
+        public String getType() {
+            return "session";
         }
     }
 }
