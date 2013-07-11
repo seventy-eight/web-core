@@ -9,6 +9,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.Language;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.velocity.DateUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,6 +144,7 @@ public class TemplateManager {
 				                                       + "org.seventyeight.web.velocity.html.ResourceSelectorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderDescriptorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderObject,"
+                                                       + "org.seventyeight.web.velocity.html.RenderStatic,"
                                                        + "org.seventyeight.web.velocity.html.RenderView,"
 				                                       + "org.seventyeight.web.velocity.html.FileInputDirective" );
 
@@ -248,6 +250,8 @@ public class TemplateManager {
 
 			/* I18N */
 			context.put( "locale", locale );
+            //context.put( "dateTool", new DateTool() );
+            context.put( "dateUtils", new DateUtils() );
 			
 			template.merge( context, writer );
 			
@@ -339,6 +343,18 @@ public class TemplateManager {
     public boolean templateExists( AbstractTheme theme, Object object, String method ) {
         try {
             getTemplate( theme, getUrlFromClass( object.getClass().getCanonicalName(), method ) );
+            return true;
+        } catch( TemplateException e ) {
+            return false;
+        }
+    }
+
+    /**
+     * Determine whether a template for the given {@link Class} exists or not
+     */
+    public boolean templateForClassExists( AbstractTheme theme, Class<?> clazz, String method ) {
+        try {
+            getTemplate( theme, getUrlFromClass( clazz, method ) );
             return true;
         } catch( TemplateException e ) {
             return false;

@@ -1,24 +1,36 @@
 <table style="width:100%;border-collapse: collapse;">
+
     <tr>
-        <td style="width:100%">
-            <!-- <a href="/db/browse/resource/$item.getIdentifier()">Browse</a> -->
+        <td style="width:100px" class="headerContrast" align="left">
+            $item.getType()
+        </td>
+
+        <td style="width:auto;padding-left:20px" class="headerContrast" align="center">
+            $item.getDisplayName()
+        </td>
+
+        <td style="width:100px;padding-left:20px" class="headerContrast" align="right">
+            Something
         </td>
     </tr>
 
     <tr>
-        <td style="width:100%">
+        <td style="width:100%" colspan="3">
             #render( $item "view" )
         </td>
     </tr>
 
     <tr>
-        <td style="width:100%">
-            BOOM
+        <td style="width:100%" colspan="3">
             <div style="width: 100%" align="center">
 
-                ---- $item.getActions() ----
                 #foreach( $action in $item.getActions() )
                     #render( $action "bottom" )
+                #end
+
+                #foreach( $action in $item.getLayoutableHavingTemplate( "bottom.vm" ) )
+
+                    #renderStatic( $action.getClazz() "bottom" )
                 #end
 
                 <!--
@@ -27,6 +39,16 @@
                 #end
                 -->
             </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="width:100%;font-size: 9px" class="headerContrast" align="left" colspan="3">
+            Created about $dateUtils.getDateString($item.getCreated()) ago
+            #if($item.getRevision() > 1)
+                , last updated $dateUtils.getDateString($item.getUpdated()) ago
+            #end
+            . Revision $item.getRevision()
         </td>
     </tr>
 

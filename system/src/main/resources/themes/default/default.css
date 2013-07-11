@@ -45,8 +45,14 @@ tr.listing:hover {
 }
 
 .header {
+     font-size: 20px;
+     font-weight: bold;
+ }
+
+.headerContrast {
     font-size: 20px;
     font-weight: bold;
+    background-color: #992992;
 }
 
 a:link {

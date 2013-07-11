@@ -96,6 +96,11 @@ public class Session extends AbstractNode<Session> {
         return document.get( __END_DATE );
 	}
 
+    public Date getCreated() {
+        //return new Date( (Long)document.get( __END_DATE ) );
+        return document.get( "created" );
+    }
+
     public static class SessionsDescriptor extends NodeDescriptor<Session> {
 
         @Override
@@ -106,6 +111,11 @@ public class Session extends AbstractNode<Session> {
         @Override
         public String getType() {
             return "session";
+        }
+
+        @Override
+        public String getCollectionName() {
+            return SessionManager.SESSIONS_COLLECTION_NAME;
         }
     }
 }

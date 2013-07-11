@@ -1,12 +1,11 @@
-package org.seventyeight.web.nodes;
+package org.seventyeight.web.project.actions;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.ProjectCore;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -17,9 +16,9 @@ import java.net.URLDecoder;
 /**
  * @author cwolfgang
  */
-public class ThemeFiles implements Autonomous, Node {
+public class SignatureFile implements Autonomous, Node {
 
-    private static Logger logger = Logger.getLogger( ThemeFiles.class );
+    private static Logger logger = Logger.getLogger( SignatureFile.class );
 
     @Override
     public Node getParent() {
@@ -28,7 +27,7 @@ public class ThemeFiles implements Autonomous, Node {
 
     @Override
     public String getDisplayName() {
-        return "Theme files";
+        return "Signature files";
     }
 
     @Override
@@ -37,23 +36,29 @@ public class ThemeFiles implements Autonomous, Node {
 
         requestedFile = requestedFile.replaceFirst( "^/?.*?/", "" );
         logger.debug( "[Request file] " + requestedFile );
-        String filename = URLDecoder.decode( requestedFile, "UTF-8" );
 
-        File themeFile = null;
-        try {
-            themeFile = Core.getInstance().getThemeFile( request.getTheme(), filename );
-        } catch ( IOException e ) {
+        if( requestedFile == null ) {
             try {
                 Response.NOT_FOUND_404.render( request, response );
-            } catch( TemplateException e1 ) {
-                throw new IOException( e1 );
+            } catch( TemplateException e ) {
+                throw new IOException( e );
             }
             return;
         }
 
-        logger.debug( "THE THEME FILE IS " + themeFile );
+        String filename = URLDecoder.decode( requestedFile, "UTF-8" );
 
-        response.deliverFile( request, themeFile, true );
+        File file = null;
+        try {
+            file = ((ProjectCore)Core.getInstance()).getSignaturePath();
+            response.deliverFile( request, file, true );
+        } catch( IOException e ) {
+            try {
+                Response.NOT_FOUND_404.render( request, response );
+            } catch( TemplateException e1 ) {
+                throw new IOException( e );
+            }
+        }
     }
 
     @Override

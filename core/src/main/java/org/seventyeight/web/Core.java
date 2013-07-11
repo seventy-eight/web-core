@@ -641,8 +641,12 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
     }
 
     public File getThemeFile( AbstractTheme theme, String filename ) throws IOException {
+        logger.debug( "Getting theme file " + filename + " for " + theme );
+
         File themePath = new File( themesPath, theme.getName() );
         File themeFile = new File( themePath, filename );
+
+        logger.debug( "Getting theme file " + themeFile + " for " + theme );
 
         if( themeFile.exists() ) {
             return themeFile;
@@ -699,6 +703,25 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
         response.addCookie( c );
 
         response.sendRedirect( request.getValue( "url", "/" ) );
+    }
+
+    public void doLogout( Request request, Response response ) throws IOException {
+        logger.debug( "Logging out" );
+
+        for( Cookie cookie : request.getCookies() ) {
+            logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
+            if( cookie.getName().equals( Authentication.__SESSION_ID ) ) {
+                cookie.setMaxAge( 0 );
+                response.addCookie( cookie );
+
+                /* Remove the session object */
+                sessionManager.removeSession( cookie.getValue() );
+
+                break;
+            }
+        }
+
+        response.sendRedirect( "/" );
     }
 
     @Override

@@ -11,11 +11,11 @@ public class TimeUtils {
 
     private TimeUtils() {}
 
-    public static int SECONDS = 1000;
-    public static int MINUTES = SECONDS * 60;
-    public static int HOURS = MINUTES * 60;
-    public static int DAYS = HOURS * 24;
-    public static int WEEKS = DAYS * 7;
+    public final static int SECONDS = 1000;
+    public final static int MINUTES = SECONDS * 60;
+    public final static int HOURS = MINUTES * 60;
+    public final static int DAYS = HOURS * 24;
+    public final static int WEEKS = DAYS * 7;
 
     public static class Time {
         public int millis = 0;
@@ -47,7 +47,7 @@ public class TimeUtils {
 
     public static String getSmallTimeString( long millis ) {
         if( millis < MINUTES ) {
-            return "Just now";
+            return "Less than one minute";
         } else if( millis < HOURS ) {
             long m = millis / MINUTES;
             return m + ( m == 1 ? " minute" : " minutes" );

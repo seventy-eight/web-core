@@ -105,7 +105,9 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
             throw new NoAuthorizationException( e );
         }
 
-        if( auth.ordinal() > authorization.ordinal() ) {
+        logger.debug( "User auth: " + auth + ", required: " + authorization );
+
+        if( auth.ordinal() >= authorization.ordinal() ) {
             return;
         } else {
             throw new NoAuthorizationException( user + " was not authorized to " + authorizer );

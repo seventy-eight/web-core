@@ -173,9 +173,9 @@ public class User extends Entity<User> {
     @Override
     public String getPortrait() {
         if( false ) {
-            return "/theme/default/unknown-person.png";
+            return "/theme/unknown-person.png";
         } else {
-            return "/theme/default/unknown-person.png";
+            return "/theme/unknown-person.png";
         }
     }
 

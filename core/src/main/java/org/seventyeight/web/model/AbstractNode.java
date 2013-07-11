@@ -17,6 +17,7 @@ import org.seventyeight.web.utilities.JsonUtils;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -163,13 +164,32 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     }
 
+
+    /**
+     * Return a {@link List} of {@link org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor}'s that are applicable and have a certain template.
+     */
+    public List<AbstractExtension.ExtensionDescriptor<?>> getLayoutableHavingTemplate( String template ) {
+        List<AbstractExtension.ExtensionDescriptor<?>> ds = new ArrayList<AbstractExtension.ExtensionDescriptor<?>>(  );
+
+        logger.debug( "DS: " + Core.getInstance().getExtensionDescriptors( Layoutable.class ) );
+
+        for( Descriptor d : Core.getInstance().getExtensionDescriptors( Layoutable.class ) ) {
+            if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) &&
+                   Core.getInstance().getTemplateManager().templateForClassExists( Core.getInstance().getDefaultTheme(), d.getClazz(), template ) ) {
+                ds.add( (AbstractExtension.ExtensionDescriptor<?>) d );
+            }
+        }
+
+        return ds;
+    }
+
     @Override
     public Node getParent() {
         return parent;
     }
 
     public boolean isOwner( User user ) {
-        return true;
+        return user.getIdentifier().equals( getIdentifier() );
     }
 
     /**
@@ -183,12 +203,16 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     @Override
     public Authorization getAuthorization( User user ) throws AuthorizationException {
 
+        logger.debug( "Authorizing " + user + " for " + this );
+
         /* First check ownerships */
         if( isOwner( user ) ) {
+            logger.debug( "Is owner" );
             return Authorization.MODERATE;
         }
 
         List<MongoDocument> docs = document.getList( MODERATORS );
+        logger.debug( "Mods: " + docs );
         for( MongoDocument d : docs ) {
             Authoritative a = null;
             try {
@@ -262,13 +286,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         document.set( "updated", now );
     }
 
-    public Date getUpdatedAsDate() {
-        String d = getField( "updated", null );
-        if( d != null ) {
-            return DatatypeConverter.parseDateTime( d ).getTime();
-        } else {
-            return null;
-        }
+    public Date getUpdated() {
+        return getField( "updated", null );
     }
 
     public void setTitle( String title ) {

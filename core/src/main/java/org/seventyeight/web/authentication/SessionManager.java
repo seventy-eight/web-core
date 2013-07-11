@@ -21,6 +21,7 @@ public class SessionManager {
 
     public static final String SESSIONS = "sessions";
     public static final String SESSION = "session";
+    public static final String SESSIONS_COLLECTION_NAME = "sessions";
 
 	public SessionManager() {
         //db.createIndex( INDEX_SESSIONS, IndexType.UNIQUE, IndexValueType.STRING );
@@ -61,16 +62,15 @@ public class SessionManager {
 	public Session getSession( String hash ) {
 		logger.debug( "Getting session for " + hash );
 
-        //MongoDBQuery query = new MongoDBQuery().is( "hash", hash );
         MongoDBQuery query = new MongoDBQuery().getId( hash );
-        List<MongoDocument> docs = new MongoDBCollection( Core.NODE_COLLECTION_NAME ).find( query );
+        List<MongoDocument> docs = MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).find( query );
 
         logger.debug( "DOCS: " + docs );
 
         Session actual = null;
         for( MongoDocument doc : docs ) {
             Session session = new Session( Core.getInstance(), doc );
-            logger.debug( "Comparing " + session.getEndingAsDate().getTime() + " with " + new Date().getTime() );
+            logger.debug( "Comparing " + session.getEndingAsDate() + " with " + new Date() + "(" + session.getCreated() + ")" );
             if( session.getEndingAsDate().after( new Date() ) ) {
                 logger.debug( "A valid session found" );
                 actual = session;
@@ -86,6 +86,6 @@ public class SessionManager {
 	
 	public void removeSession( String hash ) {
         logger.debug( "[Removing sessions] " + hash );
-        new MongoDBCollection( SESSIONS ).remove( new MongoDBQuery().is( "hash", hash ) );
+        MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).remove( new MongoDBQuery().getId( hash ) );
 	}
 }

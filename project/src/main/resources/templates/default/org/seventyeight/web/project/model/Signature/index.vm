@@ -1,7 +1,5 @@
-$item.getParent().getIdentifier()
-
-#if( $item.getSignature().exists() )
-    <img src="$item.getSignature()">
+#if( $item.getFileSignature().exists() )
+    <img src="fetch">
 #else
-    DAMMIT!!!!$item.getSignature()
+    No signature
 #end

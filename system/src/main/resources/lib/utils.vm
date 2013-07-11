@@ -1,0 +1,5 @@
+#macro( displayDateString $date )
+    #if( $date )
+
+    #end
+#end

@@ -71,6 +71,13 @@ $(function() {
         <td style="width: 250px" align="right" class="ui-widget">
             <input id="search">
         </td>
+        <td style="width: 75px" align="center">
+            #if($request.isAuthenticated())
+                <a href="/logout">Logout</a>
+            #else
+                <a href="/login">Login</a>
+            #end
+        </td>
 
     </tr>
 </table>

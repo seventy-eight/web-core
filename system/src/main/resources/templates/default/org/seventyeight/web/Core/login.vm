@@ -1,5 +1,6 @@
 #if( $request.isAuthenticated() )
-<b>Logged in as $request.getUser().getDisplayName()</b>
+<b>Logged in as $request.getUser().getDisplayName()</b><br />
+<a href="/logout">Logout</a>
 #else
 <form action="/login" method="post" name="login">
 

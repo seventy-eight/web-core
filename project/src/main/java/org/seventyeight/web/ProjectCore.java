@@ -13,6 +13,8 @@ import org.seventyeight.web.project.model.Profile;
 import org.seventyeight.web.project.model.Signature;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author cwolfgang
@@ -34,6 +36,9 @@ public class ProjectCore extends Core {
         children.put( "upload", new Upload() );
         children.put( "nodes", new Nodes() );
         children.put( "configuration", new GlobalConfiguration() );
+
+        children.put( "information", new Information() );
+
         //children.put( "login", new Login( this ) );
 
         /* Adding search action */
@@ -65,18 +70,22 @@ public class ProjectCore extends Core {
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
 
         addDescriptor( new Signature.SignatureDescriptor() );
+
         //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );
 
         mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
         mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
-        mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle/" ) );
         mainMenu.add( new Menu.MenuItem( "Configure", "/configuration/" ) );
     }
 
     public File getSignaturePath() {
         return signaturePath;
+    }
+
+    public String getSignatureURL() {
+        return "signatures/";
     }
 
 }

@@ -29,7 +29,7 @@ public class Certificate extends Entity<Certificate> {
 
     @Override
     public String getDisplayName() {
-        return CERTIFICATE_NAME;
+        return getTitle();
     }
 
     @Override
