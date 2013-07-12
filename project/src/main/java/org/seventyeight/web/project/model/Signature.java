@@ -43,7 +43,8 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
 
     @Override
     public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        logger.debug( "HEHRHE" );
+        document.set( "was", "here" );
     }
 
     @Override

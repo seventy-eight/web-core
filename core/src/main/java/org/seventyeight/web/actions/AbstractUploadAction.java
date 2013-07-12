@@ -1,5 +1,6 @@
 package org.seventyeight.web.actions;
 
+import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
@@ -8,6 +9,8 @@ import org.seventyeight.web.model.Authorizer;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonException;
+import org.seventyeight.web.utilities.JsonUtils;
 import org.seventyeight.web.utilities.ServletUtils;
 
 import java.io.File;
@@ -46,6 +49,14 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
 
         if( uploadedFilenames.size() > 0 ) {
             setFile( new File( relativePath, uploadedFilenames.get( 0 ) ).toString() );
+            try {
+                JsonObject json = JsonUtils.getJsonFromRequest( request );
+                save( request, json );
+            } catch( JsonException e ) {
+                logger.warn( "Json is null: " + e.getMessage() );
+                save( request, null );
+            }
+
         } else {
             throw new IllegalStateException( "No file uploaded" );
         }
