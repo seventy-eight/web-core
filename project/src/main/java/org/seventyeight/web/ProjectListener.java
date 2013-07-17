@@ -29,9 +29,11 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
 
         ProfileInstall cwInstall = new ProfileInstall( "cwolfgang", "Christian", "Wolfgang", "cwolfgang@seventyeight.org", "pass" );
         cwInstall.install();
+        cwInstall.after();
 
         ProfileInstall anInstall = new ProfileInstall( "anonymous", "Anonymous", "Anonymous", "anonymous@seventyeight.org", "pass" );
         anInstall.install();
+        anInstall.after();
 
         GroupInstall agInstall = new GroupInstall( "Administrators", cwInstall.getValue() );
         agInstall.install();

@@ -32,6 +32,16 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
         return ((ProjectCore) Core.getInstance()).getSignaturePath();
     }
 
+    @Override
+    public String getRelativePath() {
+        return "";
+    }
+
+    @Override
+    public String getFilename( String thisFilename ) {
+        return ((Profile)parent).getIdentifier();
+    }
+
     public String getURL() {
         return ((ProjectCore) Core.getInstance()).getSignatureURL();
     }
@@ -43,7 +53,6 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
 
     @Override
     public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        logger.debug( "HEHRHE" );
         document.set( "was", "here" );
     }
 
@@ -58,11 +67,11 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
     }
 
     public File getFileSignature() {
-        return new File( new File( getPath(), ((Profile)parent).getIdentifier() ), "signature.jpg" );
+        return new File( getPath(), ((Profile)parent).getIdentifier() + getExtension() );
     }
 
     public String getSignature() {
-        return ((ProjectCore) Core.getInstance()).getSignatureURL() + ((Profile)parent).getIdentifier() + "/signature.jpg";
+        return ((ProjectCore) Core.getInstance()).getSignatureURL() + ((Profile)parent).getIdentifier() + getExtension();
     }
 
     @Override

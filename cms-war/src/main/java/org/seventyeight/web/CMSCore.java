@@ -41,4 +41,8 @@ public class CMSCore extends Core {
         mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle/" ) );
     }
 
+    @Override
+    public void save() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

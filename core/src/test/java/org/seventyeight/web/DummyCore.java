@@ -15,4 +15,10 @@ public class DummyCore extends Core {
         addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new User.UserDescriptor() );
     }
+
+
+    @Override
+    public void save() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

@@ -1,5 +1,6 @@
 package org.seventyeight.web.project.install;
 
+import org.apache.log4j.Logger;
 import org.seventyeight.database.DBInstallable;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.Core;
@@ -14,6 +15,8 @@ import org.seventyeight.web.utilities.Parameters;
  * @author cwolfgang
  */
 public class ProfileInstall extends NodeInstaller<User> {
+
+    private static Logger logger = Logger.getLogger( ProfileInstall.class );
 
     protected String firstName;
     protected String lastName;
@@ -43,6 +46,13 @@ public class ProfileInstall extends NodeInstaller<User> {
         parameters.put( Profile.LAST_NAME, lastName );
         parameters.put( "password", password );
         parameters.put( "password_again", password );
+    }
+
+    @Override
+    public void after() {
+        logger.fatal( "AFTER FOR PROFILE INSTALL" );
+        node.getDocument().set( "owner", node.getIdentifier() );
+        node.save();
     }
 
     @Override

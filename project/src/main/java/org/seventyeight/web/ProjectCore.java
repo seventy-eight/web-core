@@ -1,5 +1,6 @@
 package org.seventyeight.web;
 
+import org.apache.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.model.Menu;
@@ -20,6 +21,8 @@ import java.net.URL;
  * @author cwolfgang
  */
 public class ProjectCore extends Core {
+
+    private static Logger logger = Logger.getLogger( ProjectCore.class );
 
     private File signaturePath;
 
@@ -88,4 +91,8 @@ public class ProjectCore extends Core {
         return "signatures/";
     }
 
+    @Override
+    public void save() {
+        logger.fatal( "SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+    }
 }

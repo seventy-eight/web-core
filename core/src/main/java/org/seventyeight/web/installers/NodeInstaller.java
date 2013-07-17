@@ -45,6 +45,10 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
         }
     }
 
+    public void after() {
+        /* Default implementation is no op */
+    }
+
     @Override
     public T getValue() {
         return node;

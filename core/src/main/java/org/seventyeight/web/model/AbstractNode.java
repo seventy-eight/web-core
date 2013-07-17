@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements Node, Authorizer, Describable<T> {
+public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements TopLevelNode, Authorizer, Describable<T> {
 
     private static Logger logger = Logger.getLogger( AbstractNode.class );
 
@@ -189,12 +189,17 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public boolean isOwner( User user ) {
-        return user.getIdentifier().equals( getIdentifier() );
+        return user.getIdentifier().equals( getOwnerId() );
+    }
+
+    public String getOwnerId() {
+        return document.get( "owner" );
     }
 
     /**
-     * Fast track saving the node
+     * Save the document of the {@link Node}.
      */
+    @Override
     public void save() {
         logger.debug( "BEFORE SAVING: " + document );
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
@@ -202,7 +207,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     @Override
     public Authorization getAuthorization( User user ) throws AuthorizationException {
-
         logger.debug( "Authorizing " + user + " for " + this );
 
         /* First check ownerships */

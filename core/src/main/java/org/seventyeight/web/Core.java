@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * @author cwolfgang
  */
-public abstract class Core extends Actionable implements Node, RootNode, Parent {
+public abstract class Core extends Actionable implements TopLevelNode, RootNode, Parent {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
@@ -571,6 +571,25 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
         }
     }
 
+    /**
+     * Save the {@link TopLevelNode} given a {@link Node}.
+     */
+    public static void superSave( Node node ) {
+        logger.debug( "Saving node " + node );
+
+        while( node != null ) {
+            if( node instanceof TopLevelNode ) {
+                logger.debug( "Saving top level node " + node );
+                ((TopLevelNode)node).save();
+                return;
+            }
+
+            node = node.getParent();
+        }
+
+        throw new IllegalStateException( "No top level node to save" );
+    }
+
     public AbstractTheme getDefaultTheme() {
         return defaultTheme;
     }
@@ -585,12 +604,6 @@ public abstract class Core extends Actionable implements Node, RootNode, Parent 
 
     public SessionManager getSessionManager() {
         return sessionManager;
-    }
-
-
-    public int getNextSequence( String sequence ) {
-
-        return 1;
     }
 
     public void setAnonymous( User anonymous ) {
