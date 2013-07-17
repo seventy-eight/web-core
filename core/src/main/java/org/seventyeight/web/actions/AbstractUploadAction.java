@@ -64,8 +64,8 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
             String ext = "." + FilenameUtils.getExtension( uploadedFilenames.get( 0 ) );
 
             /* Rename */
-            String fname = FilenameUtils.getBaseName( uploadedFilenames.get( 0 ) );
-            File f = new File( path, getFilename( fname ) + ext );
+            String fname = getFilename( FilenameUtils.getBaseName( uploadedFilenames.get( 0 ) ) ) + ext;
+            File f = new File( path, fname );
             f.delete();
             FileUtils.moveFile( new File( path, uploadedFilenames.get( 0 ) ), f );
             setExtension( ext );
