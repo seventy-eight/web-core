@@ -19,8 +19,10 @@ public class TokenList {
     private List<String> list;
     private int number = 0;
     private int counter = -1;
+    private boolean endsWithSlash = false;
 
     public TokenList( String path ) {
+        endsWithSlash = path.endsWith( "/" );
         StringTokenizer tokenizer = new StringTokenizer( path, "/" );
         list = new ArrayList<String>( tokenizer.countTokens() );
         number = tokenizer.countTokens();
@@ -38,6 +40,10 @@ public class TokenList {
         }
 
         logger.debug( "Numbers: " + number + ", " + counter );
+    }
+
+    public boolean isEndsWithSlash() {
+        return endsWithSlash;
     }
 
     public String next() {

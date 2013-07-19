@@ -320,8 +320,11 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         Exception exception = null;
         try {
             node = resolveNode( tokens );
-            logger.debug("Found node " + node);
-
+            logger.debug("Found node " + node );
+            if( !tokens.isEndsWithSlash() && tokens.isEmpty() ) {
+                response.sendRedirect( request.getRequestURI() + "/" );
+                return;
+            }
         } catch( NotFoundException e ) {
             logger.debug( "Exception is set to " + e );
             exception = e;
@@ -613,7 +616,6 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     public User getAnonymousUser() {
         return anonymous;
     }
-
 
     /**
      * From the given path, get all jars and extract them to their directories
