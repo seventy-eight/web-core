@@ -1,6 +1,31 @@
-<table>
+<table style="width: 100%">
     <tr>
-        <td>$item.getDisplayName()</td>
+        <td>
+            $item.getDisplayName()
+        </td>
+
+        <td>
+
+
+            <table>
+                <thead class="header">
+                    <tr>
+                      <td>
+                          Certificates
+                      </td>
+                    </tr>
+
+                </thead>
+                #foreach($c in $item.getCertificates(0,10))
+                    <tr>
+                        <td>
+                            $c
+                        </td>
+                    </tr>
+                #end
+            </table>
+
+        </td>
     </tr>
 </table>
 

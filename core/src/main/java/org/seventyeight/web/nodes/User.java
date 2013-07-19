@@ -1,6 +1,7 @@
 package org.seventyeight.web.nodes;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.LogLevel;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -183,10 +184,15 @@ public class User extends Entity<User> {
      * Get a {@link User} by Username. Returns null if not found.
      */
     public static User getUserByUsername( Node parent, String username ) {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
+        MongoDocument docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
 
-        if( docs != null && !docs.isEmpty() ) {
-            return new User( parent, docs.get( 0 ) );
+        if( docs != null ) {
+            try {
+                return Core.getInstance().getItem( parent, docs );
+            } catch( ItemInstantiationException e ) {
+                logger.error( e );
+                return null;
+            }
         } else {
             logger.debug( "The user " + username + " was not found" );
             return null;

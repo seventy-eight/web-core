@@ -5,8 +5,12 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +66,27 @@ public class Certificate extends Entity<Certificate> {
         }
 
         return users;
+    }
+
+    public void doAddCertified( Request request, Response response ) throws IOException, TemplateException {
+        String profileName = request.getValue( "profile", null );
+        logger.debug( "Adding " + profileName + " as certified" );
+
+        if( profileName != null ) {
+            Profile profile = Profile.getProfileByUsername( this, profileName );
+            if( profile != null ) {
+                profile.addCertificate( this );
+                response.sendRedirect( "" );
+                return;
+            } else {
+                Response.HttpCode c = new Response.HttpCode( 404, "Profile not found", "The profile " + profileName + " was not found" );
+                c.render( request, response );
+            }
+        } else {
+            Response.HttpCode c = new Response.HttpCode( 404, "Not provided", "No profile provided" );
+            c.render( request, response );
+        }
+
     }
 
     /**

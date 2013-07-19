@@ -93,7 +93,8 @@ public class Profile extends User {
     }
 
     public List<Certificate> getCertificates( int offset, int number ) {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
+        //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
+        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
 
         List<Certificate> certificates = new ArrayList<Certificate>( docs.size() );
 
@@ -105,10 +106,28 @@ public class Profile extends User {
     }
 
     public void addCertificate( Certificate certificate ) {
+        logger.debug( "Adding certificate " + certificate );
+
         /* TODO Should only one instance of the certificate be allowed?! */
-        MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() ).set( "title", certificate.getTitle() );
         document.addToList( Certificate.CERTIFICATES, d );
         this.save();
+    }
+
+    public boolean hasCertificate( String certificateId ) throws NotFoundException {
+        //Certificate c = Certificate.getCertificateByTitle( certificateName, this );
+        //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Certificate.CERTIFICATES + "." +  ) )
+        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+
+        logger.debug( "DOCS: " + docs );
+
+        for( MongoDocument d : docs ) {
+            if( d.get( Certificate.CERTIFICATE, "" ).equals( certificateId ) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void validateCertificate( Certificate certificate, Profile profile ) {

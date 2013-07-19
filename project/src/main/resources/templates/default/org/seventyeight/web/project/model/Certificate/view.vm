@@ -1,0 +1,12 @@
+$item<br />
+$item.getIdentifier()
+
+
+#if( $request.isAuthenticated() )
+    $request.getUser() <br />
+    #if($request.getUser().hasCertificate($item.getIdentifier()))
+        You have this certificate
+    #else
+        <a href="addCertified?profile=$request.getUser().getUsername()">I have this certificate</a>
+    #end
+#end
