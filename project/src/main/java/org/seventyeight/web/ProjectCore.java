@@ -11,6 +11,7 @@ import org.seventyeight.web.project.actions.CertificateSearch;
 import org.seventyeight.web.project.actions.Search;
 import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Profile;
+import org.seventyeight.web.project.model.Role;
 import org.seventyeight.web.project.model.Signature;
 
 import java.io.File;
@@ -65,7 +66,8 @@ public class ProjectCore extends Core {
 
         /**/
         addDescriptor( new Profile.ProfileDescriptor() );
-        addDescriptor( new Group.GroupDescriptor() );
+        //addDescriptor( new Group.GroupDescriptor() );
+        addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileNode.FileDescriptor() );
         addDescriptor( new Certificate.CertificateDescriptor() );
         addDescriptor( new Article.ArticleDescriptor() );

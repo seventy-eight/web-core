@@ -57,6 +57,8 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
             throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
         }
 
+        String id = Core.getInstance().getUniqueName( this );
+        document.set( "_id", id );
         document.set( "class", clazz.getName() );
         //collection.save( document );
 

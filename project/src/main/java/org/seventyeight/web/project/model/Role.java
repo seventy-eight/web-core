@@ -12,8 +12,8 @@ import org.seventyeight.web.nodes.Group;
  */
 public class Role extends Group {
 
-    public static final String ROLE_STRING_TITLE = "role";
-    public static final String ROLE_STRING_TITLE_PL = "roles";
+    public static final String ROLE = "role";
+    public static final String ROLES = "roles";
 
     public Role( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -33,8 +33,8 @@ public class Role extends Group {
         public void save() throws SavingException {
             super.save();
 
-            set( "title", ROLE_STRING_TITLE_PL );
-            set( ROLE_STRING_TITLE );
+            set( "title", ROLES );
+            set( ROLE );
         }
     }
 
@@ -44,9 +44,15 @@ public class Role extends Group {
 
 
     public static class RoleDescriptor extends GroupDescriptor {
+
         @Override
         public String getDisplayName() {
-            return "Roles";
+            return ROLES;
+        }
+
+        @Override
+        public String getType() {
+            return ROLE;
         }
     }
 }

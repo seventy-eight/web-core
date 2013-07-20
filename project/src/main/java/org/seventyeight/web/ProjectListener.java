@@ -35,11 +35,15 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
         anInstall.install();
         anInstall.after();
 
-        GroupInstall agInstall = new GroupInstall( "Administrators", cwInstall.getValue() );
-        agInstall.install();
+        //GroupInstall agInstall = new GroupInstall( "Administrators", cwInstall.getValue() );
+        //agInstall.install();
+
+        RoleInstall arInstall = new RoleInstall( "Administrators", cwInstall.getValue() );
+        arInstall.install();
 
         Core.getInstance().setAnonymous( anInstall.getValue() );
-        cwInstall.getValue().addGroup( agInstall.getValue() );
+        //cwInstall.getValue().addGroup( agInstall.getValue() );
+        ((Profile)cwInstall.getValue()).addRole( (Role) arInstall.getValue() );
 
 
 

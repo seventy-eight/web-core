@@ -129,12 +129,12 @@ public class Group extends Entity<Group> {
 
         @Override
         public String getDisplayName() {
-            return "Group";
+            return GROUP;
         }
 
         @Override
         public String getType() {
-            return "group";
+            return GROUPS;
         }
     }
 }

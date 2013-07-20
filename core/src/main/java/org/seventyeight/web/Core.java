@@ -617,6 +617,31 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         return anonymous;
     }
 
+    private static final String NUMBERS_COLLECTION = "numbers";
+
+    /**
+     * Given a {@link NodeDescriptor} a unique name is returned.
+     * @param d NodeDescriptor
+     * @return
+     */
+    public synchronized String getUniqueName( NodeDescriptor d ) {
+        logger.debug( "Getting unique name for " + d.getType() );
+        MongoDocument doc = MongoDBCollection.get( NUMBERS_COLLECTION ).findOne( new MongoDBQuery().getId( d.getType() ) );
+        if( doc.isNull() ) {
+            logger.debug( "Numbers for " + d.getType() + " was null, creating document" );
+            doc = new MongoDocument(  ).set( "_id", d.getType() ).set( "number", 1 );
+            //MongoDBCollection.get( NUMBERS_COLLECTION ).save( doc );
+        }
+
+        int i = doc.get( "number" );
+        String name = d.getType() + "-" + i;
+        doc.set( "number", i++ );
+
+        MongoDBCollection.get( NUMBERS_COLLECTION ).save( doc );
+
+        return name;
+    }
+
     /**
      * From the given path, get all jars and extract them to their directories
      * @param basePath

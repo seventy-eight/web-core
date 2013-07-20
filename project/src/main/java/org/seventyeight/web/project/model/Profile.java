@@ -130,6 +130,10 @@ public class Profile extends User {
         return false;
     }
 
+    public void addRole( Role role ) {
+        addGroup( role );
+    }
+
     public void validateCertificate( Certificate certificate, Profile profile ) {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
 
