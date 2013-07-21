@@ -24,6 +24,12 @@ public class MongoDBQuery {
     }
 
     public MongoDBQuery getId( String id ) {
+        query.put( "_id" ).is( id );
+
+        return this;
+    }
+
+    public MongoDBQuery getId2( String id ) {
         query.put( "_id" ).is( new ObjectId( id ) );
 
         return this;

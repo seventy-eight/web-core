@@ -24,6 +24,11 @@ public class Role extends Group {
         return new RoleSaver( this, request );
     }
 
+    @Override
+    protected String getGroupType() {
+        return ROLES;
+    }
+
     public class RoleSaver extends GroupSaver {
         public RoleSaver( AbstractNode modelObject, CoreRequest request ) {
             super( modelObject, request );
@@ -33,8 +38,8 @@ public class Role extends Group {
         public void save() throws SavingException {
             super.save();
 
-            set( "title", ROLES );
-            set( ROLE );
+            //set( "title", ROLES );
+            //set( ROLE );
         }
     }
 

@@ -62,20 +62,22 @@ public class Group extends Entity<Group> {
         return getName();
     }
 
+    protected String getGroupType() {
+        return GROUPS;
+    }
+
     /**
      * Add a {@link User} to this {@link Group}.
      */
     public void addMember( User user ) {
-        user.addGroup( this );
-        /*
         if( !isMember( user ) ) {
             logger.debug( "Adding " + user + " to " + this );
-            updateField( GROUPS, new MongoUpdate().push( "members", user.getObjectId() ) );
-            save();
+            //document.addToList( getGroupType(), user.getIdentifier() );
+            user.getDocument().addToList( getGroupType(), getIdentifier() );
+            user.save();
         } else {
             logger.debug( user + " is already a member of " + this );
         }
-        */
     }
 
     /**

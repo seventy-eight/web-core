@@ -635,7 +635,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
         int i = doc.get( "number" );
         String name = d.getType() + "-" + i;
-        doc.set( "number", i++ );
+        doc.set( "number", ++i );
 
         MongoDBCollection.get( NUMBERS_COLLECTION ).save( doc );
 

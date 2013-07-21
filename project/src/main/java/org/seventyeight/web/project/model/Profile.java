@@ -131,7 +131,7 @@ public class Profile extends User {
     }
 
     public void addRole( Role role ) {
-        addGroup( role );
+        role.addMember( this );
     }
 
     public void validateCertificate( Certificate certificate, Profile profile ) {

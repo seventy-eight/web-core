@@ -113,16 +113,6 @@ public class User extends Entity<User> {
         return groups;
     }
 
-    public void addGroup( Group group ) {
-        if( !group.isMember( this ) ) {
-            logger.debug( "Adding " + this + " to " + group );
-            document.addToList( Group.GROUPS, group.getIdentifier() );
-            save();
-        } else {
-            logger.debug( this + " is already a member of " + group );
-        }
-    }
-
     @Override
     public void setOwner( User owner ) {
         /* No op for users */
