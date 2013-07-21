@@ -276,18 +276,18 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
         Date now = new Date();
 
-        Date date = document.get( "created", null );
-        if( date == null ) {
-            logger.debug( "Was created" );
-            document.set( "created", now );
-        }
-
         if( document.get( "owner", null ) == null ) {
             logger.debug( "Owner was set to " + owner );
             setOwner( owner );
         }
 
-        document.set( "updated", now );
+        /* Only do this if it is not just created */
+        if( getRevision() > 1 ) {
+            document.set( "updated", now );
+            document.set( "revision", getRevision() + 1 );
+        } else {
+
+        }
     }
 
     public Date getUpdated() {

@@ -92,14 +92,15 @@ public class Profile extends User {
         }
     }
 
-    public List<Certificate> getCertificates( int offset, int number ) {
+    public List<Certificate> getCertificates( int offset, int number ) throws ItemInstantiationException {
         //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
         List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
 
         List<Certificate> certificates = new ArrayList<Certificate>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            certificates.add( new Certificate( this, d ) );
+            Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) d.get( "certificate" ) );
+            certificates.add( c );
         }
 
         return certificates;
@@ -109,9 +110,32 @@ public class Profile extends User {
         logger.debug( "Adding certificate " + certificate );
 
         /* TODO Should only one instance of the certificate be allowed?! */
-        MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() ).set( "title", certificate.getTitle() );
+        MongoDocument d = new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() ); //.set( "title", certificate.getTitle() );
+        d.set( "added", new Date() );
         document.addToList( Certificate.CERTIFICATES, d );
         this.save();
+    }
+
+    public void doAddCertificate( Request request, Response response ) throws ItemInstantiationException {
+        String title = request.getValue( "certificateTitle", null );
+        logger.debug( "Adding " + title + " to " + this );
+
+        if( title != null ) {
+            Certificate c = null;
+            try {
+                c = Certificate.getCertificateByTitle( title, this );
+            } catch( NotFoundException e ) {
+                logger.debug( e );
+
+                c = Certificate.createCertificate( title );
+                c.save();
+            }
+
+            addCertificate( c );
+        } else {
+            logger.debug( "No certificate title given" );
+        }
+
     }
 
     public boolean hasCertificate( String certificateId ) throws NotFoundException {

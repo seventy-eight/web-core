@@ -25,6 +25,10 @@
                 #end
             </table>
 
+            <form action="addCertificate" method="post">
+                <input name="certificateTitle" type="text">
+            </form>
+
         </td>
     </tr>
 </table>

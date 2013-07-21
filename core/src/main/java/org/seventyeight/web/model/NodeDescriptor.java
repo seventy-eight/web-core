@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
 import java.lang.reflect.Constructor;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,7 +61,10 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
         String id = Core.getInstance().getUniqueName( this );
         document.set( "_id", id );
         document.set( "class", clazz.getName() );
-        //collection.save( document );
+        Date now = new Date();
+        document.set( "created", now );
+        document.set( "updated", now );
+        document.set( "revision", 1 );
 
         return instance;
     }

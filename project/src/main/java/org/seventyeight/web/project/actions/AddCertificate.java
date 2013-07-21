@@ -17,6 +17,7 @@ import java.io.IOException;
 
 /**
  * @author cwolfgang
+ * @deprecated
  */
 public class AddCertificate extends AddAction {
 

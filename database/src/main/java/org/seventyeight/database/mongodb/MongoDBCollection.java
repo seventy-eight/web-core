@@ -78,7 +78,8 @@ public class MongoDBCollection {
 
     public MongoDocument getDocumentById( String id ) {
         BasicDBObject query = new BasicDBObject();
-        query.put( "_id", new ObjectId( id ) );
+        //query.put( "_id", new ObjectId( id ) );
+        query.put( "_id", id );
         DBObject dbObj = collection.findOne( query );
         return new MongoDocument( dbObj );
     }
