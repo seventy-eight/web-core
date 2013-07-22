@@ -40,6 +40,7 @@ public class ProjectCore extends Core {
         children.put( "upload", new Upload() );
         children.put( "nodes", new Nodes() );
         children.put( "configuration", new GlobalConfiguration() );
+        children.put( "search2", new org.seventyeight.web.actions.Search() );
 
         children.put( "information", new Information() );
 
@@ -58,9 +59,9 @@ public class ProjectCore extends Core {
         /* Adders */
         AddNode add = new AddNode();
 
-        AddCertificate ac = new AddCertificate( add );
+        //AddCertificate ac = new AddCertificate( add );
 
-        add.addAction( Certificate.CERTIFICATE, ac );
+        //add.addAction( Certificate.CERTIFICATE, ac );
 
         children.put( "add", add );
 
@@ -83,6 +84,7 @@ public class ProjectCore extends Core {
         mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
         mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
         mainMenu.add( new Menu.MenuItem( "Configure", "/configuration/" ) );
+        mainMenu.add( new Menu.MenuItem( "Search", "/search2/" ) );
     }
 
     public File getSignaturePath() {

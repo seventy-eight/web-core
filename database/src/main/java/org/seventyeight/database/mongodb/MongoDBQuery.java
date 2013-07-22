@@ -35,6 +35,12 @@ public class MongoDBQuery {
         return this;
     }
 
+    public MongoDBQuery elemMatch( String field, MongoDocument value ) {
+        query.put( field ).elemMatch( value.getDBObject() );
+
+        return this;
+    }
+
     public MongoDBQuery greaterThan( String field, Object value ) {
         if( value instanceof MongoDocument ) {
             query.put( field ).greaterThan( ((MongoDocument)value).getDBObject() );

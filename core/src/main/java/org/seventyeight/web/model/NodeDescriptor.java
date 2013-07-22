@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +75,10 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
     }
 
     public abstract String getType();
+
+    public List<Searchable> getSearchables() {
+        return Collections.EMPTY_LIST;
+    }
 
     /**
      * Determine whether to allow identical names or not.<br />
