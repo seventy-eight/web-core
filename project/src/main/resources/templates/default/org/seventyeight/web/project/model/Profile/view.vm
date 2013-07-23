@@ -1,3 +1,4 @@
+
 <table style="width: 100%">
     <tr>
         <td>
@@ -7,7 +8,7 @@
         <td>
 
 
-            <table>
+            <table id="certlist">
                 <thead class="header">
                     <tr>
                       <td>
@@ -25,12 +26,24 @@
                 #end
             </table>
 
-            <form action="addCertificate" method="post">
-                <input name="certificateTitle" type="text">
-            </form>
+            <input name="certificateTitle" type="text" id="addcert">
+            <button onclick="sendCert()">Send</button>
 
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+function sendCert() {
+    d = $("#addcert").val();
+    $.get( "addCertificate", d).success(addCert(d));
+
+}
+
+function addCert( cert) {
+    $('#certlist tr:last').after('<tr><td>' +  cert + '</td></tr>');
+}
+</script>
+
 
 <img src="$item.getPortrait()">

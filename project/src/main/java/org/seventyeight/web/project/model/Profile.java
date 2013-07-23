@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -78,6 +79,12 @@ public class Profile extends User {
         return "Profile[" + getDisplayName() + "]";
     }
 
+    public void doListCertificates( Request request, Response response ) throws TemplateException {
+        logger.debug( "DO LIST BEFORE" );
+        Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "listCertificates.vm" );
+        logger.debug( "DO LIST AFTER" );
+    }
+
     @Override
     public String getDisplayName() {
         return document.get( FIRST_NAME ) + " " + document.get( LAST_NAME );
@@ -124,6 +131,10 @@ public class Profile extends User {
             Certificate c = null;
             try {
                 c = Certificate.getCertificateByTitle( title, this );
+
+                if( hasCertificate( c.getIdentifier() ) ) {
+                    response.HttpCode
+                }
             } catch( NotFoundException e ) {
                 logger.debug( e );
 

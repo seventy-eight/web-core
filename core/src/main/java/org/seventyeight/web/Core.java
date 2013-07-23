@@ -496,6 +496,9 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
             children.put( nd.getType(), nd );
+
+            /* Find searchables */
+            nd.getSearchables();
         }
 
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
