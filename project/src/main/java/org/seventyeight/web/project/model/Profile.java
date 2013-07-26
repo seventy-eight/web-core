@@ -7,12 +7,14 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +97,7 @@ public class Profile extends User {
         if( doc != null ) {
             return new Profile( parent, doc );
         } else {
-            throw new NotFoundException( "The profile " + username + " was not found" );
+            throw new NotFoundException( "The profile " + username + " was not found" ).setHeader( "Profile not found" );
         }
     }
 
@@ -123,7 +125,10 @@ public class Profile extends User {
         this.save();
     }
 
-    public void doAddCertificate( Request request, Response response ) throws ItemInstantiationException {
+    public void doAddCertificate( Request request, Response response ) throws ItemInstantiationException, IOException, TemplateException, NoAuthorizationException {
+        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        request.checkAuthorization( (Authorizer) this, Authorization.MODERATE );
+
         String title = request.getValue( "certificateTitle", null );
         logger.debug( "Adding " + title + " to " + this );
 
@@ -133,7 +138,9 @@ public class Profile extends User {
                 c = Certificate.getCertificateByTitle( title, this );
 
                 if( hasCertificate( c.getIdentifier() ) ) {
-                    response.HttpCode
+                    //Response.NOT_ACCEPTABLE.render( request, response, "The certificate " + title + " is already possessed by " + this );
+                    response.sendError( Response.SC_NOT_ACCEPTABLE, this + " already have " + c );
+                    return;
                 }
             } catch( NotFoundException e ) {
                 logger.debug( e );

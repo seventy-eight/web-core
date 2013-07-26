@@ -36,7 +36,14 @@
 <script type="text/javascript">
 function sendCert() {
     d = $("#addcert").val();
-    $.get( "addCertificate", d).success(addCert(d));
+    $.ajax({
+            type: "POST",
+            url: "addCertificate",
+            data: $("#addcert").serialize(),
+            //success: addCert($("#addcert").val()),
+            success: function(){addCert($("#addcert").val())},
+            error: function(ajax, text, error) {alert(error)}
+    });
 
 }
 

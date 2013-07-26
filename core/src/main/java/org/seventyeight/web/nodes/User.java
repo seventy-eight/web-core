@@ -40,7 +40,7 @@ public class User extends Entity<User> {
     public static MongoDocument getUserDocumentByUsername( String username ) {
         MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
 
-        if( doc != null ) {
+        if( doc != null && !doc.isNull() ) {
             return doc;
         } else {
             logger.debug( "The username " + username + " was not found" );

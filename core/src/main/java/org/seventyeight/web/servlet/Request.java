@@ -33,6 +33,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private String[] requestParts;
 
+    public enum ResponseType {
+        PAGED,
+        HTTP_CODE
+    }
+
+    private ResponseType responseType = ResponseType.PAGED;
+
     public enum RequestMethod {
         GET,
         POST,
@@ -88,13 +95,18 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     public void checkAuthorization( Node node, Authorizer.Authorization authorization ) throws NoAuthorizationException {
+        logger.debug( "Checking authorization for " + user );
+
         while( node != null ) {
+            logger.debug( "Checking " + node );
             if( node instanceof Authorizer ) {
                 checkAuthorization( (Authorizer)node, authorization );
             }
 
             node = node.getParent();
         }
+
+        logger.debug( "Was authorized" );
     }
 
     public void checkAuthorization( Authorizer authorizer, Authorizer.Authorization authorization ) throws NoAuthorizationException {
@@ -168,5 +180,17 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         } else {
             return false;
         }
+    }
+
+    public ResponseType getResponseType() {
+        return responseType;
+    }
+
+    public boolean isPagedResponseType() {
+        return responseType == ResponseType.PAGED;
+    }
+
+    public void setResponseType( ResponseType responseType ) {
+        this.responseType = responseType;
     }
 }
