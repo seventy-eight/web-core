@@ -314,7 +314,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     /**
      * Render the path from the URL
      */
-    public void render( Request request, Response response ) throws Exception {
+    public void render( Request request, Response response ) throws HttpException {
         TokenList tokens = new TokenList( request.getRequestURI() );
         Node node = null;
         Exception exception = null;
@@ -328,25 +328,36 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         } catch( NotFoundException e ) {
             logger.debug( "Exception is set to " + e );
             exception = e;
+        } catch( Exception e ) {
+            throw new HttpException( e );
         }
 
         if( node instanceof Autonomous ) {
             logger.debug( node + " is autonomous" );
-            ((Autonomous)node).autonomize( request, response );
+            try {
+                ((Autonomous)node).autonomize( request, response );
+            } catch( IOException e ) {
+                throw new HttpException( e );
+            }
             return;
         }
 
         /* Only try to find a valid view if there was a valid node found on the path */
         if( node != null ) {
-            if( tokens.isEmpty() && exception == null ) {
-                logger.debug( "Executing last node" );
-                ExecuteUtils.execute( request, response, node, "index" );
-                return;
-            }
+                try {
+                    if( tokens.isEmpty() && exception == null ) {
+                        logger.debug( "Executing last node" );
+                        ExecuteUtils.execute( request, response, node, "index" );
+                        return;
+                    }
 
-            renderObject( node, exception, request, response, tokens );
+                    renderObject( node, exception, request, response, tokens );
+                } catch( Exception e ) {
+                    throw new HttpException( e.getMessage(), e );
+                }
         } else {
-            Response.NOT_FOUND_404.render( request, response, exception );
+            //Response.NOT_FOUND_404.render( request, response, exception );
+            throw new HttpException( exception ).setCode( 404 );
         }
 
     }
@@ -366,11 +377,13 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
                     /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
                 default:
-                    Response.NOT_FOUND_404.render( request, response, exception );
+                    //Response.NOT_FOUND_404.render( request, response, exception );
+                    throw new HttpException(  exception ).setCode( 400 );
             }
         } catch( NotFoundException e ) {
             logger.log( Level.WARN, "", e );
-            Response.NOT_FOUND_404.render( request, response, exception );
+            //Response.NOT_FOUND_404.render( request, response, exception );
+            throw new HttpException( e ).setCode( 404 );
         }
     }
 

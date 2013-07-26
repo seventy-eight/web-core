@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
+import org.seventyeight.web.model.HttpException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -74,6 +75,13 @@ public class Rest extends HttpServlet {
 
         try {
             Core.getInstance().render( request, response );
+        } catch( HttpException e ) {
+            e.printStackTrace();
+            if( request.isPagedResponseType() ) {
+                response.renderError( request, e );
+            } else {
+                response.sendError( e.getCode(), e.getMessage() );
+            }
         } catch( Exception e ) {
             logger.error( "CAUGHT ERROR" );
             e.printStackTrace();

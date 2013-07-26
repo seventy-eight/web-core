@@ -3,15 +3,15 @@ package org.seventyeight.web.servlet;
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.ExceptionHeader;
+import org.seventyeight.web.model.HttpException;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -429,7 +429,39 @@ public class Response extends HttpServletResponseWrapper {
 
     }
 
-    public static HttpCode NOT_FOUND_404 = new HttpCode( 404, "Page not found", "$request.getRequestURI()" );
+    public static final HttpCode BAD_REQUEST_400 = new HttpCode( 400, "Bad request", "$request.getRequestURI()" );
+
+    public static final HttpCode NOT_FOUND_404 = new HttpCode( 404, "Page not found", "$request.getRequestURI()" );
+    public static final HttpCode NOT_ACCEPTABLE_406 = new HttpCode( 406, "Not acceptable", "Not accepted" );
+
+    public static final HttpCode INTERNAL_SERVER_ERROR_500 = new HttpCode( 500, "Internal server error", "Error" );
+
+    private static Map<Integer, HttpCode> errors = new HashMap<Integer, HttpCode>(  );
+
+    static {
+        errors.put( 400, BAD_REQUEST_400 );
+        errors.put( 404, NOT_FOUND_404 );
+        errors.put( 406, NOT_ACCEPTABLE_406 );
+
+        errors.put( 500, INTERNAL_SERVER_ERROR_500 );
+    }
+
+    public void renderError( Request request, HttpException e ) throws IOException {
+        logger.debug( "Render error " + e );
+        try {
+            if( errors.containsKey( e.getCode() ) ) {
+                errors.get( e.getCode() ).render( request, this, e );
+            } else {
+                BAD_REQUEST_400.render( request, this, e );
+            }
+        } catch( TemplateException te ) {
+            try {
+                INTERNAL_SERVER_ERROR_500.render( request, this, te );
+            } catch( TemplateException e1 ) {
+                logger.error( te );
+            }
+        }
+    }
 
     public static class HttpCode {
         private int code;
@@ -448,6 +480,9 @@ public class Response extends HttpServletResponseWrapper {
 
         public void render( Request request, Response response, Exception e ) throws TemplateException, IOException {
             if( e != null ) {
+                if( e instanceof HttpException && ( (HttpException) e ).getHeader() != null ) {
+                    this.errorHeader = ( (HttpException) e ).getHeader();
+                }
                 render( request, response, e.getMessage() );
             } else {
                 render( request, response, defaultMessage );
