@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * @author cwolfgang
+ * @deprecated
  */
 public abstract class Actionable {
 
@@ -23,6 +24,7 @@ public abstract class Actionable {
                 continue;
             }
 
+            /*
             String urlName = a.getUrlName();
             if( urlName == null ) {
                 continue;
@@ -31,6 +33,7 @@ public abstract class Actionable {
             if( urlName.equals( token ) ) {
                 return a;
             }
+            */
         }
 
         return null;

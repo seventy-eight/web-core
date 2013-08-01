@@ -371,6 +371,7 @@ public class TemplateManager {
      * @return
      */
 	public Template getTemplateFromClass( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws TemplateException {
+        Class<?> org = clazz;
 		/* Resolve template */
 		int cnt = 0;
 		while( clazz != null && clazz != Object.class ) {
@@ -385,7 +386,8 @@ public class TemplateManager {
             }
 		}
 
-        throw new TemplateException( method + " for " + clazz.getName() + " not found" );
+        //throw new TemplateException( method + " for " + org.getName() + " not found" );
+        throw new TemplateException( method + " for " + org.getSimpleName() + " not found" );
 	}
 
     public static String getUrlFromClass( Class<?> clazz ) {

@@ -2,21 +2,17 @@ package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.web.actions.*;
+import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
-import org.seventyeight.web.project.actions.AddCertificate;
-import org.seventyeight.web.project.actions.AddNode;
-import org.seventyeight.web.project.actions.CertificateSearch;
-import org.seventyeight.web.project.actions.Search;
+import org.seventyeight.web.project.actions.*;
 import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Profile;
 import org.seventyeight.web.project.model.Role;
 import org.seventyeight.web.project.model.Signature;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * @author cwolfgang
@@ -51,8 +47,8 @@ public class ProjectCore extends Core {
         CertificateSearch cs = new CertificateSearch( search );
         NodeSearch ns = new NodeSearch( search );
 
-        search.addAction( Certificate.CERTIFICATE, cs );
-        search.addAction( "node", ns );
+        //search.addAction( Certificate.CERTIFICATE, cs );
+        //search.addAction( "node", ns );
 
         children.put( "search", search );
 
@@ -76,6 +72,7 @@ public class ProjectCore extends Core {
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
 
         addDescriptor( new Signature.SignatureDescriptor() );
+        addDescriptor( new ProfileCertificates.ProfileCertificateDescriptor() );
 
         //addDescriptor( new  );
 

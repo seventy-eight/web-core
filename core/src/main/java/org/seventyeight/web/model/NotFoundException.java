@@ -22,4 +22,9 @@ public class NotFoundException extends CoreException implements ExceptionHeader 
     public String getHeader() {
         return header;
     }
+
+    @Override
+    public int getCode() {
+        return 404;
+    }
 }

@@ -60,6 +60,14 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         return method.equals( RequestMethod.POST );
     }
 
+    public RequestMethod getRequestMethod() {
+        return method;
+    }
+
+    public boolean isRequestPut() {
+        return method.equals( RequestMethod.PUT );
+    }
+
     public String[] getRequestParts() {
         return requestParts;
     }
@@ -192,5 +200,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public void setResponseType( ResponseType responseType ) {
         this.responseType = responseType;
+    }
+
+    public boolean isUser( User user ) {
+        if( this.user != null && user != null ) {
+            return this.user.equals( user );
+        } else {
+            return false;
+        }
     }
 }

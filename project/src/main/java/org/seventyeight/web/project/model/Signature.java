@@ -56,10 +56,12 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
         document.set( "was", "here" );
     }
 
+    /*
     @Override
     public String getUrlName() {
         return "signature";
     }
+    */
 
     @Override
     public String getDisplayName() {

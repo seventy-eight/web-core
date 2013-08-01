@@ -5,4 +5,5 @@ package org.seventyeight.web.model;
  */
 public interface ExceptionHeader {
     public String getHeader();
+    public int getCode();
 }

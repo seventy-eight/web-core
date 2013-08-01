@@ -26,7 +26,7 @@ public class ProjectEnvironment extends WebCoreEnv<ProjectCore> {
     }
 
     public Profile createProfile( String name ) throws DatabaseException {
-        ProfileInstall ui = new ProfileInstall( name, "First", "Last", name + "@seventyeight.org" );
+        ProfileInstall ui = new ProfileInstall( name, "First", "Last", name + "@seventyeight.org", "pass" );
         ui.install();
         ui.after();
         return (Profile) ui.getValue();

@@ -96,6 +96,8 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
     protected Map<Class<?>, List> extensionsList = new HashMap<Class<?>, List>();
 
+    //protected ConcurrentMap<String, N>
+
     /**
      * A {@link Map} of top level actions, given by its name
      */
@@ -271,8 +273,8 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
             logger.warn( "Class property not found" );
             throw new ItemInstantiationException( "\"class\" property not found for " + document );
         }
-        logger.debug( "ModelObject class: " + clazz );
-        logger.debug( "PARENT: " + parent );
+        //logger.debug( "ModelObject class: " + clazz );
+        //logger.debug( "PARENT: " + parent );
 
         try {
             Class<PersistedObject> eclass = (Class<PersistedObject>) Class.forName(clazz, true, classLoader );
@@ -378,7 +380,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
                     /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
                 default:
                     //Response.NOT_FOUND_404.render( request, response, exception );
-                    throw new HttpException(  exception ).setCode( 400 );
+                    throw new HttpException( exception ).setCode( 400 );
             }
         } catch( NotFoundException e ) {
             logger.log( Level.WARN, "", e );
@@ -412,7 +414,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
             if( current instanceof Parent ) {
                 temp = ((Parent)current).getChild( token );
             }
-            logger.debug( "TEMP: " + temp );
+            logger.debug( "Found node is " + temp );
 
             /* If there's no child, try an action */
             if( temp == null ) {
@@ -420,10 +422,10 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
                 AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
                 if( d != null && current instanceof AbstractNode ) {
                     if( d.isApplicable( current ) ) {
-                        logger.debug( "CURRENT IS " + current );
+                        //logger.debug( "CURRENT IS " + current );
                         temp = (Node) d.get( (AbstractNode) current );
-                        logger.debug( "TEMP: " + temp );
-                        logger.debug( "TEMP PARENT: " + temp.getParent() );
+                        logger.debug( "Found action is " + temp );
+                        //logger.debug( "TEMP PARENT: " + temp.getParent() );
                     }
                 }
 
@@ -456,6 +458,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         return last;
     }
 
+    /*
     public Object resolveObject( Actionable parent, LinkedList<String> tokens ) {
         Action action = null;
         Object lastObject = parent;
@@ -481,10 +484,13 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
         return lastObject;
     }
+    */
 
+    /*
     public Action getAction( Actionable actionable, String action ) {
         return null;
     }
+    */
 
     public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
         logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
@@ -561,7 +567,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     }
 
     public Collection<Descriptor<?>> getAllDescriptors() {
-        return descriptors.values();
+            return descriptors.values();
     }
 
     public List<Descriptor> getCreatableDescriptors() {

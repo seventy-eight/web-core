@@ -47,6 +47,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         return Core.getInstance().getDescriptor( getClass() );
     }
 
+    /**
+     *
+     * @param <T>
+     */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
 
         public abstract String getDisplayName();
@@ -60,7 +64,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             if( d.get( "class", null ) == null ) {
                 d.set( "class", getId() );
             }
-            logger.debug( "FROM NODE " + node );
+            //logger.debug( "FROM NODE " + node );
             return Core.getInstance().getItem( node, d );
         }
 

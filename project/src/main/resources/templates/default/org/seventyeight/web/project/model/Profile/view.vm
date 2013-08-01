@@ -22,12 +22,18 @@
                         <td>
                             $c
                         </td>
+                        <td>
+#if($request.isUser($item))
+
+    <a href="certificate/$c.getDisplayName()/verify">Verify</a>
+#end
+                        </td>
                     </tr>
                 #end
             </table>
 
-            <input name="certificateTitle" type="text" id="addcert">
-            <button onclick="sendCert()">Send</button>
+            <input name="certificateTitle" type="text" id="addcert" onkeypress="submitCert(event);">
+            <button id="submitCert" onclick="sendCert()">Send</button>
 
         </td>
     </tr>
@@ -45,6 +51,15 @@ function sendCert() {
             error: function(ajax, text, error) {alert(error)}
     });
 
+}
+
+function submitCert(e)
+{
+    e = e || window.event;
+    if ($("#addcert").is(":focus") && e.keyCode == 13)
+    {
+        $('#submitCert').click();
+    }
 }
 
 function addCert( cert) {

@@ -13,10 +13,12 @@ public class GetUserInfo extends Action {
         super( parent, document );
     }
 
+    /*
     @Override
     public String getUrlName() {
         return "info";
     }
+    */
 
     @Override
     public String getDisplayName() {

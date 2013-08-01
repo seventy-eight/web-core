@@ -52,17 +52,25 @@ public class ExecuteUtils {
     private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         logger.debug( "Executing method : " + actionMethod + " on " + object );
 
-        Method method = getRequestMethod( object, actionMethod, request.isRequestPost() );
+        Method method = getRequestMethod( object, actionMethod, request.getRequestMethod() );
 
         method.invoke( object, request, response );
     }
 
-    private static Method getRequestMethod( Object object, String method, boolean isPost ) throws NoSuchMethodException {
+    private static Method getRequestMethod( Object object, String method, Request.RequestMethod requestMethod ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
 
-        if( isPost ) {
+        switch( requestMethod ) {
+            case POST:
             return ClassUtils.getInheritedPostMethod( object.getClass(), m, Request.class, Response.class );
-        } else {
+
+        case GET:
+            return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
+
+        case PUT:
+            return ClassUtils.getInheritedPutMethod( object.getClass(), m, Request.class, Response.class );
+
+        default:
             return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
         }
     }

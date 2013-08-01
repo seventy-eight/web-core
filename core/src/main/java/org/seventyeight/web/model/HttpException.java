@@ -22,6 +22,7 @@ public class HttpException extends CoreException {
 
         if( e instanceof ExceptionHeader ) {
             header = ( (ExceptionHeader) e ).getHeader();
+            code = ( (ExceptionHeader) e ).getCode();
         }
     }
 
