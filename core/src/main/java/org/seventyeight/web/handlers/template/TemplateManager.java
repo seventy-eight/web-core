@@ -8,6 +8,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.Language;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.velocity.DateUtils;
 
@@ -289,25 +290,23 @@ public class TemplateManager {
         }
 
 
-
-
-        public String renderClass( Class clazz, String method ) throws TemplateException {
+        public String renderClass( Class clazz, String method ) throws NotFoundException {
             return renderClass( clazz, method, true );
         }
 
-        public String renderClass( Class clazz, String method, boolean trySuper ) throws TemplateException {
+        public String renderClass( Class clazz, String method, boolean trySuper ) throws NotFoundException {
             Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             return render( template );
         }
 
 
-        public String renderClass( Object object, Class clazz, String method ) throws TemplateException {
+        public String renderClass( Object object, Class clazz, String method ) throws NotFoundException {
             Template template = getTemplateFromClass( theme, clazz, method, true );
             context.put( "item", object );
             return render( template );
         }
 
-        public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws TemplateException {
+        public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws NotFoundException {
             Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             context.put( "item", object );
             return render( template );
@@ -370,7 +369,7 @@ public class TemplateManager {
      * @param trySuper If true, try objects super classes
      * @return
      */
-	public Template getTemplateFromClass( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws TemplateException {
+	public Template getTemplateFromClass( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws NotFoundException {
         Class<?> org = clazz;
 		/* Resolve template */
 		int cnt = 0;
@@ -387,7 +386,7 @@ public class TemplateManager {
 		}
 
         //throw new TemplateException( method + " for " + org.getName() + " not found" );
-        throw new TemplateException( method + " for " + org.getSimpleName() + " not found" );
+        throw new NotFoundException( method + " for " + org.getSimpleName() + " not found" );
 	}
 
     public static String getUrlFromClass( Class<?> clazz ) {

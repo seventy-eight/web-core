@@ -72,10 +72,9 @@ public class Rest extends HttpServlet {
             logger.warn( "Unable to authenticate", e );
         }
 
-
         try {
             Core.getInstance().render( request, response );
-        } catch( HttpException e ) {
+        } catch( CoreException e ) {
             e.printStackTrace();
             if( request.isPagedResponseType() ) {
                 response.renderError( request, e );

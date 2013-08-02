@@ -2,6 +2,7 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.CoreException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.ExceptionHeader;
 import org.seventyeight.web.model.HttpException;
@@ -446,7 +447,7 @@ public class Response extends HttpServletResponseWrapper {
         errors.put( 500, INTERNAL_SERVER_ERROR_500 );
     }
 
-    public void renderError( Request request, HttpException e ) throws IOException {
+    public void renderError( Request request, CoreException e ) throws IOException {
         logger.debug( "Render error " + e );
         try {
             if( errors.containsKey( e.getCode() ) ) {
@@ -480,8 +481,8 @@ public class Response extends HttpServletResponseWrapper {
 
         public void render( Request request, Response response, Exception e ) throws TemplateException, IOException {
             if( e != null ) {
-                if( e instanceof HttpException && ( (HttpException) e ).getHeader() != null ) {
-                    this.errorHeader = ( (HttpException) e ).getHeader();
+                if( e instanceof CoreException ) {
+                    this.errorHeader = ( (CoreException) e ).getHeader();
                 }
                 render( request, response, e.getMessage() );
             } else {

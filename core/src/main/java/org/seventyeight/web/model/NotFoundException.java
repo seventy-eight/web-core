@@ -5,26 +5,19 @@ import org.seventyeight.web.CoreException;
 /**
  * @author cwolfgang
  */
-public class NotFoundException extends CoreException implements ExceptionHeader {
-
-    private String header = null;
+public class NotFoundException extends CoreException {
 
     public NotFoundException( String m ) {
         super( m );
+
+        this.code = 404;
+        this.header = "Not found";
     }
 
-    public NotFoundException setHeader( String header ) {
+    public NotFoundException( String m, String header ) {
+        super( m );
+
+        this.code = 404;
         this.header = header;
-
-        return this;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    @Override
-    public int getCode() {
-        return 404;
     }
 }

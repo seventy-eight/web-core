@@ -97,7 +97,8 @@ public class Profile extends User {
         if( doc != null ) {
             return new Profile( parent, doc );
         } else {
-            throw new NotFoundException( "The profile " + username + " was not found" ).setHeader( "Profile not found" );
+            throw new NotFoundException( "The profile " + username + " was not found", "Profile not found" );
+            //throw new NotFoundException( "" ).setHeader( "" );
         }
     }
 
