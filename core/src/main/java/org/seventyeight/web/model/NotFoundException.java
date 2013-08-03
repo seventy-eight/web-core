@@ -11,7 +11,7 @@ public class NotFoundException extends CoreException {
         super( m );
 
         this.code = 404;
-        this.header = "Not found";
+        this.header = "Page not found";
     }
 
     public NotFoundException( String m, String header ) {

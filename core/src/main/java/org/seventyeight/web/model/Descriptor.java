@@ -73,7 +73,7 @@ public abstract class Descriptor<T extends Describable<T>> {
         return false;
     }
 
-    public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateException {
+    public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateException, NotFoundException {
         VelocityContext c = new VelocityContext();
         c.put( "class", getClazz().getName() );
         c.put( "descriptor", this );

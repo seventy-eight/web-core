@@ -10,6 +10,7 @@ import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 
 import java.io.IOException;
@@ -90,7 +91,7 @@ public class RenderObject extends Directive {
                     }
                     logger.debug("USING " + clazz);
                     writer.write( (Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( obj, clazz, template + ".vm", false ) ) );
-                } catch( TemplateException e ) {
+                } catch( NotFoundException e ) {
                     e.printStackTrace();
                 }
             }

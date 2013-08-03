@@ -1,0 +1,7 @@
+#set($v = false)
+#set($v = $c.getLastValidation())
+#if($v)
+Last validated by $v.getProfile().getDisplayName(), $dateUtils.getDateString($v.getDate()) ago
+#else
+Never validated
+#end

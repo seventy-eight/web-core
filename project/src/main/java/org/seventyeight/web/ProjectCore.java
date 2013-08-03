@@ -7,10 +7,7 @@ import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.project.actions.*;
-import org.seventyeight.web.project.model.Certificate;
-import org.seventyeight.web.project.model.Profile;
-import org.seventyeight.web.project.model.Role;
-import org.seventyeight.web.project.model.Signature;
+import org.seventyeight.web.project.model.*;
 
 import java.io.File;
 

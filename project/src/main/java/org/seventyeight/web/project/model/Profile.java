@@ -6,6 +6,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -102,15 +103,21 @@ public class Profile extends User {
         }
     }
 
-    public List<Certificate> getCertificates( int offset, int number ) throws ItemInstantiationException {
+    public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException {
         //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
         List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
 
-        List<Certificate> certificates = new ArrayList<Certificate>( docs.size() );
+        List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( docs.size() );
 
         for( MongoDocument d : docs ) {
             Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) d.get( "certificate" ) );
-            certificates.add( c );
+
+            ProfileCertificate pc = new ProfileCertificate( this, this, c );
+            List<MongoDocument> sd = d.getList( "validatedby" );
+
+            pc.setValidations( sd );
+
+            certificates.add( pc );
         }
 
         return certificates;
@@ -126,6 +133,7 @@ public class Profile extends User {
         this.save();
     }
 
+    @PostMethod
     public void doAddCertificate( Request request, Response response ) throws ItemInstantiationException, IOException, TemplateException, NoAuthorizationException {
         request.setResponseType( Request.ResponseType.HTTP_CODE );
         request.checkAuthorization( (Authorizer) this, Authorization.MODERATE );
@@ -177,12 +185,17 @@ public class Profile extends User {
         role.addMember( this );
     }
 
+    public void getLastValidation() {
+
+    }
+
     public void validateCertificate( Certificate certificate, Profile profile ) {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
 
         MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
         MongoDBQuery q = new MongoDBQuery().is( Certificate.CERTIFICATE_DOTTED, certificate.getIdentifier() );
-        MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
+        //MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
+        MongoUpdate u = new MongoUpdate().push( Certificate.CERTIFICATES + ".$.validatedby", d );
         MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( q, u );
     }
 

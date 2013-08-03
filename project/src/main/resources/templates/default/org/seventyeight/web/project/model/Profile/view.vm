@@ -19,21 +19,33 @@
                 </thead>
                 #foreach($c in $item.getCertificates(0,10))
                     <tr>
-                        <td>
-                            $c
+                        <td style="font-size: 18px; background-color: #998223; font-weight: bold">
+                            $c.getCertificate().getDisplayName()
                         </td>
                         <td>
-#if($request.isUser($item))
-
-    <a href="certificate/$c.getDisplayName()/verify">Verify</a>
+#if($request.isAuthenticated() && !$request.isUser($item))
+    <a href="certificate/$c.getDisplayName()/validate">validate</a>
 #end
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            #set($v = false)
+                            #set($v = $c.getLastValidation())
+                            #if($v)
+                                Last validated by $v.getProfile().getDisplayName(), $dateUtils.getDateString($v.getDate()) ago
+                            #else
+                                Never validated
+                            #end
                         </td>
                     </tr>
                 #end
             </table>
 
+#if($request.isUser($item) )
             <input name="certificateTitle" type="text" id="addcert" onkeypress="submitCert(event);">
             <button id="submitCert" onclick="sendCert()">Send</button>
+#end
 
         </td>
     </tr>

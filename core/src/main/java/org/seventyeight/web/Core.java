@@ -385,7 +385,11 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
                 /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
             default:
                 //Response.NOT_FOUND_404.render( request, response, exception );
-                throw new CoreException( exception );
+                if( exception != null ) {
+                    throw new CoreException( exception );
+                } else {
+                    throw new NotFoundException( request.getRequestURI() );
+                }
         }
     }
 

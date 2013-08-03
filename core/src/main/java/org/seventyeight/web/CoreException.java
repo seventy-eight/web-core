@@ -5,7 +5,7 @@ package org.seventyeight.web;
  */
 public class CoreException extends Exception {
 
-    protected int code;
+    protected int code = 400;
     protected String header = "Bad request";
 
     public CoreException( String m ) {

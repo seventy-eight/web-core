@@ -386,7 +386,7 @@ public class TemplateManager {
 		}
 
         //throw new TemplateException( method + " for " + org.getName() + " not found" );
-        throw new NotFoundException( method + " for " + org.getSimpleName() + " not found" );
+        throw new NotFoundException( "Template " + method + " for " + org.getSimpleName() + " not found", "Template not found" );
 	}
 
     public static String getUrlFromClass( Class<?> clazz ) {

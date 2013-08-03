@@ -450,11 +450,7 @@ public class Response extends HttpServletResponseWrapper {
     public void renderError( Request request, CoreException e ) throws IOException {
         logger.debug( "Render error " + e );
         try {
-            if( errors.containsKey( e.getCode() ) ) {
-                errors.get( e.getCode() ).render( request, this, e );
-            } else {
-                BAD_REQUEST_400.render( request, this, e );
-            }
+            renderError( request, this, e );
         } catch( TemplateException te ) {
             try {
                 INTERNAL_SERVER_ERROR_500.render( request, this, te );
@@ -462,6 +458,21 @@ public class Response extends HttpServletResponseWrapper {
                 logger.error( te );
             }
         }
+    }
+
+    public void renderError( Request request, Response response, Exception e ) throws TemplateException, IOException {
+        if( e instanceof CoreException ) {
+            request.getContext().put( "header", ( (CoreException) e ).getHeader() );
+            request.getContext().put( "code", ( (CoreException) e ).getCode() );
+        } else {
+            request.getContext().put( "header", "Bad request" );
+            request.getContext().put( "code", 400 );
+        }
+
+        request.getContext().put( "exception", e );
+        request.getContext().put( "request", request );
+
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
     }
 
     public static class HttpCode {

@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
         <title>$code, $header</title>
     </head>
 
@@ -13,7 +14,28 @@
 
     <tr>
         <td style="font-size: 18px">
-#evaluate($message)
+#evaluate($exception.getMessage())
+        </td>
+    </tr>
+</table>
+
+<br />
+
+<table style="width:640px;border-style: solid" align="center">
+    <tr>
+        <td style="font-size: 14px; background-color: #89a89a; text-align: center" onclick="$('#trace').toggle()">
+            Guru meditation
+        </td>
+    </tr>
+
+    <tr>
+        <td id="trace" style="display: none; border-collapse: collapse">
+            <div style="font-size: 12px;overflow:scroll;width:625px">
+                #foreach( $e in $exception.getStackTrace() )
+                    $e
+                    <br />
+                #end
+            </div>
         </td>
     </tr>
 

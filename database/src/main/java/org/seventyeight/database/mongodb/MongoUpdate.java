@@ -19,6 +19,12 @@ public class MongoUpdate {
         return update;
     }
 
+    /*
+    public MongoUpdate add() {
+        update
+    }
+    */
+
     public MongoUpdate set( String key, Object value ) {
         return update( "$set", key, value );
     }

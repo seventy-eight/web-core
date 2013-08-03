@@ -1,11 +1,8 @@
-package org.seventyeight.web.project.actions;
+package org.seventyeight.web.project.model;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.project.model.Certificate;
-import org.seventyeight.web.project.model.Profile;
-import org.seventyeight.web.project.model.ProfileCertificate;
 
 /**
  * @author cwolfgang
