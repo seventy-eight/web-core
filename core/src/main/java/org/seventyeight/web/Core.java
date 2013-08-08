@@ -424,10 +424,11 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
             if( temp == null ) {
 
                 AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
-                if( d != null && current instanceof AbstractNode ) {
+                if( d != null && current instanceof PersistedObject ) {
+                    logger.debug( "Found descriptor " + d + " for " + token );
                     if( d.isApplicable( current ) ) {
                         //logger.debug( "CURRENT IS " + current );
-                        temp = (Node) d.get( (AbstractNode) current );
+                        temp = (Node) d.getExtension( (PersistedObject) current );
                         logger.debug( "Found action is " + temp );
                         //logger.debug( "TEMP PARENT: " + temp.getParent() );
                     }

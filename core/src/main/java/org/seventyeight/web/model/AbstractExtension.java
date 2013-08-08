@@ -59,13 +59,14 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         public abstract String getTypeName();
 
-        public T get( AbstractNode node ) throws ItemInstantiationException {
-            MongoDocument d = node.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
+        public T getExtension( Documented parent ) throws ItemInstantiationException {
+            MongoDocument d = parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
             if( d.get( "class", null ) == null ) {
                 d.set( "class", getId() );
             }
-            //logger.debug( "FROM NODE " + node );
-            return Core.getInstance().getItem( node, d );
+
+            logger.debug( "EXTENSION SUBDOC " + d );
+            return Core.getInstance().getItem( (Node) parent, d );
         }
 
         public boolean isApplicable( Node node ) {

@@ -70,6 +70,7 @@ public class ProjectCore extends Core {
 
         addDescriptor( new Signature.SignatureDescriptor() );
         addDescriptor( new ProfileCertificates.ProfileCertificateDescriptor() );
+        addDescriptor( new GetCertificate.GetCertificateDescriptor() );
 
         //addDescriptor( new  );
 
