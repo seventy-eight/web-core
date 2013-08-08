@@ -30,7 +30,10 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
     @Override
     public Node getChild( String name ) throws NotFoundException {
-        Certificate c = Certificate.getCertificateByTitle( name, this );
+        Certificate c = AbstractNode.getNodeById( this, name );
+        if( c == null ) {
+            c = Certificate.getCertificateByTitle( name, this );
+        }
         if( ((Profile)parent).hasCertificate( c.getIdentifier() ) ) {
             return new ProfileCertificate( this, (Profile) parent, c );
         } else {

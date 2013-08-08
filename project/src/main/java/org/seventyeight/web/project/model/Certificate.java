@@ -114,6 +114,11 @@ public class Certificate extends Entity<Certificate> {
         }
 
         @Override
+        public boolean allowIdenticalNaming() {
+            return false;
+        }
+
+        @Override
         public Node getChild( String name ) throws NotFoundException {
             Certificate cert = getCertificateByTitle( name, this );
             if( cert != null ) {

@@ -20,11 +20,12 @@
                 #foreach($c in $item.getCertificates(0,10))
                     <tr>
                         <td style="font-size: 18px; background-color: #998223; font-weight: bold">
-                            $c.getCertificate().getDisplayName()
+                            <a href="certificate/$c.getCertificate().getDisplayName()">$c.getCertificate().getDisplayName()</a>
                         </td>
                         <td>
 #if($request.isAuthenticated() && !$request.isUser($item))
-    <a href="certificate/$c.getDisplayName()/validate">validate</a>
+    <a href="certificate/$c.getCertificate().getDisplayName()/validate">validate</a>
+    <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
 #end
                         </td>
                     </tr>
@@ -43,8 +44,8 @@
             </table>
 
 #if($request.isUser($item) )
-            <input name="certificateTitle" type="text" id="addcert" onkeypress="submitCert(event);">
-            <button id="submitCert" onclick="sendCert()">Send</button>
+            <input name="certificateTitle" type="text" id="addcert" onkeypress="doSubmitCert(event);">
+            <button type="button" id="submitCert" onclick="sendCert()">Send</button>
 #end
 
         </td>
@@ -52,6 +53,15 @@
 </table>
 
 <script type="text/javascript">
+function doValidateCert(obj,id) {
+    $.ajax({
+        type: "GET",
+        url: "certificate/" + id + "/validate",
+        success: function(){$(obj).hide(400);},
+        error: function(ajax, text, error) {alert(error)}
+    });
+}
+
 function sendCert() {
     d = $("#addcert").val();
     $.ajax({
@@ -65,7 +75,7 @@ function sendCert() {
 
 }
 
-function submitCert(e)
+function doSubmitCert(e)
 {
     e = e || window.event;
     if ($("#addcert").is(":focus") && e.keyCode == 13)

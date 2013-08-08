@@ -37,6 +37,9 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
 
+        /* Save */
+        MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
+
         return node;
     }
 

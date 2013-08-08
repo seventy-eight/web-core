@@ -71,6 +71,10 @@ public class ProfileCertificate implements Node {
         }
     }
 
+    public List<Validation> getValidations() {
+        return null;
+    }
+
     public Profile getProfile() {
         return profile;
     }

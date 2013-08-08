@@ -166,6 +166,7 @@ public class Profile extends User {
     }
 
     public boolean hasCertificate( String certificateId ) throws NotFoundException {
+        logger.debug( "Does " + this + " have " + certificateId );
         //Certificate c = Certificate.getCertificateByTitle( certificateName, this );
         //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Certificate.CERTIFICATES + "." +  ) )
         List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
@@ -193,7 +194,8 @@ public class Profile extends User {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
 
         MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
-        MongoDBQuery q = new MongoDBQuery().is( Certificate.CERTIFICATE_DOTTED, certificate.getIdentifier() );
+
+        MongoDBQuery q = new MongoDBQuery().is( Certificate.CERTIFICATE_DOTTED, certificate.getIdentifier() ).getId( this.getIdentifier() );
         //MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
         MongoUpdate u = new MongoUpdate().push( Certificate.CERTIFICATES + ".$.validatedby", d );
         MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( q, u );

@@ -385,11 +385,18 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         MongoDBCollection.get( collection ).update( new MongoDBQuery().is( "_id", getObjectId() ), update );
     }
 
-    public static Node getNodeByTitle( Node parent, String title ) {
+    /**
+     * Get the first {@link Node} having the title.
+     */
+    public static <N extends Node> N getNodeByTitle( Node parent, String title ) {
         return getNodeByTitle( parent, title, null );
     }
 
-    public static Node getNodeByTitle( Node parent, String title, String type ) {
+    /**
+     * Get the first {@link Node} having the title of the given type.
+     * Type can be null and will then be disregarded.
+     */
+    public static <N extends Node> N getNodeByTitle( Node parent, String title, String type ) {
         MongoDBQuery q = new MongoDBQuery().is( "title", title );
         if( type != null && !type.isEmpty() ) {
             q.is( "type", type );
@@ -399,13 +406,54 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
         if( docs != null ) {
             try {
-                return (Node) Core.getInstance().getItem( parent, docs );
+                return (N) Core.getInstance().getItem( parent, docs );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
                 return null;
             }
         } else {
-            logger.debug( "The user " + title + " was not found" );
+            logger.debug( "The node " + title + " was not found" );
+            return null;
+        }
+    }
+
+    public static <N extends Node> List<N> getNodesByTitle( Node parent, String title, String type ) {
+        MongoDBQuery q = new MongoDBQuery().is( "title", title );
+        if( type != null && !type.isEmpty() ) {
+            q.is( "type", type );
+        }
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q );
+        logger.debug( "Docs are: " + docs );
+
+        List<N> nodes = new ArrayList<N>( docs.size() );
+
+        if( docs != null ) {
+            for( MongoDocument doc : docs ) {
+                try {
+                    nodes.add( (N)Core.getInstance().getItem( parent, doc ) );
+                } catch( ItemInstantiationException e ) {
+                    /* TODO should this fail the entire method???? */
+                    logger.error( e.getMessage() );
+                }
+            }
+        } else {
+            logger.debug( "Any node with title " + title + " was not found" );
+        }
+
+        return nodes;
+    }
+
+    public static <N extends Node> N getNodeById( Node parent, String id ) {
+        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).getDocumentById( id );
+        if( doc != null ) {
+            try {
+                return (N) Core.getInstance().getItem( parent, doc );
+            } catch( ItemInstantiationException e ) {
+                logger.warn( e.getMessage() );
+                return null;
+            }
+        } else {
+            logger.debug( "The node with id " + id + " was not found" );
             return null;
         }
     }
