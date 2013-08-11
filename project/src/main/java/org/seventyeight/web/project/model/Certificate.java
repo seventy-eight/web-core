@@ -68,6 +68,7 @@ public class Certificate extends Entity<Certificate> {
         return users;
     }
 
+    /*
     public void doAddCertified( Request request, Response response ) throws IOException, TemplateException {
         String profileName = request.getValue( "profile", null );
         logger.debug( "Adding " + profileName + " as certified" );
@@ -88,6 +89,7 @@ public class Certificate extends Entity<Certificate> {
         }
 
     }
+    */
 
     /**
      * Get a {@link Certificate} by its title

@@ -33,7 +33,7 @@ public class Get implements Node, Parent {
         logger.debug( "Token is " + token );
         try {
             return Core.getInstance().getNodeById( this, token );
-        } catch( ItemInstantiationException e ) {
+        } catch( Exception e ) {
             logger.log( Level.DEBUG, "Unable to get " + token, e );
             return null;
         }

@@ -20,4 +20,11 @@ public class NotFoundException extends CoreException {
         this.code = 404;
         this.header = header;
     }
+
+    public NotFoundException( String m, String header, Exception e ) {
+        super( m, e );
+
+        this.code = 404;
+        this.header = header;
+    }
 }

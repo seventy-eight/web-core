@@ -1,4 +1,4 @@
-package org.seventyeight.web.project.model;
+package org.seventyeight.web.actions;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -7,15 +7,15 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class GetCertificate extends Action<GetCertificate> implements Parent {
+public class GetAction extends Action<GetAction> implements Parent {
 
-    public GetCertificate( Node parent, MongoDocument document ) {
+    public GetAction( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
     @Override
     public String getDisplayName() {
-        return "Get certificate";
+        return "Get";
     }
 
     @Override
@@ -25,15 +25,7 @@ public class GetCertificate extends Action<GetCertificate> implements Parent {
 
     @Override
     public Node getChild( String name ) throws NotFoundException {
-        Certificate c = AbstractNode.getNodeById( this, name );
-        if( c == null ) {
-            c = Certificate.getCertificateByTitle( name, this );
-        }
-        if( ((ProfileCertificates)parent).hasCertificate( c.getIdentifier() ) ) {
-            return new ProfileCertificate( this, (Profile) parent, c );
-        } else {
-            throw new NotFoundException( parent + " does not have " + name );
-        }
+        return (Node) ((Getable)parent).get( name );
     }
 
     @Override
@@ -41,11 +33,11 @@ public class GetCertificate extends Action<GetCertificate> implements Parent {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public static class GetCertificateDescriptor extends Action.ActionDescriptor<GetCertificate> {
+    public static class GetDescriptor extends Action.ActionDescriptor<GetAction> {
 
         @Override
         public String getDisplayName() {
-            return "Get profile certificate";
+            return "Get";
         }
 
         @Override
@@ -55,7 +47,7 @@ public class GetCertificate extends Action<GetCertificate> implements Parent {
 
         @Override
         public boolean isApplicable( Node node ) {
-            return node instanceof ProfileCertificates;
+            return ( node instanceof Getable );
         }
     }
 }

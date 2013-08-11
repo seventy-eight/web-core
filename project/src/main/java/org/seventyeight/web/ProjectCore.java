@@ -29,7 +29,7 @@ public class ProjectCore extends Core {
         children.put( "static", new StaticFiles() );
         children.put( "theme", new ThemeFiles() );
         children.put( "new", new NewContent( this ) );
-        children.put( "get", new Get( this ) );
+        //children.put( "get", new Get( this ) );
         children.put( "upload", new Upload() );
         children.put( "nodes", new Nodes() );
         children.put( "configuration", new GlobalConfiguration() );
@@ -70,7 +70,8 @@ public class ProjectCore extends Core {
 
         addDescriptor( new Signature.SignatureDescriptor() );
         addDescriptor( new ProfileCertificates.ProfileCertificateDescriptor() );
-        addDescriptor( new GetCertificate.GetCertificateDescriptor() );
+        addDescriptor( new GetAction.GetDescriptor() );
+        addDescriptor( new GetAction.GetDescriptor() );
 
         //addDescriptor( new  );
 

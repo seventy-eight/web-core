@@ -53,7 +53,7 @@ public class ServletUtils {
             FileNode obj = null;
             try {
                 obj = (FileNode) Core.getInstance().getNodeById( Core.getInstance(), id );
-            } catch( ItemInstantiationException e ) {
+            } catch( Exception e ) {
                 logger.log( Level.FATAL, "Failed to get node when uploading", e );
                 return;
             }
@@ -134,7 +134,7 @@ public class ServletUtils {
             AbstractNode obj = null;
             try {
                 obj = (AbstractNode) Core.getInstance().getNodeById( Core.getInstance(), id );
-            } catch( ItemInstantiationException e ) {
+            } catch( Exception e ) {
                 logger.log( Level.FATAL, "Failed to get node when uploading", e );
                 return;
             }

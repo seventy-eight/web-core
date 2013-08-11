@@ -2,6 +2,8 @@ package org.seventyeight.web.project.model;
 
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
@@ -19,7 +21,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class ProfileCertificates extends Action<ProfileCertificates> {
+public class ProfileCertificates extends Action<ProfileCertificates> implements Getable<ProfileCertificate> {
 
     private static Logger logger = Logger.getLogger( ProfileCertificates.class );
 
@@ -89,6 +91,31 @@ public class ProfileCertificates extends Action<ProfileCertificates> {
             logger.debug( "No certificate title given" );
         }
 
+    }
+
+    @Override
+    public ProfileCertificate get( String token ) throws NotFoundException {
+        logger.debug( "Get certificate " + token );
+
+        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+
+        MongoDBQuery q1 = new MongoDBQuery().is( "certificate", token );
+        MongoDocument d = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( q1 );
+
+        if( d != null || !d.isNull() ) {
+            logger.debug( "Found the id in the list" );
+            try {
+                Certificate c = (Certificate) Core.getInstance().getNodeById( this, token );
+            } catch( ItemInstantiationException e ) {
+                throw new NotFoundException( e.getMessage(), "Error while finding", e );
+            }
+
+        } else {
+            logger.debug( "D was null" );
+        }
+
+
+        throw new NotFoundException( "Could not find certificate " + token );
     }
 
     public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException {

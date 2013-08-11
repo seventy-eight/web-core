@@ -286,13 +286,17 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         }
     }
 
-    public Node getNodeById( Node parent, String id ) throws ItemInstantiationException {
+    public Node getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Getting node by id: " + id );
         MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
 
-        PersistedObject obj = getItem( parent, d );
+        if( d != null && !d.isNull() ) {
+            PersistedObject obj = getItem( parent, d );
 
-        return (Node) obj;
+            return (Node) obj;
+        } else {
+            throw new NotFoundException( "Could not find node with id " + id );
+        }
     }
 
     @Override
@@ -618,6 +622,20 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         }
 
         throw new IllegalStateException( "No top level node to save" );
+    }
+
+    public static <T extends TopLevelNode> T superGet( Node node ) {
+        logger.debug( "Super getting node " + node );
+
+        while( node != null ) {
+            if( node instanceof TopLevelNode ) {
+                return (T) node;
+            }
+
+            node = node.getParent();
+        }
+
+        throw new IllegalStateException( "No top level node" );
     }
 
     public AbstractTheme getDefaultTheme() {

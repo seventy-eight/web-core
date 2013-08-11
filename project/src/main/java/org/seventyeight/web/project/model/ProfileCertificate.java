@@ -1,12 +1,10 @@
 package org.seventyeight.web.project.model;
 
-import com.google.gson.JsonObject;
+import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.project.model.Certificate;
-import org.seventyeight.web.project.model.Profile;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -18,15 +16,23 @@ import java.util.List;
  */
 public class ProfileCertificate implements Node {
 
-    private Node parent;
-    private Profile profile;
-    private Certificate certificate;
-    private List<MongoDocument> validations;
+    private static Logger logger  = Logger.getLogger( ProfileCertificate.class );
 
-    public ProfileCertificate( Node parent, Profile profile, Certificate certificate ) {
+    private Node parent;
+    private Certificate certificate;
+    private MongoDocument document;
+    private List<Validation> validations;
+
+    public ProfileCertificate( Node parent, Certificate certificate, MongoDocument document ) {
         this.certificate = certificate;
-        this.profile = profile;
         this.parent = parent;
+        this.document = document;
+
+        extractValidations();
+    }
+
+    private void extractValidations() {
+
     }
 
     @Override
@@ -44,13 +50,13 @@ public class ProfileCertificate implements Node {
         return null;
     }
 
-    public void setValidations( List<MongoDocument> validations ) {
-        this.validations = validations;
+    public List<MongoDocument> getValidationDocuments() {
+        return null;
     }
 
-    public Validation getLastValidation() throws ItemInstantiationException {
-        if( validations != null && validations.size() > 0 ) {
-            MongoDocument d = validations.get( validations.size()-1 );
+    public Validation getLastValidation() throws ItemInstantiationException, NotFoundException {
+        if( getValidationDocuments() != null && getValidationDocuments().size() > 0 ) {
+            MongoDocument d = getValidationDocuments().get( getValidationDocuments().size() - 1 );
             Profile validator = (Profile) Core.getInstance().getNodeById( this, (String) d.get( "profile" ) );
             return new Validation( (Date) d.get("date"), validator );
         } else {
@@ -65,18 +71,21 @@ public class ProfileCertificate implements Node {
         request.setResponseType( Request.ResponseType.HTTP_CODE );
         //request.checkAuthorization( (Authorizer) pr, Authorizer.Authorization.MODERATE );
         if( request.isAuthenticated() ) {
-            profile.validateCertificate( certificate, user );
+            validateCertificate( user );
         } else {
             throw new NoAuthorizationException( "You are not authenticated" );
         }
     }
 
-    public List<Validation> getValidations() {
-        return null;
+    public void validateCertificate( Profile profile ) {
+        logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
+        document.set( "profile", profile.getIdentifier() ).set( "date", new org.seventyeight.utils.Date() );
+        //((Profile)parent.getParent().getParent()).save();
+        Core.superSave( this );
     }
 
     public Profile getProfile() {
-        return profile;
+        return Core.superGet( parent );
     }
 
     public Certificate getCertificate() {
