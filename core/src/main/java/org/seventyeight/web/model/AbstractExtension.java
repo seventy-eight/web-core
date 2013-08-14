@@ -53,11 +53,20 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
      */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
 
+        protected String mongoPath = EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
+
         public abstract String getDisplayName();
 
         public abstract String getExtensionName();
 
         public abstract String getTypeName();
+
+        /**
+         * Yes yes, I know....
+         */
+        public String getMongoPath() {
+            return EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
+        }
 
         public T getExtension( Documented parent ) throws ItemInstantiationException {
             MongoDocument d = parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );

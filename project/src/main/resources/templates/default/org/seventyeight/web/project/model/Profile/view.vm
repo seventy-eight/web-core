@@ -1,92 +1,26 @@
 
 <table style="width: 100%">
     <tr>
-        <td>
+        <td style="width:250px">
             $item.getDisplayName()
         </td>
 
-        <td>
-
-
-            <table id="certlist">
-                <thead class="header">
-                    <tr>
-                      <td>
-                          Certificates
-                      </td>
-                    </tr>
-
-                </thead>
-                #foreach($c in $item.getCertificates(0,10))
-                    <tr>
-                        <td style="font-size: 18px; background-color: #998223; font-weight: bold">
-                            <a href="certificate/$c.getCertificate().getDisplayName()">$c.getCertificate().getDisplayName()</a>
-                        </td>
-                        <td>
-#if($request.isAuthenticated() && !$request.isUser($item))
-    <a href="certificate/$c.getCertificate().getDisplayName()/validate">validate</a>
-    <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
-#end
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            #set($v = false)
-                            #set($v = $c.getLastValidation())
-                            #if($v)
-                                Last validated by $v.getProfile().getDisplayName(), $dateUtils.getDateString($v.getDate()) ago
-                            #else
-                                Never validated
-                            #end
-                        </td>
-                    </tr>
-                #end
-            </table>
-
-#if($request.isUser($item) )
-            <input name="certificateTitle" type="text" id="addcert" onkeypress="doSubmitCert(event);">
-            <button type="button" id="submitCert" onclick="sendCert()">Send</button>
-#end
+        <td id="certificates">
 
         </td>
     </tr>
 </table>
 
 <script type="text/javascript">
-function doValidateCert(obj,id) {
-    $.ajax({
-        type: "GET",
-        url: "certificate/" + id + "/validate",
-        success: function(){$(obj).hide(400);},
-        error: function(ajax, text, error) {alert(error)}
-    });
-}
 
-function sendCert() {
-    d = $("#addcert").val();
-    $.ajax({
-            type: "POST",
-            url: "certificates/add",
-            data: $("#addcert").serialize(),
-            //success: addCert($("#addcert").val()),
-            success: function(){addCert($("#addcert").val())},
+    $(function() {
+        $.ajax({
+            type: "GET",
+            url: "certificates/list",
+            success: function(data, textStatus, jqxhr){$('#certificates').html("SNADE:" + data)},
             error: function(ajax, text, error) {alert(error)}
+        });
     });
-
-}
-
-function doSubmitCert(e)
-{
-    e = e || window.event;
-    if ($("#addcert").is(":focus") && e.keyCode == 13)
-    {
-        $('#submitCert').click();
-    }
-}
-
-function addCert( cert) {
-    $('#certlist tr:last').after('<tr><td>' +  cert + '</td></tr>');
-}
 </script>
 
 

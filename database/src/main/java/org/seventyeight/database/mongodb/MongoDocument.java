@@ -3,6 +3,7 @@ package org.seventyeight.database.mongodb;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.seventyeight.database.Document;
@@ -208,6 +209,11 @@ public class MongoDocument implements Document {
     public String getIdentifier() {
         ObjectId id = get( "_id" );
         return id.toString();
+    }
+
+    public boolean arrayHas( String field, String value ) {
+
+        return true;
     }
 
     @Override

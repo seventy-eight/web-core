@@ -15,6 +15,8 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,13 +101,16 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
         List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
 
-        MongoDBQuery q1 = new MongoDBQuery().is( "certificate", token );
-        MongoDocument d = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( q1 );
+        MongoDBQuery q1 = new MongoDBQuery().is( ((ExtensionDescriptor)getDescriptor()).getMongoPath() + "certificates.certificate", token );
+        MongoDocument fields = new MongoDocument(  ).set( "_id", 0 ).set( ((ExtensionDescriptor)getDescriptor()).getMongoPath() + "certificates.$", 1 );
+        MongoDocument d = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( q1, fields );
+        logger.debug( d );
 
-        if( d != null || !d.isNull() ) {
+        if( d != null && !d.isNull() ) {
             logger.debug( "Found the id in the list" );
             try {
                 Certificate c = (Certificate) Core.getInstance().getNodeById( this, token );
+                return new ProfileCertificate( this, c, null );
             } catch( ItemInstantiationException e ) {
                 throw new NotFoundException( e.getMessage(), "Error while finding", e );
             }
@@ -114,30 +119,32 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             logger.debug( "D was null" );
         }
 
-
-        throw new NotFoundException( "Could not find certificate " + token );
+        throw new NotFoundException( parent + " does not have the certificate " + token );
     }
 
-    public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException {
+    public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException, NotFoundException {
         //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
         List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
 
         List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( docs.size() );
 
-        /*
         for( MongoDocument d : docs ) {
             Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) d.get( "certificate" ) );
 
-            ProfileCertificate pc = new ProfileCertificate( this, this, c );
-            List<MongoDocument> sd = d.getList( "validatedby" );
+            ProfileCertificate pc = new ProfileCertificate( this, c, d );
+            //List<MongoDocument> sd = d.getList( "validatedby" );
 
-            pc.setValidations( sd );
+            //pc.setValidations( sd );
 
             certificates.add( pc );
         }
-        */
 
         return certificates;
+    }
+
+    public void doList( Request request, Response response ) throws IOException, TemplateException {
+        PrintWriter writer = response.getWriter();
+        writer.write( (Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
     }
 
     public void addCertificate( Certificate certificate ) {
