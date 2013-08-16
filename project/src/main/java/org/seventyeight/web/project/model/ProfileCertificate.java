@@ -8,6 +8,7 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,11 +29,25 @@ public class ProfileCertificate implements Node {
         this.parent = parent;
         this.document = document;
 
-        extractValidations();
+
     }
 
-    private void extractValidations() {
+    private void extractValidations() throws NotFoundException, ItemInstantiationException {
+        List<MongoDocument> docs = document.getList( "validatedby" );
+        validations = new ArrayList<Validation>( docs.size() );
 
+        for( MongoDocument d : docs ) {
+            Profile p = Core.getInstance().getNodeById( this, (String) d.get( "profile" ) );
+            validations.add( new Validation( (Date) d.get( "date" ), p ) );
+        }
+    }
+
+    public List<Validation> getValidations() throws NotFoundException, ItemInstantiationException {
+        if( validations == null ) {
+            extractValidations();
+        }
+
+        return validations;
     }
 
     @Override
@@ -79,7 +94,8 @@ public class ProfileCertificate implements Node {
 
     public void validateCertificate( Profile profile ) {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
-        document.set( "profile", profile.getIdentifier() ).set( "date", new org.seventyeight.utils.Date() );
+        MongoDocument d = new MongoDocument(  ).set( "profile", profile.getIdentifier() ).set( "date", new org.seventyeight.utils.Date() );
+        document.addToList( "validatedby", d );
         //((Profile)parent.getParent().getParent()).save();
         Core.superSave( this );
     }

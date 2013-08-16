@@ -11,6 +11,7 @@ import org.seventyeight.database.Document;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cwolfgang
@@ -149,6 +150,26 @@ public class MongoDocument implements Document {
         return this;
     }
 
+    /**
+     * Add an entry to a field. If the entry doesn't exist, it will be created.
+     *
+     * <code>
+     *  { field: {
+     *      key: { value }
+     *           }
+     *  }
+     *  </code>
+     */
+    public <T> MongoDocument add( String field, String key, T value ) {
+        if( document.containsField( field ) ) {
+            ((DBObject)document.get( field )).put( key, ( value instanceof MongoDocument ? ( (MongoDocument) value ).getDBObject() : value ) );
+        } else {
+            document.put( field, new BasicDBObject( key, ( value instanceof MongoDocument ? ( (MongoDocument) value ).getDBObject() : value ) ) );
+        }
+
+        return this;
+    }
+
     public List<MongoDocument> getList( String key ) {
         List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
 
@@ -214,6 +235,10 @@ public class MongoDocument implements Document {
     public boolean arrayHas( String field, String value ) {
 
         return true;
+    }
+
+    public Map getMap() {
+        return document.toMap();
     }
 
     @Override

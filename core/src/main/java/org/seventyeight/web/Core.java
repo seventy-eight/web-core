@@ -286,14 +286,14 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         }
     }
 
-    public Node getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
+    public <T extends Node> T getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Getting node by id: " + id );
         MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
 
         if( d != null && !d.isNull() ) {
             PersistedObject obj = getItem( parent, d );
 
-            return (Node) obj;
+            return (T) obj;
         } else {
             throw new NotFoundException( "Could not find node with id " + id );
         }
