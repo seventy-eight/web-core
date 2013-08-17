@@ -1,5 +1,46 @@
 The certificate $item.getCertificate() for $item.getProfile().getDisplayName() <br/>
 
-List validations
+<table class="listing">
 
-$item.get
+    <thead class="listing">
+        <tr>
+            <th colspan="2" class="listing">Validator</th>
+        </tr>
+    </thead>
+
+    #set($i = 0)
+    #foreach( $v in $item.getValidations() )
+    <tr>
+        <td class="listing" id="pp$i">
+            <a href="/profile/$v.getProfile().getIdentifier()/">$v.getProfile().getDisplayName()</a>
+        </td>
+        <td class="listing">
+            $v.getDate()
+        </td>
+    </tr>
+        #set($i = $i+1)
+    #end
+
+
+</table>
+
+
+<script type="text/javascript">
+
+    $(function() {
+        for( i = 0 ; i < $item.getNumberOfValidations() ; i++ ) {
+            updateProfile('pp' + i, $item.getValidation(i).getProfile().getIdentifier());
+        }
+    });
+
+    function updateProfile(container, nu) {
+        $.ajax({
+            type: "GET",
+            url: "/profile/profile/" + profile + "/small",
+            success: function(data, textStatus, jqxhr){$('.'+profile).html("SNADE:" + data)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+
+    }
+
+</script>

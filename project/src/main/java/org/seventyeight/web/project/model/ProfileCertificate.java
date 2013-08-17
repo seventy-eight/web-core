@@ -1,13 +1,18 @@
 package org.seventyeight.web.project.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +53,40 @@ public class ProfileCertificate implements Node {
         }
 
         return validations;
+    }
+
+    public int getNumberOfValidations() {
+        try {
+            return getValidations().size();
+        } catch( Exception e ) {
+            return 0;
+        }
+    }
+
+    public Validation getValidation( int i ) throws NotFoundException, ItemInstantiationException {
+        return getValidations().get( i );
+    }
+
+    public void doGetValidations( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+        int number = request.getValue( "number", 10 );
+        int offset = request.getValue( "offset", 0 );
+
+        List<String> strings = new ArrayList<String>( number );
+
+        List<MongoDocument> docs = document.getList( "validatedby" );
+
+        for( MongoDocument d : docs ) {
+            String pid = d.get( "profile" );
+            Profile p = Core.getInstance().getNodeById( this, pid );
+            strings.add( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( p, "small.vm" ) );
+        }
+
+        logger.debug( "_-----> " + strings );
+
+        PrintWriter writer = response.getWriter();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        writer.write( gson.toJson( strings ) );
     }
 
     @Override

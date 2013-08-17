@@ -65,6 +65,10 @@ public class Profile extends User {
         }
     }
 
+    public void doSmall( Request request, Response response ) throws TemplateException {
+        Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "small.vm" );
+    }
+
     /*
     @Override
     public Node getChild( String name ) {
