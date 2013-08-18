@@ -31,10 +31,7 @@
     <tr>
         <td id="trace" style="display: none; border-collapse: collapse">
             <div style="font-size: 12px;overflow:scroll;width:625px">
-                #foreach( $e in $exception.getStackTrace() )
-                    $e
-                    <br />
-                #end
+                #printStackTrace($exception)
             </div>
         </td>
     </tr>

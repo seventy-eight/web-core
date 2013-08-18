@@ -67,7 +67,19 @@ public class ProfileCertificate implements Node {
         return getValidations().get( i );
     }
 
-    public void doGetValidations( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+    public void doGetValidations( Request request, Response response ) throws IOException {
+        int number = request.getValue( "number", 10 );
+        int offset = request.getValue( "offset", 0 );
+
+        List<MongoDocument> docs = document.getList( "validatedby" );
+
+        PrintWriter writer = response.getWriter();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        writer.write( gson.toJson( docs ) );
+    }
+
+    public void doGetValidations2( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
         int number = request.getValue( "number", 10 );
         int offset = request.getValue( "offset", 0 );
 
@@ -105,7 +117,7 @@ public class ProfileCertificate implements Node {
     }
 
     public List<MongoDocument> getValidationDocuments() {
-        return null;
+        return document.getList( "validatedby" );
     }
 
     public Validation getLastValidation() throws ItemInstantiationException, NotFoundException {

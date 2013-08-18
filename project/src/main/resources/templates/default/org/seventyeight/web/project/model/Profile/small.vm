@@ -1,1 +1,7 @@
-<img src="$item.getPortrait()">$item.getDisplayName()
+<div style="background-color: #abacad; width: 400px;padding: 5px 5px 5px 5px; border-radius: 12px">
+    <a href="/profile/$item.getUsername()/"><img src="$item.getPortrait()" style="display: inline-block;vertical-align:middle;"></a>
+    <div style="display: inline-block;vertical-align:top">
+        <h3><a href="/profile/$item.getUsername()/">$item.getDisplayName()</a></h3>
+        Snade
+    </div>
+</div>

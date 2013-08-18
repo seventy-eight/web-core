@@ -1,25 +1,13 @@
-The certificate $item.getCertificate() for $item.getProfile().getDisplayName() <br/>
+The certificate <a href="/certificate/$item.getCertificate().getDisplayName()/">$item.getCertificate()</a> for <a href="/profile/$item.getProfile().getIdentifier()/">$item.getProfile().getDisplayName()</a> <br/>
 
-<table class="listing">
+<table>
 
-    <thead class="listing">
+    <thead class="listing" id="validators">
         <tr>
-            <th colspan="2" class="listing">Validator</th>
+            <th colspan="2" class="header">Validations</th>
         </tr>
     </thead>
 
-    #set($i = 0)
-    #foreach( $v in $item.getValidations() )
-    <tr>
-        <td class="listing" id="pp$i">
-            <a href="/profile/$v.getProfile().getIdentifier()/">$v.getProfile().getDisplayName()</a>
-        </td>
-        <td class="listing">
-            $v.getDate()
-        </td>
-    </tr>
-        #set($i = $i+1)
-    #end
 
 
 </table>
@@ -28,19 +16,33 @@ The certificate $item.getCertificate() for $item.getProfile().getDisplayName() <
 <script type="text/javascript">
 
     $(function() {
-        for( i = 0 ; i < $item.getNumberOfValidations() ; i++ ) {
-            updateProfile('pp' + i, $item.getValidation(i).getProfile().getIdentifier());
-        }
+        getValidators();
     });
 
-    function updateProfile(container, nu) {
+    function getValidators() {
         $.ajax({
             type: "GET",
-            url: "/profile/profile/" + profile + "/small",
-            success: function(data, textStatus, jqxhr){$('.'+profile).html("SNADE:" + data)},
+            url: "getValidations",
+            success: function(data, textStatus, jqxhr){addValidators(eval(data));},
             error: function(ajax, text, error) {alert(error)}
         });
+    }
 
+    function addValidators( data ) {
+        //alert(data);
+        for( i in data ) {
+            //alert(data[i]);
+            getProfile(data[i].document.profile, data[i].document.date);
+        }
+    }
+
+    function getProfile(profile, date) {
+        $.ajax({
+            type: "GET",
+            url: "/profile/" + profile + "/small",
+            success: function(data, textStatus, jqxhr){$("#validators").after("<tr><td>" + data + "</td><td>" + date + "</td></tr>");},
+            error: function(ajax, text, error) {alert(error)}
+        });
     }
 
 </script>

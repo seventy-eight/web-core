@@ -3,3 +3,15 @@
 
     #end
 #end
+
+#macro( printStackTrace $exception )
+    <h2>$exception.getMessage()</h2>
+    #foreach( $e in $exception.getStackTrace() )
+        $e
+    <br />
+    #end
+
+    #if( $exception.getCause() )
+        #printStackTrace( $exception.getCause() )
+    #end
+#end

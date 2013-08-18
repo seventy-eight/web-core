@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -139,22 +140,27 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
         MongoDocument docs = document.get( Certificate.CERTIFICATES );
 
-        Map map = docs.getMap();
-        List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( map.size() );
+        if( docs != null && !docs.isNull() ) {
 
-        for( Object key : map.keySet() ) {
-            Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) key );
+            Map map = docs.getMap();
+            List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( map.size() );
 
-            logger.debug( "------> " + map.get( key ) );
-            ProfileCertificate pc = new ProfileCertificate( this, c, new MongoDocument( (BasicDBObject) map.get( key ) ) );
-            //List<MongoDocument> sd = d.getList( "validatedby" );
+            for( Object key : map.keySet() ) {
+                Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) key );
 
-            //pc.setValidations( sd );
+                logger.debug( "------> " + map.get( key ) );
+                ProfileCertificate pc = new ProfileCertificate( this, c, new MongoDocument( (BasicDBObject) map.get( key ) ) );
+                //List<MongoDocument> sd = d.getList( "validatedby" );
 
-            certificates.add( pc );
+                //pc.setValidations( sd );
+
+                certificates.add( pc );
+            }
+
+            return certificates;
+        } else {
+            return Collections.emptyList();
         }
-
-        return certificates;
     }
 
     public void doList( Request request, Response response ) throws IOException, TemplateException {

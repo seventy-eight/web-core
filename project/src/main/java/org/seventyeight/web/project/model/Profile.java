@@ -65,8 +65,8 @@ public class Profile extends User {
         }
     }
 
-    public void doSmall( Request request, Response response ) throws TemplateException {
-        Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "small.vm" );
+    public void doSmall( Request request, Response response ) throws TemplateException, IOException {
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "small.vm" ) );
     }
 
     /*
@@ -130,7 +130,11 @@ public class Profile extends User {
 
         @Override
         public Node getChild( String name ) throws NotFoundException {
-            return getProfileByUsername( name, this );
+            try {
+                return Core.getInstance().getNodeById( this, name );
+            } catch( Exception e ) {
+                return getProfileByUsername( name, this );
+            }
         }
 
         @Override
