@@ -95,6 +95,10 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
         }
     }
 
+    public <T> void setField( String key, T value ) {
+        document.set( key, value );
+    }
+
     public void update( User owner ) {
         /* Default implementation is no op */
     }

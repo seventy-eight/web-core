@@ -33,7 +33,7 @@
     #end
 </table>
 
-#if($request.isUser($item.getParent()) )
+#if($request.isUser($item) )
 <input name="certificateTitle" type="text" id="addcert" onkeypress="doSubmitCert(event);">
 <button type="button" id="submitCert" onclick="sendCert()">Send</button>
 #end

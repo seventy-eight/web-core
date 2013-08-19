@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -16,6 +17,7 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,28 @@ public class Profile extends User {
             set( FIRST_NAME );
             set( LAST_NAME );
         }
+    }
+
+    public static Profile createProfile( String username, String firstName, String lastName, String email, String password ) throws ItemInstantiationException {
+        if( password == null || firstName == null || lastName == null || email == null ) {
+            throw new IllegalStateException( "Not all options are set" );
+        }
+
+        ProfileDescriptor d = Core.getInstance().getDescriptor( Profile.class );
+        Profile profile = (Profile) d.newInstance( username );
+
+        profile.getDocument().set( USERNAME, username );
+        profile.getDocument().set( FIRST_NAME, firstName );
+        profile.getDocument().set( LAST_NAME, lastName );
+        profile.getDocument().set( EMAIL, email );
+        try {
+            profile.getDocument().set( PASSWORD, Utils.md5( password ) );
+        } catch( NoSuchAlgorithmException e ) {
+            /* Algorithm must be present */
+            throw new IllegalStateException( e );
+        }
+
+        return profile;
     }
 
     public static Profile getProfileByUsername( Node parent, String username ) {
@@ -124,6 +148,59 @@ public class Profile extends User {
         //MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
         MongoUpdate u = new MongoUpdate().push( Certificate.CERTIFICATES + ".$.validatedby", d );
         MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( q, u );
+    }
+
+    public static class ProfileCreator {
+        private String username;
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String password;
+
+        private Profile profile;
+
+        public ProfileCreator( String username ) {
+            this.username = username;
+        }
+
+        public ProfileCreator setFirstName( String firstName ) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public ProfileCreator setLastName( String lastName ) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public ProfileCreator setEmail( String email ) {
+            this.email = email;
+            return this;
+        }
+
+        public ProfileCreator setMaskedPassword( String password ) {
+            this.password = password;
+            return this;
+        }
+
+        public ProfileCreator setUnmaskedPassword( String password ) throws NoSuchAlgorithmException {
+            this.password = Utils.md5( password );
+            return this;
+        }
+
+        public ProfileCreator create() throws ItemInstantiationException {
+            if( password == null || firstName == null || lastName == null || email == null ) {
+                throw new IllegalStateException( "Not all " );
+            }
+            ProfileDescriptor d = Core.getInstance().getDescriptor( Profile.class );
+            profile = (Profile) d.newInstance( username );
+            return this;
+        }
+
+        public Profile getProfile() {
+            return profile;
+        }
+
     }
 
     public static class ProfileDescriptor extends UserDescriptor {

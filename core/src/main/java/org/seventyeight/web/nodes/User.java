@@ -25,6 +25,10 @@ public class User extends Entity<User> {
 
     public static final String USERS = "users";
 
+    public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
+    public static final String USERNAME = "username";
+
     public enum Visibility {
         VISIBLE,
         HIDDEN;

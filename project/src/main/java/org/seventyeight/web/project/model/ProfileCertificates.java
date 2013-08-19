@@ -66,7 +66,13 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         }
         */
 
-        MongoDocument d = ((MongoDocument)document.get( Certificate.CERTIFICATES )).getSubDocument( certificateId, null );
+        logger.debug( "SUB DOC: " + document );
+        MongoDocument d = null;
+        try {
+            d = ((MongoDocument)document.get( Certificate.CERTIFICATES )).getSubDocument( certificateId, null );
+        } catch( Exception e ) {
+            return false;
+        }
 
 
         return ( d != null && !d.isNull() );
