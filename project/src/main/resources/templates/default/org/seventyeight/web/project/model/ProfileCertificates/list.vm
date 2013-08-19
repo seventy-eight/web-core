@@ -46,7 +46,7 @@ function doValidateCert(obj,id) {
     $.ajax({
         type: "GET",
         url: "certificates/get/" + id + "/validate",
-        success: function(){$(obj).hide(400);},
+        success: function(data, textStatus, jqxhr){$(obj).hide(400);alert(data)},
         error: function(ajax, text, error) {alert(error)}
     });
 }
@@ -58,7 +58,7 @@ function sendCert() {
         url: "certificates/add",
         data: $("#addcert").serialize(),
         //success: addCert($("#addcert").val()),
-        success: function(){addCert($("#addcert").val())},
+        success: function(data, textStatus, jqxhr){addCert($("#addcert").val())},
         error: function(ajax, text, error) {alert(error)}
     });
 

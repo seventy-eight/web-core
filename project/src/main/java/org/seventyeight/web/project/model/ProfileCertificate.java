@@ -130,7 +130,7 @@ public class ProfileCertificate implements Node {
         }
     }
 
-    public void doValidate( Request request, Response response ) throws NoAuthorizationException {
+    public void doValidate( Request request, Response response ) throws NoAuthorizationException, IOException {
         //Profile profile = (Profile) parent.getParent();
         Profile user = (Profile) request.getUser();
 
@@ -141,11 +141,14 @@ public class ProfileCertificate implements Node {
         } else {
             throw new NoAuthorizationException( "You are not authenticated" );
         }
+
+        response.getWriter().write( "BUH YEAH" );
     }
 
     public void validateCertificate( Profile profile ) {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
         MongoDocument d = new MongoDocument(  ).set( "profile", profile.getIdentifier() ).set( "date", new org.seventyeight.utils.Date() );
+        logger.debug( "VALIDATED: " + d );
         document.addToList( "validatedby", d );
         //((Profile)parent.getParent().getParent()).save();
         Core.superSave( this );

@@ -154,7 +154,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             for( Object key : map.keySet() ) {
                 Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) key );
 
-                logger.debug( "------> " + map.get( key ) );
+                //logger.debug( "------> " + map.get( key ) );
                 ProfileCertificate pc = new ProfileCertificate( this, c, new MongoDocument( (BasicDBObject) map.get( key ) ) );
                 //List<MongoDocument> sd = d.getList( "validatedby" );
 

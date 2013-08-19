@@ -173,7 +173,7 @@ public class MongoDocument implements Document {
     public List<MongoDocument> getList( String key ) {
         List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
 
-        System.out.println( "DA LIST: " + list );
+        //System.out.println( "DA LIST: " + list );
 
         if( list != null ) {
             List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
@@ -194,7 +194,7 @@ public class MongoDocument implements Document {
     public List<MongoDocument> getMappedList( String key, String collection ) {
         List<String> list = (List<String>) document.get( key );
 
-        System.out.println( "DA LIST: " + list );
+        //System.out.println( "DA LIST: " + list );
         MongoDBCollection col = MongoDBCollection.get( collection );
 
         if( list != null ) {

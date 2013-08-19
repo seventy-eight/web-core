@@ -147,7 +147,7 @@ public class User extends Entity<User> {
     }
 
     public String getEmail() {
-        return document.get( "email", null );
+        return document.get( EMAIL, "" );
     }
 
     @Override
