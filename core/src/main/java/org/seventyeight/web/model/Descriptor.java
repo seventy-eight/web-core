@@ -73,6 +73,10 @@ public abstract class Descriptor<T extends Describable<T>> {
         return false;
     }
 
+    public List<Searchable> getSearchables() {
+        return Collections.EMPTY_LIST;
+    }
+
     public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateException, NotFoundException {
         VelocityContext c = new VelocityContext();
         c.put( "class", getClazz().getName() );

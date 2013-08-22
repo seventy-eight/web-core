@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
+import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.project.actions.*;
@@ -75,6 +76,8 @@ public class ProjectCore extends Core {
         addDescriptor( new GetAction.GetDescriptor() );
         addDescriptor( new GetAction.GetDescriptor() );
 
+        addSearchable( new TitleSearch() );
+
         //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );
@@ -83,6 +86,7 @@ public class ProjectCore extends Core {
         mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
         mainMenu.add( new Menu.MenuItem( "Configure", "/configuration/" ) );
         mainMenu.add( new Menu.MenuItem( "Search", "/search2/" ) );
+
     }
 
     public File getSignaturePath() {

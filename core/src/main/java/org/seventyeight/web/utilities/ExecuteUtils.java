@@ -4,9 +4,12 @@ import org.apache.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.Core;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -43,10 +46,17 @@ public class ExecuteUtils {
         }
 
         if( !request.isRequestPost() ) {
-            request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( object, imposter, urlName + ".vm" ) );
-            response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
-            return;
+            render( request, response, object, urlName, imposter );
         }
+    }
+
+    public static void render( Request request, Response response, Object object, String method ) throws NotFoundException, TemplateException, IOException {
+        render( request, response, object, method, object.getClass() );
+    }
+
+    public static void render( Request request, Response response, Object object, String method, Class<?> imposter ) throws NotFoundException, TemplateException, IOException {
+        request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
+        response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
     }
 
     private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {

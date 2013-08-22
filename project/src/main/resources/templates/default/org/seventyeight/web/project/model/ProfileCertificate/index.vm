@@ -19,15 +19,18 @@ The certificate <a href="/certificate/$item.getCertificate().getDisplayName()/">
         getValidators();
     });
 
+    maindata = null;
+
     function getValidators() {
         $.ajax({
             type: "GET",
             url: "getValidations",
-            success: function(data, textStatus, jqxhr){addValidators(eval(data));},
+            success: function(data, textStatus, jqxhr){maindata = eval(data); nextProfile(maindata.length-1)},
             error: function(ajax, text, error) {alert(error)}
         });
     }
 
+    /*
     function addValidators( data ) {
         //alert(data);
         for( i in data ) {
@@ -43,6 +46,24 @@ The certificate <a href="/certificate/$item.getCertificate().getDisplayName()/">
             success: function(data, textStatus, jqxhr){$("#validators").after("<tr><td>" + data + "</td><td>" + date + "</td></tr>");},
             error: function(ajax, text, error) {alert(error)}
         });
+    }
+    */
+
+    function nextProfile(i) {
+        if( i >= 0 ) {
+            $.ajax({
+                type: "GET",
+                url: "/profile/" + maindata[i].document.profile + "/small",
+                success: function(data, textStatus, jqxhr){addProfile(data, maindata[i].document.date); nextProfile(i-1)},
+                error: function(ajax, text, error) {alert(error)}
+            });
+        } else {
+            //alert("DONE");
+        }
+    }
+
+    function addProfile( profile, date ) {
+        $("<tr><td>" + profile + "</td><td>" + date + "</td></tr>").hide().insertBefore("#validators").fadeIn(600);
     }
 
 </script>

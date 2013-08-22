@@ -130,66 +130,6 @@ public class Certificate extends Entity<Certificate> {
             }
         }
 
-        @Override
-        public List<Searchable> getSearchables() {
-            List<Searchable> ss = new ArrayList<Searchable>( 1 );
 
-            ss.add( new VerifiedBy() );
-
-            return ss;
-        }
-
-        private class CertificateId extends Searchable {
-
-            @Override
-            public Class<? extends Node> getClazz() {
-                return Profile.class;
-            }
-
-            @Override
-            public String getName() {
-                return "Certificate id";
-            }
-
-            @Override
-            public String getMethodName() {
-                return "certificate-id";
-            }
-
-            @Override
-            public void search( MongoDBQuery query, Operator operator, String term ) throws SearchException {
-                switch( operator ) {
-                    case EQUALS:
-                        query.elemMatch( CERTIFICATES, (MongoDocument) new MongoDocument().set( CERTIFICATE, term ) );
-                        break;
-
-                    default:
-                        throw new SearchException( "Unsupported operator, " + operator );
-                }
-            }
-        }
-
-        private class VerifiedBy extends Searchable {
-
-            @Override
-            public Class<? extends Node> getClazz() {
-                return Profile.class;
-            }
-
-            @Override
-            public String getName() {
-                return "Verified by";
-            }
-
-            @Override
-            public String getMethodName() {
-                return "verified-by";
-            }
-
-            @Override
-            public void search( MongoDBQuery query, Operator operator, String term ) {
-                //query.is(  )
-            }
-        }
     }
 }

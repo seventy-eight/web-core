@@ -217,5 +217,63 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         public boolean isApplicable( Node node ) {
             return node instanceof Profile;
         }
+
+        @Override
+        public List<Searchable> getSearchables() {
+            List<Searchable> ss = new ArrayList<Searchable>( 1 );
+
+            ss.add( new VerifiedBy() );
+            ss.add( new CertificateId() );
+
+            return ss;
+        }
+
+        private class CertificateId extends Searchable {
+
+            @Override
+            public Class<? extends Node> getClazz() {
+                return Profile.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Certificate id";
+            }
+
+            @Override
+            public String getMethodName() {
+                return "certificate-id";
+            }
+
+            @Override
+            public void search( MongoDBQuery query, String term ) {
+                logger.debug( "SEARCHING FOR " + term );
+                //query.elemMatch( CERTIFICATES, (MongoDocument) new MongoDocument().set( CERTIFICATE, term ) );
+                query.exists( getMongoPath() + Certificate.CERTIFICATE + "." + term );
+            }
+        }
+
+        private class VerifiedBy extends Searchable {
+
+            @Override
+            public Class<? extends Node> getClazz() {
+                return Profile.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Verified by";
+            }
+
+            @Override
+            public String getMethodName() {
+                return "verified-by";
+            }
+
+            @Override
+            public void search( MongoDBQuery query, String term ) {
+                //query.is(  )
+            }
+        }
     }
 }

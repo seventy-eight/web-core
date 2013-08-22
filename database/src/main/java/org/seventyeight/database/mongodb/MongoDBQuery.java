@@ -41,6 +41,12 @@ public class MongoDBQuery {
         return this;
     }
 
+    public MongoDBQuery exists( String field ) {
+        query.put( field ).exists( true );
+
+        return this;
+    }
+
     public MongoDBQuery greaterThan( String field, Object value ) {
         if( value instanceof MongoDocument ) {
             query.put( field ).greaterThan( ((MongoDocument)value).getDBObject() );
@@ -111,5 +117,10 @@ public class MongoDBQuery {
 
     public DBObject getDocument() {
         return query.get();
+    }
+
+    @Override
+    public String toString() {
+        return query.get().toString();
     }
 }

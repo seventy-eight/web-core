@@ -46,7 +46,7 @@ function doValidateCert(obj,id) {
     $.ajax({
         type: "GET",
         url: "certificates/get/" + id + "/validate",
-        success: function(data, textStatus, jqxhr){$(obj).hide(400);alert(data)},
+        success: function(data, textStatus, jqxhr){$(obj).hide(400)},
         error: function(ajax, text, error) {alert(error)}
     });
 }

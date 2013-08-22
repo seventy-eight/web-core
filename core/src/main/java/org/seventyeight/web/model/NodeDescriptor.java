@@ -79,10 +79,6 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
 
     public abstract String getType();
 
-    public List<Searchable> getSearchables() {
-        return Collections.EMPTY_LIST;
-    }
-
     /**
      * Determine whether to allow identical names or not.<br />
      * Default is true.

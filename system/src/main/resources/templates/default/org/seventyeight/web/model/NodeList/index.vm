@@ -1,0 +1,13 @@
+<table>
+
+    #foreach( $node in $item.getNodes() )
+    <tr>
+        <td>
+
+            $node
+
+        </td>
+    </tr>
+    #end
+
+</table>

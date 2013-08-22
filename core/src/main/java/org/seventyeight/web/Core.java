@@ -54,6 +54,8 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     protected Authentication authentication = new SimpleAuthentication();
     protected SessionManager sessionManager = new SessionManager();
 
+    protected Map<String, Searchable> searchables = new ConcurrentHashMap<String, Searchable>(  );
+
     /**
      * The default anonymous {@link User}
      */
@@ -524,9 +526,12 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
             children.put( nd.getType(), nd );
+        }
 
-            /* Find searchables */
-            nd.getSearchables();
+        /* Find searchables */
+        List<Searchable> ss = descriptor.getSearchables();
+        for( Searchable s : ss ) {
+            searchables.put( s.getMethodName(), s );
         }
 
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
@@ -540,6 +545,14 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
         /**/
         //descriptor.configureIndex( db );
+    }
+
+    public void addSearchable( Searchable s ) {
+        searchables.put( s.getMethodName(), s );
+    }
+
+    public Map<String, Searchable> getSearchables() {
+        return searchables;
     }
 
     public Descriptor<?> getDescriptor( String className ) throws ClassNotFoundException {
