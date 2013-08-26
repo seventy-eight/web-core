@@ -182,6 +182,14 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
     }
 
+    public int getInt( String key, int defaultValue ) {
+        if( this.getParameter( key ) != null ) {
+            return Integer.parseInt( this.getParameter( key ) );
+        } else {
+            return defaultValue;
+        }
+    }
+
     public static boolean isMultipart( HttpServletRequest request) {
         if( request.getContentType() != null ) {
             return request.getContentType().startsWith( __MULTIPART );

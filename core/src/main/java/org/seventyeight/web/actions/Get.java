@@ -41,6 +41,6 @@ public class Get implements Node, Parent {
 
     @Override
     public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
+        return null;
     }
 }

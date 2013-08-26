@@ -4,7 +4,11 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
+import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,4 +39,18 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
     public Node getChild( String name ) {
         return null;
     }
+
+    @Override
+    public String getPortrait() {
+        if( false ) {
+            return "/theme/framed-question-mark-small.png";
+        } else {
+            return "/theme/framed-question-mark-small.png";
+        }
+    }
+
+    public void doSmall( Request request, Response response ) throws TemplateException, IOException {
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "small.vm" ) );
+    }
+
 }

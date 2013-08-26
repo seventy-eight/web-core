@@ -5,6 +5,7 @@ import org.seventyeight.web.actions.*;
 import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
+import org.seventyeight.web.extensions.searchers.TypeSearch;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.project.actions.*;
@@ -77,6 +78,7 @@ public class ProjectCore extends Core {
         addDescriptor( new GetAction.GetDescriptor() );
 
         addSearchable( new TitleSearch() );
+        addSearchable( new TypeSearch() );
 
         //addDescriptor( new  );
 

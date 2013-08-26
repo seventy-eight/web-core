@@ -43,7 +43,7 @@ public class Certificate extends Entity<Certificate> {
 
     @Override
     public String getPortrait() {
-        return null;
+        return "/theme/framed-certificate-small.png";
     }
 
     public static Certificate createCertificate( String certName ) throws ItemInstantiationException {

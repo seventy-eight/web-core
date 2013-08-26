@@ -1,0 +1,12 @@
+<table style="border-style: solid; width:250px">
+    <tr>
+        <td style="; text-align: center">
+            <a href="$item.getUrl()"><img src="$item.getPortrait()"></>
+        </td>
+
+        <td style="width:100%;text-align: left;vertical-align: top">
+            <h4 style="margin: 0px">$item.getDisplayName()</h4>
+            $item.getType()
+        </td>
+    </tr>
+</table>

@@ -27,7 +27,7 @@ public class Group extends Entity<Group> {
 
     @Override
     public String getPortrait() {
-        return null;
+        return "/theme/framed-group-small.png";
     }
 
     @Override

@@ -1,0 +1,54 @@
+<table>
+
+    <tr id="bottom">
+        <td colspan="2" onclick="get(currentOffset, 10);">
+            More
+        </td>
+    </tr>
+
+</table>
+
+<script type="text/javascript">
+
+    currentOffset = 0;
+
+    $(function() {
+        get(0,10);
+    });
+
+    function get(offset, number) {
+        $.ajax({
+            type: "GET",
+            url: "search",
+            data: { query: "$request.getValue("query")", offset: offset, number: number },
+            success: function(data, textStatus, jqxhr){populate(eval(data), offset)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+
+        currentOffset = offset + number;
+    }
+
+    function populate(data, offset) {
+        if( data === undefined ) {
+            $('#bottom').hide();
+        } else {
+            for( i = 0 ; i < data.length ; i++ ) {
+                $('<tr><td id="node' + (i+offset) + '">' + data[i].document.title + '</td><td>' + data[i].document.revision + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
+                getNode(data[i].document._id, "node" + (i+offset));
+            }
+
+            if( data.length < 10 ) {
+                $('#bottom').hide();
+            }
+        }
+    }
+
+    function getNode(id, eid) {
+        $.ajax({
+            type: "GET",
+            url: "/get/" + id + "/small",
+            success: function(data, textStatus, jqxhr){$('#'+eid).html(data)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+</script>

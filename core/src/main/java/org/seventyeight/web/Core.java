@@ -9,6 +9,7 @@ import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.web.actions.Get;
 import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
@@ -165,6 +166,9 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         /* Class loader */
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
         this.pluginLoader = new Loader( classLoader );
+
+        /* Mandatory */
+        children.put( "get", new Get( this ) );
 
         instance = this;
     }

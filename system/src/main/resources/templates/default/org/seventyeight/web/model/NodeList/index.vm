@@ -1,13 +1,18 @@
 <table>
 
-    #foreach( $node in $item.getNodes() )
-    <tr>
+    <tr id="bottom">
         <td>
-
-            $node
-
+            bottom
         </td>
     </tr>
-    #end
 
 </table>
+
+<script type="text/javascript">
+
+    function populate(offset, number) {
+        for( i = offset ; i < number + offset ; i++ ) {
+            $("<tr><td>" + profile + "</td><td>" + date + "</td></tr>").hide().insertBefore("#bottom").fadeIn(600);
+        }
+    }
+</script>
