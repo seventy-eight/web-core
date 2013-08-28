@@ -64,6 +64,8 @@ public class Profile extends User {
         ProfileDescriptor d = Core.getInstance().getDescriptor( Profile.class );
         Profile profile = (Profile) d.newInstance( username );
 
+        profile.setMandatoryFields( profile );
+
         profile.getDocument().set( USERNAME, username );
         profile.getDocument().set( FIRST_NAME, firstName );
         profile.getDocument().set( LAST_NAME, lastName );

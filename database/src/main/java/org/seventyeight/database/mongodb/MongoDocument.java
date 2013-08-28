@@ -188,6 +188,23 @@ public class MongoDocument implements Document {
         }
     }
 
+    public List<MongoDocument> getList( String key, int offset, int number ) {
+        List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
+
+        if( list != null ) {
+            List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
+
+            for( int i = offset ; ( i < docs.size() || i < offset + number ) ; i++ ) {
+                BasicDBObject o = list.get( i );
+                docs.add( new MongoDocument( o ) );
+            }
+
+            return docs;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
     /**
      *
      */
@@ -228,8 +245,9 @@ public class MongoDocument implements Document {
     }
 
     public String getIdentifier() {
-        ObjectId id = get( "_id" );
-        return id.toString();
+        //ObjectId id = get( "_id" );
+        //return id.toString();
+        return get( "_id" );
     }
 
     public boolean arrayHas( String field, String value ) {

@@ -90,7 +90,7 @@ public class ProfileCertificate implements Node {
         for( MongoDocument d : docs ) {
             String pid = d.get( "profile" );
             Profile p = Core.getInstance().getNodeById( this, pid );
-            strings.add( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( p, "small.vm" ) );
+            strings.add( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( p, "badge.vm" ) );
         }
 
         logger.debug( "_-----> " + strings );

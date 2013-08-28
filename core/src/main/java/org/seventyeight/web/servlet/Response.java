@@ -12,6 +12,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.*;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
@@ -161,7 +162,13 @@ public class Response extends HttpServletResponseWrapper {
 
         // Get content type by file name and set default GZIP support and
         // content disposition.
-        String contentType = new MimetypesFileTypeMap().getContentType(fileName);
+        //String contentType = new MimetypesFileTypeMap().getContentType(fileName);
+        //InputStream is = new BufferedInputStream(new FileInputStream(file));
+        //String contentType = URLConnection.guessContentTypeFromStream(is);
+        //is.close();
+        String contentType = getMimeType2( file );
+        //String contentType = URLConnection.guessContentTypeFromName( file.getName() );
+        logger.debug( "MIME TYPE: " + contentType );
         boolean acceptsGzip = false;
         String disposition = "inline";
 
@@ -397,6 +404,35 @@ public class Response extends HttpServletResponseWrapper {
                 // aborted the request.
             }
         }
+    }
+
+    public static Map<String, String> mimeTypes = new HashMap<String, String>(  );
+
+    static {
+        mimeTypes.put( "css", "text/css" );
+    }
+
+    public static String getMimeType( File file ) throws IOException {
+        InputStream is = new BufferedInputStream( new FileInputStream(file ) );
+        String mimeType = URLConnection.guessContentTypeFromStream( is );
+        is.close();
+        return mimeType;
+    }
+
+    public static String getMimeType2( File file ) throws IOException {
+        InputStream is = new BufferedInputStream( new FileInputStream(file ) );
+        String mimeType = URLConnection.guessContentTypeFromStream( is );
+        is.close();
+
+        if( mimeType == null ) {
+            int i = file.getName().lastIndexOf( "." );
+            if( i > -1 ) {
+                String s = file.getName().substring( (i+1), file.getName().length() );
+                mimeType = mimeTypes.get( s );
+            }
+        }
+
+        return mimeType;
     }
 
     // Inner classes

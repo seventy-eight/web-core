@@ -13,7 +13,7 @@
                 <a href="certificates/get/$c.getCertificate().getIdentifier()">$c.getCertificate().getDisplayName()</a>
             </td>
             <td>
-                #if($request.isAuthenticated() && !$request.isUser($item))
+                #if($request.isAuthenticated() && !$request.isUser($item.getParent()))
                     <a href="certificates/get/$c.getIdentifier().getDisplayName()/validate">validate</a>
                     <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
                 #end
@@ -33,7 +33,7 @@
     #end
 </table>
 
-#if($request.isUser($item) )
+#if($request.isUser($item.getParent()) )
 <input name="certificateTitle" type="text" id="addcert" onkeypress="doSubmitCert(event);">
 <button type="button" id="submitCert" onclick="sendCert()">Send</button>
 #end

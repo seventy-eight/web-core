@@ -53,7 +53,7 @@ The certificate <a href="/certificate/$item.getCertificate().getDisplayName()/">
         if( i >= 0 ) {
             $.ajax({
                 type: "GET",
-                url: "/profile/" + maindata[i].document.profile + "/small",
+                url: "/profile/" + maindata[i].document.profile + "/badge",
                 success: function(data, textStatus, jqxhr){addProfile(data, maindata[i].document.date); nextProfile(i-1)},
                 error: function(ajax, text, error) {alert(error)}
             });

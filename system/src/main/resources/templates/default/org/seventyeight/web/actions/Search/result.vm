@@ -33,8 +33,8 @@
             $('#bottom').hide();
         } else {
             for( i = 0 ; i < data.length ; i++ ) {
-                $('<tr><td id="node' + (i+offset) + '">' + data[i].document.title + '</td><td>' + data[i].document.revision + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
-                getNode(data[i].document._id, "node" + (i+offset));
+                $('<tr><td id="node' + (i+offset) + '">' + data[i].document.badge + '</td><td>' + data[i].document.revision + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
+                //getNode(data[i].document._id, "node" + (i+offset));
             }
 
             if( data.length < 10 ) {

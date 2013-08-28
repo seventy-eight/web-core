@@ -5,6 +5,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -49,8 +50,12 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
         }
     }
 
-    public void doSmall( Request request, Response response ) throws TemplateException, IOException {
-        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "small.vm" ) );
+    protected void setMandatoryFields( User owner ) {
+        setOwner( owner );
+    }
+
+    public void doBadge( Request request, Response response ) throws TemplateException, IOException {
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
     }
 
 }

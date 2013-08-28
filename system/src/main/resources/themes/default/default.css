@@ -2,15 +2,38 @@ html {
     overflow-y: scroll;
 }
 
+html, body { height:100%; }
+
 body {
-    background-color: #f5f2f2;
+    background-color: #ffffff;
+    margin: 0%;
+    padding: 0%;
+}
 
-    background-image: url('/theme/bottom.png');
-    background-repeat:no-repeat;
-    background-attachment:scroll;
-    background-position:bottom;
+#container {
+    position:relative; /* needed for footer positioning*/
+    margin:0 auto; /* center, not in IE5 */
+    border-collapse: collapse;
 
-    /* margin: 0px 0px 0px 0px; */
+    height:auto !important; /* real browsers */
+    height:100%; /* IE6: treaded as min-height*/
+
+    min-height:100%; /* real browsers */
+
+}
+
+#footer {
+    position: absolute;
+    top: -152px;
+    width: 100%;
+    z-index: -9999;
+}
+
+.pseudoParent {
+    position: relative;
+    width: 0;
+    height: 0;
+    width: 100%;
 }
 
 table.listing {

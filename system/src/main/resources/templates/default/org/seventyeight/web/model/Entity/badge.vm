@@ -1,4 +1,4 @@
-<table style="border-style: solid; width:250px">
+<table style="border-style: solid; width:400px">
     <tr>
         <td style="; text-align: center">
             <a href="$item.getUrl()"><img src="$item.getPortrait()"></>

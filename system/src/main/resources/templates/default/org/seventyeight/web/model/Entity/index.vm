@@ -1,4 +1,4 @@
-<table style="width:100%;border-collapse: collapse;">
+<table style="width:100%;height: 100%;border-collapse: collapse">
 
     <tr>
         <td style="width:100px" class="headerContrast" align="left">
@@ -15,14 +15,14 @@
     </tr>
 
     <tr>
-        <td style="width:100%" colspan="3">
+        <td style="width:100%;height: 100%" colspan="3">
             #render( $item "view" )
         </td>
     </tr>
 
     <tr>
-        <td style="width:100%" colspan="3">
-            <div style="width: 100%" align="center">
+        <td style="width:100%;height: 100%" colspan="3">
+            <div style="width: 100%;min-height: 400px" align="center">
 
                 #foreach( $action in $item.getActions() )
                     #render( $action "bottom" )
@@ -43,7 +43,7 @@
     </tr>
 
     <tr>
-        <td style="width:100%;font-size: 9px" class="headerContrast" align="left" colspan="3">
+        <td style="width:100%;height: 100%;font-size: 9px" class="headerContrast" align="left" colspan="3">
             Created about $dateUtils.getDateString($item.getCreated()) ago
             #if($item.getRevision() > 1)
                 , last updated $dateUtils.getDateString($item.getUpdated()) ago
