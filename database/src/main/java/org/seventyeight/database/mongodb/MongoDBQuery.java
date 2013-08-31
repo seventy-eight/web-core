@@ -125,6 +125,18 @@ public class MongoDBQuery {
         return this;
     }
 
+    public <T> MongoDBQuery or( boolean removeEmpty, MongoDBQuery ... ors ) {
+        List<DBObject> objs = new ArrayList<DBObject>( ors.length );
+        for( int i = 0 ; i < ors.length ; i++ ) {
+            if( ors[i].getDocument().keySet().size() > 0 ) {
+                objs.add( ors[i].getDocument() );
+            }
+        }
+        query.or( objs.toArray(new DBObject[objs.size()]) );
+
+        return this;
+    }
+
     public <T> MongoDBQuery notIn( String field, List<T> items ) {
         if( items != null && !items.isEmpty() ) {
             query.put( field ).notIn( items );

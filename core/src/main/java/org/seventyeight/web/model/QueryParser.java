@@ -6,7 +6,9 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,9 @@ public class QueryParser {
         Matcher m = pattern.matcher( query );
 
         MongoDBQuery dbquery = new MongoDBQuery();
+
+        MongoDBQuery titles = new MongoDBQuery();
+        MongoDBQuery tags = new MongoDBQuery();
 
         while( m.find() ) {
             for( int i = 0 ; i < m.groupCount() ; i++ ) {
@@ -56,16 +61,22 @@ public class QueryParser {
 
             /*QUE?!*/
             } else if( m.group( 3 ) != null ) {
-                dbquery.addIn( "title", m.group( 3 ) );
+                //dbquery.addIn( "title", m.group( 3 ) );
             /* Just a term with quotes */
             } else if( m.group( 4 ) != null ) {
-                dbquery.addIn( "title", m.group( 4 ) );
+                titles.addIn( "title", m.group( 4 ) );
+                tags.addIn( "tags", m.group( 4 ) );
             /* Just a term without quotes */
             } else if( m.group( 5 ) != null ) {
-                dbquery.addIn( "title", m.group( 5 ) );
+                titles.addIn( "title", m.group( 5 ) );
+                tags.addIn( "tags", m.group( 5 ) );
             }
         }
 
-        return dbquery;
+        logger.debug( "FINAL" );
+        MongoDBQuery finalQuery = new MongoDBQuery();
+        finalQuery.or( true, dbquery, titles, tags );
+
+        return finalQuery;
     }
 }
