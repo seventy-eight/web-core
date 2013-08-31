@@ -38,6 +38,10 @@ public class MongoDBCollection {
         return this;
     }
 
+    public long count( MongoDBQuery query ) {
+        return collection.count( query.getDocument() );
+    }
+
     public DBCollection getCollection() {
         return collection;
     }
@@ -61,6 +65,10 @@ public class MongoDBCollection {
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit ) {
+        return find( query, offset, limit, new MongoDocument(  ) );
+    }
+
+    public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument order ) {
         List<DBObject> objs = collection.find( query.getDocument() ).skip( offset ).limit( limit ).toArray();
         List<MongoDocument> docs = new ArrayList<MongoDocument>( objs.size() );
 

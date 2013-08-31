@@ -153,6 +153,13 @@ public class User extends Entity<User> {
     }
 
     @Override
+    protected void setMandatoryFields( User owner ) {
+        super.setMandatoryFields( owner );
+
+        document.set( "owner", owner.getIdentifier() );
+    }
+
+    @Override
     public String getDisplayName() {
         return getTitle();
     }

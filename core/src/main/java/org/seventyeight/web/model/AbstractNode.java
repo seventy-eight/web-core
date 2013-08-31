@@ -247,6 +247,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public void setOwner( User owner ) {
+        logger.debug( "Setting owner to " + owner );
         document.set( "owner", owner.getIdentifier() );
     }
 
@@ -465,6 +466,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     @Override
     public String toString() {
-        return getDisplayName();
+        //return getDisplayName();
+        return getIdentifier();
     }
 }

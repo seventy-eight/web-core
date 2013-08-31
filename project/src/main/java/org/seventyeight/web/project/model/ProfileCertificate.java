@@ -8,6 +8,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.data.DataElement;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -20,21 +21,21 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class ProfileCertificate implements Node {
+public class ProfileCertificate extends DataElement implements Node {
 
-    private static Logger logger  = Logger.getLogger( ProfileCertificate.class );
+    private static Logger logger = Logger.getLogger( ProfileCertificate.class );
+
+    public static final String VALIDATEDBY = "validatedby";
+    public static final String COLLECTIONNAME = "profilecertificates";
 
     private Node parent;
     private Certificate certificate;
-    private MongoDocument document;
     private List<Validation> validations;
 
     public ProfileCertificate( Node parent, Certificate certificate, MongoDocument document ) {
+        super( document );
         this.certificate = certificate;
         this.parent = parent;
-        this.document = document;
-
-
     }
 
     private void extractValidations() throws NotFoundException, ItemInstantiationException {
@@ -46,6 +47,23 @@ public class ProfileCertificate implements Node {
             validations.add( new Validation( (Date) d.get( "date" ), p ) );
         }
     }
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTIONNAME;
+    }
+
+    public static ProfileCertificate create( Profile profile, Certificate certificate ) {
+        MongoDocument d = createDocument( profile.getIdentifier() );
+
+        d.set( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        d.setList( VALIDATEDBY );
+
+        ProfileCertificate e = new ProfileCertificate( profile, certificate, d );
+
+        return e;
+    }
+
 
     public List<Validation> getValidations() throws NotFoundException, ItemInstantiationException {
         if( validations == null ) {
@@ -149,9 +167,10 @@ public class ProfileCertificate implements Node {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
         MongoDocument d = new MongoDocument(  ).set( "profile", profile.getIdentifier() ).set( "date", new org.seventyeight.utils.Date() );
         logger.debug( "VALIDATED: " + d );
-        document.addToList( "validatedby", d );
+        document.addToList( VALIDATEDBY, d );
+        save();
         //((Profile)parent.getParent().getParent()).save();
-        Core.superSave( this );
+        //Core.superSave( this );
     }
 
     public Profile getProfile() {

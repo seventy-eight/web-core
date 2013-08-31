@@ -57,6 +57,7 @@ public class Profile extends User {
     }
 
     public static Profile createProfile( String username, String firstName, String lastName, String email, String password ) throws ItemInstantiationException {
+        logger.debug( "Creating new profile, " + username );
         if( password == null || firstName == null || lastName == null || email == null ) {
             throw new IllegalStateException( "Not all options are set" );
         }
@@ -64,7 +65,9 @@ public class Profile extends User {
         ProfileDescriptor d = Core.getInstance().getDescriptor( Profile.class );
         Profile profile = (Profile) d.newInstance( username );
 
+        logger.debug( "Setting mandatory fields" );
         profile.setMandatoryFields( profile );
+        logger.debug( "Mandatory fields set" );
 
         profile.getDocument().set( USERNAME, username );
         profile.getDocument().set( FIRST_NAME, firstName );

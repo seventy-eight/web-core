@@ -12,6 +12,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.data.DataElement;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -123,10 +124,11 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         logger.debug( d );
         */
 
-        MongoDocument d = ((MongoDocument)document.get( Certificate.CERTIFICATES )).getSubDocument( token, null );
+        MongoDBQuery query = new MongoDBQuery().is( DataElement.NODEID, ((Profile)getParent()).getIdentifier() ).is( Certificate.CERTIFICATE, token );
+        MongoDocument d = MongoDBCollection.get( ProfileCertificate.COLLECTIONNAME ).findOne( query );
 
         if( d != null && !d.isNull() ) {
-            logger.debug( "Found the id in the list" );
+            logger.debug( "Found the profile certificate" );
             try {
                 Certificate c = (Certificate) Core.getInstance().getNodeById( this, token );
                 return new ProfileCertificate( this, c, d );
@@ -143,30 +145,22 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
 
     public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException, NotFoundException {
-        //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "type", Certificate.CERTIFICATE ), offset, number );
-        MongoDocument docs = document.get( Certificate.CERTIFICATES );
+        MongoDBQuery query = new MongoDBQuery().is( ProfileCertificate.NODEID, ((Profile)getParent()).getIdentifier() );
+        MongoDocument order = new MongoDocument(  ).set( "added", 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( ProfileCertificate.COLLECTIONNAME ).find( query, offset, number, order );
 
-        if( docs != null && !docs.isNull() ) {
+        List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( docs.size() );
 
-            Map map = docs.getMap();
-            List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( map.size() );
-
-            for( Object key : map.keySet() ) {
-                Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) key );
-
-                //logger.debug( "------> " + map.get( key ) );
-                ProfileCertificate pc = new ProfileCertificate( this, c, new MongoDocument( (BasicDBObject) map.get( key ) ) );
-                //List<MongoDocument> sd = d.getList( "validatedby" );
-
-                //pc.setValidations( sd );
-
-                certificates.add( pc );
-            }
-
-            return certificates;
-        } else {
-            return Collections.emptyList();
+        for( MongoDocument doc : docs ) {
+               Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) doc.get( Certificate.CERTIFICATE ) );
+               //logger.debug( "------> " + map.get( key ) );
+               ProfileCertificate pc = new ProfileCertificate( this, c, doc );
+              //List<MongoDocument> sd = d.getList( "validatedby" );
+              //pc.setValidations( sd );
+               certificates.add( pc );
         }
+
+        return certificates;
     }
 
     public void doList( Request request, Response response ) throws IOException, TemplateException {
@@ -177,16 +171,8 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
     public void addCertificate( Certificate certificate ) {
         logger.debug( "Adding certificate " + certificate );
 
-        MongoDocument certs = document.get( Certificate.CERTIFICATES );
-
-        if( certs != null && !certs.isNull() ) {
-            certs.set( certificate.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
-        } else {
-            MongoDocument d = new MongoDocument().set( certificate.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
-            document.set( Certificate.CERTIFICATES, d );
-        }
-
-        ((Profile)parent).save();
+        ProfileCertificate pce = ProfileCertificate.create( (Profile) this.getParent(), certificate );
+        pce.save();
     }
 
     @Override

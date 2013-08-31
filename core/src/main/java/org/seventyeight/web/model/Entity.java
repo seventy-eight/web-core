@@ -51,6 +51,7 @@ public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implem
     }
 
     protected void setMandatoryFields( User owner ) {
+        logger.debug( "The mandatory fields, " + owner );
         setOwner( owner );
     }
 

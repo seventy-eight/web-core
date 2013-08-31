@@ -1,5 +1,6 @@
 package org.seventyeight.web;
 
+import org.apache.log4j.Logger;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -19,6 +20,8 @@ import java.net.UnknownHostException;
  */
 public abstract class WebCoreEnv<C extends Core> implements TestRule {
 
+    private static Logger logger = Logger.getLogger( WebCoreEnv.class );
+
     protected File path;
     protected String databaseName;
     protected MongoDatabase db;
@@ -36,6 +39,7 @@ public abstract class WebCoreEnv<C extends Core> implements TestRule {
     }
 
     protected void after() {
+        logger.debug( "Runner after!!!!!!!!!!!!!!!!!!!!!!!" );
         db.remove();
     }
 

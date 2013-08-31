@@ -32,15 +32,21 @@ public abstract class DataNode<T extends Node> implements Node {
         this.document = document;
     }
 
+    /**
+     * Get the offset of the total number of {@link Element}'s for the strategy.
+     */
     public int getOffset() {
         return document.get( "offset", 0 );
     }
 
+    /**
+     * Get the number of {@link Element}'s in this {@link DataNode}.
+     */
     public int getNumber() {
-        return document.get( "number", 1 );
+        return document.get( "number", 0 );
     }
 
-    public <E extends Element> List<E> getElements( int index, int number ) {
+    public <E extends Element<T>> List<E> getElements( int index, int number ) {
         List<MongoDocument> docs = document.getList( "elements", index, number );
 
         List<E> elements = new ArrayList<E>( docs.size() );
@@ -52,20 +58,7 @@ public abstract class DataNode<T extends Node> implements Node {
         return elements;
     }
 
-    public List<T> getNodes( int index, int number ) throws NotFoundException, ItemInstantiationException {
-        List<MongoDocument> docs = document.getList( "elements", index, number );
-
-        List<T> nodes = new ArrayList<T>( docs.size() );
-
-        for( MongoDocument d : docs ) {
-            T node = Core.getInstance().getNodeById( this, (String) d.get( "identifier" ) );
-            nodes.add( node );
-        }
-
-        return nodes;
-    }
-
-    public abstract <E extends Element> E getElement( MongoDocument document );
+    public abstract <E extends Element<T>> E getElement( MongoDocument document );
 
     public class Element<T> {
 
