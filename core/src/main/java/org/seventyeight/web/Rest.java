@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
+import org.seventyeight.web.model.HttpException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -46,6 +47,7 @@ public class Rest extends HttpServlet {
         /* Instantiating request */
         Request request = new Request( rqs );
         Response response = new Response( rsp );
+        response.setCharacterEncoding( "UTF-8" );
 
         logger.debug( "[Parameters] " + rqs.getParameterMap() );
 
@@ -70,10 +72,17 @@ public class Rest extends HttpServlet {
             logger.warn( "Unable to authenticate", e );
         }
 
-
         try {
             Core.getInstance().render( request, response );
+        } catch( CoreException e ) {
+            e.printStackTrace();
+            if( request.isPagedResponseType() ) {
+                response.renderError( request, e );
+            } else {
+                response.sendError( e.getCode(), e.getMessage() );
+            }
         } catch( Exception e ) {
+            logger.error( "CAUGHT ERROR" );
             e.printStackTrace();
             generateException( request, rsp.getWriter(), e, e.getMessage() );
         }
@@ -83,7 +92,7 @@ public class Rest extends HttpServlet {
     }
 
     private void generateException( Request request, PrintWriter writer, Throwable e, String message ) {
-        logger.error( e.getMessage() );
+        logger.error( "Generating error: " + e.getMessage() );
         try {
             VelocityContext vc = new VelocityContext();
             vc.put( "stacktrace", e.getStackTrace() );

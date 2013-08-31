@@ -1,0 +1,2 @@
+#textField( "twidth", "Thumb width", 80 )
+#textField( "theight", "Thumb height", 120 )

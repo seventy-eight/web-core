@@ -1,6 +1,7 @@
 package org.seventyeight.database.mongodb;
 
 import com.mongodb.*;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author cwolfgang
- *         Date: 23-02-13
- *         Time: 10:48
  */
 public class MongoDBQuery {
     private QueryBuilder query = new QueryBuilder();
@@ -20,6 +19,30 @@ public class MongoDBQuery {
         } else {
             query.put( field ).is( value );
         }
+
+        return this;
+    }
+
+    public MongoDBQuery getId( String id ) {
+        query.put( "_id" ).is( id );
+
+        return this;
+    }
+
+    public MongoDBQuery getId2( String id ) {
+        query.put( "_id" ).is( new ObjectId( id ) );
+
+        return this;
+    }
+
+    public MongoDBQuery elemMatch( String field, MongoDocument value ) {
+        query.put( field ).elemMatch( value.getDBObject() );
+
+        return this;
+    }
+
+    public MongoDBQuery exists( String field ) {
+        query.put( field ).exists( true );
 
         return this;
     }
@@ -94,5 +117,10 @@ public class MongoDBQuery {
 
     public DBObject getDocument() {
         return query.get();
+    }
+
+    @Override
+    public String toString() {
+        return query.get().toString();
     }
 }

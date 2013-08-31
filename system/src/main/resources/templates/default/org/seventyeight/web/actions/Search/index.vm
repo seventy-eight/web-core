@@ -1,0 +1,3 @@
+<form action="result" method="get" name="login">
+    <input name="query" type="text" style="width: 80%">
+</form>

@@ -1,0 +1,10 @@
+<div class="header">$item.getDisplayName()</div>
+<div><a href="file">Download</a></div>
+
+<br>
+
+$item.getFileTypeClass()
+
+<br>
+
+$item.getDocument().getDBObject()

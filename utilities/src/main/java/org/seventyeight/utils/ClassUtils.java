@@ -10,6 +10,7 @@ import java.util.List;
  * @author cwolfgang
  */
 public class ClassUtils {
+
     private ClassUtils() {}
 
     public static Method getInheritedMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
@@ -17,7 +18,7 @@ public class ClassUtils {
             try {
                 Method m = clazz.getDeclaredMethod( method, args );
                 /* If null, the method is NOT annotated as a post method */
-                if( m.getAnnotation( PostMethod.class ) == null ) {
+                if( m.getAnnotation( PostMethod.class ) == null && m.getAnnotation( PutMethod.class ) == null ) {
                     return m;
                 }
             } catch( NoSuchMethodException e ) {
@@ -33,7 +34,27 @@ public class ClassUtils {
     public static Method getInheritedPostMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
         while( clazz != null ) {
             try {
-                return clazz.getDeclaredMethod( method, args );
+                Method m = clazz.getDeclaredMethod( method, args );
+                if( m.getAnnotation( PostMethod.class ) != null ) {
+                    return m;
+                }
+            } catch( NoSuchMethodException e ) {
+                /* Just carry on */
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        throw new NoSuchMethodException( method );
+    }
+
+    public static Method getInheritedPutMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
+        while( clazz != null ) {
+            try {
+                Method m = clazz.getDeclaredMethod( method, args );
+                if( m.getAnnotation( PutMethod.class ) != null ) {
+                    return m;
+                }
             } catch( NoSuchMethodException e ) {
                 /* Just carry on */
             }
@@ -46,6 +67,7 @@ public class ClassUtils {
 
 
     public static List<Class<?>> getInterfaces( Class<?> clazz ) {
+        System.out.println( "[CLASS=" + clazz + "]" );
         List<Class<?>> interfaces = new ArrayList<Class<?>>();
         interfaces.addAll( Arrays.asList( clazz.getInterfaces() ) );
 
@@ -55,6 +77,17 @@ public class ClassUtils {
         }
 
         return interfaces;
+    }
+
+    public static List<Class<?>> getClasses( Class<?> clazz ) {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+
+        while( clazz != null && !clazz.equals( Object.class ) ) {
+            classes.add( clazz );
+            clazz = clazz.getSuperclass();
+        }
+
+        return classes;
     }
 
 }

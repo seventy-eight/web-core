@@ -2,16 +2,21 @@ package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.NodeExtension;
+import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 24-02-13
- *         Time: 21:47
  */
-public abstract class Entity extends AbstractNode implements CreatableNode {
+public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent {
 
     private static Logger logger = Logger.getLogger( Entity.class );
 
@@ -20,19 +25,10 @@ public abstract class Entity extends AbstractNode implements CreatableNode {
     }
 
     @Override
-    public List<Action> getActions() {
-        logger.debug( "Getting actions for " + this );
-
-        List<Action> actions = new ArrayList<Action>();
-        List<AbstractExtension> extensions = getExtensions();
-
-        /* For all extensions */
-        for( AbstractExtension e : extensions ) {
-            actions.addAll( e.getActions() );
-        }
-
-        logger.debug( "Found: " + actions );
-        return actions;
+    public List<AbstractExtension> getExtensions() {
+        List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
+        //es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );
+        return es;
     }
 
     @Override
@@ -43,6 +39,24 @@ public abstract class Entity extends AbstractNode implements CreatableNode {
     @Override
     public Node getChild( String name ) {
         return null;
+    }
+
+    @Override
+    public String getPortrait() {
+        if( false ) {
+            return "/theme/framed-question-mark-small.png";
+        } else {
+            return "/theme/framed-question-mark-small.png";
+        }
+    }
+
+    protected void setMandatoryFields( User owner ) {
+        logger.debug( "The mandatory fields, " + owner );
+        setOwner( owner );
+    }
+
+    public void doBadge( Request request, Response response ) throws TemplateException, IOException {
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
     }
 
 }

@@ -1,9 +1,147 @@
+html {
+    overflow-y: scroll;
+}
+
+html, body { height:100%; }
+
+body {
+    background-color: #ffffff;
+    margin: 0%;
+    padding: 0%;
+}
+
+#container {
+    position:relative; /* needed for footer positioning*/
+    margin:0 auto; /* center, not in IE5 */
+    border-collapse: collapse;
+
+    height:auto !important; /* real browsers */
+    height:100%; /* IE6: treaded as min-height*/
+
+    min-height:100%; /* real browsers */
+
+}
+
+#footer {
+    position: absolute;
+    top: -152px;
+    width: 100%;
+    z-index: -9999;
+}
+
+.pseudoParent {
+    position: relative;
+    width: 0;
+    height: 0;
+    width: 100%;
+}
+
+table.listing {
+    border-style: solid;
+    border-width: 2px;
+}
+
+caption.listing {
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #172849;
+    color: #a7b7c7;
+}
+
+thead.listing {
+    font-weight: bold;
+    font-size: 14px;
+    color: #172849;
+}
+
+th.listing {
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #172849;
+    border-style: solid;
+    border-width: 1px;
+}
+
+td.listing {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+tr.listing:hover {
+    background-color: #c1d3e5;
+}
+
+.input {
+    width: 500px
+}
+
 .header {
-    font-size: 30px;
+     font-size: 20px;
+     font-weight: bold;
+ }
+
+.headerContrast {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #992992;
+}
+
+a:link {
+    color: #94a2b2;
+}
+
+/* 1. level menu items */
+.hMenu {
+    font-family: Arial;
+    font-size: 12px;
+    background: #2f8be8;
+
+}
+
+/* Childs */
+.hMenu ul {
+    background: #f09d28;
+}
+.hMenu ul li a {
+    color: #000;
+}
+.hMenu ul li:hover a {
+    background: #ffc97c;
+}
+
+/* Menu structure */
+.hMenu,
+.hMenu ul {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    z-index: 999;
+}
+
+.hMenu > li {
+    list-style: none;
+    float: left;
+    display: block;
+    background-color: #bb3b00;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #872900;
+    margin-right: 6px;
+    width: 150px;
+
+}
+.hMenu li a {
+    display: block;
+    padding: 3px 8px;
+    text-decoration: none;
+    color: #000000;
     font-weight: bold;
 }
 
-
-.snade {
-    font-size: 121px;
+.hMenu > li:hover > a {
+    background: #000000;
+    color: #ff2300;
 }

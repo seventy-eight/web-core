@@ -3,14 +3,13 @@ package org.seventyeight.web.model;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.nodes.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 16-02-13
- *         Time: 23:14
  */
 public abstract class PersistedObject extends Actionable implements Savable, Documented {
 
@@ -20,13 +19,37 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
 
     protected MongoDocument document;
 
+    public PersistedObject() {
+
+    }
+
     public PersistedObject( MongoDocument document ) {
         this.document = document;
     }
 
     public List<AbstractExtension> getExtensions() {
 
-        return null;
+        return new ArrayList<AbstractExtension>();
+    }
+
+    protected void setDocument( MongoDocument document ) {
+        this.document = document;
+    }
+
+    public static MongoDocument getSubDocument( MongoDocument document, String type, Class<?> clazz ) {
+        MongoDocument extensionClassDocument = document.getr( EXTENSIONS, type, clazz.getCanonicalName() );
+
+        /*
+        for( MongoDocument doc : docs ) {
+            if( doc.get( "class", null ) != null ) {
+                return doc;
+            }
+        }
+        */
+
+        MongoDocument d = new MongoDocument(  );
+        extensionClassDocument.addToList( type, d );
+        return d;
     }
 
     /**
@@ -72,7 +95,11 @@ public abstract class PersistedObject extends Actionable implements Savable, Doc
         }
     }
 
-    public void update() {
+    public <T> void setField( String key, T value ) {
+        document.set( key, value );
+    }
+
+    public void update( User owner ) {
         /* Default implementation is no op */
     }
 

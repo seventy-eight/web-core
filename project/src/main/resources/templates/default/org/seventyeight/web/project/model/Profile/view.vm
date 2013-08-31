@@ -1,0 +1,27 @@
+
+<table style="width: 100%">
+    <tr>
+        <td style="width:250px">
+            $item.getDisplayName()
+        </td>
+
+        <td id="certificates">
+
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+
+    $(function() {
+        $.ajax({
+            type: "GET",
+            url: "certificates/list",
+            success: function(data, textStatus, jqxhr){$('#certificates').html("SNADE:" + data)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    });
+</script>
+
+
+<img src="$item.getPortrait()">

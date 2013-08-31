@@ -1,0 +1,7 @@
+<div align="left" style="width:300px">
+    <ul>
+    #foreach( $d in $core.getAllDescriptors() )
+        <li><a href="$d.getClazz().getName()/globalConfigure">$d.getDisplayName()</a></li>
+    #end
+    </ul>
+</div>

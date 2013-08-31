@@ -7,7 +7,6 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
-import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
@@ -16,7 +15,10 @@ import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNode extends PersistedObject implements Node, Authorizer, Describable {
+public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements TopLevelNode, Authorizer, Describable<T> {
 
     private static Logger logger = Logger.getLogger( AbstractNode.class );
 
@@ -53,13 +55,15 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
             handleJsonConfigurations( request, jsonData );
         }
 
-        update();
+        update( request.getUser() );
 
+        /*
         if( saver.getId() != null ) {
             logger.debug( "Setting id to " + saver.getId() );
             document.set( "_id", saver.getId() );
             //document.set( "_id", getUniqueIdentifier() );
         }
+        */
 
         /* Persist */
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
@@ -70,10 +74,10 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     public static class Saver {
-        protected PersistedObject modelObject;
+        protected AbstractNode modelObject;
         protected CoreRequest request;
 
-        public Saver( PersistedObject modelObject, CoreRequest request ) {
+        public Saver( AbstractNode modelObject, CoreRequest request ) {
             this.modelObject = modelObject;
             this.request = request;
         }
@@ -83,21 +87,34 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
         }
 
         public void save() throws SavingException {
-
         }
 
-        public Object getId() {
-            return null;
+        protected String set( String key ) throws SavingException {
+            return set( key, key, true );
+        }
+
+        protected String set( String formkey, String dbkey ) throws SavingException {
+            return set( formkey, dbkey, true );
+        }
+
+        protected String set( String formkey, String dbkey, boolean mandatory ) throws SavingException {
+            String v = request.getValue( formkey, null );
+            if( mandatory && ( v == null || v.isEmpty() ) ) {
+                throw new SavingException( "The " + formkey + " must be set" );
+            }
+            modelObject.document.set( dbkey, v );
+
+            return v;
         }
     }
 
-    public Object getIdentifier() {
-        return document.get( "_id" );
+    public String getIdentifier() {
+        return document.get( "_id" ).toString();
     }
 
     public String getUrl() {
         //return "/get/" + getIdentifier();
-        return "/" + getDescriptor().getType() + "/" + getTitle();
+        return "/" + getDescriptor().getType() + "/" + getTitle() + "/";
     }
 
     public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
@@ -147,18 +164,42 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
 
     }
 
+
+    /**
+     * Return a {@link List} of {@link org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor}'s that are applicable and have a certain template.
+     */
+    public List<AbstractExtension.ExtensionDescriptor<?>> getLayoutableHavingTemplate( String template ) {
+        List<AbstractExtension.ExtensionDescriptor<?>> ds = new ArrayList<AbstractExtension.ExtensionDescriptor<?>>(  );
+
+        logger.debug( "DS: " + Core.getInstance().getExtensionDescriptors( Layoutable.class ) );
+
+        for( Descriptor d : Core.getInstance().getExtensionDescriptors( Layoutable.class ) ) {
+            if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) &&
+                   Core.getInstance().getTemplateManager().templateForClassExists( Core.getInstance().getDefaultTheme(), d.getClazz(), template ) ) {
+                ds.add( (AbstractExtension.ExtensionDescriptor<?>) d );
+            }
+        }
+
+        return ds;
+    }
+
     @Override
     public Node getParent() {
         return parent;
     }
 
     public boolean isOwner( User user ) {
-        return true;
+        return user.getIdentifier().equals( getOwnerId() );
+    }
+
+    public String getOwnerId() {
+        return document.get( "owner" );
     }
 
     /**
-     * Fast track saving the node
+     * Save the document of the {@link Node}.
      */
+    @Override
     public void save() {
         logger.debug( "BEFORE SAVING: " + document );
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
@@ -166,14 +207,16 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
 
     @Override
     public Authorization getAuthorization( User user ) throws AuthorizationException {
+        logger.debug( "Authorizing " + user + " for " + this );
 
         /* First check ownerships */
         if( isOwner( user ) ) {
+            logger.debug( "Is owner" );
             return Authorization.MODERATE;
         }
 
-
         List<MongoDocument> docs = document.getList( MODERATORS );
+        logger.debug( "Mods: " + docs );
         for( MongoDocument d : docs ) {
             Authoritative a = null;
             try {
@@ -204,28 +247,52 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     public void setOwner( User owner ) {
+        logger.debug( "Setting owner to " + owner );
         document.set( "owner", owner.getIdentifier() );
     }
 
-    public Date getCreatedAsDate() {
-        return new Date( (Long)getField( "created" ) );
+    public User getOwner() throws ItemInstantiationException {
+        return User.getUserByUsername( this, (String) document.get( "owner" ) );
     }
 
-    public Long getCreated() {
+    public String getOwnerName() {
+        return document.get( "owner" );
+    }
+
+    public Date getCreatedAsDate() {
+        //return new Date( (Long)getField( "created" ) );
+        return DatatypeConverter.parseDateTime( (String) getField( "created" ) ).getTime();
+    }
+
+    public String getType() {
+        return document.get( "type", "unknown" );
+    }
+
+    public Date getCreated() {
         return getField( "created" );
     }
 
-    public void update() {
-        document.set( "updated", new Date().getTime() );
+    public void update( User owner ) {
+        logger.debug( "Updating " + this );
+
+        Date now = new Date();
+
+        if( document.get( "owner", null ) == null ) {
+            logger.debug( "Owner was set to " + owner );
+            setOwner( owner );
+        }
+
+        /* Only do this if it is not just created */
+        if( getRevision() > 1 ) {
+            document.set( "updated", now );
+            document.set( "revision", getRevision() + 1 );
+        } else {
+
+        }
     }
 
-    public Date getUpdatedAsDate() {
-        Long l = getField( "updated", null );
-        if( l != null ) {
-            return new Date( l );
-        } else {
-            return null;
-        }
+    public Date getUpdated() {
+        return getField( "updated", null );
     }
 
     public void setTitle( String title ) {
@@ -233,13 +300,13 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     public String getTitle() {
-        return getField( "title", "" );
+        String title = getField( "title", null );
+        if( title != null ) {
+            return title;
+        } else {
+            throw new IllegalStateException( "A node must have a title" );
+        }
     }
-
-    public Long getUpdated() {
-        return getField( "updated", null );
-    }
-
 
     public void delete() {
         document.set( "deleted", new Date().getTime() );
@@ -273,7 +340,9 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     public ObjectId getObjectId() {
-        return document.get( "_id" );
+        Object o = document.get( "_id" );
+        logger.info( "OBJECT: " + o );
+        return ObjectId.massageToObjectId( o.toString() );
     }
 
     public MongoDocument getUniqueIdentifier() {
@@ -309,12 +378,96 @@ public abstract class AbstractNode extends PersistedObject implements Node, Auth
     }
 
     @Override
-    public NodeDescriptor<?> getDescriptor() {
+    public NodeDescriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
 
     public void updateField( String collection, MongoUpdate update ) {
-        MongoDBCollection.get( collection ).update( update, new MongoDBQuery().is( "_id", getObjectId() ) );
+        MongoDBCollection.get( collection ).update( new MongoDBQuery().is( "_id", getObjectId() ), update );
+    }
+
+    /**
+     * Get the first {@link Node} having the title.
+     */
+    public static <N extends Node> N getNodeByTitle( Node parent, String title ) {
+        return getNodeByTitle( parent, title, null );
+    }
+
+    /**
+     * Get the first {@link Node} having the title of the given type.
+     * Type can be null and will then be disregarded.
+     */
+    public static <N extends Node> N getNodeByTitle( Node parent, String title, String type ) {
+        MongoDBQuery q = new MongoDBQuery().is( "title", title );
+        if( type != null && !type.isEmpty() ) {
+            q.is( "type", type );
+        }
+        MongoDocument docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( q );
+        logger.debug( "DOC IS: " + docs );
+
+        if( docs != null ) {
+            try {
+                return (N) Core.getInstance().getItem( parent, docs );
+            } catch( ItemInstantiationException e ) {
+                logger.warn( e.getMessage() );
+                return null;
+            }
+        } else {
+            logger.debug( "The node " + title + " was not found" );
+            return null;
+        }
+    }
+
+    public static <N extends Node> List<N> getNodesByTitle( Node parent, String title, String type ) {
+        MongoDBQuery q = new MongoDBQuery().is( "title", title );
+        if( type != null && !type.isEmpty() ) {
+            q.is( "type", type );
+        }
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q );
+        logger.debug( "Docs are: " + docs );
+
+        List<N> nodes = new ArrayList<N>( docs.size() );
+
+        if( docs != null ) {
+            for( MongoDocument doc : docs ) {
+                try {
+                    nodes.add( (N)Core.getInstance().getItem( parent, doc ) );
+                } catch( ItemInstantiationException e ) {
+                    /* TODO should this fail the entire method???? */
+                    logger.error( e.getMessage() );
+                }
+            }
+        } else {
+            logger.debug( "Any node with title " + title + " was not found" );
+        }
+
+        return nodes;
+    }
+
+    public static <N extends Node> N getNodeById( Node parent, String id ) {
+        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).getDocumentById( id );
+        if( doc != null ) {
+            try {
+                return (N) Core.getInstance().getItem( parent, doc );
+            } catch( ItemInstantiationException e ) {
+                logger.warn( e.getMessage() );
+                return null;
+            }
+        } else {
+            logger.debug( "The node with id " + id + " was not found" );
+            return null;
+        }
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getTitle();
+    }
+
+    @Override
+    public String toString() {
+        //return getDisplayName();
+        return getIdentifier();
     }
 
     @Override

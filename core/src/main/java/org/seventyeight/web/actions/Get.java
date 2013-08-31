@@ -8,7 +8,7 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class Get implements Action {
+public class Get implements Node, Parent {
 
     private Logger logger = Logger.getLogger( Get.class );
 
@@ -29,16 +29,11 @@ public class Get implements Action {
     }
 
     @Override
-    public String getUrlName() {
-        return "get";
-    }
-
-    @Override
     public Node getChild( String token ) {
         logger.debug( "Token is " + token );
         try {
             return Core.getInstance().getNodeById( this, token );
-        } catch( ItemInstantiationException e ) {
+        } catch( Exception e ) {
             logger.log( Level.DEBUG, "Unable to get " + token, e );
             return null;
         }
@@ -46,6 +41,6 @@ public class Get implements Action {
 
     @Override
     public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
+        return null;
     }
 }

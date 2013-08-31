@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author cwolfgang
  */
-public class NewContent implements Action {
+public class NewContent implements Node {
 
     private static Logger logger = Logger.getLogger( NewContent.class );
 
@@ -22,18 +22,8 @@ public class NewContent implements Action {
     }
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public Node getParent() {
         return parent;
-    }
-
-    @Override
-    public String getUrlName() {
-        return "new";
     }
 
     @Override
@@ -66,7 +56,7 @@ public class NewContent implements Action {
         try {
             String title = request.getValue( "title", "" );
             logger.debug( "Title is " + title );
-            r = descriptor.newInstance( title );
+            r = (AbstractNode) descriptor.newInstance( title );
             r.save();
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );
@@ -82,6 +72,6 @@ public class NewContent implements Action {
 
     @Override
     public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
+        return null;
     }
 }

@@ -3,32 +3,26 @@ package org.seventyeight.web;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDBManager;
-import org.seventyeight.database.mongodb.MongoDatabase;
-import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.TokenList;
+import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.actions.Get;
-import org.seventyeight.web.actions.NewContent;
-import org.seventyeight.web.authentication.Authentication;
-import org.seventyeight.web.authentication.SessionManager;
-import org.seventyeight.web.authentication.SimpleAuthentication;
-import org.seventyeight.web.extensions.footer.Footer;
+import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.nodes.StaticFiles;
-import org.seventyeight.web.nodes.ThemeFiles;
-import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.nodes.Users;
+import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
 import org.seventyeight.web.utilities.ExecuteUtils;
 
+import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -38,50 +32,73 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author cwolfgang
- *         Date: 16-02-13
- *         Time: 23:16
  */
-public class Core extends Actionable implements Node, RootNode {
+public abstract class Core extends Actionable implements TopLevelNode, RootNode, Parent {
 
     private static Logger logger = Logger.getLogger( Core.class );
+
+    public static final String NAME_FIELD = "title";
+
+    public static final String MAIN_TEMPLATE = "org/seventyeight/web/main.vm";
 
     public static final String TEMPLATE_PATH_NAME = "templates";
     public static final String THEMES_PATH_NAME = "themes";
     public static final String PLUGINS_PATH_NAME = "plugins";
 
-    private static Core instance;
+    /**
+     * The instance of {@link Core}
+     */
+    protected static Core instance;
 
-    private TemplateManager templateManager = new TemplateManager();
+    protected TemplateManager templateManager = new TemplateManager();
 
-    private Authentication authentication = new SimpleAuthentication();
-    private SessionManager sessionManager = new SessionManager();
+    protected Authentication authentication = new SimpleAuthentication();
+    protected SessionManager sessionManager = new SessionManager();
 
-    private User anonymous;
+    protected Map<String, Searchable> searchables = new ConcurrentHashMap<String, Searchable>(  );
 
+    /**
+     * The default anonymous {@link User}
+     */
+    protected User anonymous;
+
+    /**
+     * The collection name for {@link Node}s
+     */
     public static final String NODE_COLLECTION_NAME = "nodes";
 
-    private org.seventyeight.loader.ClassLoader classLoader = null;
-    private Loader pluginLoader;
+    /**
+     * The collection name for {@link Descriptor}s
+     */
+    public static final String DESCRIPTOR_COLLECTION_NAME = "descriptors";
+
+    protected org.seventyeight.loader.ClassLoader classLoader = null;
+    protected Loader pluginLoader;
 
     /* Database */
-    private MongoDBManager dbManager;
-    private MongoDatabase db;
+    protected MongoDBManager dbManager;
+    protected MongoDatabase db;
 
-    private Menu mainMenu = new Menu();
+    protected Menu mainMenu = new Menu();
 
-    //
     /**
-     * A map of descriptors keyed by their super class
+     * A map of descriptors keyed by their supers class
      */
-    private Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
+    protected Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
+
+    protected Map<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>> extensionDescriptors = new HashMap<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>>();
 
     /**
      * A map of interfaces corresponding to specific {@link Descriptor}s<br />
      * This is used to map an extension class/interface to those {@link Describable}s {@link Descriptor}s implementing them.
      */
-    private Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
+    protected Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
 
-    private Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
+    protected Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
+
+    protected Map<Class<?>, List> extensionsList = new HashMap<Class<?>, List>();
+
+    //protected ConcurrentMap<String, N>
 
     /**
      * A {@link Map} of top level actions, given by its name
@@ -89,65 +106,68 @@ public class Core extends Actionable implements Node, RootNode {
     //private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
 
     /**
-     * A map of first level {@link org.seventyeight.web.model.Node}s registered to the core
+     * The Map of top level {@link Node}s
      */
-    private ConcurrentMap<String, Node> items = new ConcurrentHashMap<String, Node>();
+    protected ConcurrentMap<String, Node> children = new ConcurrentHashMap<String, Node>();
 
     /**
-     * The list of top level {@link Action}s
+     * Default {@link Group} that has no one in it
      */
-    private List<Action> actions = new CopyOnWriteArrayList<Action>();
+    protected Group noneGroup;
+
+    /**
+     * Default {@link Group} that has all in it
+     */
+    protected Group addGroup;
 
     /**
      * Path to the ...
      */
-    private File path;
-    private File orientdbPath;
-    private File pluginsPath;
-    private File uploadPath;
+    protected File path;
+    protected File orientdbPath;
+    protected File pluginsPath;
+    protected File uploadPath;
 
     /**
      * This path contains the themes. Each theme in a sub directory
      */
-    private File themesPath;
+    protected File themesPath;
 
 
-    private AbstractTheme defaultTheme = new Default();
+    protected AbstractTheme defaultTheme = new Default();
 
     public static class Relations {
         public static final String EXTENSIONS = "extensions";
     }
 
-    public Core( File path, String dbname ) {
+    public Core( File path, String dbname ) throws CoreException {
         if( instance != null ) {
             throw new IllegalStateException( "Instance already defined" );
         }
 
+        /* Initialize database */
         try {
             dbManager = new MongoDBManager( dbname );
         } catch( UnknownHostException e ) {
             throw new IllegalArgumentException( e );
         }
         db = dbManager.getDatabase();
+
+        /* Initialize paths */
         this.path = path;
+        this.uploadPath = new File( path, "upload" );
 
-        /* Mandatory top level Actions */
-        actions.add( new StaticFiles() );
-        actions.add( new ThemeFiles() );
-        actions.add( new NewContent( this ) );
-        actions.add( new Get( this ) );
+        addDescriptor( new Session.SessionsDescriptor() );
 
-        //items.put( "user", new Users( this ) );
+        /* Default groups */
+        // Group.de Maybe not???!?!?!?!
 
         /* Class loader */
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
         this.pluginLoader = new Loader( classLoader );
 
-        /**/
-        addDescriptor( new User.UserDescriptor() );
-
-        /* test */
-        addDescriptor( new Footer.FooterDescriptor() );
+        /* Mandatory */
+        children.put( "get", new Get( this ) );
 
         /**/
         mainMenu.add( new Menu.MenuItem( "New Content", "/new" ) );
@@ -156,8 +176,17 @@ public class Core extends Actionable implements Node, RootNode {
         instance = this;
     }
 
-    public static Core getInstance() {
-        return instance;
+    public Core initialize() {
+
+        /* TODO something with install */
+
+        /* Other stuff */
+
+        return this;
+    }
+
+    public static <T extends Core> T getInstance() {
+        return (T) instance;
     }
 
     @Override
@@ -241,13 +270,20 @@ public class Core extends Actionable implements Node, RootNode {
      * @throws ItemInstantiationException
      */
     public <T extends PersistedObject> T getItem( Node parent, MongoDocument document ) throws ItemInstantiationException {
-        String clazz = (String) document.get( "class" );
+        String clazz = null;
+        try {
+            clazz = document.get( "class" );
+        } catch( Exception e ) {
+            throw new ItemInstantiationException( "Field \"class\" not found.", e );
+        }
+
 
         if( clazz == null ) {
             logger.warn( "Class property not found" );
             throw new ItemInstantiationException( "\"class\" property not found for " + document );
         }
-        logger.debug( "ModelObject class: " + clazz );
+        //logger.debug( "ModelObject class: " + clazz );
+        //logger.debug( "PARENT: " + parent );
 
         try {
             Class<PersistedObject> eclass = (Class<PersistedObject>) Class.forName(clazz, true, classLoader );
@@ -259,31 +295,30 @@ public class Core extends Actionable implements Node, RootNode {
         }
     }
 
-    public Node getNodeById( Node parent, String id ) throws ItemInstantiationException {
+    public <T extends Node> T getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Getting node by id: " + id );
         MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
 
-        PersistedObject obj = getItem( parent, d );
+        if( d != null && !d.isNull() ) {
+            PersistedObject obj = getItem( parent, d );
 
-        return (Node) obj;
+            return (T) obj;
+        } else {
+            throw new NotFoundException( "Could not find node with id " + id );
+        }
     }
 
     @Override
     public Node getChild( String name ) {
-        if( items.containsKey( name ) ) {
-            return items.get( name );
+        if( children.containsKey( name ) ) {
+            return children.get( name );
         } else {
-            return getDynamic( name );
+            return null;
         }
     }
 
     public void addNode( String urlName, Node node ) {
-        items.put( urlName, node );
-    }
-
-    @Override
-    public List<Action> getActions() {
-        return actions;
+        children.put( urlName, node );
     }
 
     public Object resolve( String path ) {
@@ -294,103 +329,196 @@ public class Core extends Actionable implements Node, RootNode {
     /**
      * Render the path from the URL
      */
-    public void render( Request request, Response response ) throws Exception {
-        LinkedList<String> tokens = new LinkedList<String>();
+    public void render( Request request, Response response ) throws CoreException {
+        TokenList tokens = new TokenList( request.getRequestURI() );
         Node node = null;
         Exception exception = null;
         try {
-            node = resolveNode( request.getRequestURI(), tokens );
-            logger.debug( "Found node " + node );
-            request.setTemplate( node.getMainTemplate() );
-
+            node = resolveNode( tokens );
+            logger.debug("Found node " + node );
+            if( !tokens.isEndsWithSlash() && tokens.isEmpty() ) {
+                response.sendRedirect( request.getRequestURI() + "/" );
+                return;
+            }
         } catch( NotFoundException e ) {
             logger.debug( "Exception is set to " + e );
             exception = e;
+        } catch( Exception e ) {
+            throw new CoreException( e );
         }
 
         if( node instanceof Autonomous ) {
             logger.debug( node + " is autonomous" );
-            ((Autonomous)node).autonomize( request, response );
-            return;
-        }
-
-        if( tokens.isEmpty() ) {
-            logger.debug( "Executing last node" );
-            ExecuteUtils.execute( request, response, node, "index" );
-            return;
-        }
-
-        try {
-            switch( tokens.size() ) {
-                case 0:
-                    ExecuteUtils.execute( request, response, node, "index" );
-                    break;
-
-                case 1:
-                    ExecuteUtils.execute( request, response, node, tokens.get( 0 ) );
-                    break;
-
-                default:
-                    Response.NOT_FOUND_404.render( request, response, exception );
+            try {
+                ((Autonomous)node).autonomize( request, response );
+            } catch( IOException e ) {
+                throw new CoreException( e );
             }
-        } catch( NotFoundException e ) {
-            logger.log( Level.WARN, "", e );
-            Response.NOT_FOUND_404.render( request, response, exception );
+            return;
+        }
+
+        /* Only try to find a valid view if there was a valid node found on the path */
+        if( node != null ) {
+                try {
+                    if( tokens.isEmpty() && exception == null ) {
+                        logger.debug( "Executing last node" );
+                        ExecuteUtils.execute( request, response, node, "index" );
+                        return;
+                    }
+
+                    renderObject( node, exception, request, response, tokens );
+                } catch( CoreException ce ) {
+                    throw ce;
+                } catch( Exception e ) {
+                    throw new CoreException( e.getMessage(), e );
+                }
+        } else {
+            //Response.NOT_FOUND_404.render( request, response, exception );
+            if( exception instanceof CoreException ) {
+                throw (CoreException)exception;
+            } else {
+                throw new HttpException( exception ).setCode( 404 );
+            }
         }
 
     }
 
+    private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Exception {
+        switch( tokens.left() ) {
+                /* If the last token on the path is a valid node */
+            case 0:
+                ExecuteUtils.execute( request, response, obj, "index" );
+                break;
+
+                /* Typically, this happens if a node has an action, either as a view or doSomething */
+            case 1:
+                ExecuteUtils.execute( request, response, obj, tokens.next() );
+                break;
+
+                /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
+            default:
+                //Response.NOT_FOUND_404.render( request, response, exception );
+                if( exception != null ) {
+                    throw new CoreException( exception );
+                } else {
+                    throw new NotFoundException( request.getRequestURI() );
+                }
+        }
+    }
+
 
     /**
-     * Resolve the {@link org.seventyeight.web.model.Node}s from a path
-     * @param path
+     * Resolve the {@link org.seventyeight.web.model.Node}s from a path. <br />
      * @param tokens
-     * @return
+     * @return The last valid {@link Node} on the path, adding the extra tokens, if any, to the the token list.
      */
-    public Node resolveNode( String path, List<String> tokens ) throws NotFoundException {
-        logger.debug( "Resolving " + path );
-        StringTokenizer tokenizer = new StringTokenizer( path, "/" );
+    public Node resolveNode( TokenList tokens ) throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
+        //logger.debug( "Resolving " + path );
+        //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
+        //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
         Node current = this;
+        Node temp = null;
         Node last = this;
 
-        while( tokenizer.hasMoreTokens() ) {
-            String token = tokenizer.nextToken();
-            logger.debug( "Url name: " + token );
+        while( tokens.hasMore() ) {
+            String token = tokens.next();
+            logger.debug( "Current token: \"" + token + "\"" );
 
-            current = current.getChild( token );
+            /* Find a child node */
 
-            if( current == null ) {
-                tokens.add( token );
-                break;
+            temp = null;
+            if( current instanceof Parent ) {
+                temp = ((Parent)current).getChild( token );
+            }
+            logger.debug( "Found node is " + temp );
+
+            /* If there's no child, try an action */
+            if( temp == null ) {
+
+                AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
+                if( d != null && current instanceof PersistedObject ) {
+                    logger.debug( "Found descriptor " + d + " for " + token );
+                    if( d.isApplicable( current ) ) {
+                        //logger.debug( "CURRENT IS " + current );
+                        temp = (Node) d.getExtension( (PersistedObject) current );
+                        logger.debug( "Found action is " + temp );
+                        //logger.debug( "TEMP PARENT: " + temp.getParent() );
+                    }
+                }
+
+                /* If there ain't any actions */
+                if( temp == null ) {
+                    tokens.backup();
+                    break;
+                }
             }
 
-            if( current instanceof Autonomous ) {
+            if( temp instanceof Autonomous ) {
                 logger.debug( current + " is autonomous" );
-                return current;
+                return temp;
+            }
+
+            if( current instanceof Parent ) {
+            } else if( current instanceof Actionable ) {
+
+            } else {
+                tokens.backup();
+                break;
             }
 
             /* TODO Something about authorization? */
 
-            last = current;
-        }
-
-        while( tokenizer.hasMoreTokens() ) {
-            tokens.add( tokenizer.nextToken() );
+            current = temp;
+            last = temp;
         }
 
         return last;
     }
 
+    /*
+    public Object resolveObject( Actionable parent, LinkedList<String> tokens ) {
+        Action action = null;
+        Object lastObject = parent;
+        //for( String token : tokens ) {
+        while( !tokens.isEmpty() ) {
+            String token = tokens.peek();
+            logger.debug( "Popped " + token );
+
+            action = parent.getAction( token );
+
+            if( action == null ) {
+                return lastObject;
+            }
+
+            if( action instanceof Actionable ) {
+                parent = (Actionable) action;
+            }
+
+            lastObject = action;
+
+            tokens.pop();
+        }
+
+        return lastObject;
+    }
+    */
+
+    /*
     public Action getAction( Actionable actionable, String action ) {
         return null;
     }
+    */
 
-
-    public void addDescriptor( Descriptor<?> descriptor ) {
+    public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
+        logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
+        /* Determine if the descriptor has something to be loaded */
+        descriptor.loadFromDisk();
+        logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
+        interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
         for( Class<?> i : interfaces ) {
             logger.debug( "INTERFACE: " + i );
             List<Descriptor> list = null;
@@ -404,11 +532,34 @@ public class Core extends Actionable implements Node, RootNode {
 
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
-            items.put( nd.getType(), nd );
+            children.put( nd.getType(), nd );
+        }
+
+        /* Find searchables */
+        List<Searchable> ss = descriptor.getSearchables();
+        for( Searchable s : ss ) {
+            searchables.put( s.getMethodName(), s );
+        }
+
+        if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
+            AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
+            logger.debug( "Adding extension descriptor " + ed.getTypeName() + ", " + ed.getExtensionName() );
+            if( !extensionDescriptors.containsKey( ed.getTypeName() ) ) {
+                extensionDescriptors.put( ed.getTypeName(), new HashMap<String, AbstractExtension.ExtensionDescriptor<?>>() );
+            }
+            extensionDescriptors.get( ed.getTypeName() ).put( ed.getExtensionName(), ed );
         }
 
         /**/
         //descriptor.configureIndex( db );
+    }
+
+    public void addSearchable( Searchable s ) {
+        searchables.put( s.getMethodName(), s );
+    }
+
+    public Map<String, Searchable> getSearchables() {
+        return searchables;
     }
 
     public Descriptor<?> getDescriptor( String className ) throws ClassNotFoundException {
@@ -431,6 +582,8 @@ public class Core extends Actionable implements Node, RootNode {
 
     /**
      * Get a list of {@link Descriptor}s whose {@link Describable} implements the given interface
+     *
+     *
      * @param clazz The interface in question
      * @return
      */
@@ -442,8 +595,67 @@ public class Core extends Actionable implements Node, RootNode {
         }
     }
 
+    public Collection<Descriptor<?>> getAllDescriptors() {
+            return descriptors.values();
+    }
+
     public List<Descriptor> getCreatableDescriptors() {
         return getExtensionDescriptors( CreatableNode.class );
+    }
+
+    /**
+     * Add an extension implementing a certain interface.
+     */
+    public <T> void addExtension( Class<T> clazz, Object extension ) {
+        if( !extensionsList.containsKey( clazz ) ) {
+            extensionsList.put( clazz, new ArrayList<T>() );
+        }
+
+        extensionsList.get( clazz ).add( extension );
+    }
+
+    /**
+     * Get a list of extensions implementing a certain interface.
+     */
+    public <T> List<T> getExtensions( Class<T> type ) {
+        if( extensionsList.containsKey( type ) ) {
+            return extensionsList.get( type );
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Save the {@link TopLevelNode} given a {@link Node}.
+     */
+    public static void superSave( Node node ) {
+        logger.debug( "Saving node " + node );
+
+        while( node != null ) {
+            if( node instanceof TopLevelNode ) {
+                logger.debug( "Saving top level node " + node );
+                ((TopLevelNode)node).save();
+                return;
+            }
+
+            node = node.getParent();
+        }
+
+        throw new IllegalStateException( "No top level node to save" );
+    }
+
+    public static <T extends TopLevelNode> T superGet( Node node ) {
+        logger.debug( "Super getting node " + node );
+
+        while( node != null ) {
+            if( node instanceof TopLevelNode ) {
+                return (T) node;
+            }
+
+            node = node.getParent();
+        }
+
+        throw new IllegalStateException( "No top level node" );
     }
 
     public AbstractTheme getDefaultTheme() {
@@ -462,12 +674,6 @@ public class Core extends Actionable implements Node, RootNode {
         return sessionManager;
     }
 
-
-    public int getNextSequence( String sequence ) {
-
-        return 1;
-    }
-
     public void setAnonymous( User anonymous ) {
         this.anonymous = anonymous;
     }
@@ -476,6 +682,30 @@ public class Core extends Actionable implements Node, RootNode {
         return anonymous;
     }
 
+    private static final String NUMBERS_COLLECTION = "numbers";
+
+    /**
+     * Given a {@link NodeDescriptor} a unique name is returned.
+     * @param d NodeDescriptor
+     * @return
+     */
+    public synchronized String getUniqueName( NodeDescriptor d ) {
+        logger.debug( "Getting unique name for " + d.getType() );
+        MongoDocument doc = MongoDBCollection.get( NUMBERS_COLLECTION ).findOne( new MongoDBQuery().getId( d.getType() ) );
+        if( doc.isNull() ) {
+            logger.debug( "Numbers for " + d.getType() + " was null, creating document" );
+            doc = new MongoDocument(  ).set( "_id", d.getType() ).set( "number", 1 );
+            //MongoDBCollection.get( NUMBERS_COLLECTION ).save( doc );
+        }
+
+        int i = doc.get( "number" );
+        String name = d.getType() + "-" + i;
+        doc.set( "number", ++i );
+
+        MongoDBCollection.get( NUMBERS_COLLECTION ).save( doc );
+
+        return name;
+    }
 
     /**
      * From the given path, get all jars and extract them to their directories
@@ -516,8 +746,12 @@ public class Core extends Actionable implements Node, RootNode {
     }
 
     public File getThemeFile( AbstractTheme theme, String filename ) throws IOException {
+        logger.debug( "Getting theme file " + filename + " for " + theme );
+
         File themePath = new File( themesPath, theme.getName() );
         File themeFile = new File( themePath, filename );
+
+        logger.debug( "Getting theme file " + themeFile + " for " + theme );
 
         if( themeFile.exists() ) {
             return themeFile;
@@ -550,8 +784,49 @@ public class Core extends Actionable implements Node, RootNode {
         return path;
     }
 
+    public File getUploadPath() {
+        return uploadPath;
+    }
+
     public Menu getMainMenu() {
         return mainMenu;
+    }
+
+    @PostMethod
+    public void doLogin( Request request, Response response ) throws AuthenticationException, IOException {
+
+        String username = request.getValue( Authentication.__NAME_KEY );
+        String password = request.getValue( Authentication.__PASS_KEY );
+        logger.debug( "U: " + username + ", P:" + password );
+
+        Session session = getAuthentication().login( username, password );
+
+        session.save();
+
+        Cookie c = new Cookie( Authentication.__SESSION_ID, session.getIdentifier() );
+        c.setMaxAge( session.getTimeToLive() );
+        response.addCookie( c );
+
+        response.sendRedirect( request.getValue( "url", "/" ) );
+    }
+
+    public void doLogout( Request request, Response response ) throws IOException {
+        logger.debug( "Logging out" );
+
+        for( Cookie cookie : request.getCookies() ) {
+            logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
+            if( cookie.getName().equals( Authentication.__SESSION_ID ) ) {
+                cookie.setMaxAge( 0 );
+                response.addCookie( cookie );
+
+                /* Remove the session object */
+                sessionManager.removeSession( cookie.getValue() );
+
+                break;
+            }
+        }
+
+        response.sendRedirect( "/" );
     }
 
     @Override

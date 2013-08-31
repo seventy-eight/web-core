@@ -1,0 +1,11 @@
+<table>
+
+    #foreach( $d in $core.getAllDescriptors() )
+    <tr>
+        <td>
+            $d
+        </td>
+    </tr>
+    #end
+
+</table>

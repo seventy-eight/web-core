@@ -1,5 +1,5 @@
-<ul>
+<ul class="hMenu">
     #foreach( $mitem in $item )
-        <li>$mitem.getName()</li>
+        <li><a href="$mitem.getUrl()">$mitem.getName()</a></li>
     #end
 </ul>

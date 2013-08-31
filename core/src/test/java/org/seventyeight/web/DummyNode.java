@@ -4,8 +4,6 @@ import org.seventyeight.web.model.Node;
 
 /**
  * @author cwolfgang
- *         Date: 03-03-13
- *         Time: 22:38
  */
 public class DummyNode implements Node {
 
@@ -21,17 +19,12 @@ public class DummyNode implements Node {
     }
 
     @Override
-    public Node getChild( String name ) {
-        return null;
-    }
-
-    @Override
     public String getDisplayName() {
         return "Dummy";
     }
 
     @Override
     public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
+        return null;
     }
 }

@@ -4,8 +4,6 @@ import org.seventyeight.web.nodes.User;
 
 /**
  * @author cwolfgang
- *         Date: 28-01-13
- *         Time: 13:40
  */
 public interface Authorizer {
     public enum Authorization {

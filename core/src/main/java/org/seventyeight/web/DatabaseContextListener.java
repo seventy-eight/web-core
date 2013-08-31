@@ -1,6 +1,8 @@
 package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.DatabaseException;
+import org.seventyeight.utils.TimeUtils;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
 import org.seventyeight.web.utilities.Installer;
@@ -9,108 +11,183 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * @author cwolfgang
- *         Date: 02-12-12
- *         Time: 15:39
  */
-@WebListener
-public class DatabaseContextListener implements ServletContextListener {
-        private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
+//@WebListener
+public abstract class DatabaseContextListener<T extends Core> implements ServletContextListener {
+    private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
 
-        public void contextDestroyed( ServletContextEvent arg0 ) {
-            synchronized( DatabaseContextListener.class ) {
-                System.out.println( "Shutting down" );
+    private long seconds;
+
+    protected List<String> extraTemplatePaths = new ArrayList<String>(  );
+
+    public void contextDestroyed( ServletContextEvent arg0 ) {
+        synchronized( DatabaseContextListener.class ) {
+            long duration = System.currentTimeMillis() - seconds;
+            System.out.println( "Shutting down after " + ( duration / 1000 ) + " seconds" );
+        }
+    }
+
+    private void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook( new Thread() {
+            @Override
+            public void run() {
+                long duration = System.currentTimeMillis() - seconds;
+                //System.out.println( "Shutting down after " + ( duration / 1000 ) + " seconds" );
+                System.out.println( "Shutting down after " + TimeUtils.getTimeString( duration ) );
             }
+        } );
+    }
+
+    public abstract T getCore( File path, String dbname ) throws CoreException;
+
+    public void contextInitialized( ServletContextEvent sce ) {
+
+        String spath = sce.getServletContext().getRealPath( "" );
+        logger.info( "Path: " + spath );
+
+        seconds = System.currentTimeMillis();
+
+        List<File> templatePaths = new ArrayList<File>();
+
+        File path = new File( spath );
+
+        Core core = null;
+        try {
+            core = getCore( path, "seventyeight" ).initialize();
+        } catch( CoreException e ) {
+            e.printStackTrace();
+            logger.fatal( "Failed to initialize core", e );
         }
 
-        public void contextInitialized( ServletContextEvent sce ) {
-
-            String spath = sce.getServletContext().getRealPath( "" );
-            logger.info( "Path: " + spath );
-
-            //logger.setLevel( Level.WARN );
-            //LogManager.shutdown();
-
-            /* Debugging system */
-            List<File> paths = new ArrayList<File>();
-
-            File path = new File( spath );
-
-            Core core = new Core( path, "seventyeight" );
-
-            try {
-                List<File> plugins = core.extractPlugins( core.getPath() );
+        try {
+            List<File> plugins = core.extractPlugins( core.getPath() );
 
                 /* Paths added first is served first */
-                //gd.getTemplateManager().addStaticPath( new File( "C:/projects/graph-dragon/war/src/main/webapp/static" ) );
-                //gd.getTemplateManager().addStaticPath( new File( gd.getPath(), "static" ) );
-                core.getTemplateManager().addStaticPath( new File( "C:/Users/Christian/projects/web-core/cms-war/src/main/webapp/static" ) );
+            //gd.getTemplateManager().addStaticPath( new File( "C:/projects/graph-dragon/war/src/main/webapp/static" ) );
+            //gd.getTemplateManager().addStaticPath( new File( gd.getPath(), "static" ) );
 
+            String staticPathStr = System.getProperty( "static", null );
+            File staticPath = null;
+            if( staticPathStr != null ) {
+                staticPath = new File( staticPathStr );
+            } else {
+                staticPath = new File( path, "static" );
+            }
 
-                //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
-                //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
+            logger.info( "Static path: " + staticPath.getAbsolutePath() );
+            core.getTemplateManager().addStaticPath( staticPath );
 
+            //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
+            //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
+            /* Specialized templates paths comes first */
+            String templatePathStr = System.getProperty( "templatePath", null );
+            if( templatePathStr != null ) {
+                logger.debug( "Template path: " + templatePathStr );
+                templatePaths.add( new File( templatePathStr ) );
+            }
 
-                /*
-                for( File plugin : plugins ) {
-                    logger.debug( "Adding " + plugin );
-                    paths.add( new File( plugin, "themes" ) );
+            /**/
+            logger.debug( "Adding extra template paths" );
+            for( String tpath : extraTemplatePaths ) {
+                File f = new File( path, tpath );
+                logger.debug( "Extra template path: " + f.getAbsoluteFile() );
+                templatePaths.add( f );
+            }
+
+            for( File plugin : plugins ) {
+                File f1 = new File( plugin, "templates" );
+                if( f1.exists() ) {
+                    templatePaths.add( f1 );
                 }
-                */
 
-                paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
+                File f2 = new File( plugin, "lib" );
+                if( f2.exists() ) {
+                    templatePaths.add( f2 );
 
-                /* LIB */
-                paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
-                Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
+                    File[] libs = f2.listFiles( new FF() );
+                    for( File lib : libs ) {
+                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                    }
+                }
 
-                //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
-
-                logger.info( "Loading plugins" );
-                core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
-                core.getPlugins( plugins );
-
-                logger.info( "Loading templates" );
-                core.getTemplateManager().setTemplateDirectories( paths );
-                logger.debug( core.getTemplateManager().toString() );
-                core.getTemplateManager().initialize();
-            } catch( IOException e ) {
-                e.printStackTrace();
             }
 
-            /* Adding action handlers */
-            /*
-            //GraphDragon.getInstance().addActionHandler( "system", new SystemHandler() );
-            SeventyEight.getInstance().addTopLevelGizmo( new ResourceAction() );
-            SeventyEight.getInstance().addTopLevelGizmo( new ResourcesAction() );
-            SeventyEight.getInstance().addTopLevelGizmo( new StaticFileHandler() );
-            SeventyEight.getInstance().addTopLevelGizmo( new UploadHandler() );
-
-            //SeventyEight.getInstance().addTopLevelGizmo( "debate", new DebateHandler() );
-
-            SeventyEight.getInstance().addTopLevelGizmo( new DatabaseBrowser() );
-
-            SeventyEight.getInstance().addTopLevelGizmo( new ThemeFileHandler() );
-            SeventyEight.getInstance().addTopLevelGizmo( new LoginHandler() );
-            */
-
-            /* Post actions */
-            Core.getInstance().setThemesPath( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/themes" ) );
+            //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
 
 
-            /* INSTALL */
-            Installer installer = new Installer();
-            try {
-                installer.install();
-            } catch( Exception e ) {
-                throw new IllegalStateException( e );
-            }
+            /* LIB */
+            //templatePaths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/lib" ) );
+            //Core.getInstance().getTemplateManager().addTemplateLibrary( "form.vm" );
+
+            //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
+
+            logger.info( "Loading plugins" );
+            //core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
+            core.getPlugins( plugins );
+
+            logger.info( "Loading templates" );
+            core.getTemplateManager().setTemplateDirectories( templatePaths );
+            logger.debug( core.getTemplateManager().toString() );
+            core.getTemplateManager().initialize();
+        } catch( IOException e ) {
+            e.printStackTrace();
         }
+
+        /* Themes path */
+        String themePathStr = System.getProperty( "theme", null );
+        File themePath = null;
+        if( themePathStr != null ) {
+            themePath = new File( themePathStr );
+        } else {
+            themePath = new File( path, "themes" );
+        }
+
+        logger.info( "Themes path: " + themePath.getAbsolutePath() );
+        Core.getInstance().setThemesPath( themePath );
+
+        try {
+            install();
+        } catch( DatabaseException e ) {
+            logger.fatal( "Unable to install", e );
+        }
+
+        /* Asynch */
+        //Executor executor = new ThreadPoolExecutor(10, 10, 50000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100));
+        Executor executor =  Executors.newCachedThreadPool();
+        sce.getServletContext().setAttribute( "executor", executor );
+
+
+        registerShutdownHook();
+    }
+
+    /**
+     * Default implementation of install. Could/should be overridden.
+     */
+    protected void install() throws DatabaseException {
+        /* INSTALL */
+        Installer installer = new Installer();
+        try {
+            installer.install();
+        } catch( Exception e ) {
+            throw new IllegalStateException( e );
+        }
+    }
+
+    protected class FF implements FilenameFilter {
+        @Override
+        public boolean accept( File dir, String name ) {
+            return name.endsWith( ".vm" );
+        }
+    }
 }

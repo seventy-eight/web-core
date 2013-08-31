@@ -2,8 +2,6 @@ package org.seventyeight.database;
 
 /**
  * @author cwolfgang
- *         Date: 15-02-13
- *         Time: 20:33
  */
 public interface Document {
 

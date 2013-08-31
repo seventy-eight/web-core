@@ -17,14 +17,9 @@ import java.net.URLDecoder;
 /**
  * @author cwolfgang
  */
-public class ThemeFiles implements Action, Autonomous {
+public class ThemeFiles implements Autonomous, Node {
 
     private static Logger logger = Logger.getLogger( ThemeFiles.class );
-
-    @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
 
     @Override
     public Node getParent() {
@@ -32,18 +27,8 @@ public class ThemeFiles implements Action, Autonomous {
     }
 
     @Override
-    public String getUrlName() {
-        return "theme";
-    }
-
-    @Override
     public String getDisplayName() {
         return "Theme files";
-    }
-
-    @Override
-    public String getMainTemplate() {
-        return "org/seventyeight/web/main.vm";
     }
 
     @Override
@@ -66,10 +51,15 @@ public class ThemeFiles implements Action, Autonomous {
             return;
         }
 
-        logger.debug( "[Delivering] " + themeFile.getAbsolutePath() );
+        logger.debug( "THE THEME FILE IS " + themeFile );
 
         response.deliverFile( request, themeFile, true );
 
 
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;
     }
 }

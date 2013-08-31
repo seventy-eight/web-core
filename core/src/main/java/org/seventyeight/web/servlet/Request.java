@@ -2,18 +2,15 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.model.PersistedObject;
-import org.seventyeight.web.model.AbstractTheme;
-import org.seventyeight.web.model.CoreRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * User: cwolfgang
- * Date: 16-11-12
- * Time: 21:43
+ * @author cwolfgang
  */
 public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
@@ -36,6 +33,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private String[] requestParts;
 
+    public enum ResponseType {
+        PAGED,
+        HTTP_CODE
+    }
+
+    private ResponseType responseType = ResponseType.PAGED;
+
     public enum RequestMethod {
         GET,
         POST,
@@ -54,6 +58,14 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public boolean isRequestPost() {
         return method.equals( RequestMethod.POST );
+    }
+
+    public RequestMethod getRequestMethod() {
+        return method;
+    }
+
+    public boolean isRequestPut() {
+        return method.equals( RequestMethod.PUT );
     }
 
     public String[] getRequestParts() {
@@ -88,6 +100,38 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public void setAuthenticated( boolean authenticated ) {
         this.authenticated = authenticated;
+    }
+
+    public void checkAuthorization( Node node, Authorizer.Authorization authorization ) throws NoAuthorizationException {
+        logger.debug( "Checking authorization for " + user );
+
+        while( node != null ) {
+            logger.debug( "Checking " + node );
+            if( node instanceof Authorizer ) {
+                checkAuthorization( (Authorizer)node, authorization );
+            }
+
+            node = node.getParent();
+        }
+
+        logger.debug( "Was authorized" );
+    }
+
+    public void checkAuthorization( Authorizer authorizer, Authorizer.Authorization authorization ) throws NoAuthorizationException {
+        Authorizer.Authorization auth = null;
+        try {
+            auth = authorizer.getAuthorization( this.user );
+        } catch( AuthorizationException e ) {
+            throw new NoAuthorizationException( e );
+        }
+
+        logger.debug( "User auth: " + auth + ", required: " + authorization );
+
+        if( auth.ordinal() >= authorization.ordinal() ) {
+            return;
+        } else {
+            throw new NoAuthorizationException( user + " was not authorized to " + authorizer );
+        }
     }
 
     public String getTemplate() {
@@ -138,9 +182,37 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
     }
 
+    public int getInt( String key, int defaultValue ) {
+        if( this.getParameter( key ) != null ) {
+            return Integer.parseInt( this.getParameter( key ) );
+        } else {
+            return defaultValue;
+        }
+    }
+
     public static boolean isMultipart( HttpServletRequest request) {
         if( request.getContentType() != null ) {
             return request.getContentType().startsWith( __MULTIPART );
+        } else {
+            return false;
+        }
+    }
+
+    public ResponseType getResponseType() {
+        return responseType;
+    }
+
+    public boolean isPagedResponseType() {
+        return responseType == ResponseType.PAGED;
+    }
+
+    public void setResponseType( ResponseType responseType ) {
+        this.responseType = responseType;
+    }
+
+    public boolean isUser( User user ) {
+        if( this.user != null && user != null ) {
+            return this.user.equals( user );
         } else {
             return false;
         }

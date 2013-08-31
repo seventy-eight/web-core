@@ -1,14 +1,11 @@
 package org.seventyeight.web.model;
 
-import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.Core;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * @author cwolfgang
+ * @deprecated
  */
 public abstract class Actionable {
 
@@ -17,16 +14,17 @@ public abstract class Actionable {
     }
 
     /**
-     * Return a dynamic object, null if nothing applies
+     * Return a single {@link Action}, null if nothing applies
      * @param token
      * @return
      */
-    public Node getDynamic( String token ) {
+    public Action getAction( String token ) {
         for( Action a : getActions() ) {
             if( a == null ) {
                 continue;
             }
 
+            /*
             String urlName = a.getUrlName();
             if( urlName == null ) {
                 continue;
@@ -35,6 +33,7 @@ public abstract class Actionable {
             if( urlName.equals( token ) ) {
                 return a;
             }
+            */
         }
 
         return null;

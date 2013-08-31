@@ -1,0 +1,5 @@
+#if( $item.getFileSignature().exists() )
+    <img src="fetch">
+#else
+    No signature
+#end

@@ -48,7 +48,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>loader</artifactId>
-            <version>0.1.1</version>
+            <version>0.1.0</version>
         </dependency>
 
         <dependency>
@@ -68,6 +68,14 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
+
+        <!--
+        <dependency>
+            <groupId>velocity-tools</groupId>
+            <artifactId>velocity-tools-generic</artifactId>
+            <version>1.4</version>
+        </dependency>
+        -->
 
         <dependency>
             <groupId>commons-fileupload</groupId>

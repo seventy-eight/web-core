@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 
 /**
  * @author cwolfgang
- *         Date: 19-02-13
- *         Time: 21:40
  */
 public class MongoUpdate {
 
@@ -20,6 +18,12 @@ public class MongoUpdate {
     public BasicDBObject getDocument() {
         return update;
     }
+
+    /*
+    public MongoUpdate add() {
+        update
+    }
+    */
 
     public MongoUpdate set( String key, Object value ) {
         return update( "$set", key, value );

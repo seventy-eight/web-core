@@ -3,17 +3,18 @@ package org.seventyeight.database.mongodb;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand;
 import org.bson.BSONObject;
+import org.bson.types.ObjectId;
 import org.seventyeight.database.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cwolfgang
- *         Date: 15-02-13
- *         Time: 21:00
  */
 public class MongoDocument implements Document {
 
@@ -69,14 +70,39 @@ public class MongoDocument implements Document {
         }
     }
 
-    public <T> T get( String ... keys ) {
-        StringBuilder key = new StringBuilder();
-        key.append( keys[0] );
-        for( int i = 1 ; i < keys.length ; i++ ) {
-            key.append( "." );
-            key.append( keys[i] );
+    public MongoDocument getr( String ... keys ) {
+
+        DBObject current = document;
+        int i = 0;
+        for( ; i < keys.length ; i++ ) {
+            String key = keys[i];
+            Object o = current.get( key );
+
+            if( o == null ) {
+                break;
+            } else {
+                if( o instanceof DBObject ) {
+                    current = (DBObject) o;
+                }
+            }
         }
-        return (T) get( key.toString() );
+
+        for( ; i < keys.length ; i++ ) {
+            String key = keys[i];
+            DBObject o = new BasicDBObject(  );
+            current.put( key, o );
+            current = o;
+        }
+
+        return new MongoDocument( current );
+    }
+
+    public MongoDocument getSubDocument( String key, MongoDocument defaultDoc ) {
+        if( document.containsField( key ) ) {
+            return new MongoDocument( (DBObject) document.get( key ) );
+        } else {
+            return defaultDoc;
+        }
     }
 
     @Override
@@ -124,14 +150,76 @@ public class MongoDocument implements Document {
         return this;
     }
 
+    /**
+     * Add an entry to a field. If the entry doesn't exist, it will be created.
+     *
+     * <code>
+     *  { field: {
+     *      key: { value }
+     *           }
+     *  }
+     *  </code>
+     */
+    public <T> MongoDocument add( String field, String key, T value ) {
+        if( document.containsField( field ) ) {
+            ((DBObject)document.get( field )).put( key, ( value instanceof MongoDocument ? ( (MongoDocument) value ).getDBObject() : value ) );
+        } else {
+            document.put( field, new BasicDBObject( key, ( value instanceof MongoDocument ? ( (MongoDocument) value ).getDBObject() : value ) ) );
+        }
+
+        return this;
+    }
+
     public List<MongoDocument> getList( String key ) {
         List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
+
+        //System.out.println( "DA LIST: " + list );
 
         if( list != null ) {
             List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
 
             for( BasicDBObject o : list ) {
                 docs.add( new MongoDocument( o ) );
+            }
+
+            return docs;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<MongoDocument> getList( String key, int offset, int number ) {
+        List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
+
+        if( list != null ) {
+            List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
+
+            for( int i = offset ; ( i < docs.size() || i < offset + number ) ; i++ ) {
+                BasicDBObject o = list.get( i );
+                docs.add( new MongoDocument( o ) );
+            }
+
+            return docs;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     *
+     */
+    public List<MongoDocument> getMappedList( String key, String collection ) {
+        List<String> list = (List<String>) document.get( key );
+
+        //System.out.println( "DA LIST: " + list );
+        MongoDBCollection col = MongoDBCollection.get( collection );
+
+        if( list != null ) {
+            List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
+
+            for( String o : list ) {
+                MongoDocument d = col.getDocumentById( o );
+                docs.add( d );
             }
 
             return docs;
@@ -152,8 +240,31 @@ public class MongoDocument implements Document {
         return this;
     }
 
+    public boolean isNull() {
+        return document == null;
+    }
+
+    public String getIdentifier() {
+        //ObjectId id = get( "_id" );
+        //return id.toString();
+        return get( "_id" );
+    }
+
+    public boolean arrayHas( String field, String value ) {
+
+        return true;
+    }
+
+    public Map getMap() {
+        return document.toMap();
+    }
+
     @Override
     public String toString() {
-        return document.toString();
+        if( document != null ) {
+            return document.toString();
+        } else {
+            return "Internal document is null";
+        }
     }
 }

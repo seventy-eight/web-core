@@ -8,7 +8,9 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.Language;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.velocity.DateUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class TemplateManager {
 	private VelocityEngine engine = new VelocityEngine();
 	private Properties velocityProperties = new Properties();
 	
-	private String paths = "";
+	private String templatePathsStr = "";
 	
 	private List<File> templatePaths = new ArrayList<File>();
 	private List<File> staticPaths = new ArrayList<File>();
@@ -41,6 +43,11 @@ public class TemplateManager {
 		}
 	}
 
+    /**
+     * Given a template name and a {@link AbstractTheme}, return the {@link Template}.
+     * If the {@link AbstractTheme} does not have the {@link Template}, try to find it in the default theme.
+     * Throws a TemplateException if not found.
+     */
     public Template getTemplate( AbstractTheme theme, String template ) throws TemplateException {
         logger.debug( "[Finding] " + template + " for " + theme.getName() );
         try {
@@ -53,7 +60,7 @@ public class TemplateManager {
 
 	
 	public void addTemplatePath( File path ) {
-		this.paths += path.toString() + ", ";
+		this.templatePathsStr += path.toString() + ", ";
 		templatePaths.add( path );
 	}
 	
@@ -75,15 +82,20 @@ public class TemplateManager {
 		
 		throw new IOException( "File does not exist, " + filename );
 	}
-	
+
+    /**
+     * Reset template templatePathsStr
+     */
 	public void resetPaths() {
-		this.paths = "";
+		this.templatePathsStr = "";
 	}
-	
+
+    /**
+     * Add a {@link List} of {@link File} templatePathsStr to the template path
+     * @param directories
+     */
 	public void setTemplateDirectories( List<File> directories ) {
 		for( File dir : directories ) {
-			logger.debug( "[Template directory] " + dir );
-			this.paths += dir.toString() + ", ";
 			templatePaths.add( dir );
 		}
 	}
@@ -100,19 +112,23 @@ public class TemplateManager {
 
         throw new IOException( "File does not exist, " + filename );
 	}
-	
+
+    /**
+     * Initialize velocity
+     */
 	public void initialize() {
 		
-		/* Generate paths */
-		this.paths = "";
+		/* Generate templatePathsStr */
+		this.templatePathsStr = "";
 		for( File f : templatePaths ) {
-			this.paths += f.toString() + ", ";
+            logger.info( "[Template directory] " + f.getAbsoluteFile() );
+			this.templatePathsStr += f.toString() + ", ";
 		}
 		
-		this.paths = paths.substring( 0, ( paths.length() - 2 ) );
+		this.templatePathsStr = templatePathsStr.substring( 0, ( templatePathsStr.length() - 2 ) );
 		
 		velocityProperties.setProperty( "resource.loader", "file" );
-		velocityProperties.setProperty( "file.resource.loader.path", this.paths );
+		velocityProperties.setProperty( "file.resource.loader.path", this.templatePathsStr );
 				
 		velocityProperties.setProperty( "file.resource.loader.modificationCheckInterval", "2" );
         velocityProperties.setProperty( "eventhandler.include.class", "org.apache.velocity.app.event.implement.IncludeRelativePath" );
@@ -129,6 +145,8 @@ public class TemplateManager {
 				                                       + "org.seventyeight.web.velocity.html.ResourceSelectorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderDescriptorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderObject,"
+                                                       + "org.seventyeight.web.velocity.html.RenderStatic,"
+                                                       + "org.seventyeight.web.velocity.html.RenderView,"
 				                                       + "org.seventyeight.web.velocity.html.FileInputDirective" );
 
         String l = getListAsCommaString( libsList );
@@ -233,6 +251,8 @@ public class TemplateManager {
 
 			/* I18N */
 			context.put( "locale", locale );
+            //context.put( "dateTool", new DateTool() );
+            context.put( "dateUtils", new DateUtils() );
 			
 			template.merge( context, writer );
 			
@@ -270,26 +290,24 @@ public class TemplateManager {
         }
 
 
-
-
-        public String renderClass( Class clazz, String method ) throws TemplateException {
+        public String renderClass( Class clazz, String method ) throws NotFoundException {
             return renderClass( clazz, method, true );
         }
 
-        public String renderClass( Class clazz, String method, boolean trySuper ) throws TemplateException {
-            Template template = getTemplateFile( theme, clazz, method, trySuper );
+        public String renderClass( Class clazz, String method, boolean trySuper ) throws NotFoundException {
+            Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             return render( template );
         }
 
 
-        public String renderClass( Object object, Class clazz, String method ) throws TemplateException {
-            Template template = getTemplateFile( theme, clazz, method, true );
+        public String renderClass( Object object, Class clazz, String method ) throws NotFoundException {
+            Template template = getTemplateFromClass( theme, clazz, method, true );
             context.put( "item", object );
             return render( template );
         }
 
-        public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws TemplateException {
-            Template template = getTemplateFile( theme, clazz, method, trySuper );
+        public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws NotFoundException {
+            Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             context.put( "item", object );
             return render( template );
         }
@@ -297,7 +315,7 @@ public class TemplateManager {
 	}
 
     /**
-     * Given a class, get the corresponding list of templates
+     * Given a class, get the corresponding template
      * @param object
      * @param method
      * @param trySuper If true, try objects super classes
@@ -321,16 +339,38 @@ public class TemplateManager {
 		throw new TemplateException( method + " for " + object.getClass().getName() + " not found" );
 	}
 
+    public boolean templateExists( AbstractTheme theme, Object object, String method ) {
+        try {
+            getTemplate( theme, getUrlFromClass( object.getClass().getCanonicalName(), method ) );
+            return true;
+        } catch( TemplateException e ) {
+            return false;
+        }
+    }
+
+    /**
+     * Determine whether a template for the given {@link Class} exists or not
+     */
+    public boolean templateForClassExists( AbstractTheme theme, Class<?> clazz, String method ) {
+        try {
+            getTemplate( theme, getUrlFromClass( clazz, method ) );
+            return true;
+        } catch( TemplateException e ) {
+            return false;
+        }
+    }
+
 
 
     /**
-     * Given a class, get the corresponding list of templates
+     * Given a class, get the corresponding template
      * @param clazz
      * @param method
      * @param trySuper If true, try objects super classes
      * @return
      */
-	public Template getTemplateFile( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws TemplateException {
+	public Template getTemplateFromClass( AbstractTheme theme, Class<?> clazz, String method, boolean trySuper ) throws NotFoundException {
+        Class<?> org = clazz;
 		/* Resolve template */
 		int cnt = 0;
 		while( clazz != null && clazz != Object.class ) {
@@ -345,7 +385,8 @@ public class TemplateManager {
             }
 		}
 
-        throw new TemplateException( method + " for " + clazz.getName() + " not found" );
+        //throw new TemplateException( method + " for " + org.getName() + " not found" );
+        throw new NotFoundException( "Template " + method + " for " + org.getSimpleName() + " not found", "Template not found" );
 	}
 
     public static String getUrlFromClass( Class<?> clazz ) {
@@ -384,7 +425,7 @@ public class TemplateManager {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append( "Paths: " + this.paths + "\n" );
+		sb.append( "Paths: " + this.templatePathsStr + "\n" );
 		
 		return sb.toString();
 	}

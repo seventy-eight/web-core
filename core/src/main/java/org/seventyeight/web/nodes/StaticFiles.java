@@ -17,23 +17,13 @@ import java.net.URLDecoder;
 /**
  * @author cwolfgang
  */
-public class StaticFiles implements Action, Autonomous {
+public class StaticFiles implements Autonomous, Node {
 
     private static Logger logger = Logger.getLogger( StaticFiles.class );
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        return null;
-    }
-
-    @Override
     public Node getParent() {
         return Core.getInstance();
-    }
-
-    @Override
-    public String getUrlName() {
-        return "static";
     }
 
     @Override

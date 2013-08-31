@@ -12,8 +12,6 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 16-02-13
- *         Time: 21:45
  */
 public class MongoDBCollection {
 
@@ -34,9 +32,14 @@ public class MongoDBCollection {
     }
 
     public MongoDBCollection save( MongoDocument document ) {
+        logger.debug( "Saving " + document );
         collection.save( document.getDBObject() );
 
         return this;
+    }
+
+    public long count( MongoDBQuery query ) {
+        return collection.count( query.getDocument() );
     }
 
     public DBCollection getCollection() {
@@ -49,6 +52,8 @@ public class MongoDBCollection {
 
 
     public List<MongoDocument> find( MongoDBQuery query ) {
+        logger.debug( "Finding with " + query.getDocument().toString() );
+
         List<DBObject> objs = collection.find( query.getDocument() ).toArray();
         List<MongoDocument> docs = new ArrayList<MongoDocument>( objs.size() );
 
@@ -60,6 +65,10 @@ public class MongoDBCollection {
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit ) {
+        return find( query, offset, limit, new MongoDocument(  ) );
+    }
+
+    public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument order ) {
         List<DBObject> objs = collection.find( query.getDocument() ).skip( offset ).limit( limit ).toArray();
         List<MongoDocument> docs = new ArrayList<MongoDocument>( objs.size() );
 
@@ -70,9 +79,20 @@ public class MongoDBCollection {
         return docs;
     }
 
+    public MongoDocument findOne( MongoDBQuery query ) {
+        logger.debug( "Query is " + query.getDocument() );
+        return new MongoDocument( collection.findOne( query.getDocument() ) );
+    }
+
+    public MongoDocument findOne( MongoDBQuery query, MongoDocument field ) {
+        logger.debug( "Query is " + query.getDocument() );
+        return new MongoDocument( collection.findOne( query.getDocument(), field.getDBObject() ) );
+    }
+
     public MongoDocument getDocumentById( String id ) {
         BasicDBObject query = new BasicDBObject();
-        query.put( "_id", new ObjectId( id ) );
+        //query.put( "_id", new ObjectId( id ) );
+        query.put( "_id", id );
         DBObject dbObj = collection.findOne( query );
         return new MongoDocument( dbObj );
     }
@@ -86,15 +106,15 @@ public class MongoDBCollection {
     }
 
     public void update( MongoUpdate update ) {
-        update( update, new MongoDBQuery() );
+        update( new MongoDBQuery(), update );
     }
 
-    public void update( MongoUpdate update, MongoDBQuery query ) {
+    public void update( MongoDBQuery query, MongoUpdate update ) {
         if( update.getDocument().isEmpty() ) {
 
         } else {
             logger.debug( "Criteria: " + query.getDocument() );
-            logger.debug( "Update  : " + update );
+            logger.debug( "Update  : " + update.getDocument() );
             collection.update( query.getDocument(), update.getDocument(), update.isUpsert(), update.isMulti() );
         }
     }

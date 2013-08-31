@@ -5,8 +5,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
 
 /**
  * @author cwolfgang
- *         Date: 27-02-13
- *         Time: 09:06
  */
 public interface Savable {
     public MongoDocument getDocument();

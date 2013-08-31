@@ -1,0 +1,31 @@
+package org.seventyeight.web.installers;
+
+import org.seventyeight.web.Core;
+import org.seventyeight.web.model.AbstractNode;
+import org.seventyeight.web.model.Descriptor;
+import org.seventyeight.web.nodes.Group;
+import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.utilities.Parameters;
+
+/**
+ * @author cwolfgang
+ */
+public abstract class DefaultNodeInstall<T extends AbstractNode<T>> extends NodeInstaller<T> {
+
+    protected User owner;
+
+    public DefaultNodeInstall( String title, User owner ) {
+        super( title );
+        this.owner = owner;
+    }
+
+    @Override
+    protected void setParameters( Parameters parameters ) {
+        parameters.setUser( owner );
+    }
+
+    @Override
+    protected T getNodeFromDB() {
+        return (T) AbstractNode.getNodeByTitle( Core.getInstance(), title );
+    }
+}

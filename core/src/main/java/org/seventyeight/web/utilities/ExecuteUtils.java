@@ -4,9 +4,12 @@ import org.apache.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.Core;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -22,11 +25,18 @@ public class ExecuteUtils {
     }
 
     public static void execute( Request request, Response response, Object object, String urlName ) throws Exception {
+        execute( request, response, object, urlName, object.getClass() );
+    }
+
+    public static void execute( Request request, Response response, Object object, String urlName, Class<?> imposter ) throws Exception {
         logger.debug( "EXECUTE: " + object + ", " + urlName );
+
+        if( imposter == null ) {
+            imposter = object.getClass();
+        }
 
         /* First try to find a view, if not a POST */
         try {
-            logger.debug( "ModelObject: " + object + " -> " + urlName );
             executeMethod( object, request, response, urlName );
             return;
         } catch( InvocationTargetException e ) {
@@ -35,30 +45,42 @@ public class ExecuteUtils {
             logger.debug( object + " does not have " + urlName + ", " + e.getMessage() );
         }
 
-        logger.debug( "TRYING VIEW FILE" );
-
         if( !request.isRequestPost() ) {
-            request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( object, urlName + ".vm" ) );
-            response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
-            return;
+            render( request, response, object, urlName, imposter );
         }
     }
 
-    private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        logger.debug( "METHOD: " + object + ", " + actionMethod );
+    public static void render( Request request, Response response, Object object, String method ) throws NotFoundException, TemplateException, IOException {
+        render( request, response, object, method, object.getClass() );
+    }
 
-        Method method = getRequestMethod( object, actionMethod, request.isRequestPost() );
-        logger.debug( "FOUND METHOD: " + method );
+    public static void render( Request request, Response response, Object object, String method, Class<?> imposter ) throws NotFoundException, TemplateException, IOException {
+        request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
+        response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
+    }
+
+    private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        logger.debug( "Executing method : " + actionMethod + " on " + object );
+
+        Method method = getRequestMethod( object, actionMethod, request.getRequestMethod() );
 
         method.invoke( object, request, response );
     }
 
-    private static Method getRequestMethod( Object object, String method, boolean isPost ) throws NoSuchMethodException {
+    private static Method getRequestMethod( Object object, String method, Request.RequestMethod requestMethod ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
-        logger.debug( "Method: " + method + " = " + m );
-        if( isPost ) {
+
+        switch( requestMethod ) {
+            case POST:
             return ClassUtils.getInheritedPostMethod( object.getClass(), m, Request.class, Response.class );
-        } else {
+
+        case GET:
+            return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
+
+        case PUT:
+            return ClassUtils.getInheritedPutMethod( object.getClass(), m, Request.class, Response.class );
+
+        default:
             return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
         }
     }

@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <title>SNADE</title>
+</head>
+
+<body>
+BAM!
+
+<table>
+    <thead class="header">
+    <tr>
+        <td>
+            Certificates
+        </td>
+    </tr>
+
+    </thead>
+    #foreach($c in $item.getCertificates(0,10))
+        <tr>
+            <td>
+                $c
+            </td>
+        </tr>
+    #end
+</table>
+
+</body>
+</html>
