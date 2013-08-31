@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import org.junit.Test;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,5 +26,28 @@ public class QueryParserTest {
                 System.out.println( i + ": " + m.group( i+1 ) );
             }
         }
+    }
+
+    @Test
+    public void testRegex2() {
+        String s = "term1";
+        Pattern pattern = Pattern.compile( QueryParser.regex );
+        //Pattern pattern = Pattern.compile( "(\\w+)\\s*([=<>])\\s*(\\w+)" );
+        Matcher m = pattern.matcher( s );
+
+        while( m.find() ) {
+            System.out.println("------");
+            for( int i = 0 ; i < m.groupCount() ; i++ ) {
+                System.out.println( i + ": " + m.group( i+1 ) );
+            }
+        }
+    }
+
+    @Test
+    public void testParser() {
+        QueryParser parser = new QueryParser();
+        MongoDBQuery query = parser.parse( "term1 \"term 2\" jaha" );
+
+        System.out.println(query.getDocument());
     }
 }
