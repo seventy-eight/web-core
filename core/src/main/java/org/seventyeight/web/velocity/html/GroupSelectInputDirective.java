@@ -76,7 +76,7 @@ public class GroupSelectInputDirective extends Directive {
         /*
 		List<Group> selected = null;
 		if( id > 0 ) {
-			Entity r = null;
+			Resource r = null;
 			try {
 				r = SeventyEight.getInstance().getResource( db, id );
 			} catch( Exception e ) {

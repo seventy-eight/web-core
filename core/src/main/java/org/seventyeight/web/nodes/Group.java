@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
@@ -14,7 +13,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Group extends Entity<Group> {
+public class Group extends Resource<Group> {
 
     private static Logger logger = Logger.getLogger( Group.class );
 

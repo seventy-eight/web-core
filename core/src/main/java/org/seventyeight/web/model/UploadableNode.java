@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * @author cwolfgang
  */
-public abstract class UploadableNode<T extends UploadableNode<T>> extends Entity<T> implements Uploadable {
+public abstract class UploadableNode<T extends UploadableNode<T>> extends Resource<T> implements Uploadable {
 
     public static final String FILENAME = "filename";
     public static final String EXTENSION = "ext";

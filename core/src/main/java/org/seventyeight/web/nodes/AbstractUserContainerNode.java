@@ -5,8 +5,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.AbstractNode;
-import org.seventyeight.web.model.Entity;
+import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.model.Node;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class AbstractUserContainerNode<C extends User, T extends AbstractUserContainerNode<C, T>> extends Entity<T> {
+public abstract class AbstractUserContainerNode<C extends User, T extends AbstractUserContainerNode<C, T>> extends Resource<T> {
 
     private static Logger logger = Logger.getLogger( AbstractUserContainerNode.class );
 

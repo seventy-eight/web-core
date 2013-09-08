@@ -5,19 +5,15 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.Response;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cwolfgang
  */
-public class Certificate extends Entity<Certificate> {
+public class Certificate extends Resource<Certificate> {
 
     private static Logger logger = Logger.getLogger( Certificate.class );
 

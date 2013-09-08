@@ -94,8 +94,6 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
      */
     protected Map<Class, List<Descriptor>> descriptorList = new HashMap<Class, List<Descriptor>>();
 
-    protected Map<Class, List<Descriptor>> entityDescriptorList = new HashMap<Class, List<Descriptor>>();
-
     protected Map<Class<?>, List> extensionsList = new HashMap<Class<?>, List>();
 
     //protected ConcurrentMap<String, N>

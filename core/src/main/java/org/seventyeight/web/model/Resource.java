@@ -10,17 +10,16 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cwolfgang
  */
-public abstract class Entity<T extends Entity<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent {
+public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent {
 
-    private static Logger logger = Logger.getLogger( Entity.class );
+    private static Logger logger = Logger.getLogger( Resource.class );
 
-    public Entity( Node parent, MongoDocument document ) {
+    public Resource( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 

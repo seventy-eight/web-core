@@ -2,7 +2,7 @@ package org.seventyeight.web.nodes;
 
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.Entity;
+import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
 import org.seventyeight.web.model.NotFoundException;
@@ -10,7 +10,7 @@ import org.seventyeight.web.model.NotFoundException;
 /**
  * @author cwolfgang
  */
-public class Article extends Entity<Article> {
+public class Article extends Resource<Article> {
 
     public Article( Node parent, MongoDocument document ) {
         super( parent, document );
