@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 16-02-13
- *         Time: 21:12
  */
 public class TestMongoDB {
 
