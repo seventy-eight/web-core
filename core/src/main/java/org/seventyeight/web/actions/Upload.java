@@ -1,6 +1,5 @@
 package org.seventyeight.web.actions;
 
-import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
@@ -21,8 +20,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author cwolfgang
@@ -67,7 +64,7 @@ public class Upload implements Node {
     }
 
     protected static FileNode getFileByUploadId( Node parent, String uploadId ) throws ItemInstantiationException {
-        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
+        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
 
         if( doc != null ) {
             return new FileNode( parent, doc );

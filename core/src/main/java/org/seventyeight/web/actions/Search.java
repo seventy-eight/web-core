@@ -53,7 +53,7 @@ public class Search implements Node {
             MongoDBQuery dbquery = parser.parse( query );
             logger.debug( "QUERY: " + dbquery );
 
-            List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( dbquery, offset, number );
+            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
 
             for( MongoDocument d : docs ) {
                 Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
@@ -83,7 +83,7 @@ public class Search implements Node {
             MongoDBQuery dbquery = parser.parse( query );
             logger.debug( "QUERY: " + dbquery );
 
-            List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( dbquery, offset, number );
+            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
 
             PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
@@ -108,7 +108,7 @@ public class Search implements Node {
             MongoDBQuery dbquery = parser.parse( query );
             logger.debug( "QUERY: " + dbquery );
 
-            List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( dbquery, 0, 10 );
+            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, 0, 10 );
 
             NodeList nodes = new NodeList();
 

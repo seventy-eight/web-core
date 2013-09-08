@@ -1,7 +1,6 @@
 package org.seventyeight.web;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.seventyeight.TokenList;
 import org.seventyeight.database.mongodb.*;
@@ -28,7 +27,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author cwolfgang
@@ -65,7 +63,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     /**
      * The collection name for {@link Node}s
      */
-    public static final String NODE_COLLECTION_NAME = "nodes";
+    public static final String RESOURCES_COLLECTION_NAME = "resources";
 
     /**
      * The collection name for {@link Descriptor}s
@@ -295,7 +293,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
     public <T extends Node> T getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Getting node by id: " + id );
-        MongoDocument d = MongoDBCollection.get( NODE_COLLECTION_NAME ).getDocumentById( id );
+        MongoDocument d = MongoDBCollection.get( RESOURCES_COLLECTION_NAME ).getDocumentById( id );
 
         if( d != null && !d.isNull() ) {
             PersistedObject obj = getItem( parent, d );

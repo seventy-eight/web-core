@@ -41,7 +41,7 @@ public class User extends Resource<User> {
      * Return the document corresponding to the given username,
      */
     public static MongoDocument getUserDocumentByUsername( String username ) {
-        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
+        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
 
         if( doc != null && !doc.isNull() ) {
             return doc;
@@ -105,7 +105,7 @@ public class User extends Resource<User> {
     public List<Group> getGroups() {
         logger.debug( "Listing groups for " + this );
 
-        List<MongoDocument> docs = document.getMappedList( Group.GROUPS, Core.NODE_COLLECTION_NAME );
+        List<MongoDocument> docs = document.getMappedList( Group.GROUPS, Core.RESOURCES_COLLECTION_NAME );
 
         List<Group> groups = new ArrayList<Group>( docs.size() );
 
@@ -122,7 +122,7 @@ public class User extends Resource<User> {
     }
 
     public void setUsername( String username ) {
-        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( new MongoDBQuery().is( "_id", getObjectId() ), new MongoUpdate().set( "username", username ) );
+        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( new MongoDBQuery().is( "_id", getObjectId() ), new MongoUpdate().set( "username", username ) );
     }
 
     public String getUsername() {
@@ -184,7 +184,7 @@ public class User extends Resource<User> {
      * Get a {@link User} by Username. Returns null if not found.
      */
     public static User getUserByUsername( Node parent, String username ) {
-        MongoDocument docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
+        MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
 
         if( docs != null ) {
             try {

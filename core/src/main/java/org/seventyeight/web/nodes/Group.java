@@ -98,7 +98,7 @@ public class Group extends Resource<Group> {
         logger.debug( "Getting members for " + this );
 
         MongoDBQuery q = new MongoDBQuery().is( GROUPS, getIdentifier() );
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q );
 
         logger.debug( "DOCS ARE: " + docs );
 

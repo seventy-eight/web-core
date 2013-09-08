@@ -27,7 +27,7 @@ public abstract class AbstractUserContainerNode<C extends User, T extends Abstra
     public abstract C getElement( MongoDocument d );
 
     public String getCollectionName() {
-        return Core.NODE_COLLECTION_NAME;
+        return Core.RESOURCES_COLLECTION_NAME;
     }
 
     protected List<C> getElements() {

@@ -5,7 +5,6 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.SearchAction;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -28,7 +27,7 @@ public class NodeSearch extends SearchAction {
         if( type != null ) {
             q.is( "type", type );
         }
-        return MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q, 0, limit );
+        return MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q, 0, limit );
     }
 
     /*

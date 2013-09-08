@@ -36,7 +36,7 @@ public class Installer {
         //admins.addMember( admin );
 
         MongoDocument d = new MongoDocument().set( "type", 1 ).set( "title", 1 );
-        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).createIndex( "title", d );
+        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).createIndex( "title", d );
 
     }
 

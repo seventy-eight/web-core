@@ -7,9 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
 import java.lang.reflect.Constructor;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author cwolfgang
@@ -44,7 +42,7 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
     }
 
     private boolean titleExists( String title, String type ) {
-        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ) );
+        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ) );
         return !doc.isNull();
     }
 
@@ -74,7 +72,7 @@ public abstract class NodeDescriptor<T extends Describable<T>> extends Descripto
     }
 
     public String getCollectionName() {
-        return Core.NODE_COLLECTION_NAME;
+        return Core.RESOURCES_COLLECTION_NAME;
     }
 
     public abstract String getType();

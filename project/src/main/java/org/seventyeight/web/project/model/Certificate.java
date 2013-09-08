@@ -51,7 +51,7 @@ public class Certificate extends Resource<Certificate> {
         logger.debug( "Getting members for " + this );
 
         MongoDBQuery q = new MongoDBQuery().is( CERTIFICATES + "." + CERTIFICATE, getIdentifier() );
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( q );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q );
 
         logger.debug( "DOCS ARE: " + docs );
 
@@ -91,7 +91,7 @@ public class Certificate extends Resource<Certificate> {
      * Get a {@link Certificate} by its title
      */
     public static Certificate getCertificateByTitle( String title, Node parent ) throws NotFoundException {
-        MongoDocument doc = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ).is( "type", CERTIFICATE ) );
+        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ).is( "type", CERTIFICATE ) );
         if( !doc.isNull() ) {
             return new Certificate( parent, doc );
         } else {

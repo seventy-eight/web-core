@@ -37,7 +37,7 @@ public class FileNode extends UploadableNode<FileNode> {
     }
 
     public static FileNode getFileByFilename( Node parent, String filename ) throws ItemInstantiationException {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "filename", filename ), 0, 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( new MongoDBQuery().is( "filename", filename ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
             return new FileNode( parent, docs.get( 0 ) );

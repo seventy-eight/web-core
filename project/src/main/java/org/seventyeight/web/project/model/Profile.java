@@ -6,19 +6,15 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
-import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,7 +80,7 @@ public class Profile extends User {
     }
 
     public static Profile getProfileByUsername( Node parent, String username ) {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( new MongoDBQuery().is( "username", username ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
             return new Profile( parent, docs.get( 0 ) );
@@ -148,7 +144,7 @@ public class Profile extends User {
         MongoDBQuery q = new MongoDBQuery().is( Certificate.CERTIFICATE_DOTTED, certificate.getIdentifier() ).getId( this.getIdentifier() );
         //MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
         MongoUpdate u = new MongoUpdate().push( Certificate.CERTIFICATES + ".$.validatedby", d );
-        MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).update( q, u );
+        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( q, u );
     }
 
     public static class ProfileCreator {
