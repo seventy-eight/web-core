@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class FindParser extends QueryParser {
+public class FindParser extends FeatureSearch {
 
     public void parse( List<String> tokens ) {
         for( String token : tokens ) {

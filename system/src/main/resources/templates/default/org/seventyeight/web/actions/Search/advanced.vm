@@ -1,3 +1,5 @@
-<form action="result" method="get">
+Advanced search
+
+<form action="result" method="post">
     <input name="query" type="text" style="width: 80%">
 </form>

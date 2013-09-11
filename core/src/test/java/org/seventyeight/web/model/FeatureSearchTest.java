@@ -11,12 +11,12 @@ import static org.junit.Assert.fail;
 /**
  * @author cwolfgang
  */
-public class QueryParserTest {
+public class FeatureSearchTest {
 
     @Test
     public void testRegex() {
         String s = "method1:\"snade\" bla de bla method2 : hello \"world, hello\" method-3:bam";
-        Pattern pattern = Pattern.compile( QueryParser.regex );
+        Pattern pattern = Pattern.compile( FeatureSearch.regex );
         //Pattern pattern = Pattern.compile( "(\\w+)\\s*([=<>])\\s*(\\w+)" );
         Matcher m = pattern.matcher( s );
 
@@ -31,7 +31,7 @@ public class QueryParserTest {
     @Test
     public void testRegex2() {
         String s = "term1";
-        Pattern pattern = Pattern.compile( QueryParser.regex );
+        Pattern pattern = Pattern.compile( FeatureSearch.regex );
         //Pattern pattern = Pattern.compile( "(\\w+)\\s*([=<>])\\s*(\\w+)" );
         Matcher m = pattern.matcher( s );
 
@@ -45,8 +45,7 @@ public class QueryParserTest {
 
     @Test
     public void testParser() {
-        QueryParser parser = new QueryParser();
-        MongoDBQuery query = parser.parse( "term1 \"term 2\" jaha" );
+        MongoDBQuery query = FeatureSearch.getSimpleQuery( "term1 \"term 2\" jaha" );
 
         System.out.println(query.getDocument());
     }

@@ -26,6 +26,11 @@ public class MongoDBMapReduce {
         reduceFunction = FileUtils.readFileToString( reduceFile );
     }
 
+    public MongoDBMapReduce( String mapFunction, String reduceFunction ) {
+        this.mapFunction = mapFunction;
+        this.reduceFunction = reduceFunction;
+    }
+
     public MongoDBMapReduce setCollection( String collectionName ) {
         this.collection = MongoDBCollection.get( collectionName ).getCollection();
         return this;

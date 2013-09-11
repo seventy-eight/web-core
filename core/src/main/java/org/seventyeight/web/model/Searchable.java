@@ -8,9 +8,18 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
  */
 public abstract class Searchable {
 
+    public enum CollectionType {
+        DATA,
+        RESOURCE
+    }
+
     public abstract Class<? extends Node> getClazz();
     public abstract String getName();
     public abstract String getMethodName();
+
+    public CollectionType getType() {
+        return CollectionType.RESOURCE;
+    }
 
     public abstract void search( MongoDBQuery query, String term );
 }

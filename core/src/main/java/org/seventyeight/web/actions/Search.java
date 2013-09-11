@@ -48,9 +48,7 @@ public class Search implements Node {
         logger.debug( query + ", OFFSET: " + offset + ", NUMBER: " + number );
 
         if( query != null && !query.isEmpty() ) {
-            QueryParser parser = new QueryParser();
-
-            MongoDBQuery dbquery = parser.parse( query );
+            MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( query );
             logger.debug( "QUERY: " + dbquery );
 
             List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
@@ -69,58 +67,29 @@ public class Search implements Node {
         }
     }
 
-    //@PostMethod
-    public void doSearch2( Request request, Response response ) throws IOException {
-        int offset = request.getInt( "offset", 0 );
-        int number = request.getInt( "number", 10 );
-        String query = request.getValue( "query", null );
-
-        logger.debug( query + ", OFFSET: " + offset + ", NUMBER: " + number );
-
-        if( query != null && !query.isEmpty() ) {
-            QueryParser parser = new QueryParser();
-
-            MongoDBQuery dbquery = parser.parse( query );
-            logger.debug( "QUERY: " + dbquery );
-
-            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
-
-            PrintWriter writer = response.getWriter();
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
-            writer.write( gson.toJson( docs ) );
-        } else {
-            response.getWriter().write( "{}" );
-        }
-    }
-
     @PostMethod
-    public void doIndex2( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+    public void doResult( Request request, Response response ) throws IOException {
         String query = request.getValue( "query", null );
-        logger.debug( "Searching for " + query );
-
-        PrintWriter writer = response.getWriter();
 
         if( query != null ) {
+            String s = createSearchCollection( query );
 
-            QueryParser parser = new QueryParser();
-
-            MongoDBQuery dbquery = parser.parse( query );
-            logger.debug( "QUERY: " + dbquery );
-
-            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, 0, 10 );
-
-            NodeList nodes = new NodeList();
-
-            for( MongoDocument d : docs ) {
-                //response.getWriter().write( d.toString() );
-                nodes.getNodes().add( Core.getInstance().getNodeById( this, (String) d.get( "_id" ) ) );
-            }
-
-            ExecuteUtils.render( request, response, nodes, "index" );
-
+            response.sendRedirect( "show?search=" + s );
         } else {
-            response.sendRedirect( "" );
+            response.sendRedirect( "advanced" );
         }
     }
+
+    public void doShow( Request request, Response response ) {
+        logger.debug( "SHOW????!!!!" );
+    }
+
+    private String createSearchCollection( String query ) throws IOException {
+        FeatureSearch parser = new FeatureSearch();
+
+        parser.parseQuery( query ).generate();
+
+        return parser.getCollectionName();
+    }
+
 }
