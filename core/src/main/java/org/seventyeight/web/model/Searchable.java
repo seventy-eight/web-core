@@ -21,5 +21,5 @@ public abstract class Searchable {
         return CollectionType.RESOURCE;
     }
 
-    public abstract void search( MongoDBQuery query, String term );
+    public abstract MongoDBQuery search( String term );
 }

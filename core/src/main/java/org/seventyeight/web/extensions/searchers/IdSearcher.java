@@ -25,7 +25,7 @@ public class IdSearcher extends Searchable {
     }
 
     @Override
-    public void search( MongoDBQuery query, String term ) {
-        query.getId( term );
+    public MongoDBQuery search( String term ) {
+        return new MongoDBQuery().getId( term );
     }
 }

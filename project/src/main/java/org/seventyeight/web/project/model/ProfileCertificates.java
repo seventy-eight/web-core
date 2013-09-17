@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
@@ -19,10 +18,9 @@ import org.seventyeight.web.servlet.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author cwolfgang
@@ -124,18 +122,23 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         logger.debug( d );
         */
 
-        MongoDBQuery query = new MongoDBQuery().is( DataElement.NODEID, ((Profile)getParent()).getIdentifier() ).is( Certificate.CERTIFICATE, token );
-        MongoDocument d = MongoDBCollection.get( ProfileCertificate.COLLECTIONNAME ).findOne( query );
+        //MongoDocument d = ((MongoDocument)document.get( Certificate.CERTIFICATES )).getSubDocument( token, null );
+        String path = ((ExtensionDescriptor)getDescriptor()).getMongoPath() + Certificate.CERTIFICATES;
+        logger.debug( "PATH: " + path );
+        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
 
-        if( d != null && !d.isNull() ) {
-            logger.debug( "Found the profile certificate" );
-            try {
-                Certificate c = (Certificate) Core.getInstance().getNodeById( this, token );
-                return new ProfileCertificate( this, c, d );
-            } catch( ItemInstantiationException e ) {
-                throw new NotFoundException( e.getMessage(), "Error while finding", e );
+        if( docs != null && docs.size() > 0 ) {
+            for( MongoDocument d : docs ) {
+                if( d.get( "certificate", "" ).equals( token ) ) {
+                    logger.debug( "Found the profile certificate" );
+                    try {
+                        Certificate c = (Certificate) Core.getInstance().getNodeById( this, token );
+                        return new ProfileCertificate( this, c, d );
+                    } catch( ItemInstantiationException e ) {
+                        throw new NotFoundException( e.getMessage(), "Error while finding", e );
+                    }
+                }
             }
-
         } else {
             logger.debug( "D was null" );
         }
@@ -145,6 +148,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
 
     public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException, NotFoundException {
+        /*
         MongoDBQuery query = new MongoDBQuery().is( ProfileCertificate.NODEID, ((Profile)getParent()).getIdentifier() );
         MongoDocument order = new MongoDocument(  ).set( "added", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( ProfileCertificate.COLLECTIONNAME ).find( query, offset, number, order );
@@ -161,6 +165,27 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         }
 
         return certificates;
+        */
+
+        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+
+        if( docs != null && docs.size() > 0 ) {
+
+            //Map map = docs.getMap();
+            List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( docs.size() );
+
+            for( MongoDocument d : docs ) {
+                Certificate c = (Certificate) Core.getInstance().getNodeById( this, d.get( Certificate.CERTIFICATE, "" ) );
+
+                ProfileCertificate pc = new ProfileCertificate( this, c, d );
+
+                certificates.add( pc );
+            }
+
+            return certificates;
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public void doList( Request request, Response response ) throws IOException, TemplateException {
@@ -171,8 +196,16 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
     public void addCertificate( Certificate certificate ) {
         logger.debug( "Adding certificate " + certificate );
 
-        ProfileCertificate pce = ProfileCertificate.create( (Profile) this.getParent(), certificate );
-        pce.save();
+        //MongoDocument certs = document.get( Certificate.CERTIFICATES );
+
+            //certs.set( certificate.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
+        document.addToList( Certificate.CERTIFICATES, new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() ).set( "added", new Date() ) );
+        //} else {
+        //    MongoDocument d = new MongoDocument().set( certificate.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
+        //    document.set( Certificate.CERTIFICATES, d );
+        //}
+
+        ((Profile)parent).save();
     }
 
     @Override
@@ -206,9 +239,10 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
         @Override
         public List<Searchable> getSearchables() {
-            List<Searchable> ss = new ArrayList<Searchable>( 1 );
+            List<Searchable> ss = new ArrayList<Searchable>( 3 );
 
             ss.add( new VerifiedBy() );
+            ss.add( new ValidatedAfter() );
             ss.add( new CertificateId() );
 
             return ss;
@@ -232,10 +266,42 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             }
 
             @Override
-            public void search( MongoDBQuery query, String term ) {
+            public MongoDBQuery search( String term ) {
                 logger.debug( "SEARCHING FOR " + term );
                 //query.elemMatch( CERTIFICATES, (MongoDocument) new MongoDocument().set( CERTIFICATE, term ) );
-                query.exists( getMongoPath() + Certificate.CERTIFICATE + "." + term );
+                return new MongoDBQuery().is( getMongoPath() + Certificate.CERTIFICATES + "." + Certificate.CERTIFICATE, term );
+            }
+        }
+
+        private class ValidatedAfter extends Searchable {
+
+            private final SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd" );
+
+            @Override
+            public Class<? extends Node> getClazz() {
+                return Profile.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Validated after";
+            }
+
+            @Override
+            public String getMethodName() {
+                return "validated-after";
+            }
+
+            @Override
+            public MongoDBQuery search( String term ) {
+                try {
+                    Date date = format.parse( term );
+                    return new MongoDBQuery().greaterThan( "extensions.action.certificates.certificates.added", date );
+                } catch( ParseException e ) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+                return new MongoDBQuery();
             }
         }
 
@@ -257,8 +323,9 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             }
 
             @Override
-            public void search( MongoDBQuery query, String term ) {
+            public MongoDBQuery search( String term ) {
                 //query.is(  )
+                return new MongoDBQuery();
             }
         }
     }

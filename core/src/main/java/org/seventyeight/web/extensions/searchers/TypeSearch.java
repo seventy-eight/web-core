@@ -24,7 +24,7 @@ public class TypeSearch extends Searchable {
     }
 
     @Override
-    public void search( MongoDBQuery query, String term ) {
-        query.regex( "type", "(?i)" + term );
+    public MongoDBQuery search( String term ) {
+        return new MongoDBQuery().regex( "type", "(?i)" + term );
     }
 }

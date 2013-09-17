@@ -67,29 +67,10 @@ public class Search implements Node {
         }
     }
 
-    @PostMethod
-    public void doResult( Request request, Response response ) throws IOException {
-        String query = request.getValue( "query", null );
-
-        if( query != null ) {
-            String s = createSearchCollection( query );
-
-            response.sendRedirect( "show?search=" + s );
-        } else {
-            response.sendRedirect( "advanced" );
-        }
-    }
-
     public void doShow( Request request, Response response ) {
         logger.debug( "SHOW????!!!!" );
     }
 
-    private String createSearchCollection( String query ) throws IOException {
-        FeatureSearch parser = new FeatureSearch();
 
-        parser.parseQuery( query ).generate();
-
-        return parser.getCollectionName();
-    }
 
 }

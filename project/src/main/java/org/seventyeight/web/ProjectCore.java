@@ -75,7 +75,6 @@ public class ProjectCore extends Core {
         addDescriptor( new Signature.SignatureDescriptor() );
         addDescriptor( new ProfileCertificates.ProfileCertificateDescriptor() );
         addDescriptor( new GetAction.GetDescriptor() );
-        addDescriptor( new GetAction.GetDescriptor() );
 
         addSearchable( new TitleSearch() );
         addSearchable( new TypeSearch() );

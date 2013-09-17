@@ -3,6 +3,8 @@ package org.seventyeight.web.project.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
@@ -15,45 +17,43 @@ import org.seventyeight.web.servlet.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * <pre>
+ * {
+ *     certificate: {
+ *         added: date  // The date added
+ *         profile: pid // Last validator
+ *         date: date   // Last validation
+ *     }
+ * }
+ * </pre>
+ *
  * @author cwolfgang
  */
-public class ProfileCertificate extends DataElement implements Node {
+public class ProfileCertificate implements Node {
 
     private static Logger logger = Logger.getLogger( ProfileCertificate.class );
 
-    public static final String VALIDATEDBY = "validatedby";
-    public static final String COLLECTIONNAME = "profilecertificates";
+    public static final String LAST_VALIDATION = "lastValidation";
+    public static final String VALIDATIONS_COLLECTION = "certificateValidations";
 
     private Node parent;
     private Certificate certificate;
+    private MongoDocument document;
     private List<Validation> validations;
 
     public ProfileCertificate( Node parent, Certificate certificate, MongoDocument document ) {
-        super( document );
         this.certificate = certificate;
         this.parent = parent;
-    }
-
-    private void extractValidations() throws NotFoundException, ItemInstantiationException {
-        List<MongoDocument> docs = document.getList( "validatedby" );
-        validations = new ArrayList<Validation>( docs.size() );
-
-        for( MongoDocument d : docs ) {
-            Profile p = Core.getInstance().getNodeById( this, (String) d.get( "profile" ) );
-            validations.add( new Validation( (Date) d.get( "date" ), p ) );
-        }
-    }
-
-    @Override
-    public String getCollectionName() {
-        return COLLECTIONNAME;
+        this.document = document;
     }
 
     public static ProfileCertificate create( Profile profile, Certificate certificate ) {
+        /*
         MongoDocument d = createDocument( profile.getIdentifier() );
 
         d.set( Certificate.CERTIFICATE, certificate.getIdentifier() );
@@ -62,34 +62,23 @@ public class ProfileCertificate extends DataElement implements Node {
         ProfileCertificate e = new ProfileCertificate( profile, certificate, d );
 
         return e;
-    }
-
-
-    public List<Validation> getValidations() throws NotFoundException, ItemInstantiationException {
-        if( validations == null ) {
-            extractValidations();
-        }
-
-        return validations;
+        */
+        return null;
     }
 
     public int getNumberOfValidations() {
         try {
-            return getValidations().size();
+            return getValidationDocuments().size();
         } catch( Exception e ) {
             return 0;
         }
     }
 
-    public Validation getValidation( int i ) throws NotFoundException, ItemInstantiationException {
-        return getValidations().get( i );
-    }
-
     public void doGetValidations( Request request, Response response ) throws IOException {
-        int number = request.getValue( "number", 10 );
-        int offset = request.getValue( "offset", 0 );
+        // int number = request.getValue( "number", 10 );
+        // int offset = request.getValue( "offset", 0 );
 
-        List<MongoDocument> docs = document.getList( "validatedby" );
+        List<MongoDocument> docs = getValidationDocuments();
 
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
@@ -103,7 +92,7 @@ public class ProfileCertificate extends DataElement implements Node {
 
         List<String> strings = new ArrayList<String>( number );
 
-        List<MongoDocument> docs = document.getList( "validatedby" );
+        List<MongoDocument> docs = getValidationDocuments();
 
         for( MongoDocument d : docs ) {
             String pid = d.get( "profile" );
@@ -134,11 +123,31 @@ public class ProfileCertificate extends DataElement implements Node {
         return null;
     }
 
+    public MongoDocument getValidationData() {
+        MongoDBQuery query = new MongoDBQuery().is( "profile", getProfile().getIdentifier() ).is( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        return MongoDBCollection.get( VALIDATIONS_COLLECTION ).findOne( query );
+    }
+
     public List<MongoDocument> getValidationDocuments() {
-        return document.getList( "validatedby" );
+        MongoDocument doc = getValidationData();
+
+        if( doc != null && !doc.isNull() ) {
+            return doc.getList( "validatedby" );
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public Validation getLastValidation() throws ItemInstantiationException, NotFoundException {
+        String pid = document.get( "profile", null );
+        Date date = document.get( "date", null );
+        if( pid != null && date != null ) {
+            Profile profile = Profile.getNodeById( this, pid );
+            return new Validation( date, profile );
+        } else {
+            return null;
+        }
+        /*
         if( getValidationDocuments() != null && getValidationDocuments().size() > 0 ) {
             MongoDocument d = getValidationDocuments().get( getValidationDocuments().size() - 1 );
             Profile validator = (Profile) Core.getInstance().getNodeById( this, (String) d.get( "profile" ) );
@@ -146,6 +155,7 @@ public class ProfileCertificate extends DataElement implements Node {
         } else {
             return null;
         }
+        */
     }
 
     public void doValidate( Request request, Response response ) throws NoAuthorizationException, IOException {
@@ -165,10 +175,28 @@ public class ProfileCertificate extends DataElement implements Node {
 
     public void validateCertificate( Profile profile ) {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
+
+        /* Update profile */
+        document.set( "profile", profile.getIdentifier() );
+        document.set( "date", new Date() );
+        Core.superSave( this );
+
+        /* Update data, add! */
+        logger.debug( "Adding data to " + VALIDATIONS_COLLECTION );
+        MongoDocument doc = getValidationData();
+        if( doc == null || doc.isNull() ) {
+            doc = Validation.createNode( getProfile(), certificate );
+        }
+
+        doc.addToList( "validatedby", Validation.create( profile ) );
+        MongoDBCollection.get( VALIDATIONS_COLLECTION ).save( doc );
+
+        /*
         MongoDocument d = new MongoDocument(  ).set( "profile", profile.getIdentifier() ).set( "date", new org.seventyeight.utils.Date() );
         logger.debug( "VALIDATED: " + d );
         document.addToList( VALIDATEDBY, d );
         save();
+        */
         //((Profile)parent.getParent().getParent()).save();
         //Core.superSave( this );
     }
@@ -181,6 +209,20 @@ public class ProfileCertificate extends DataElement implements Node {
         return certificate;
     }
 
+    /**
+     * <pre>
+     * {
+     *     profile: pid,
+     *     certificate: cid,
+     *     validations : [
+     *         {
+     *             profile: pid,
+     *             date: date
+     *         } ...
+     *     ]
+     * }
+     * </pre>
+     */
     public static class Validation {
         private Date date;
         private Profile profile;
@@ -196,6 +238,15 @@ public class ProfileCertificate extends DataElement implements Node {
 
         public Profile getProfile() {
             return profile;
+        }
+
+        public static MongoDocument create( Profile profile ) {
+            return new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
+        }
+
+        public static MongoDocument createNode( Profile profile, Certificate certificate ) {
+            MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( Certificate.CERTIFICATE, certificate.getIdentifier() );
+            return d;
         }
     }
 }

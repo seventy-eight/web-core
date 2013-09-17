@@ -1,6 +1,7 @@
 package org.seventyeight.database.mongodb;
 
 import com.mongodb.*;
+import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -12,6 +13,10 @@ import java.util.regex.Pattern;
  */
 public class MongoDBQuery {
     private QueryBuilder query = new QueryBuilder();
+
+    public int length() {
+        return query.get().toMap().size();
+    }
 
     public MongoDBQuery is( String field, Object value ) {
         if( value instanceof MongoDocument ) {
@@ -125,6 +130,45 @@ public class MongoDBQuery {
         return this;
     }
 
+    public <T> MongoDBQuery addAnd( T item ) {
+        return _add( "$and", item );
+    }
+
+    private DBObject strip( Object object ) {
+        if( object instanceof MongoDBQuery ) {
+            return ( (MongoDBQuery) object ).getDocument();
+        } else if( object instanceof DBObject ) {
+            return (DBObject) object;
+        } else {
+            return new BasicDBObject( "value", object );
+        }
+    }
+
+    /** Top level add */
+    public <T> MongoDBQuery _add( String type, T item ) {
+        if( query.get().containsField( type ) ) {
+
+            Object object = query.get().get( type );
+
+            if( object instanceof BasicDBList ) {
+                BasicDBList list = (BasicDBList) object;
+                list.add( strip( item ) );
+            } else {
+                BasicDBList list = new BasicDBList();
+                list.add( object );
+                list.add( strip( item ) );
+                query.get().put( type, list );
+            }
+
+        } else {
+            BasicDBList list = new BasicDBList();
+            list.add( strip( item ) );
+            query.get().put( type, list );
+        }
+
+        return this;
+    }
+
     public <T> MongoDBQuery or( boolean removeEmpty, MongoDBQuery ... ors ) {
         List<DBObject> objs = new ArrayList<DBObject>( ors.length );
         for( int i = 0 ; i < ors.length ; i++ ) {
@@ -133,6 +177,18 @@ public class MongoDBQuery {
             }
         }
         query.or( objs.toArray(new DBObject[objs.size()]) );
+
+        return this;
+    }
+
+    public <T> MongoDBQuery and( boolean removeEmpty, MongoDBQuery ... ands ) {
+        List<DBObject> objs = new ArrayList<DBObject>( ands.length );
+        for( int i = 0 ; i < ands.length ; i++ ) {
+            if( ands[i].getDocument().keySet().size() > 0 ) {
+                objs.add( ands[i].getDocument() );
+            }
+        }
+        query.and( objs.toArray(new DBObject[objs.size()]) );
 
         return this;
     }

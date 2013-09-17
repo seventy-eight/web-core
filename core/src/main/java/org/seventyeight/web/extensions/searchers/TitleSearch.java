@@ -24,7 +24,7 @@ public class TitleSearch extends Searchable {
     }
 
     @Override
-    public void search( MongoDBQuery query, String term ) {
-        query.regex( "title", "(?i)" + term );
+    public MongoDBQuery search( String term ) {
+        return new MongoDBQuery().regex( "title", "(?i)" + term );
     }
 }
