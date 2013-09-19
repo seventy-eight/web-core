@@ -2,6 +2,7 @@ package org.seventyeight.database.mongodb;
 
 import com.mongodb.BasicDBObject;
 import org.apache.log4j.Logger;
+import org.seventyeight.database.Document;
 
 /**
  * @author cwolfgang
@@ -31,6 +32,25 @@ public class MongoUpdate {
 
     public MongoUpdate pull( String key, Object value ) {
         return update( "$pull", key, value );
+    }
+
+    /**
+     * extensions: {
+     *     action: {
+     *         t: 2
+     *     }
+     * }
+     *
+     */
+    public MongoUpdate pull( String path, String field, Object value ) {
+
+        BasicDBObject dbo = new BasicDBObject();
+        dbo.put( path, new BasicDBObject( field, value ) );
+        update.put( "$pull", dbo );
+        upsert = false;
+        multi = true;
+
+        return this;
     }
 
     public MongoUpdate push( String key, Object value ) {

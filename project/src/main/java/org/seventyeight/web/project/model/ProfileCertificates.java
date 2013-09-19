@@ -15,6 +15,7 @@ import org.seventyeight.web.model.data.DataElement;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -103,8 +104,10 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             }
 
             addCertificate( c );
+            response.setStatus( HttpServletResponse.SC_OK );
         } else {
             logger.debug( "No certificate title given" );
+            response.setStatus( HttpServletResponse.SC_NOT_FOUND );
         }
 
     }
@@ -296,7 +299,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             public MongoDBQuery search( String term ) {
                 try {
                     Date date = format.parse( term );
-                    return new MongoDBQuery().greaterThan( "extensions.action.certificates.certificates.added", date );
+                    return new MongoDBQuery().greaterThan( "extensions.action.certificates.certificates.date", date );
                 } catch( ParseException e ) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }

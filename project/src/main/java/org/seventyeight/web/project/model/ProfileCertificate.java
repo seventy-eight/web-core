@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -14,6 +15,7 @@ import org.seventyeight.web.model.data.DataElement;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -84,6 +86,21 @@ public class ProfileCertificate implements Node {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         writer.write( gson.toJson( docs ) );
+    }
+
+    public void doRemove( Request request, Response response ) throws NoAuthorizationException {
+        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        request.checkAuthorization( (Authorizer) parent.getParent(), Authorizer.Authorization.MODERATE );
+
+        remove();
+        response.setStatus( HttpServletResponse.SC_OK );
+    }
+
+    public void remove() {
+        MongoDBQuery query = new MongoDBQuery().getId( getProfile().getIdentifier() );
+        //MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates.certificate", certificate.getIdentifier() );
+        MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates", "certificate", certificate.getIdentifier() );
+        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( query, pull );
     }
 
     public void doGetValidations2( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {

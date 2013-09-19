@@ -1,12 +1,26 @@
-$item<br />
-$item.getIdentifier()
-
 
 #if( $request.isAuthenticated() )
-    $request.getUser() <br />
-    #if($request.getUser().hasCertificate($item.getIdentifier()))
+    #if($item.hasCertificate($request.getUser()))
         You have this certificate
     #else
-        <a href="addCertified?profile=$request.getUser().getUsername()">I have this certificate</a>
+        <a href="" class="button" id="addCert">I have this certificate</a>
     #end
 #end
+
+
+
+$item.getProfiles()
+
+
+<script type="text/javascript">
+    $('#addCert').click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "/profile/$request.getUser().getIdentifier()/certificates/add",
+            data: { certificateTitle: "$item.getDisplayName()" },
+            success: function(data, textStatus, jqxhr){$('#addCert').hide(0)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    })
+</script>

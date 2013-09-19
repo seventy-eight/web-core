@@ -50,7 +50,7 @@ public class Certificate extends Resource<Certificate> {
     public List<Profile> getProfiles() {
         logger.debug( "Getting members for " + this );
 
-        MongoDBQuery q = new MongoDBQuery().is( CERTIFICATES + "." + CERTIFICATE, getIdentifier() );
+        MongoDBQuery q = new MongoDBQuery().is( "extensions.action.certificates.certificates." + CERTIFICATE, getIdentifier() );
         List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q );
 
         logger.debug( "DOCS ARE: " + docs );
@@ -62,6 +62,13 @@ public class Certificate extends Resource<Certificate> {
         }
 
         return users;
+    }
+
+    public boolean hasCertificate( Profile profile ) {
+        MongoDBQuery q = new MongoDBQuery().is( "extensions.action.certificates.certificates." + CERTIFICATE, getIdentifier() ).getId( profile.getIdentifier() );
+        MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( q );
+
+        return ( docs != null && !docs.isNull() );
     }
 
     /*

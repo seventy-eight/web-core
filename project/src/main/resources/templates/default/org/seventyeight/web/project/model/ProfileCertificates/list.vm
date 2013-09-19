@@ -8,13 +8,15 @@
 
     </thead>
     #foreach($c in $item.getCertificates(0,10))
-        <tr>
+        <tr id="row$c.getCertificate().getIdentifier()">
             <td style="font-size: 18px; background-color: #998223; font-weight: bold">
                 <a href="certificates/get/$c.getCertificate().getIdentifier()">$c.getCertificate().getDisplayName()</a>
             </td>
             <td>
+                #if($request.isAuthenticated() && $request.isUser($item.getParent()))
+                    <button type="button" onclick="doRemoveCert(this,'$c.getCertificate().getIdentifier()')">Remove</button>
+                #end
                 #if($request.isAuthenticated() && !$request.isUser($item.getParent()))
-                    <a href="certificates/get/$c.getIdentifier().getDisplayName()/validate">validate</a>
                     <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
                 #end
             </td>
@@ -41,6 +43,15 @@
 
 
 <script type="text/javascript">
+
+    function doRemoveCert(obj,id) {
+        $.ajax({
+            type: "GET",
+            url: "certificates/get/" + id + "/remove",
+            success: function(data, textStatus, jqxhr){$(obj).hide(400);$("#row"+id).hide(600)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
 
 function doValidateCert(obj,id) {
     $.ajax({
