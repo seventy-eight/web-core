@@ -1,8 +1,9 @@
 
 <table style="width: 100%">
     <tr>
-        <td style="width:250px">
-            $item.getDisplayName()
+        <td style="width:250px; vertical-align: top">
+            $item.getDisplayName()<br/>
+            <img src="$item.getPortrait()">
         </td>
 
         <td id="certificates">
@@ -24,4 +25,3 @@
 </script>
 
 
-<img src="$item.getPortrait()">

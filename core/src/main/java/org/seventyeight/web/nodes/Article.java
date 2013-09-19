@@ -4,7 +4,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NodeDescriptor;
+import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.model.NotFoundException;
 
 /**
@@ -31,7 +31,7 @@ public class Article extends Resource<Article> {
         return null;
     }
 
-    public static class ArticleDescriptor extends NodeDescriptor<Article> {
+    public static class ArticleDescriptor extends ResourceDescriptor<Article> {
 
         @Override
         public String getType() {

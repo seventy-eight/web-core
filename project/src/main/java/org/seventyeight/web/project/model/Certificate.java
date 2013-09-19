@@ -106,7 +106,7 @@ public class Certificate extends Resource<Certificate> {
         }
     }
 
-    public static class CertificateDescriptor extends NodeDescriptor<Certificate> {
+    public static class CertificateDescriptor extends ResourceDescriptor<Certificate> {
 
         @Override
         public String getType() {

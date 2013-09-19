@@ -121,7 +121,7 @@ public class Group extends Resource<Group> {
         return "org/seventyeight/web/main.vm";
     }
 
-    public static class GroupDescriptor extends NodeDescriptor<Group> {
+    public static class GroupDescriptor extends ResourceDescriptor<Group> {
 
         @Override
         public Node getChild( String name ) throws NotFoundException {

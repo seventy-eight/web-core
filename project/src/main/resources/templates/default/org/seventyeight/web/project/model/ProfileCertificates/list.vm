@@ -1,28 +1,14 @@
-<table id="certlist">
-    <thead class="header">
-    <tr>
-        <td>
+<div id="certlist" style="width: 400px">
+    <div>
             Certificates
-        </td>
-    </tr>
+    </div>
 
-    </thead>
     #foreach($c in $item.getCertificates(0,10))
-        <tr id="row$c.getCertificate().getIdentifier()">
-            <td style="font-size: 18px; background-color: #998223; font-weight: bold">
+        <div id="row$c.getCertificate().getIdentifier()">
+            <h3 style="font-size: 18px; background-color: #998223; font-weight: bold; margin-bottom: 2px">
                 <a href="certificates/get/$c.getCertificate().getIdentifier()">$c.getCertificate().getDisplayName()</a>
-            </td>
-            <td>
-                #if($request.isAuthenticated() && $request.isUser($item.getParent()))
-                    <button type="button" onclick="doRemoveCert(this,'$c.getCertificate().getIdentifier()')">Remove</button>
-                #end
-                #if($request.isAuthenticated() && !$request.isUser($item.getParent()))
-                    <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
-                #end
-            </td>
-        </tr>
-        <tr>
-            <td>
+            </h3>
+            <div>
                 #set($v = false)
                 #set($v = $c.getLastValidation())
                 #if($v)
@@ -30,10 +16,19 @@
                 #else
                     Never validated
                 #end
-            </td>
-        </tr>
+            </div>
+            <div>
+                #if($request.isAuthenticated() && $request.isUser($item.getParent()))
+                    <button type="button" onclick="doRemoveCert(this,'$c.getCertificate().getIdentifier()')">Remove</button>
+                #end
+                #if($request.isAuthenticated() && !$request.isUser($item.getParent()))
+                    <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
+                #end
+            </div>
+
+        </div>
     #end
-</table>
+</div>
 
 #if($request.isUser($item.getParent()) )
 <input name="certificateTitle" type="text" id="addcert" onkeypress="doSubmitCert(event);">

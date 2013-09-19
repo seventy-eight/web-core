@@ -12,9 +12,9 @@ import java.util.Date;
 /**
  * @author cwolfgang
  */
-public abstract class NodeDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node, Parent {
+public abstract class ResourceDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node, Parent {
 
-    private static Logger logger = Logger.getLogger( NodeDescriptor.class );
+    private static Logger logger = Logger.getLogger( ResourceDescriptor.class );
 
     @Override
     public Node getParent() {

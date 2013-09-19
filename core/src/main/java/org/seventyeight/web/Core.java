@@ -526,8 +526,8 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
             list.add( descriptor );
         }
 
-        if( descriptor instanceof NodeDescriptor ) {
-            NodeDescriptor nd = (NodeDescriptor) descriptor;
+        if( descriptor instanceof ResourceDescriptor ) {
+            ResourceDescriptor nd = (ResourceDescriptor) descriptor;
             children.put( nd.getType(), nd );
         }
 
@@ -681,11 +681,11 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     private static final String NUMBERS_COLLECTION = "numbers";
 
     /**
-     * Given a {@link NodeDescriptor} a unique name is returned.
-     * @param d NodeDescriptor
+     * Given a {@link org.seventyeight.web.model.ResourceDescriptor} a unique name is returned.
+     * @param d ResourceDescriptor
      * @return
      */
-    public synchronized String getUniqueName( NodeDescriptor d ) {
+    public synchronized String getUniqueName( ResourceDescriptor d ) {
         logger.debug( "Getting unique name for " + d.getType() );
         MongoDocument doc = MongoDBCollection.get( NUMBERS_COLLECTION ).findOne( new MongoDBQuery().getId( d.getType() ) );
         if( doc.isNull() ) {

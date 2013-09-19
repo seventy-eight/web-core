@@ -346,7 +346,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public MongoDocument getUniqueIdentifier() {
-        MongoDocument d = new MongoDocument().set( "type", ((NodeDescriptor)getDescriptor()).getType() ).set( "name", getTitle() );
+        MongoDocument d = new MongoDocument().set( "type", ((ResourceDescriptor)getDescriptor()).getType() ).set( "name", getTitle() );
         return d;
     }
 
@@ -378,7 +378,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     @Override
-    public NodeDescriptor<T> getDescriptor() {
+    public ResourceDescriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
 
