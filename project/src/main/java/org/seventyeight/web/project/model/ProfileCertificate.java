@@ -11,7 +11,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.model.data.DataElement;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -97,10 +96,15 @@ public class ProfileCertificate implements Node {
     }
 
     public void remove() {
+        logger.debug( "Removing certificate and validations" );
+        /* Remove from profile */
         MongoDBQuery query = new MongoDBQuery().getId( getProfile().getIdentifier() );
         //MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates.certificate", certificate.getIdentifier() );
         MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates", "certificate", certificate.getIdentifier() );
         MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( query, pull );
+
+        /* Remove validations */
+        removeValidations();
     }
 
     public void doGetValidations2( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
@@ -188,6 +192,11 @@ public class ProfileCertificate implements Node {
         }
 
         response.getWriter().write( "BUH YEAH" );
+    }
+
+    private void removeValidations() {
+        MongoDBQuery query = new MongoDBQuery().is( "profile", getProfile().getIdentifier() ).is( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        MongoDBCollection.get( VALIDATIONS_COLLECTION ).remove( query );
     }
 
     public void validateCertificate( Profile profile ) {
