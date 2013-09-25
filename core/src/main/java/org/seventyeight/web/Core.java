@@ -27,6 +27,7 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * @author cwolfgang
@@ -54,6 +55,8 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     protected SessionManager sessionManager = new SessionManager();
 
     protected Map<String, Searchable> searchables = new ConcurrentHashMap<String, Searchable>(  );
+
+    protected ConcurrentHashMap<String, NaturalSearchable> naturalSearchables = new ConcurrentHashMap<String, NaturalSearchable>(  );
 
     /**
      * The default anonymous {@link User}
@@ -537,6 +540,11 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
             searchables.put( s.getMethodName(), s );
         }
 
+        /**/
+        if( descriptor instanceof NaturalSearchable ) {
+            naturalSearchables.put( ( (NaturalSearchable) descriptor ).getType(), ( NaturalSearchable )descriptor );
+        }
+
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
             AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
             logger.debug( "Adding extension descriptor " + ed.getTypeName() + ", " + ed.getExtensionName() );
@@ -548,6 +556,14 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
         /**/
         //descriptor.configureIndex( db );
+    }
+
+    public NaturalSearchable getNaturalSearchable( String type ) {
+        return naturalSearchables.get( type );
+    }
+
+    public Map<String, NaturalSearchable> getNaturalSearchables() {
+        return naturalSearchables;
     }
 
     public void addSearchable( Searchable s ) {
