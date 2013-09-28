@@ -18,10 +18,15 @@ $exists.getName()<br> <a href="#" onclick="$('#uploadNewFile').hide();$('#theFor
 </div>
 <div id="outer">
     <form action="upload" method="post" enctype="multipart/form-data" target="uploadTarget" onsubmit="Utils.getProgress( $item.getIdentifier(), 'outer', 'progress' )">
-        <input type="file" name="filename">
+        <input type="file" name="filename" multiple>
         <input type="submit" value="Upload">
     </form>
 </div>
 
 <iframe id="uploadTarget" name="uploadTarget" src="#" style="width:0;height:0;border-style: none;"></iframe>
 </div>
+
+
+    <form action="/file-upload"
+          class="dropzone"
+          id="my-awesome-dropzone"></form>

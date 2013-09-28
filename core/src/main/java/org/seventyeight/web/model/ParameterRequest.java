@@ -12,6 +12,9 @@ public interface ParameterRequest {
 	public <T> T getValue( String key );
     public <T> T getValue( String key, T defaultValue );
 
+    public Integer getInteger( String key );
+    public Integer getInteger( String key, Integer defaultValue );
+
     public PersistedObject getModelObject();
     public void setModelObject( PersistedObject modelObject );
 }

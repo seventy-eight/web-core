@@ -66,11 +66,13 @@ public class ProjectCore extends Core {
         addDescriptor( new Profile.ProfileDescriptor() );
         //addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new Role.RoleDescriptor() );
-        addDescriptor( new FileNode.FileDescriptor() );
+        addDescriptor( new FileResource.FileDescriptor() );
         addDescriptor( new Certificate.CertificateDescriptor() );
         addDescriptor( new Article.ArticleDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
+
+        addDescriptor( new Collection.CollectionDescriptor() );
 
         addDescriptor( new Signature.SignatureDescriptor() );
         addDescriptor( new ProfileCertificates.ProfileCertificateDescriptor() );

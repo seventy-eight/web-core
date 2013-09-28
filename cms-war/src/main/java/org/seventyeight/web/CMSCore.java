@@ -3,7 +3,7 @@ package org.seventyeight.web;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.model.Menu;
-import org.seventyeight.web.nodes.FileNode;
+import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.nodes.StaticFiles;
 import org.seventyeight.web.nodes.ThemeFiles;
 import org.seventyeight.web.nodes.User;
@@ -29,7 +29,7 @@ public class CMSCore extends Core {
 
         /**/
         addDescriptor( new User.UserDescriptor() );
-        addDescriptor( new FileNode.FileDescriptor() );
+        addDescriptor( new FileResource.FileDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
         //addDescriptor( new  );

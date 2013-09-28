@@ -1,6 +1,7 @@
 package org.seventyeight.web.actions;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -31,6 +32,7 @@ public class NewContent implements Node {
         return "New content";
     }
 
+    @PostMethod
     public void doCreate( Request request, Response response ) throws IOException {
         String className = request.getValue( "className" );
 
@@ -66,7 +68,7 @@ public class NewContent implements Node {
         r.setOwner( request.getUser() );
         r.save();
 
-        response.sendRedirect( r.getUrl() + "/configure" );
+        response.sendRedirect( r.getUrl() + "configure" );
         //ResourceUtils.getConfigureResourceView( request, response, r, descriptor );
     }
 

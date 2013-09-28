@@ -10,7 +10,8 @@
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
-    <script language="javascript" type="text/javascript" src="/static/javascript/ajaxupload.js"></script>
+    <!-- <script language="javascript" type="text/javascript" src="/static/javascript/ajaxupload.js"></script> -->
+    <script language="javascript" type="text/javascript" src="/static/javascript/dropzone.js"></script>
 
 	<script language="javascript" type="text/javascript" src="/static/javascript/utils.js"></script>
 

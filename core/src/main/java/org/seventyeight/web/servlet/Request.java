@@ -182,6 +182,29 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
     }
 
+    @Override
+    public Integer getInteger( String key ) {
+        return getInteger( key, null );
+    }
+
+    @Override
+    public Integer getInteger( String key, Integer defaultValue ) {
+        Integer i = defaultValue;
+        if( this.getParameter( key ) != null ) {
+            String val = this.getParameter( key );
+            try {
+                i = Integer.parseInt( val );
+            } catch( NumberFormatException e ) {
+                /* No op, default value is used */
+            }
+        }
+
+        return i;
+    }
+
+    /**
+     * @deprecated use {@link getInteger} instead
+     */
     public int getInt( String key, int defaultValue ) {
         if( this.getParameter( key ) != null ) {
             return Integer.parseInt( this.getParameter( key ) );

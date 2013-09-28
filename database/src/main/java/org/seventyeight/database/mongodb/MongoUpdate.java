@@ -57,6 +57,14 @@ public class MongoUpdate {
         return update( "$push", key, value );
     }
 
+    public MongoUpdate push( String key, Object value, MongoDocument sort ) {
+        if( value instanceof MongoDocument ) {
+            ( (MongoDocument) value ).set( "$sort", sort );
+        }
+
+        return update( "$push", key, value );
+    }
+
     public MongoUpdate unset( String key ) {
         return update( "$unset", key, 1 );
     }

@@ -12,12 +12,8 @@ import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.actions.Upload;
 import org.seventyeight.web.model.AbstractNode;
-import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.PersistedObject;
-import org.seventyeight.web.nodes.FileNode;
+import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
-import sun.misc.IOUtils;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
@@ -50,9 +46,9 @@ public class ServletUtils {
             HttpServletRequest request = (HttpServletRequest) ctx.getRequest();
             logger.debug( "REQUEST IS " + request );
 
-            FileNode obj = null;
+            FileResource obj = null;
             try {
-                obj = (FileNode) Core.getInstance().getNodeById( Core.getInstance(), id );
+                obj = (FileResource) Core.getInstance().getNodeById( Core.getInstance(), id );
             } catch( Exception e ) {
                 logger.log( Level.FATAL, "Failed to get node when uploading", e );
                 return;
@@ -87,6 +83,15 @@ public class ServletUtils {
         }
     }
 
+    public static String generate( String filename ) {
+        int i = filename.lastIndexOf( '.' );
+        if( i < 0 ) {
+            return "dot";
+        } else {
+            return filename.substring( i );
+        }
+    }
+
     /**
      * Upload files from a form, return the filenames.
      */
@@ -103,9 +108,39 @@ public class ServletUtils {
             FileItem item = items.get( i );
             if( !item.isFormField() ) {
                 String filename = useFieldName ? replace( item.getName(), item.getFieldName() ) : item.getName();
-                File destination = new File( destinationPath, filename );
+                File destination = new File( destinationPath + "/" + generate( filename ), filename );
                 item.write( destination );
                 uploadedFiles.add( filename );
+            }
+        }
+
+        return uploadedFiles;
+    }
+
+
+    public static List<FileResource> upload2( Request request, File destinationPath, String relativePath, boolean useFieldName, int limit ) throws Exception {
+        FileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload( factory );
+        List<FileItem> items = upload.parseRequest( request );
+
+        List<FileResource> uploadedFiles = new ArrayList<FileResource>( items.size() );
+
+        //for( FileItem item : items ) {
+        int size = limit > 0 ? limit : items.size();
+        for( int i = 0 ; i < size ; ++i ) {
+            FileItem item = items.get( i );
+            if( !item.isFormField() ) {
+                String filename = useFieldName ? replace( item.getName(), item.getFieldName() ) : item.getName();
+                File path = new File( new File( destinationPath, relativePath ), generate( filename ) );
+                File filePath = new File( path, filename );
+                item.write( filePath );
+
+                FileResource fr = FileResource.create( filename );
+                fr.setPath( relativePath );
+                fr.setFilename( filename );
+                fr.save();
+
+                uploadedFiles.add( fr );
             }
         }
 

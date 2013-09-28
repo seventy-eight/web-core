@@ -9,7 +9,7 @@ import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.nodes.FileNode;
+import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.ServletUtils;
@@ -39,19 +39,19 @@ public class Upload implements Node {
 
     public void doInfo( Request request, Response response ) throws IOException, ItemInstantiationException {
         String id = request.getValue( "id" );
-        FileNode fileNode = getFileByUploadId( this, id );
+        FileResource fileResource = getFileByUploadId( this, id );
         try {
 
-            File file = fileNode.getFile();
+            File file = fileResource.getFile();
             long currentSize = file.length();
-            Double ratio = Math.floor( ( (double)currentSize / (double)fileNode.getExpectedFileSize() ) * 10000 ) / 100.0;
+            Double ratio = Math.floor( ( (double)currentSize / (double) fileResource.getExpectedFileSize() ) * 10000 ) / 100.0;
 
             /*
             logger.fatal( "File: " + file );
             logger.fatal( "Exists: " + file.exists() );
-            logger.fatal( "File node: " + fileNode );
+            logger.fatal( "File node: " + fileResource );
             logger.fatal( "Current: " + currentSize );
-            logger.fatal( "Expected: " + fileNode.getExpectedFileSize() );
+            logger.fatal( "Expected: " + fileResource.getExpectedFileSize() );
             logger.fatal( "Ratio: " + ratio );
             */
 
@@ -63,11 +63,11 @@ public class Upload implements Node {
         }
     }
 
-    protected static FileNode getFileByUploadId( Node parent, String uploadId ) throws ItemInstantiationException {
+    protected static FileResource getFileByUploadId( Node parent, String uploadId ) throws ItemInstantiationException {
         MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
 
         if( doc != null ) {
-            return new FileNode( parent, doc );
+            return new FileResource( parent, doc );
         } else {
             throw new ItemInstantiationException( "The File with upload id " + uploadId + " not found" );
         }
@@ -89,7 +89,7 @@ public class Upload implements Node {
         /* Create new file */
         UploadableNode f = null;
         try {
-            f = (UploadableNode) Core.getInstance().getDescriptor( FileNode.class ).newInstance( filename );
+            f = (UploadableNode) Core.getInstance().getDescriptor( FileResource.class ).newInstance( filename );
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );
         }

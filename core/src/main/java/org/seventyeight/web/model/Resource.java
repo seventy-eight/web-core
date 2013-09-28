@@ -1,6 +1,8 @@
 package org.seventyeight.web.model;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
@@ -17,10 +19,20 @@ import java.util.List;
  */
 public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent {
 
+    public static final String RESOURCES_COLLECTION_NAME = "resources";
+
     private static Logger logger = Logger.getLogger( Resource.class );
 
     public Resource( Node parent, MongoDocument document ) {
         super( parent, document );
+    }
+
+    /**
+     * Determines whether a {@link Resource} exists or not
+     */
+    public static boolean exists( String id ) {
+        MongoDBQuery query = new MongoDBQuery().getId( id );
+        return MongoDBCollection.get( RESOURCES_COLLECTION_NAME ).count( query ) > 0;
     }
 
     @Override
