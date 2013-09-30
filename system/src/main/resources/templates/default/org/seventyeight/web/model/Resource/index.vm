@@ -1,7 +1,7 @@
 <table style="width:100%;height: 100%;border-collapse: collapse">
 
     <tr>
-        <td style="width:100px" class="headerContrast" align="left">
+        <td style="width:100px; text-align: left" class="headerContrast">
             $item.getType()
         </td>
 
@@ -9,15 +9,16 @@
             $item.getDisplayName()
         </td>
 
-        <td style="width:100px;padding-left:20px" class="headerContrast" align="right">
+        <td style="width:100px;text-align: right" class="headerContrast">
             Something
         </td>
     </tr>
 
     <tr>
-        <td style="width:100%;height: 100%" colspan="3">
+        <td style="width:auto;height: 100%" colspan="2">
             #render( $item "view" )
         </td>
+        <td style="text-align: center">RIGTH</td>
     </tr>
 
     <tr>
@@ -29,7 +30,6 @@
                 #end
 
                 #foreach( $action in $item.getLayoutableHavingTemplate( "bottom.vm" ) )
-
                     #renderStatic( $action.getClazz() "bottom" )
                 #end
 

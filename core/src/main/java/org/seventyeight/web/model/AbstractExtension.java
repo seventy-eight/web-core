@@ -68,6 +68,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             return EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
         }
 
+        public MongoDocument getExtensionSubDocument( Documented parent ) {
+            return parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
+        }
+
         public T getExtension( Documented parent ) throws ItemInstantiationException {
             MongoDocument d = parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
             if( d.get( "class", null ) == null ) {

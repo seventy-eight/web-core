@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.UserPortrait;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -173,8 +174,17 @@ public class User extends Resource<User> {
 
     @Override
     public String getPortrait() {
-        if( false ) {
-            return "/theme/unknown-person.png";
+        MongoDocument portrait = document.getSubDocument( "portrait", null );
+
+        if( portrait != null ) {
+            try {
+                UserPortrait up = Core.getInstance().getSubDocument( portrait );
+                up.setUser( this );
+                return up.getUrl();
+            } catch( ItemInstantiationException e ) {
+                logger.warn( "Unable to get the portrait from " + portrait );
+                return "/theme/unknown-person.png";
+            }
         } else {
             return "/theme/unknown-person.png";
         }
