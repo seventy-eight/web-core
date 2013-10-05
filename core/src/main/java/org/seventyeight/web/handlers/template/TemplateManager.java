@@ -15,10 +15,7 @@ import org.seventyeight.web.velocity.DateUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 public class TemplateManager {
@@ -33,7 +30,7 @@ public class TemplateManager {
 	private List<File> templatePaths = new ArrayList<File>();
 	private List<File> staticPaths = new ArrayList<File>();
 
-    private List<String> libsList = new LinkedList<String>();
+    private Set<String> libsList = new HashSet<String>();
 
 	private Template _getTemplate( AbstractTheme theme, String template ) throws TemplateException {
 		try {
@@ -69,6 +66,7 @@ public class TemplateManager {
 	}
 
     public void addTemplateLibrary( String lib ) {
+        logger.info( "Adding " + lib );
         libsList.add( lib );
     }
 	
@@ -146,7 +144,6 @@ public class TemplateManager {
                                                        + "org.seventyeight.web.velocity.html.RenderDescriptorDirective,"
                                                        + "org.seventyeight.web.velocity.html.RenderObject,"
                                                        + "org.seventyeight.web.velocity.html.RenderStatic,"
-                                                       + "org.seventyeight.web.velocity.html.RenderView,"
 				                                       + "org.seventyeight.web.velocity.html.FileInputDirective" );
 
         String l = getListAsCommaString( libsList );
@@ -158,10 +155,12 @@ public class TemplateManager {
 		engine.init( velocityProperties );
 	}
 
-    private <T> String getListAsCommaString( List<T> files ) {
+    private String getListAsCommaString( Set<String> files ) {
         StringBuilder s = new StringBuilder();
-        for( int i = 0 ; i < files.size() ; i++ ) {
-            T f = files.get( i );
+        //for( int i = 0 ; i < files.size() ; i++ ) {
+        int i = 0;
+        for( String f : files ) {
+            //String f = files.get( i );
 
             if( i < ( files.size() - 1 ) ) {
                 s.append( f );
@@ -169,6 +168,8 @@ public class TemplateManager {
             } else {
                 s.append( f );
             }
+
+            i++;
         }
 
         return s.toString();

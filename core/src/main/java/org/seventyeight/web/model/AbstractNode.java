@@ -153,7 +153,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
-        Describable e = d.newInstance( "" );
+        Describable e = d.newInstance( "", this );
 
         /* Remove data!? */
         if( d.doRemoveDataItemOnConfigure() ) {

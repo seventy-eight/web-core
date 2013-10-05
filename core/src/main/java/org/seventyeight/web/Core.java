@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 /**
  * @author cwolfgang
  */
-public abstract class Core extends Actionable implements TopLevelNode, RootNode, Parent {
+public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     private static Logger logger = Logger.getLogger( Core.class );
 
@@ -128,6 +128,8 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
     protected File pluginsPath;
     protected File uploadPath;
 
+    protected File portraitPath;
+
     /**
      * This path contains the themes. Each theme in a sub directory
      */
@@ -156,6 +158,7 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
+        this.portraitPath = new File( path, "portraits" );
 
         addDescriptor( new Session.SessionsDescriptor() );
 
@@ -203,6 +206,9 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         return db;
     }
 
+    /**
+     * @deprecated ???
+     */
     public <T extends Node> T createNode( Class<T> clazz, String collectioName ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
@@ -223,6 +229,9 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
         return instance;
     }
 
+    /**
+     * @deprecated ???
+     */
     public <T extends Documented> T createSubDocument( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating sub item " + clazz.getName() );
 
@@ -460,8 +469,6 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
             }
 
             if( current instanceof Parent ) {
-            } else if( current instanceof Actionable ) {
-
             } else {
                 tokens.backup();
                 break;
@@ -600,9 +607,9 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
      * @param clazz The interface in question
      * @return
      */
-    public List<Descriptor> getExtensionDescriptors( Class clazz ) {
+    public <T extends Descriptor> List<T> getExtensionDescriptors( Class clazz ) {
         if( descriptorList.containsKey( clazz ) ) {
-            return descriptorList.get( clazz );
+            return (List<T>) descriptorList.get( clazz );
         } else {
             return Collections.emptyList();
         }
@@ -799,6 +806,10 @@ public abstract class Core extends Actionable implements TopLevelNode, RootNode,
 
     public File getUploadPath() {
         return uploadPath;
+    }
+
+    public File getPortrataitPath() {
+        return portraitPath;
     }
 
     public Menu getMainMenu() {

@@ -49,6 +49,57 @@
     </tr>
 #end
 
+#macro( singleExtensionConfiguration $extensionClass $currentConfiguration $url )
+    #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )
+
+    <table>
+
+        <tr>
+            <td>
+                #foreach( $descriptor in $descriptors )
+                    <button onclick="changeConfiguration('$descriptor.getExtensionName()')">$descriptor.getDisplayName()</button><br/>
+                #end
+            </td>
+
+            <td id="singleConfiguration">
+                <form action="$url" method="post" id="configure" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );">
+
+                        <table>
+                            #foreach( $descriptor in $descriptors )
+                            <tr>
+                                <td colspan="2">
+                                    <div id="singleExtensionConfig-$descriptor.getExtensionName()" style="display: none">
+                                        #if( $currentConfiguration.getDescriptor().equals( $descriptor ) )
+                                            $descriptor.getConfigurationPage( $request, $currentConfiguration )
+                                        #else
+                                            $descriptor.getConfigurationPage( $request )
+                                        #end
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+
+                            <tr><td colspan="2" align="center"><input type="submit" value="OK"></td></tr>
+                        </table>
+                </form>
+            </td>
+        </tr>
+
+    </table>
+
+<script type="text/javascript">
+    function changeConfiguration( d ) {
+        var last = $('#singleConfiguration').attr('last');
+        if( last != undefined ) {
+            $('#'+last).hide();
+        }
+
+        $('#singleExtensionConfig-'+d).show();
+        $('#singleConfiguration').attr('last', 'singleExtensionConfig-'+d );
+    }
+</script>
+#end
+
 #macro( dropdownExtensions $extensionClass $item )
 
     #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )

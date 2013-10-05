@@ -61,13 +61,26 @@ Utils.addJsonElement = function( form ) {
 	form.appendChild( element );
 }
 
+Utils.getAttribute = function( e, a ) {
+    if(e.attributes == undefined ) {
+        return "";
+    } else {
+        for( i = 0 ; i < e.attributes.length ; i++ ) {
+            if(e.attributes.item(i).name == a ) {
+                return e.attributes.item(i).nodeValue;
+            }
+        }
+
+        return e.title;
+    }
+}
 
 Utils.getJsonFromForm = function( e, jsonData ) {
     var childs = e.childNodes;
 
     for( var i = 0 ; i < childs.length ; i++ ) {
         //alert( "Child: " + childs[i] + ", TAG:" + childs[i].tagName + ", nodename:" + childs[i].name );
-        var name = childs[i].name != undefined ? childs[i].name : childs[i].title;
+        var name = Utils.getAttribute(childs[i], "name");
 
         if( childs[i].tagName != undefined && name.length > 0 ) {
             //alert( "NAME=" + name + ", " + childs[i].tagName );
@@ -123,7 +136,13 @@ Utils.getJsonFromForm = function( e, jsonData ) {
         if( childs[i].tagName == 'TR' || childs[i].tagName == 'TD' || childs[i].tagName == 'TABLE' || childs[i].tagName == 'TBODY' ) {
             //alert( "IN HERE= " + $(childs[i]).is( ':visible' ) );
             Utils.getJsonFromForm( childs[i], jsonData );
+        }
 
+        if( childs[i].tagName == 'DIV') {
+            //alert("IN HERE: " + name.length);
+            if( name.length == 0 ) {
+                Utils.getJsonFromForm( childs[i], jsonData );
+            }
         }
     }
 

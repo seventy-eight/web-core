@@ -2,8 +2,10 @@
 <table style="width: 100%">
     <tr>
         <td style="width:250px; vertical-align: top">
+            <a href="#" id="opener">
             $item.getDisplayName()<br/>
             <img src="$item.getPortrait()">
+            </a>
         </td>
 
         <td id="certificates">
@@ -12,7 +14,18 @@
     </tr>
 </table>
 
+<div id="dialog" title="Select avatar" style="width:500px">
+    #singleExtensionConfiguration( "org.seventyeight.web.extensions.UserPortrait", "", "setPortrait" )
+</div>
+
 <script type="text/javascript">
+
+    $(function() {
+        $( "#dialog" ).dialog({ autoOpen: false, width: 700 });
+        $( "#opener" ).click(function() {
+            $( "#dialog" ).dialog( "open" );
+        });
+    });
 
     $(function() {
         $.ajax({

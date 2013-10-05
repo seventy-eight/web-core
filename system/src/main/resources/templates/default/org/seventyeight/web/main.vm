@@ -57,6 +57,13 @@ $(function() {
     };
 });
 
+$(function() {
+    $( "#dialog" ).dialog({ autoOpen: false, width: 500 });
+    $( "#opener" ).click(function() {
+        $( "#dialog" ).dialog( "open" );
+    });
+});
+
 </script>
 
 </head>
@@ -78,7 +85,6 @@ $(function() {
 <table style="width: 100%;">
     <tr>
         <td>
-
         </td>
 
         <td>

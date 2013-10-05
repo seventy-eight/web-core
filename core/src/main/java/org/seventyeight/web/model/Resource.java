@@ -1,15 +1,20 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonException;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +38,22 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     public static boolean exists( String id ) {
         MongoDBQuery query = new MongoDBQuery().getId( id );
         return MongoDBCollection.get( RESOURCES_COLLECTION_NAME ).count( query ) > 0;
+    }
+
+    @PostMethod
+    public void doSetPortrait( Request request, Response response ) throws IOException, JsonException {
+        logger.debug( "Setting portrait" );
+
+        JsonObject json = JsonUtils.getJsonFromRequest( request );
+        List<JsonObject> objs = JsonUtils.getJsonObjects( json );
+        setPortrait( request, objs.get( 0 ) );
+
+        /* Redirect */
+        response.sendRedirect( "" );
+    }
+
+    public void setPortrait( Request request, JsonObject json ) {
+        /* No op */
     }
 
     @Override

@@ -89,7 +89,8 @@ public class Upload implements Node {
         /* Create new file */
         UploadableNode f = null;
         try {
-            f = (UploadableNode) Core.getInstance().getDescriptor( FileResource.class ).newInstance( filename );
+            FileResource.FileDescriptor d = Core.getInstance().getDescriptor( FileResource.class );
+            f = (UploadableNode) d.newInstance( filename );
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );
         }

@@ -1,6 +1,4 @@
-<div>
 
-</div>
 
 <div class="header">$item.getUsername()</div>
 

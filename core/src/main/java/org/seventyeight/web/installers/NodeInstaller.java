@@ -2,6 +2,7 @@ package org.seventyeight.web.installers;
 
 import org.seventyeight.database.DBInstallable;
 import org.seventyeight.database.DatabaseException;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Descriptor;
@@ -34,7 +35,7 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
             Parameters p = new Parameters();
             setParameters( p );
             try {
-                T instance = getDescriptor().newInstance( title );
+                T instance = getDescriptor().newInstance( title, Core.getInstance() );
                 instance.save( p, null );
                 node = instance;
             } catch( CoreException e ) {

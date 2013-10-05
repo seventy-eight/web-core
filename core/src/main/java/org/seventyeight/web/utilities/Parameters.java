@@ -8,8 +8,6 @@ import java.util.HashMap;
 
 /**
  * @author cwolfgang
- *         Date: 30-11-12
- *         Time: 23:23
  */
 public class Parameters extends HashMap<String, String> implements CoreRequest {
 
@@ -55,6 +53,20 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     public <T> T getValue( String key, T defaultValue ) {
         if( containsKey( key ) ) {
             return (T) get( key );
+        } else {
+            return defaultValue;
+        }
+    }
+
+    @Override
+    public Integer getInteger( String key ) {
+        return getInteger( key, null );
+    }
+
+    @Override
+    public Integer getInteger( String key, Integer defaultValue ) {
+        if( containsKey( key ) ) {
+            return Integer.parseInt( get( key ) );
         } else {
             return defaultValue;
         }

@@ -3,6 +3,8 @@ package org.seventyeight.web;
 import org.apache.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.actions.Search;
+import org.seventyeight.web.extensions.GravatarPortrait;
+import org.seventyeight.web.extensions.UploadablePortrait;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
@@ -80,6 +82,9 @@ public class ProjectCore extends Core {
 
         addSearchable( new TitleSearch() );
         addSearchable( new TypeSearch() );
+
+        addDescriptor( new GravatarPortrait.GravatarPortraitDescriptor() );
+        addDescriptor( new UploadablePortrait.UploadablePortraitDescriptor() );
 
         //addDescriptor( new  );
 

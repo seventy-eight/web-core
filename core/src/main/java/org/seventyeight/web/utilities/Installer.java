@@ -41,7 +41,7 @@ public class Installer {
     }
 
     public User installUser( String name, boolean visible ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
-        User user = (User) core.getDescriptor( User.class ).newInstance( name );
+        User user = (User) ((User.UserDescriptor)core.getDescriptor( User.class )).newInstance( name );
 
         Parameters p = new Parameters();
         p.put( "username", name );
@@ -56,7 +56,7 @@ public class Installer {
     }
 
     public Group installGroup( String name, User owner ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
-        Group group = (Group) core.getDescriptor( Group.class ).newInstance( "" );
+        Group group = (Group) ((Group.GroupDescriptor)core.getDescriptor( Group.class )).newInstance( name );
 
         Parameters p = new Parameters();
         p.put( "name", name );

@@ -1,10 +1,12 @@
 package org.seventyeight.web.nodes;
 
+import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.UserPortrait;
@@ -12,6 +14,7 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,6 +171,19 @@ public class User extends Resource<User> {
     }
 
     @Override
+    public void setPortrait( Request request, JsonObject json ) {
+        try {
+            UserPortrait.UserPortraitDescriptor descriptor = (UserPortrait.UserPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
+            UserPortrait userPortrait = descriptor.newInstance( "portrait", this );
+            userPortrait.save( request, json );
+            document.set( "portrait", userPortrait.getDocument() );
+            save();
+        } catch( Exception e ) {
+            logger.warn( "failed", e );
+        }
+    }
+
+    @Override
     public String getMainTemplate() {
         return "org/seventyeight/web/main.vm";
     }
@@ -178,8 +194,7 @@ public class User extends Resource<User> {
 
         if( portrait != null ) {
             try {
-                UserPortrait up = Core.getInstance().getSubDocument( portrait );
-                up.setUser( this );
+                UserPortrait up = Core.getInstance().getItem( this, portrait );
                 return up.getUrl();
             } catch( ItemInstantiationException e ) {
                 logger.warn( "Unable to get the portrait from " + portrait );
@@ -188,6 +203,16 @@ public class User extends Resource<User> {
         } else {
             return "/theme/unknown-person.png";
         }
+    }
+
+    /**
+     * Get a list of the registered portrait descriptors
+     * @return
+     */
+    public List<? extends UserPortrait.UserPortraitDescriptor> getUserPortraitDescriptors() {
+        List<UserPortrait.UserPortraitDescriptor> descriptors = Core.getInstance().getExtensionDescriptors( UserPortrait.class );
+
+        return descriptors;
     }
 
     /**
@@ -242,7 +267,7 @@ public class User extends Resource<User> {
 
         @Override
         public User newInstance( String title ) throws ItemInstantiationException {
-            User u = super.newInstance( title );
+            User u = super.newInstance( title, this );
             u.getDocument().set( "username", title );
             //u.getDocument().set( "_id", title );
 

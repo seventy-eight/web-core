@@ -21,8 +21,12 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         return Core.getInstance();
     }
 
-    @Override
     public T newInstance( String title ) throws ItemInstantiationException {
+        return newInstance( title, this );
+    }
+
+    @Override
+    public T newInstance( String title, Node parent ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -30,7 +34,7 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
             }
         }
 
-        T node = createNode();
+        T node = createNode( parent );
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
@@ -46,7 +50,7 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         return !doc.isNull();
     }
 
-    protected T createNode( ) throws ItemInstantiationException {
+    protected T createNode( Node parent ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
         MongoDBCollection collection = MongoDBCollection.get( getCollectionName() );
@@ -55,7 +59,7 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         T instance = null;
         try {
             Constructor<T> c = clazz.getConstructor( Node.class, MongoDocument.class );
-            instance = c.newInstance( this, document );
+            instance = c.newInstance( parent, document );
         } catch( Exception e ) {
             throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
         }

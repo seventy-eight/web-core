@@ -13,7 +13,9 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public abstract class Descriptor<T extends Describable<T>> {
@@ -33,10 +35,38 @@ public abstract class Descriptor<T extends Describable<T>> {
 	
 	public abstract String getDisplayName();
 
+    /*
 	public T newInstance( String title ) throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
-		return Core.getInstance().createSubDocument( clazz );
+		return createSubDocument( title, null );
 	}
+	*/
+
+    //public abstract T newInstance( String title ) throws ItemInstantiationException;
+
+    public T newInstance( String title, Node parent ) throws ItemInstantiationException {
+        logger.debug( "New instance for " + clazz );
+        return createSubDocument( title, parent );
+    }
+
+    protected T createSubDocument( String title, Node parent ) throws ItemInstantiationException {
+        logger.debug( "Creating sub document " + clazz.getName() );
+
+        MongoDocument document = new MongoDocument();
+
+        T instance = null;
+        try {
+            Constructor<T> c = clazz.getConstructor( Node.class, MongoDocument.class );
+            instance = c.newInstance( parent, document );
+        } catch( Exception e ) {
+            throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
+        }
+
+        document.set( "title", title );
+        document.set( "class", clazz.getName() );
+
+        return instance;
+    }
 
     /**
      * Get the descriptors for
@@ -75,6 +105,10 @@ public abstract class Descriptor<T extends Describable<T>> {
 
     public List<Searchable> getSearchables() {
         return Collections.EMPTY_LIST;
+    }
+
+    public String getConfigurationPage( Request request ) throws TemplateException, NotFoundException {
+        return getConfigurationPage( request, null );
     }
 
     public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateException, NotFoundException {

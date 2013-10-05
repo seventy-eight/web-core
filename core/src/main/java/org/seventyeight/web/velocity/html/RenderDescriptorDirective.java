@@ -7,6 +7,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 
@@ -61,6 +62,14 @@ public class RenderDescriptorDirective extends Directive {
         Request request = (Request) context.get( "request" );
 
         logger.fatal( "ITEM IS " + item );
+
+        try {
+            if( item == null ) {
+                writer.write( d.getConfigurationPage( request, null ) );
+            }
+        } catch( Exception e ) {
+            throw new IOException( e );
+        }
 
 
         /* get the extension node */

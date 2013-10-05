@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * @author cwolfgang
- *         Date: 17-01-13
- *         Time: 14:24
  */
 public class JsonUtils {
 

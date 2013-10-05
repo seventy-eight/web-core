@@ -15,7 +15,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -106,6 +108,15 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             }
 
             for( File plugin : plugins ) {
+                logger.info( "Loading " + plugin );
+
+                /* Is it overridden? */
+                String overridden = System.getProperty( plugin.getName(), null );
+                if( overridden != null ) {
+                    logger.info( "Overriding " + plugin + " to " + overridden );
+                    plugin = new File( overridden );
+                }
+
                 File f1 = new File( plugin, "templates" );
                 if( f1.exists() ) {
                     templatePaths.add( f1 );
@@ -120,7 +131,6 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                         Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
                     }
                 }
-
             }
 
             //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
@@ -136,10 +146,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             //core.getClassLoader().addUrls( new URL[]{ new File( spath, "WEB-INF/lib/core.jar" ).toURI().toURL() } );
             core.getPlugins( plugins );
 
-            logger.info( "Loading templates" );
-            core.getTemplateManager().setTemplateDirectories( templatePaths );
-            logger.debug( core.getTemplateManager().toString() );
-            core.getTemplateManager().initialize();
+
         } catch( IOException e ) {
             e.printStackTrace();
         }
@@ -156,11 +163,35 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         logger.info( "Themes path: " + themePath.getAbsolutePath() );
         Core.getInstance().setThemesPath( themePath );
 
+        /*
+        String libPathStr = System.getProperty( "lib", null );
+        if( libPathStr != null ) {
+            logger.debug( "Lib path is set to " + libPathStr );
+            File libpath = new File( libPathStr );
+            if( libpath.exists() ) {
+                templatePaths.add( libpath );
+
+                File[] libs = libpath.listFiles( new FF() );
+                for( File lib : libs ) {
+                    logger.debug( "Adding lib " + lib );
+                    Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                }
+            }
+        }
+        */
+
+        logger.info( "Loading templates" );
+        core.getTemplateManager().setTemplateDirectories( templatePaths );
+        logger.debug( core.getTemplateManager().toString() );
+        core.getTemplateManager().initialize();
+
+        /*
         try {
             install();
         } catch( DatabaseException e ) {
             logger.fatal( "Unable to install", e );
         }
+        */
 
         /* Asynch */
         //Executor executor = new ThreadPoolExecutor(10, 10, 50000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100));

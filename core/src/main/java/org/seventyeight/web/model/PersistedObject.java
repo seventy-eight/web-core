@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class PersistedObject extends Actionable implements Savable, Documented {
+public abstract class PersistedObject implements Savable, Documented {
 
     private static Logger logger = Logger.getLogger( PersistedObject.class );
 

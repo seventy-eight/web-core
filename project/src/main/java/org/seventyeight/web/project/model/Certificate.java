@@ -43,7 +43,7 @@ public class Certificate extends Resource<Certificate> {
     }
 
     public static Certificate createCertificate( String certName ) throws ItemInstantiationException {
-        Certificate cert = (Certificate) Core.getInstance().getDescriptor( Certificate.class ).newInstance( certName );
+        Certificate cert = (Certificate) ((CertificateDescriptor)Core.getInstance().getDescriptor( Certificate.class )).newInstance( certName );
         return cert;
     }
 
