@@ -52,6 +52,8 @@
 #macro( singleExtensionConfiguration $extensionClass $currentConfiguration $url )
     #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )
 
+    CURRENT: $currentConfiguration
+
     <table>
 
         <tr>
@@ -66,10 +68,15 @@
 
                         <table>
                             #foreach( $descriptor in $descriptors )
+                                #set( $same = $currentConfiguration.getDescriptor().equals( $descriptor ) )
+                                #set( $displayed = "display: none" )
+                                #if( $same )
+                                    #set( $displayed = "" )
+                                #end
                             <tr>
                                 <td colspan="2">
-                                    <div id="singleExtensionConfig-$descriptor.getExtensionName()" style="display: none">
-                                        #if( $currentConfiguration.getDescriptor().equals( $descriptor ) )
+                                    <div id="singleExtensionConfig-$descriptor.getExtensionName()" style="$displayed">
+                                        #if( $same )
                                             $descriptor.getConfigurationPage( $request, $currentConfiguration )
                                         #else
                                             $descriptor.getConfigurationPage( $request )
