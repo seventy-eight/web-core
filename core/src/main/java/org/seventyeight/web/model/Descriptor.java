@@ -119,11 +119,11 @@ public abstract class Descriptor<T extends Describable<T>> {
         if( extension != null ) {
             logger.debug( "Extension is " + extension );
             c.put( "enabled", true );
-            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( extension, "config.vm" ) );
+            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderObject( extension, "config.vm" ) );
         } else {
             logger.debug( "Preparing EMPTY " + getClazz() );
             c.put( "enabled", false );
-            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( getClazz(), "config.vm" ) );
+            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderClass( getClazz(), "config.vm" ) );
         }
 
         return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
