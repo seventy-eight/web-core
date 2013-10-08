@@ -1,1 +1,1 @@
-<input type="text" name="gravatarEmail">
+<input type="text" name="gravatarEmail" value="$!item.getEmail()">

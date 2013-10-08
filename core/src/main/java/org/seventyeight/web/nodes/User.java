@@ -215,6 +215,17 @@ public class User extends Resource<User> {
         return descriptors;
     }
 
+    public UserPortrait getPortraitExtension() throws ItemInstantiationException {
+        MongoDocument portrait = document.getSubDocument( "portrait", null );
+
+        if( portrait != null ) {
+            UserPortrait up = Core.getInstance().getItem( this, portrait );
+            return up;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Get a {@link User} by Username. Returns null if not found.
      */

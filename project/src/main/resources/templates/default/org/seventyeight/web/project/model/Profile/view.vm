@@ -14,8 +14,9 @@
     </tr>
 </table>
 
-<div id="dialog" title="Select avatar" style="width:500px">
-    #singleExtensionConfiguration( "org.seventyeight.web.extensions.UserPortrait", "", "setPortrait" )
+<div id="dialog" title="Select profile portrait" style="width:500px">
+    #set( $up = $item.getPortraitExtension() )
+    #singleExtensionConfiguration( "org.seventyeight.web.extensions.UserPortrait" $up "setPortrait" )
 </div>
 
 <script type="text/javascript">
