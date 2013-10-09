@@ -65,12 +65,16 @@ public class Rest extends HttpServlet {
         request.setUser( Core.getInstance().getAnonymousUser() );
         request.setTheme( Core.getInstance().getDefaultTheme() );
 
+        logger.debug( "THE USER: " + request.getUser() );
+
         try {
             logger.debug( "AUTHENTICATING" );
             Core.getInstance().getAuthentication().authenticate( request, response );
         } catch( AuthenticationException e ) {
             logger.warn( "Unable to authenticate", e );
         }
+
+        logger.debug( "THE USER: " + request.getUser() );
 
         try {
             Core.getInstance().render( request, response );

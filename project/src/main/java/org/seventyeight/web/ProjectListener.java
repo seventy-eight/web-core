@@ -57,7 +57,7 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
         cert3.install();
 
 
-        ArticleInstall ai1 = new ArticleInstall( "Article number 1", cwInstall.getValue() );
+        ArticleInstall ai1 = new ArticleInstall( "Post number 1", cwInstall.getValue() );
         ai1.install();
 
     }

@@ -33,6 +33,36 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private String[] requestParts;
 
+    private Language language = Language.American;
+
+    public enum Language {
+        American( "English", "en_US" ),
+        English( "English", "en_GB" ),
+        Danish( "Dansk", "da_DK" );
+
+        private String name;
+        private String identifier;
+
+        Language( String name, String identifier ) {
+            this.name = name;
+            this.identifier = identifier;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getIdentifier() {
+            return identifier;
+        }
+
+
+        @Override
+        public String toString() {
+            return identifier;
+        }
+    }
+
     public enum ResponseType {
         PAGED,
         HTTP_CODE
@@ -239,5 +269,9 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         } else {
             return false;
         }
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 }

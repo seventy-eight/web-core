@@ -1,6 +1,9 @@
 package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
+import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.GravatarPortrait;
@@ -42,6 +45,7 @@ public class ProjectCore extends Core {
         children.put( "information", new Information() );
 
         children.put( "profiles", new Profiles() );
+        children.put( "posts", new Post.Posts() );
 
         //children.put( "login", new Login( this ) );
 
@@ -70,7 +74,7 @@ public class ProjectCore extends Core {
         addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileResource.FileDescriptor() );
         addDescriptor( new Certificate.CertificateDescriptor() );
-        addDescriptor( new Article.ArticleDescriptor() );
+        addDescriptor( new Post.PostDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
 
@@ -95,6 +99,11 @@ public class ProjectCore extends Core {
         mainMenu.add( new Menu.MenuItem( "Configure", "/configuration/" ) );
         mainMenu.add( new Menu.MenuItem( "Search", "/search2/" ) );
 
+
+        MongoDBQuery query = new MongoDBQuery().is( "username", "anonymous" );
+        MongoDocument d = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( query );
+        Profile a = getItem( this, d );
+        setAnonymous( a );
     }
 
     public File getSignaturePath() {

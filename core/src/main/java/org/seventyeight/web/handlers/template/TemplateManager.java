@@ -7,7 +7,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractTheme;
-import org.seventyeight.web.model.Language;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.velocity.DateUtils;
@@ -190,7 +189,7 @@ public class TemplateManager {
 	public class Renderer {
 		//private Writer writer = new StringWriter();
 		private AbstractTheme theme;
-		private Language locale;
+		private Request.Language language;
         private VelocityContext context;
 
         public Renderer( AbstractTheme theme ) {
@@ -201,6 +200,7 @@ public class TemplateManager {
             this.theme = request.getTheme();
             //this.locale = request.getLocale();
             this.context = request.getContext();
+            this.language = request.getLanguage();
         }
 
         public Renderer setContext( VelocityContext context ) {
@@ -220,8 +220,8 @@ public class TemplateManager {
             return this;
         }
 
-        public Renderer setLocale( Language locale ) {
-            this.locale = locale;
+        public Renderer setLanguage( Request.Language language ) {
+            this.language = language;
             return this;
         }
 
@@ -251,7 +251,8 @@ public class TemplateManager {
             //context.put( "url" );
 
 			/* I18N */
-			context.put( "locale", locale );
+            logger.debug( "LANG: " + language );
+			context.put( "locale", language.getIdentifier() );
             //context.put( "dateTool", new DateTool() );
             context.put( "dateUtils", new DateUtils() );
 			
