@@ -10,9 +10,9 @@ import org.seventyeight.web.model.NotFoundException;
 /**
  * @author cwolfgang
  */
-public class Article extends Resource<Article> {
+public class Post extends Resource<Post> {
 
-    public Article( Node parent, MongoDocument document ) {
+    public Post( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -31,7 +31,7 @@ public class Article extends Resource<Article> {
         return null;
     }
 
-    public static class ArticleDescriptor extends ResourceDescriptor<Article> {
+    public static class ArticleDescriptor extends ResourceDescriptor<Post> {
 
         @Override
         public String getType() {
@@ -45,7 +45,7 @@ public class Article extends Resource<Article> {
 
         @Override
         public String getDisplayName() {
-            return "Article";
+            return "Post";
         }
     }
 }
