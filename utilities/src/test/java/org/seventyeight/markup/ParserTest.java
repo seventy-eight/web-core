@@ -21,6 +21,9 @@ public class ParserTest {
     protected String sample1001 = "*1\n*2";
     protected String sample1002 = "*1\n*2\n**3";
 
+    protected String sample1000001 = "Yeah";
+    protected String sample1000002 =  "* 1\r\n* 2\r\n** 3\r\n** 4\r\n* 5";
+
     @Test
     public void test() {
         SimpleParser parser = new SimpleParser( new HtmlGenerator() );
@@ -95,6 +98,26 @@ public class ParserTest {
         SimpleParser parser = new SimpleParser( new HtmlGenerator() );
         StringBuilder output = new StringBuilder();
         parser.parse( sample1002, output );
+        System.out.println("OUT: " + output.toString());
+    }
+
+
+
+
+    @Test
+    public void test1000001() {
+        SimpleParser parser = new SimpleParser( new HtmlGenerator() );
+        StringBuilder output = new StringBuilder();
+        parser.parse( sample1000001, output );
+        System.out.println("OUT: " + output.toString());
+    }
+
+
+    @Test
+    public void test1000002() {
+        SimpleParser parser = new SimpleParser( new HtmlGenerator() );
+        StringBuilder output = new StringBuilder();
+        parser.parse( sample1000002, output );
         System.out.println("OUT: " + output.toString());
     }
 }

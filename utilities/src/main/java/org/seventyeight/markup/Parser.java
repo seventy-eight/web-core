@@ -47,10 +47,19 @@ public abstract class Parser {
 
     protected List<MarkUp> markUps = new ArrayList<MarkUp>();
 
+    public StringBuilder parse( String text ) {
+        StringBuilder output = new StringBuilder();
+        parse( text, output );
+        return output;
+    }
+
+    /**
+     * Parse the text string and provide the result in the {@link StringBuilder}.
+     */
     public void parse( String text, StringBuilder output ) {
         boolean beginningOfLine = true;
         for( int i = 0 ; i < text.length() ; i++ ) {
-            int move = getMarkUps( text, output, beginningOfLine, i );
+            int move = getMarkUp( text, output, beginningOfLine, i );
             if( move > 0 ) {
                 i += move - 1;
             } else {
@@ -72,7 +81,14 @@ public abstract class Parser {
         generator.onEmptyLine( output );
     }
 
-    private int getMarkUps( String text, StringBuilder output, boolean beginningOfLine, int idx ) {
+    /**
+     * Use the {@link MarkUp} that suits the char sequence the most. Return the number of characters consumed.
+     * @param text - The text string to be parsed.
+     * @param output - The {@link StringBuilder} to append the translated text.
+     * @param beginningOfLine - True if there are only whitespaces from the beginning of the line to the current character
+     * @param idx - The index of the current character
+     */
+    private int getMarkUp( String text, StringBuilder output, boolean beginningOfLine, int idx ) {
         MarkUp selected = emptyMarkUp;
         int consumed = 0;
 
@@ -82,6 +98,7 @@ public abstract class Parser {
                 if( parseSequence( text, m, idx ) ) {
                     if( m.sequence.length > selected.sequence.length ) {
                         selected = m;
+                        consumed = m.sequence.length;
                     }
                 }
             }
@@ -95,17 +112,26 @@ public abstract class Parser {
 
         if( selected.sequence.length > 0 ) {
             selectType( output, selected, consumed );
-            return selected.sequence.length;
+            return consumed;
         } else {
             return 0;
         }
     }
 
+    /**
+     *
+     * @param text
+     * @param markUp
+     * @param idx
+     * @return
+     */
     private int consumeAll( String text, MarkUp markUp, int idx ) {
         int count = 0;
         while( text.charAt( idx + count ) == markUp.sequence[0] ) {
             count++;
         }
+
+        logger.debug( "Consumed " + count );
 
         return count;
     }
@@ -137,6 +163,9 @@ public abstract class Parser {
                 generator.unorderedList( output, markUp, consumed );
                 break;
 
+            case orderedList:
+                generator.orderedList( output, markUp, consumed );
+                break;
         }
 
         markUp.count++;
