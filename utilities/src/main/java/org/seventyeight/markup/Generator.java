@@ -12,6 +12,7 @@ public interface Generator {
     public void italicAndBold( StringBuilder output, int count );
 
     public void unorderedList( StringBuilder output, Parser.MarkUp markUp, int consumed );
+    public void orderedList( StringBuilder output, Parser.MarkUp markUp, int consumed );
 
     public void onEmptyLine( StringBuilder output );
 
