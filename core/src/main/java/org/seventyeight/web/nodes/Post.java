@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.markup.HtmlGenerator;
+import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
@@ -21,37 +23,47 @@ public class Post extends Resource<Post> {
 
     private static Logger logger = Logger.getLogger( Post.class );
 
+    private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
+
     public static final String TEXT_FIELD = "text";
+
+    public enum TextType {
+        markUp,
+        html
+    }
 
     public Post( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
-    public String getText( Request.Language language ) {
-        return getText( language.getIdentifier() );
-    }
-
-    public String getText( String languageId ) {
+    public String getText( TextType type ) {
         MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
-        if( texts != null && !texts.isNull() ) {
-            return document.get( languageId, "" );
-        } else {
+        if( texts == null || texts.isNull() ) {
             return "";
+        } else {
+           return texts.get( type.name(), "" );
         }
     }
 
-    public void setText( String text, Request.Language language ) {
-        logger.debug( "Setting text for " + language );
+    /**
+     * Get the HTML version of the text
+     */
+    public String getText() {
+        return getText( TextType.html );
+    }
+
+    /**
+     * Assuming the text field is created
+     */
+    public void setText( String text, TextType type ) {
+        logger.debug( "Setting text for " + this );
+
         MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
         if( texts != null && !texts.isNull() ) {
-
+            texts.set( type.name(), text );
         } else {
-            logger.debug( "Creating text" );
-            texts = new MongoDocument();
-            document.set( TEXT_FIELD, text );
+            throw new IllegalStateException( TEXT_FIELD + " field was not found!" );
         }
-
-        texts.set( language.getIdentifier(), text );
     }
 
     @Override
@@ -66,17 +78,37 @@ public class Post extends Resource<Post> {
 
     @Override
     public String getPortrait() {
-        return null;
+        return "/theme/notepad-small.png";
     }
+
 
     public static Post create( String title, Request.Language language, String text, User owner ) throws ItemInstantiationException {
         logger.debug( "Creating post " + title + " for " + owner );
         PostDescriptor d = Core.getInstance().getDescriptor( Post.class );
         Post post = d.newInstance( title );
         post.setMandatoryFields( owner );
-        post.setText( text, language );
+
+        logger.debug( "Creating text" );
+        post.setText( text );
 
         return post;
+    }
+
+    /**
+     * Set the text as mark up and html.
+     * @param text
+     */
+    public void setText( String text ) {
+        MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
+        if( texts == null ) {
+            logger.debug( "Creating text field" );
+            texts = new MongoDocument();
+            document.set( TEXT_FIELD, texts );
+        }
+
+        StringBuilder output = textParser.parse( text );
+        setText( text, TextType.markUp );
+        setText( output.toString(), TextType.html );
     }
 
     public static Post getPostByTitle( Node parent, String title ) {
