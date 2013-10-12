@@ -58,6 +58,15 @@ public class HtmlGenerator implements Generator {
 
     @Override
     public void unorderedList( StringBuilder output, Parser.MarkUp markUp, int consumed ) {
+        list( output, markUp, consumed, "<ul>", "</ul>" );
+    }
+
+    @Override
+    public void orderedList( StringBuilder output, Parser.MarkUp markUp, int consumed ) {
+        list( output, markUp, consumed, "<ol>", "</ol>" );
+    }
+
+    private void list( StringBuilder output, Parser.MarkUp markUp, int consumed, String startTag, String endTag ) {
         int diff = consumed - markUp.consumed;
 
         // Be sure to close last list item
@@ -69,11 +78,11 @@ public class HtmlGenerator implements Generator {
 
         if( diff > 0 ) {
             for( int i = 0 ; i < diff ; i++ ) {
-                output.append( "<ul>" );
+                output.append( startTag );
             }
         } else if( diff < 0 ) {
             for( int i = 0 ; i > diff ; i-- ) {
-                output.append( "</ul>" );
+                output.append( endTag );
             }
         }
 
@@ -90,18 +99,30 @@ public class HtmlGenerator implements Generator {
         Parser.MarkUp m = getLastMarkUp();
 
         if( m != null ) {
+            // It's time to some unfinished business
             switch( m.type ) {
                 case unorderedList:
+                    endList( output, m , "</ul>" );
+                    break;
 
-                    // Be sure to close last list item
-                    output.append( "</li>" );
-
-                    int diff = m.consumed;
-                    for( int i = 0 ; i < diff ; i++ ) {
-                        output.append( "</ul>" );
-                    }
+                case orderedList:
+                    endList( output, m , "</ol>" );
                     break;
             }
+        }
+
+        // In either case
+        output.append( "<br />" );
+    }
+
+    private void endList( StringBuilder output, Parser.MarkUp m, String tagEnd ) {
+
+        // Be sure to close last list item
+        output.append( "</li>" );
+
+        int diff = m.consumed;
+        for( int i = 0 ; i < diff ; i++ ) {
+            output.append( tagEnd );
         }
     }
 
