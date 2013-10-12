@@ -17,5 +17,7 @@ public class SimpleParser extends Parser {
         markUps.add( new MarkUp( new char[]{'\'', '\'', '\'', '\'', '\''}, MarkUpType.italicAndBold ) );
 
         markUps.add( new MarkUp( new char[]{'*'}, MarkUpType.unorderedList, true ) );
+
+        //markUps.add( new MarkUp( new char[]{}, MarkUpType.newLine, true ) );
     }
 }
