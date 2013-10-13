@@ -18,6 +18,10 @@ public interface Authorizer {
                 return VIEW;
             }
         }
+
+        public boolean canModerate() {
+            return this.ordinal() >= MODERATE.ordinal();
+        }
     }
 
     public Authorization getAuthorization( User user ) throws AuthorizationException;

@@ -35,6 +35,8 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private Language language = Language.American;
 
+    Authorizer.Authorization authorization = null;
+
     public enum Language {
         American( "English", "en_US" ),
         English( "English", "en_GB" ),
@@ -148,20 +150,24 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     public void checkAuthorization( Authorizer authorizer, Authorizer.Authorization authorization ) throws NoAuthorizationException {
-        Authorizer.Authorization auth = null;
+
         try {
-            auth = authorizer.getAuthorization( this.user );
+            this.authorization = authorizer.getAuthorization( this.user );
         } catch( AuthorizationException e ) {
             throw new NoAuthorizationException( e );
         }
 
-        logger.debug( "User auth: " + auth + ", required: " + authorization );
+        logger.debug( "User authorization: " + this.authorization + ", required: " + authorization );
 
-        if( auth.ordinal() >= authorization.ordinal() ) {
+        if( this.authorization.ordinal() >= authorization.ordinal() ) {
             return;
         } else {
             throw new NoAuthorizationException( user + " was not authorized to " + authorizer );
         }
+    }
+
+    public Authorizer.Authorization getAuthorization() {
+        return authorization;
     }
 
     public String getTemplate() {
