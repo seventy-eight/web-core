@@ -2,13 +2,13 @@ package org.seventyeight.web.installers;
 
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.nodes.Post;
+import org.seventyeight.web.nodes.Topic;
 import org.seventyeight.web.nodes.User;
 
 /**
  * @author cwolfgang
  */
-public class ArticleInstall extends DefaultNodeInstall<Post> {
+public class ArticleInstall extends DefaultNodeInstall<Topic> {
 
     public ArticleInstall( String title, User owner ) {
         super( title, owner );
@@ -16,12 +16,12 @@ public class ArticleInstall extends DefaultNodeInstall<Post> {
     }
 
     @Override
-    protected Descriptor<Post> getDescriptor() {
-        return Core.getInstance().getDescriptor( Post.class );
+    protected Descriptor<Topic> getDescriptor() {
+        return Core.getInstance().getDescriptor( Topic.class );
     }
 
     @Override
-    protected Post getNodeFromDB() {
+    protected Topic getNodeFromDB() {
         return null;
     }
 }

@@ -1,9 +1,6 @@
 package org.seventyeight.web;
 
 import org.apache.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDBQuery;
-import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.GravatarPortrait;
@@ -45,7 +42,7 @@ public class ProjectCore extends Core {
         children.put( "information", new Information() );
 
         children.put( "profiles", new Profiles() );
-        children.put( "posts", new Post.Posts() );
+        children.put( "posts", new Topic.Posts() );
 
         //children.put( "login", new Login( this ) );
 
@@ -74,7 +71,7 @@ public class ProjectCore extends Core {
         addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileResource.FileDescriptor() );
         addDescriptor( new Certificate.CertificateDescriptor() );
-        addDescriptor( new Post.PostDescriptor() );
+        addDescriptor( new Topic.TopicDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
 

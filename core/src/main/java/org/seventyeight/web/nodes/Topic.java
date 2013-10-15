@@ -19,9 +19,9 @@ import java.io.IOException;
  *
  * @author cwolfgang
  */
-public class Post extends Resource<Post> {
+public class Topic extends Resource<Topic> {
 
-    private static Logger logger = Logger.getLogger( Post.class );
+    private static Logger logger = Logger.getLogger( Topic.class );
 
     private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
 
@@ -32,7 +32,7 @@ public class Post extends Resource<Post> {
         html
     }
 
-    public Post( Node parent, MongoDocument document ) {
+    public Topic( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -85,16 +85,16 @@ public class Post extends Resource<Post> {
         return "/theme/notepad-small.png";
     }
 
-    public static Post create( String title, Request.Language language, String text, User owner ) throws ItemInstantiationException {
-        logger.debug( "Creating post " + title + " for " + owner );
-        PostDescriptor d = Core.getInstance().getDescriptor( Post.class );
-        Post post = d.newInstance( title );
-        post.setMandatoryFields( owner );
+    public static Topic create( String title, Request.Language language, String text, User owner ) throws ItemInstantiationException {
+        logger.debug( "Creating topic " + title + " for " + owner );
+        TopicDescriptor d = Core.getInstance().getDescriptor( Topic.class );
+        Topic topic = d.newInstance( title );
+        topic.setMandatoryFields( owner );
 
         logger.debug( "Creating text" );
-        post.setText( text );
+        topic.setText( text );
 
-        return post;
+        return topic;
     }
 
     /**
@@ -114,7 +114,7 @@ public class Post extends Resource<Post> {
         setText( output.toString(), TextType.html );
     }
 
-    public static Post getPostByTitle( Node parent, String title ) {
+    public static Topic getTopicByTitle( Node parent, String title ) {
         MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
 
         if( docs != null ) {
@@ -125,16 +125,16 @@ public class Post extends Resource<Post> {
                 return null;
             }
         } else {
-            logger.debug( "The post " + title + " was not found" );
+            logger.debug( "The topic " + title + " was not found" );
             return null;
         }
     }
 
-    public static class PostDescriptor extends ResourceDescriptor<Post> {
+    public static class TopicDescriptor extends ResourceDescriptor<Topic> {
 
         @Override
         public String getType() {
-            return "post";
+            return "topic";
         }
 
         @Override
@@ -147,31 +147,31 @@ public class Post extends Resource<Post> {
                 logger.debug( "The id " + name + " was not found" );
             }
 
-            Post post = getPostByTitle( this, name );
-            if( post != null ) {
-                return post;
+            Topic topic = getTopicByTitle( this, name );
+            if( topic != null ) {
+                return topic;
             } else {
-                throw new NotFoundException( "The post " + name + " was not found" );
+                throw new NotFoundException( "The topic " + name + " was not found" );
             }
         }
 
         @Override
         public String getDisplayName() {
-            return "Post";
+            return "Topic";
         }
     }
 
-    public static class Posts implements Node {
+    public static class Topics implements Node {
 
         @PostMethod
         public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException {
             String title = request.getValue( "title", "" );
             String text = request.getValue( "text", "" );
 
-            Post post = Post.create( title, request.getLanguage(), text, request.getUser() );
-            post.save();
+            Topic topic = Topic.create( title, request.getLanguage(), text, request.getUser() );
+            topic.save();
 
-            response.sendRedirect( "/post/" + post.getIdentifier() + "/" );
+            response.sendRedirect( "/topic/" + topic.getIdentifier() + "/" );
         }
 
         @Override
@@ -181,7 +181,7 @@ public class Post extends Resource<Post> {
 
         @Override
         public String getDisplayName() {
-            return "Posts";
+            return "Topics";
         }
 
         @Override
