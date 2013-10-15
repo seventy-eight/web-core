@@ -24,6 +24,8 @@ public class ParserTest {
     protected String sample1000001 = "Yeah";
     protected String sample1000002 =  "* 1\r\n* 2\r\n** 3\r\n** 4\r\n* 5";
 
+    protected String MARKUP5 = "=First day=\n\r\n\r=second day=";
+
     @Test
     public void test() {
         SimpleParser parser = new SimpleParser( new HtmlGenerator() );
@@ -118,6 +120,14 @@ public class ParserTest {
         SimpleParser parser = new SimpleParser( new HtmlGenerator() );
         StringBuilder output = new StringBuilder();
         parser.parse( sample1000002, output );
+        System.out.println("OUT: " + output.toString());
+    }
+
+    @Test
+    public void testMarkUp5() {
+        SimpleParser parser = new SimpleParser( new HtmlGenerator() );
+        StringBuilder output = new StringBuilder();
+        parser.parse( MARKUP5, output );
         System.out.println("OUT: " + output.toString());
     }
 }
