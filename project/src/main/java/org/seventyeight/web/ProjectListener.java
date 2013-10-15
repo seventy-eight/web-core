@@ -46,7 +46,7 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
         ((Profile)cwInstall.getValue()).addRole( (Role) arInstall.getValue() );
 
 
-
+        /*
         CertificateInstall cert1 = new CertificateInstall( "Test certificate", cwInstall.getValue() );
         cert1.install();
 
@@ -59,6 +59,7 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
 
         ArticleInstall ai1 = new ArticleInstall( "Post number 1", cwInstall.getValue() );
         ai1.install();
+        */
 
     }
 

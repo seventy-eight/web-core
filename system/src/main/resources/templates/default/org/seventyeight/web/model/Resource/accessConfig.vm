@@ -1,0 +1,11 @@
+<table>
+    <tr>
+        <td align="center">#i18n( "Access groups" )</td>
+        <td align="center">#groupsforresource($!item.getIdentifier(), "editor-group", "writeAccess")</td>
+    </tr>
+
+    <tr>
+        <td align="center">#i18n( "Editor groups" )</td>
+        <td align="center">#resourcAccessConfiguration( $item "moderate" )</td>
+    </tr>
+</table>

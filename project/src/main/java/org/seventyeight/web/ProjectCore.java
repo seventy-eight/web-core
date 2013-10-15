@@ -100,10 +100,12 @@ public class ProjectCore extends Core {
         mainMenu.add( new Menu.MenuItem( "Search", "/search2/" ) );
 
 
+        /*
         MongoDBQuery query = new MongoDBQuery().is( "username", "anonymous" );
         MongoDocument d = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( query );
         Profile a = getItem( this, d );
         setAnonymous( a );
+        */
     }
 
     public File getSignaturePath() {

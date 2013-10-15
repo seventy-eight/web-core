@@ -155,3 +155,38 @@ a:link {
     font-size: 15px;
     font-variant-caps: #000000;
 }
+
+textarea.configure {
+    height: 150px;
+}
+
+.configure {
+    width: 75%;
+}
+
+.button {
+    border-style: inset;
+    border-width: 2px;
+    line-height: 20px;
+    background-color: #8aafcd;
+    width: 150px;
+    display: inline-block;
+    border-radius: 5px;
+    border-color: #99c4e4;
+    text-align: center;
+}
+
+a.button:link {
+    color: #000;
+    text-decoration: none;
+}
+
+a.button:hover {
+    background-color: #7898b5;
+    border-color: #8ab3d2;
+}
+
+.enabledButton {
+    background-color: #63829e;
+    border-color: #6d8da9;
+}

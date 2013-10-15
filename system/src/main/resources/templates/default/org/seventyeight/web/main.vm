@@ -6,9 +6,9 @@
 
     <link rel="stylesheet" href="/theme/${theme}.css" type="text/css" />
 
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />-->
+    <script src="/static/javascript/jquery/jquery-1.10.2.js"></script>
+    <script src="/static/javascript/jquery/jquery-ui-1.10.3.js"></script>
 
     <!-- <script language="javascript" type="text/javascript" src="/static/javascript/ajaxupload.js"></script> -->
     <script language="javascript" type="text/javascript" src="/static/javascript/dropzone.js"></script>

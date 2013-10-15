@@ -1,0 +1,4 @@
+<tr>
+    <td>Text</td>
+    <td>#inputtext( "text", $item.getMarkUp() 0 true)</td>
+</tr>

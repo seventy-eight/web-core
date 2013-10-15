@@ -72,9 +72,9 @@ public class TextInputDirective extends Directive {
 		}
 		
 		if( area ) {
-			writer.write( "<textarea name=\"" + name + "\" onclick=\"" + onClick + "\">" + value + "</textarea>" );
+			writer.write( "<textarea name=\"" + name + "\" onclick=\"" + onClick + "\" class=\"configure\">" + value + "</textarea>" );
 		} else {
-			writer.write( "<input type=\"text\" name=\"" + name + "\" value=\"" + value + "\" " + ( maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "" ) + " onclick=\"" + onClick + "\"" + ( readonly ? " readonly" : "" ) + ">" );
+			writer.write( "<input type=\"text\" name=\"" + name + "\" class=\"configure\" value=\"" + value + "\" " + ( maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "" ) + " onclick=\"" + onClick + "\"" + ( readonly ? " readonly" : "" ) + ">" );
 		}
 
 		return true;

@@ -52,6 +52,10 @@ public class Post extends Resource<Post> {
         return getText( TextType.html );
     }
 
+    public String getMarkUp() {
+        return getText( TextType.markUp );
+    }
+
     /**
      * Assuming the text field is created
      */
@@ -80,7 +84,6 @@ public class Post extends Resource<Post> {
     public String getPortrait() {
         return "/theme/notepad-small.png";
     }
-
 
     public static Post create( String title, Request.Language language, String text, User owner ) throws ItemInstantiationException {
         logger.debug( "Creating post " + title + " for " + owner );
@@ -141,7 +144,7 @@ public class Post extends Resource<Post> {
                 return Core.getInstance().getNodeById( this, name );
             } catch( Exception e ) {
                 /* Not an id */
-                logger.debug( "Id not found", e );
+                logger.debug( "The id " + name + " was not found" );
             }
 
             Post post = getPostByTitle( this, name );

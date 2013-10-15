@@ -22,6 +22,16 @@
 </tr>
 #end
 
+#macro( resourceConfiguration $item )
+    #renderDescriptor( $item.getDescriptor() $item )
+#end
+
+#macro( resourcAccessConfiguration $resource $name )
+    <select name="$name" multiple="multiple">
+        <option name="g1">GROURUOR</option>
+    </select>
+#end
+
 #macro( configureExtensions $extensionClass $item )
 
     #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )

@@ -75,7 +75,7 @@ public class RenderObject extends Directive {
             /* Default behaviour */
             if( superClass == 0 && clazz2 == null ) {
                 try {
-                    writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( obj, template + ".vm", false ) );
+                    writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( obj, template + ".vm", true ) );
                 } catch( TemplateException e ) {
                     e.printStackTrace();
                 }

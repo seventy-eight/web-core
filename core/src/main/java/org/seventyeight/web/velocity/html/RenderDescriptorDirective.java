@@ -66,6 +66,8 @@ public class RenderDescriptorDirective extends Directive {
         try {
             if( item == null ) {
                 writer.write( d.getConfigurationPage( request, null ) );
+            } else {
+                writer.write( d.getConfigurationPage( request, item ) );
             }
         } catch( Exception e ) {
             throw new IOException( e );

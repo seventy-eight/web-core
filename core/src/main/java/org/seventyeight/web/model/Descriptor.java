@@ -111,15 +111,15 @@ public abstract class Descriptor<T extends Describable<T>> {
         return getConfigurationPage( request, null );
     }
 
-    public String getConfigurationPage( Request request, AbstractExtension extension ) throws TemplateException, NotFoundException {
+    public String getConfigurationPage( Request request, Describable<?> describable ) throws TemplateException, NotFoundException {
         VelocityContext c = new VelocityContext();
         c.put( "class", getClazz().getName() );
         c.put( "descriptor", this );
 
-        if( extension != null ) {
-            logger.debug( "Extension is " + extension );
+        if( describable != null ) {
+            logger.debug( "Extension is " + describable );
             c.put( "enabled", true );
-            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderObject( extension, "config.vm" ) );
+            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderObject( describable, "config.vm" ) );
         } else {
             logger.debug( "Preparing EMPTY " + getClazz() );
             c.put( "enabled", false );
