@@ -35,7 +35,7 @@ public class RenderObject extends Directive {
         logger.debug( "Rendering object" );
 		Object obj = null;
         String template = null;
-        int superClass = 0;
+        boolean superClass = false;
         Class<?> clazz2 = null;
 
 		try {
@@ -52,7 +52,7 @@ public class RenderObject extends Directive {
             }
 
             if( node.jjtGetChild( 2 ) != null ) {
-                superClass = (Integer) node.jjtGetChild( 2 ).value( context );
+                superClass = (Boolean) node.jjtGetChild( 2 ).value( context );
             } else {
                 throw new IOException( "Third argument is not a string" );
             }
@@ -73,26 +73,18 @@ public class RenderObject extends Directive {
             return false;
         } else {
             /* Default behaviour */
-            if( superClass == 0 && clazz2 == null ) {
+            if( clazz2 == null ) {
                 try {
-                    writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( obj, template + ".vm", true ) );
+                    writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( obj, template + ".vm", superClass ) );
                 } catch( TemplateException e ) {
-                    e.printStackTrace();
+                    writer.write( "No " + template + " for " + obj );
                 }
             } else {
                 try {
-                    Class<?> clazz = clazz2 != null ? clazz2 : obj.getClass();
-                    int c = 0;
-                    logger.debug("BASE IS " + clazz);
-                    while( clazz != null && clazz != Object.class && c < superClass ) {
-                        clazz = clazz.getSuperclass();
-                        logger.debug("SUPER IS " + clazz);
-                        c++;
-                    }
-                    logger.debug("USING " + clazz);
-                    writer.write( (Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( obj, clazz, template + ".vm", false ) ) );
+                    logger.debug("USING " + clazz2);
+                    writer.write( (Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( obj, clazz2, template + ".vm", superClass ) ) );
                 } catch( NotFoundException e ) {
-                    e.printStackTrace();
+                    writer.write( "No " + template + " for " + obj );
                 }
             }
         }
