@@ -17,7 +17,9 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author cwolfgang
@@ -90,5 +92,33 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     public void doBadge( Request request, Response response ) throws TemplateException, IOException {
         response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
     }
+
+    public Set<String> getConfiguredExtensionTypes() {
+        MongoDocument doc = document.getSubDocument( Core.Relations.EXTENSIONS, null );
+        return doc.getKeys();
+    }
+
+    public List<AbstractExtension> getConfiguredExtensions() throws ItemInstantiationException {
+        logger.debug( "Getting configured extensions for " + this );
+        List<AbstractExtension> extensions = new ArrayList<AbstractExtension>(  );
+        for( String type : getConfiguredExtensionTypes() ) {
+            logger.debug( "Type: " + type );
+
+            MongoDocument doc = document.getr( Core.Relations.EXTENSIONS, type );
+            logger.debug( "Extension document is " + doc );
+            for( String e : doc.getKeys() ) {
+                logger.debug( "Extension: " + e );
+
+                MongoDocument ext = doc.getSubDocument( e, null );
+                if( ext != null && !ext.isNull() ) {
+                    AbstractExtension instance = Core.getInstance().getItem( this, ext );
+                    extensions.add( instance );
+                }
+            }
+        }
+
+        return extensions;
+    }
+
 
 }
