@@ -81,6 +81,7 @@ Utils.getJsonFromForm = function( e, jsonData ) {
     for( var i = 0 ; i < childs.length ; i++ ) {
         //alert( "Child: " + childs[i] + ", TAG:" + childs[i].tagName + ", nodename:" + childs[i].name );
         var name = Utils.getAttribute(childs[i], "name");
+        var tag = childs[i].tagName;
 
         if( childs[i].tagName != undefined && name.length > 0 ) {
             //alert( "NAME=" + name + ", " + childs[i].tagName );
@@ -101,6 +102,12 @@ Utils.getJsonFromForm = function( e, jsonData ) {
                         jsonData[childs[i].name] = childs[i].value;
                     }
                     break;
+
+                case "TEXTAREA":
+                    //alert("TEXT AREA: " + name)
+                    jsonData[childs[i].name] = childs[i].value;
+                    break;
+
                 case "SELECT":
                     //alert( "SELECT: " + childs[i].name + "=" + childs[i].value + ", type: " + childs[i].type );
                     if( childs[i].type == "select-one" ) {
@@ -120,7 +127,7 @@ Utils.getJsonFromForm = function( e, jsonData ) {
                     break;
                 case "DIV":
                     //alert("DIV: " + name + "=" + $(childs[i]).html() );
-                    if( $(childs[i]).is( ':visible' ) ) {
+                    if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
                         if( jsonData[name] == undefined ) {
                             jsonData[name] = [];
                         }
@@ -139,9 +146,11 @@ Utils.getJsonFromForm = function( e, jsonData ) {
         }
 
         if( childs[i].tagName == 'DIV') {
-            //alert("IN HERE: " + name.length);
-            if( name.length == 0 ) {
-                Utils.getJsonFromForm( childs[i], jsonData );
+            if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
+                alert("Div parent: " + e.name + ", " + e.tagName);
+                if( name.length == 0 ) {
+                    Utils.getJsonFromForm( childs[i], jsonData );
+                }
             }
         }
     }
