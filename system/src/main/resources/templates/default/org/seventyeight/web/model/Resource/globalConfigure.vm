@@ -12,7 +12,7 @@
                         <td colspan="2" align="center" style="font-size: 18px;font-weight: bold">Configuring global $item.getDisplayName()</td>
                     </tr>
 
-                    #render( $item "global" 0 $item.getClazz() )
+                    #render( $item "global" false $item.getClazz() )
 
                     <tr>
                         <td colspan="2">

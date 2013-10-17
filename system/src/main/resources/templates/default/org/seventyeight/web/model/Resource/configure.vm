@@ -11,15 +11,34 @@
         <td style="width: 200px; text-align: center; vertical-align: top">
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('access-config', this)">Access</a>
+
+            #set( $elist = $item.getConfiguredExtensions() )
+            #foreach( $extension in $elist )
+                <a href="#" class="button" onclick="activate('$extension.getDescriptor().getJsonId()-config', this)">$extension.getDescriptor().getDisplayName()</a>
+            #end
         </td>
 
-        <td style="width: auto; vertical-align: top">
-            <div id="$item.getType()-config" style="display: block" class="configurationDiv">
-                #resourceConfiguration( $item )
+        <td style="width: auto; vertical-align: top" name="OUTER">
+            <div id="$item.getType()-config" style="display: block" class="configurationDiv rootConfiguration">
+                <table style="width:100%">
+                    #render( $item "config" )
+                </table>
             </div>
 
-            <div id="access-config" style="display: none" class="configurationDiv">
-                #render( $item "accessConfig" )
+            <div id="access-config" style="display: none" class="configurationDiv rootConfiguration">
+                #render( $item "accessConfig" true )
+            </div>
+
+            <div name="extensions">
+                #foreach( $extension in $elist )
+                    <div id="$extension.getDescriptor().getJsonId()-config" style="display: none" class="configurationDiv rootConfiguration">
+                        <input type="hidden" name="class" value="$extension.getId()" />
+                        <table>
+                            #render( $extension "config" )
+                        </table>
+                    </div>
+                #end
+
             </div>
         </td>
     </tr>

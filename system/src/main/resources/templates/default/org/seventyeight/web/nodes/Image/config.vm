@@ -1,4 +1,4 @@
-#render( $item "config" 1 )
+#render( $item "config" )
 
 
 YEAH
