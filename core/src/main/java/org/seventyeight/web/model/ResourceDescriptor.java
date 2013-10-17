@@ -5,9 +5,12 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ResourceExtension;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -43,6 +46,13 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
 
         return node;
+    }
+
+    @Override
+    public List<Class> getExtensionClasses() {
+        List<Class> extensions = new ArrayList<Class>( 1 );
+        extensions.add( ResourceExtension.class );
+        return extensions;
     }
 
     private boolean titleExists( String title, String type ) {

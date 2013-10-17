@@ -220,7 +220,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
         @Override
         public String getDisplayName() {
-            return "Profile certificate";
+            return "Profile certificates";
         }
 
         @Override

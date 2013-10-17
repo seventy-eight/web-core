@@ -99,7 +99,7 @@ public abstract class Descriptor<T extends Describable<T>> {
         /* Default implementation is a no op */
     }
 
-    public boolean enabledByDefault() {
+    public boolean isMandatory() {
         return false;
     }
 

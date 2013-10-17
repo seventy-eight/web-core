@@ -8,10 +8,7 @@ import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.seventyeight.database.Document;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author cwolfgang
@@ -257,6 +254,10 @@ public class MongoDocument implements Document {
 
     public Map getMap() {
         return document.toMap();
+    }
+
+    public Set<String> getKeys() {
+        return document.keySet();
     }
 
     @Override
