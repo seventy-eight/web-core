@@ -9,6 +9,7 @@ import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.actions.Get;
+import org.seventyeight.web.actions.ResourceAction;
 import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
@@ -170,11 +171,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         this.pluginLoader = new Loader( classLoader );
 
         /* Mandatory */
-        children.put( "get", new Get( this ) );
-
-        /**/
-        mainMenu.add( new Menu.MenuItem( "New Content", "/new" ) );
-        mainMenu.add( new Menu.MenuItem( "Test", "/user/wolle" ) );
+        children.put( "get", new Get( this ) );  // This
+        children.put( "resource", new ResourceAction() ); // Or that?
 
         instance = this;
     }

@@ -5,7 +5,6 @@ package org.seventyeight.markup;
  */
 public class SimpleParser extends Parser {
 
-
     public SimpleParser( Generator generator ) {
         super( generator );
 
@@ -19,5 +18,10 @@ public class SimpleParser extends Parser {
         markUps.add( new MarkUp( new char[]{'*'}, MarkUpType.unorderedList, true ) );
 
         //markUps.add( new MarkUp( new char[]{}, MarkUpType.newLine, true ) );
+    }
+
+    @Override
+    public String getVersion() {
+        return "1";
     }
 }

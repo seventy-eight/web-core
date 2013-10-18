@@ -130,4 +130,9 @@ public class HtmlGenerator implements Generator {
     public Parser.MarkUp getLastMarkUp() {
         return lastMarkUp;
     }
+
+    @Override
+    public String getVersion() {
+        return "1";
+    }
 }

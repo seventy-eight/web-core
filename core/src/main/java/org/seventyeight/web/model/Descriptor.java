@@ -21,6 +21,8 @@ import java.util.List;
 public abstract class Descriptor<T extends Describable<T>> {
 	
 	private static Logger logger = Logger.getLogger( Descriptor.class );
+
+    public static final String DATA_COLLECTION = "data";
 	
 	protected transient Class<T> clazz;
 	
@@ -66,6 +68,10 @@ public abstract class Descriptor<T extends Describable<T>> {
         document.set( "class", clazz.getName() );
 
         return instance;
+    }
+
+    public String getCollectionName() {
+        return DATA_COLLECTION;
     }
 
     /**

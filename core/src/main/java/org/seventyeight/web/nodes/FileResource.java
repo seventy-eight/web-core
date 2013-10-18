@@ -99,6 +99,7 @@ public class FileResource extends UploadableNode<FileResource> {
             return "File";
         }
 
+        /*
         @Override
         public Node getChild( String name ) throws NotFoundException {
             try {
@@ -109,5 +110,6 @@ public class FileResource extends UploadableNode<FileResource> {
 
             throw new NotFoundException( "The file " + name + " was not found" );
         }
+        */
     }
 }

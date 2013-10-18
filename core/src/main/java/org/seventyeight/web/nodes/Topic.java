@@ -36,6 +36,27 @@ public class Topic extends Resource<Topic> {
         super( parent, document );
     }
 
+    @Override
+    public Saver getSaver( CoreRequest request ) {
+        return new TopicSaver( this, request );
+    }
+
+    public class TopicSaver extends Saver {
+
+        public TopicSaver( AbstractNode modelObject, CoreRequest request ) {
+            super( modelObject, request );
+        }
+
+        @Override
+        public void save() throws SavingException {
+            String text = request.getValue( "text", null );
+            if( text == null || text.isEmpty() ) {
+                throw new SavingException( "No text is provided" );
+            }
+            setText( text );
+        }
+    }
+
     public String getText( TextType type ) {
         MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
         if( texts == null || texts.isNull() ) {
@@ -110,8 +131,21 @@ public class Topic extends Resource<Topic> {
         }
 
         StringBuilder output = textParser.parse( text );
+
+        // Set the version of the parser and generator
+        String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
+        setTextParserVersion( version );
+
         setText( text, TextType.markUp );
         setText( output.toString(), TextType.html );
+    }
+
+    protected void setTextParserVersion( String version ) {
+        document.set( "textParserVersion", version );
+    }
+
+    public String getTextParserVersion() {
+        return document.get( "textParserVersion", "" );
     }
 
     public static Topic getTopicByTitle( Node parent, String title ) {
@@ -138,55 +172,8 @@ public class Topic extends Resource<Topic> {
         }
 
         @Override
-        public Node getChild( String name ) throws NotFoundException {
-            /* Id first */
-            try {
-                return Core.getInstance().getNodeById( this, name );
-            } catch( Exception e ) {
-                /* Not an id */
-                logger.debug( "The id " + name + " was not found" );
-            }
-
-            Topic topic = getTopicByTitle( this, name );
-            if( topic != null ) {
-                return topic;
-            } else {
-                throw new NotFoundException( "The topic " + name + " was not found" );
-            }
-        }
-
-        @Override
         public String getDisplayName() {
             return "Topic";
-        }
-    }
-
-    public static class Topics implements Node {
-
-        @PostMethod
-        public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException {
-            String title = request.getValue( "title", "" );
-            String text = request.getValue( "text", "" );
-
-            Topic topic = Topic.create( title, request.getLanguage(), text, request.getUser() );
-            topic.save();
-
-            response.sendRedirect( "/topic/" + topic.getIdentifier() + "/" );
-        }
-
-        @Override
-        public Node getParent() {
-            return Core.getInstance();
-        }
-
-        @Override
-        public String getDisplayName() {
-            return "Topics";
-        }
-
-        @Override
-        public String getMainTemplate() {
-            return null;  /* Implementation is a no op */
         }
     }
 }

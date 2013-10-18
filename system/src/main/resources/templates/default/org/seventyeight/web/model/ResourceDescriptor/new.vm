@@ -1,0 +1,8 @@
+<table>
+    <tr>
+        <td>Title</td>
+        <td><input type="text" name="title" class="configure"></td>
+    </tr>
+
+    #renderDescriptor( $this )
+</table>

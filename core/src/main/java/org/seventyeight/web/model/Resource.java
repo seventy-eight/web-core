@@ -59,6 +59,11 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @Override
+    public ResourceDescriptor<T> getDescriptor() {
+        return Core.getInstance().getDescriptor( getClass() );
+    }
+
+    @Override
     public List<AbstractExtension> getExtensions() {
         List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
         //es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );

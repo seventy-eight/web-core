@@ -203,15 +203,6 @@ public class Profile extends User {
     public static class ProfileDescriptor extends UserDescriptor {
 
         @Override
-        public Node getChild( String name ) throws NotFoundException {
-            try {
-                return Core.getInstance().getNodeById( this, name );
-            } catch( Exception e ) {
-                return getProfileByUsername( name, this );
-            }
-        }
-
-        @Override
         public String getDisplayName() {
             return "Profile";
         }

@@ -17,4 +17,6 @@ public interface Generator {
     public void onEmptyLine( StringBuilder output );
 
     public Parser.MarkUp getLastMarkUp();
+
+    public String getVersion();
 }

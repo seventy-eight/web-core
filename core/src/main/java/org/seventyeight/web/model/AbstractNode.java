@@ -114,7 +114,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     public String getUrl() {
         //return "/get/" + getIdentifier();
-        return "/" + getDescriptor().getType() + "/" + getTitle() + "/";
+        return "/resource/" + getIdentifier() + "/";
     }
 
     public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
@@ -194,6 +194,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
     public String getOwnerId() {
         return document.get( "owner" );
+    }
+
+    @Override
+    public Descriptor<T> getDescriptor() {
+        return Core.getInstance().getDescriptor( getClass() );
     }
 
     /**
@@ -377,10 +382,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
     }
 
-    @Override
-    public ResourceDescriptor<T> getDescriptor() {
-        return Core.getInstance().getDescriptor( getClass() );
-    }
 
     public void updateField( String collection, MongoUpdate update ) {
         MongoDBCollection.get( collection ).update( new MongoDBQuery().is( "_id", getObjectId() ), update );
@@ -458,6 +459,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
             return null;
         }
     }
+
+
 
     @Override
     public String getDisplayName() {

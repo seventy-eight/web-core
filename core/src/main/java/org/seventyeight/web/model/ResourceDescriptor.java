@@ -4,9 +4,13 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ResourceExtension;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +19,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class ResourceDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node, Parent {
+public abstract class ResourceDescriptor<T extends Resource<T>> extends Descriptor<T> implements Node {
 
     private static Logger logger = Logger.getLogger( ResourceDescriptor.class );
 
@@ -46,6 +50,20 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
 
         return node;
+    }
+
+
+    @PostMethod
+    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, SavingException, ClassNotFoundException {
+        String title = request.getValue( "title", null );
+        if( title != null ) {
+            logger.debug( "Creating " + title );
+            T instance = newInstance( title );
+            instance.save( request, null );
+            response.sendRedirect( instance.getUrl() );
+        } else {
+            throw new ItemInstantiationException( "No title provided" );
+        }
     }
 
     @Override
@@ -85,6 +103,7 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         return instance;
     }
 
+    @Override
     public String getCollectionName() {
         return Core.RESOURCES_COLLECTION_NAME;
     }
@@ -104,6 +123,7 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         return "org/seventyeight/web/main.vm";
     }
 
+    /*
     @Override
     public Node getChild( String name ) throws NotFoundException {
         Node node = AbstractNode.getNodeByTitle( this, name, getType() );
@@ -113,4 +133,5 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
             throw new NotFoundException( "The child " + name + " was not found" );
         }
     }
+    */
 }
