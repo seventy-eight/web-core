@@ -162,6 +162,11 @@ textarea.configure {
 
 .configure {
     width: 75%;
+    vertical-align: top;
+}
+
+.configureText {
+    vertical-align: top;
 }
 
 .button {

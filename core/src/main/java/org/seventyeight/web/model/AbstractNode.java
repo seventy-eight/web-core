@@ -287,13 +287,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
             setOwner( owner );
         }
 
-        /* Only do this if it is not just created */
-        if( getRevision() > 1 ) {
-            document.set( "updated", now );
-            document.set( "revision", getRevision() + 1 );
-        } else {
-
-        }
+        document.set( "updated", now );
+        document.set( "revision", getRevision() + 1 );
     }
 
     public Date getUpdated() {

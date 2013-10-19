@@ -1,8 +1,16 @@
-<table>
-    <tr>
-        <td>Title</td>
-        <td><input type="text" name="title" class="configure"></td>
-    </tr>
+<form action="create" method="post" id="create" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
 
-    #renderDescriptor( $this )
-</table>
+    <table style="width: 100%">
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="title" class="configure"></td>
+        </tr>
+
+        #renderDescriptor( $item )
+
+        <tr>
+            <td colspan="2" align="center"><input type="submit" value="Save"></td>
+        </tr>
+    </table>
+
+</form>

@@ -125,14 +125,14 @@ public abstract class Descriptor<T extends Describable<T>> {
         if( describable != null ) {
             logger.debug( "Extension is " + describable );
             c.put( "enabled", true );
-            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderObject( describable, "config.vm" ) );
+            return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderObject( describable, "config.vm" );
         } else {
             logger.debug( "Preparing EMPTY " + getClazz() );
             c.put( "enabled", false );
-            c.put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderClass( getClazz(), "config.vm" ) );
+            return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderClass( getClazz(), "config.vm" );
         }
 
-        return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
+        //return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
     }
 
     public String getRelationType() {

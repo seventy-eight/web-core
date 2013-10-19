@@ -97,8 +97,8 @@ public abstract class ResourceDescriptor<T extends Resource<T>> extends Descript
         document.set( "class", clazz.getName() );
         Date now = new Date();
         document.set( "created", now );
-        document.set( "updated", now );
-        document.set( "revision", 1 );
+        //document.set( "updated", now );
+        document.set( "revision", 0 );
 
         return instance;
     }

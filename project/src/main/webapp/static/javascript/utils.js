@@ -147,7 +147,7 @@ Utils.getJsonFromForm = function( e, jsonData ) {
 
         if( childs[i].tagName == 'DIV') {
             if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
-                alert("Div parent: " + e.name + ", " + e.tagName);
+                //alert("Div parent: " + e.name + ", " + e.tagName);
                 if( name.length == 0 ) {
                     Utils.getJsonFromForm( childs[i], jsonData );
                 }
