@@ -66,4 +66,9 @@ public class TokenList {
     public int left() {
         return number - ( counter + 1 );
     }
+
+    @Override
+    public String toString() {
+        return "Number: " + number + ", counter: " + counter + ", list: " + list.toString();
+    }
 }

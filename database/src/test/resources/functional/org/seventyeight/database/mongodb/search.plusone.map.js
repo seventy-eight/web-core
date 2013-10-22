@@ -1,3 +1,3 @@
 function() {
-    emit( this.username, 0 );
+    emit( this.username, {"data":[this.type]} );
 }

@@ -391,6 +391,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     }
 
     private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Exception {
+        logger.debug( "Rendering object " + obj + ", tokens: " + tokens );
         switch( tokens.left() ) {
                 /* If the last token on the path is a valid node */
             case 0:
@@ -425,57 +426,64 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
         Node current = this;
-        Node temp = null;
+        Node next = null;
         Node last = this;
 
         while( tokens.hasMore() ) {
             String token = tokens.next();
-            logger.debug( "Current token: \"" + token + "\"" );
+            logger.debug( "Current: " + current );
+            logger.debug( "Token  : " + token );
 
             /* Find a child node */
 
-            temp = null;
+            next = null;
             if( current instanceof Parent ) {
-                temp = ((Parent)current).getChild( token );
+                next = ((Parent)current).getChild( token );
             }
-            logger.debug( "Found node is " + temp );
+            logger.debug( "Found node is " + next );
 
             /* If there's no child, try an action */
-            if( temp == null ) {
+            if( next == null ) {
 
                 AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
-                if( d != null && current instanceof PersistedObject ) {
-                    logger.debug( "Found descriptor " + d + " for " + token );
+                logger.debug( "Found descriptor " + d + " for " + token );
+                if( d != null ) {
                     if( d.isApplicable( current ) ) {
-                        //logger.debug( "CURRENT IS " + current );
-                        temp = (Node) d.getExtension( (PersistedObject) current );
-                        logger.debug( "Found action is " + temp );
-                        //logger.debug( "TEMP PARENT: " + temp.getParent() );
+                        if( current instanceof PersistedObject ) {
+                            //logger.debug( "CURRENT IS " + current );
+                            next = (Node) d.getExtension( (PersistedObject) current );
+                            logger.debug( "Found action is " + next );
+                            //logger.debug( "TEMP PARENT: " + next.getParent() );
+                        } else if( current instanceof Descriptor ) {
+                            next = (Node) d.getExtension( (Descriptor) current );
+                        }
                     }
                 }
 
                 /* If there ain't any actions */
-                if( temp == null ) {
+                if( next == null ) {
                     tokens.backup();
                     break;
                 }
             }
 
-            if( temp instanceof Autonomous ) {
+            if( next instanceof Autonomous ) {
                 logger.debug( current + " is autonomous" );
-                return temp;
+                return next;
             }
 
+            /*
             if( current instanceof Parent ) {
             } else {
                 tokens.backup();
                 break;
             }
+            */
 
             /* TODO Something about authorization? */
 
-            current = temp;
-            last = temp;
+            current = next;
+            last = next;
         }
 
         return last;
@@ -525,7 +533,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
         for( Class<?> i : interfaces ) {
-            logger.debug( "INTERFACE: " + i );
+            //logger.debug( "INTERFACE: " + i );
             List<Descriptor> list = null;
             if( !descriptorList.containsKey( i ) ) {
                 descriptorList.put( i, new ArrayList<Descriptor>() );

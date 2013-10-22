@@ -5,6 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceOutput;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +16,15 @@ import java.util.List;
  */
 public class MongoDBMapReduce {
 
+    private static Logger logger = Logger.getLogger( MongoDBMapReduce.class );
+
     private String mapFunction;
     private String reduceFunction;
     private DBCollection collection;
     private MapReduceCommand.OutputType outputType = MapReduceCommand.OutputType.INLINE;
     private String outputCollectionName;
+    private String outputDatabase;
+    private MongoDBQuery query;
 
     public MongoDBMapReduce( File mapFile, File reduceFile ) throws IOException {
         mapFunction = FileUtils.readFileToString( mapFile );
@@ -36,20 +41,41 @@ public class MongoDBMapReduce {
         return this;
     }
 
-    public MapReduceOutput execute() {
-        MapReduceCommand cmd = new MapReduceCommand( collection, mapFunction, reduceFunction,  outputCollectionName, outputType, null);
+    public MongoDBMapReduce setOutputDatabase( String outputDatabase ) {
+        this.outputDatabase = outputDatabase;
+        return this;
+    }
 
-        return collection.mapReduce(cmd);
+    public MongoDBMapReduce setQuery( MongoDBQuery query ) {
+        this.query = query;
+        return this;
+    }
+
+    public MapReduceOutput execute() {
+        return execute( outputCollectionName, null );
     }
 
     public MapReduceOutput execute( String outputCollectionName ) {
-        MapReduceCommand cmd = new MapReduceCommand( collection, mapFunction, reduceFunction,  outputCollectionName, outputType, null);
+        return execute( outputCollectionName, null );
+    }
 
-        return collection.mapReduce(cmd);
+    public MapReduceOutput execute( MongoDBQuery query ) {
+        return execute( outputCollectionName, query );
     }
 
     public MapReduceOutput execute( String outputCollectionName, MongoDBQuery query ) {
-        MapReduceCommand cmd = new MapReduceCommand( collection, mapFunction, reduceFunction,  outputCollectionName, outputType, query.getDocument() );
+        logger.debug( "Executing map reduce" );
+
+        MapReduceCommand cmd;
+        if( query != null ) {
+            cmd = new MapReduceCommand( collection, mapFunction, reduceFunction,  outputCollectionName, outputType, query.getDocument() );
+        } else {
+            cmd = new MapReduceCommand( collection, mapFunction, reduceFunction,  outputCollectionName, outputType, null );
+        }
+
+        if( this.outputDatabase != null ) {
+            cmd.setOutputDB( outputDatabase );
+        }
 
         return collection.mapReduce(cmd);
     }

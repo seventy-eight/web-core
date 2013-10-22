@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class ResourceDescriptor<T extends Resource<T>> extends Descriptor<T> implements Node {
+public abstract class ResourceDescriptor<T extends Resource<T>> extends Descriptor<T> implements Node, Getable<T> {
 
     private static Logger logger = Logger.getLogger( ResourceDescriptor.class );
 
@@ -121,6 +121,26 @@ public abstract class ResourceDescriptor<T extends Resource<T>> extends Descript
     @Override
     public String getMainTemplate() {
         return "org/seventyeight/web/main.vm";
+    }
+
+    @Override
+    public T get( String token ) throws NotFoundException {
+        logger.debug( "Getting " + token );
+
+        /* First, get by id */
+        try {
+            return Core.getInstance().getNodeById( this, token );
+        } catch( Exception e ) {
+            logger.debug( "the id " + token + " does not exist, " + e.getMessage() );
+        }
+
+        /* Get resource by title */
+        T node = AbstractNode.getNodeByTitle( this, token, getType() );
+        if( node != null ) {
+            return node;
+        } else {
+            throw new NotFoundException( "The resource " + token + " was not found" );
+        }
     }
 
     /*
