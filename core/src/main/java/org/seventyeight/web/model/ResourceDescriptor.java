@@ -4,9 +4,13 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ResourceExtension;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +19,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class ResourceDescriptor<T extends Describable<T>> extends Descriptor<T> implements Node, Parent {
+public abstract class ResourceDescriptor<T extends Resource<T>> extends Descriptor<T> implements Node, Getable<T> {
 
     private static Logger logger = Logger.getLogger( ResourceDescriptor.class );
 
@@ -46,6 +50,20 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
 
         return node;
+    }
+
+
+    @PostMethod
+    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, SavingException, ClassNotFoundException {
+        String title = request.getValue( "title", null );
+        if( title != null ) {
+            logger.debug( "Creating " + title );
+            T instance = newInstance( title );
+            instance.save( request, null );
+            response.sendRedirect( instance.getUrl() );
+        } else {
+            throw new ItemInstantiationException( "No title provided" );
+        }
     }
 
     @Override
@@ -79,12 +97,13 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
         document.set( "class", clazz.getName() );
         Date now = new Date();
         document.set( "created", now );
-        document.set( "updated", now );
-        document.set( "revision", 1 );
+        //document.set( "updated", now );
+        document.set( "revision", 0 );
 
         return instance;
     }
 
+    @Override
     public String getCollectionName() {
         return Core.RESOURCES_COLLECTION_NAME;
     }
@@ -105,6 +124,27 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
     }
 
     @Override
+    public T get( String token ) throws NotFoundException {
+        logger.debug( "Getting " + token );
+
+        /* First, get by id */
+        try {
+            return Core.getInstance().getNodeById( this, token );
+        } catch( Exception e ) {
+            logger.debug( "the id " + token + " does not exist, " + e.getMessage() );
+        }
+
+        /* Get resource by title */
+        T node = AbstractNode.getNodeByTitle( this, token, getType() );
+        if( node != null ) {
+            return node;
+        } else {
+            throw new NotFoundException( "The resource " + token + " was not found" );
+        }
+    }
+
+    /*
+    @Override
     public Node getChild( String name ) throws NotFoundException {
         Node node = AbstractNode.getNodeByTitle( this, name, getType() );
         if( node != null ) {
@@ -113,4 +153,5 @@ public abstract class ResourceDescriptor<T extends Describable<T>> extends Descr
             throw new NotFoundException( "The child " + name + " was not found" );
         }
     }
+    */
 }

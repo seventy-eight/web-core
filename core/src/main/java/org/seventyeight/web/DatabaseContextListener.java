@@ -107,6 +107,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                 templatePaths.add( f );
             }
 
+            logger.info( "Loading plugins" );
             for( File plugin : plugins ) {
                 logger.info( "Loading " + plugin );
 
