@@ -8,6 +8,7 @@ import org.seventyeight.database.mongodb.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -150,6 +151,66 @@ public class MongoDBMapReduceTest {
         System.out.println(docs2);
     }
 
+    @Test
+    public void testJoin2() throws IOException {
+        createTests();
+
+        File mapFile = new File( this.getClass().getResource( "search.plusone.map.js" ).getFile() );
+        File reduceFile = new File( this.getClass().getResource( "search.plusone.reduce.js" ).getFile() );
+
+        MongoDBMapReduce mapReduceCerts = new MongoDBMapReduce( mapFile, reduceFile ).setCollection( "certificates" ).setOutputType( MapReduceCommand.OutputType.REDUCE ).setOutputCollection( "search01" );
+        MongoDBMapReduce mapReduceProjs = new MongoDBMapReduce( mapFile, reduceFile ).setCollection( "projects" ).setOutputType( MapReduceCommand.OutputType.REDUCE ).setOutputCollection( "search01" );
+
+        List<String> items = new ArrayList<String>( 2 );
+        items.add( "cert1" );
+        items.add( "cert2" );
+        MongoDBQuery queryCerts = new MongoDBQuery().in( "certificate", items );
+        mapReduceCerts.execute( queryCerts );
+
+        List<MongoDocument> docs = MongoDBCollection.get( "search01" ).find( new MongoDBQuery() );
+        System.out.println(docs);
+
+        MongoDBQuery queryProjs = new MongoDBQuery().is( "project", "proj2" );
+        mapReduceProjs.execute( queryProjs );
+
+        List<MongoDocument> docs2 = MongoDBCollection.get( "search01" ).find( new MongoDBQuery() );
+        System.out.println(docs2);
+    }
+
+    protected void createTests() {
+        MongoDBCollection users = env.getDatabase().getCollection( "users" );
+        users.save( createUser( "wolle" ) );
+        users.save( createUser( "robse" ) );
+        users.save( createUser( "aee" ) );
+
+        MongoDBCollection certificates = env.getDatabase().getCollection( "certificates" );
+        certificates.save( createCertificateAndLink( "cert1", "wolle" ) );
+        certificates.save( createCertificateAndLink( "cert2", "wolle" ) );
+        certificates.save( createCertificateAndLink( "cert3", "wolle" ) );
+
+        certificates.save( createCertificateAndLink( "cert1", "robse" ) );
+        certificates.save( createCertificateAndLink( "cert2", "robse" ) );
+
+        certificates.save( createCertificateAndLink( "cert2", "aee" ) );
+        certificates.save( createCertificateAndLink( "cert3", "aee" ) );
+
+        MongoDBCollection projects = env.getDatabase().getCollection( "projects" );
+        projects.save( createProjectAndLink( "proj1", "wolle" ) );
+
+        projects.save( createProjectAndLink( "proj1", "robse" ) );
+        projects.save( createProjectAndLink( "proj2", "robse" ) );
+
+        projects.save( createProjectAndLink( "proj1", "aee" ) );
+        projects.save( createProjectAndLink( "proj3", "aee" ) );
+    }
+
+    protected MongoDocument createCertificateAndLink( String certId, String username ) {
+        return new MongoDocument().set( "username", username ).set( "type", "certificate" ).set( "certificate", certId );
+    }
+
+    protected MongoDocument createProjectAndLink( String projId, String username ) {
+        return new MongoDocument().set( "username", username ).set( "type", "project" ).set( "project", projId );
+    }
 
     protected MongoDocument createUser( String username ) {
         return new MongoDocument().set( "type", "user" ).set( "username", username ).set( "email", username + "@mail.dk" );
