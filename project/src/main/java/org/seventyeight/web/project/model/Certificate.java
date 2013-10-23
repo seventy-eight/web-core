@@ -123,6 +123,7 @@ public class Certificate extends Resource<Certificate> {
             return false;
         }
 
+        /*
         @Override
         public Node getChild( String name ) throws NotFoundException {
             Certificate cert = getCertificateByTitle( name, this );
@@ -132,6 +133,7 @@ public class Certificate extends Resource<Certificate> {
                 throw new NotFoundException( "The certificate " + cert + " was not found" );
             }
         }
+        */
 
 
     }
