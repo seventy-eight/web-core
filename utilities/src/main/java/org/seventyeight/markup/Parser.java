@@ -179,4 +179,10 @@ public abstract class Parser {
         }
         return true;
     }
+
+    public abstract String getVersion();
+
+    public String getGeneratorVersion() {
+        return generator.getVersion();
+    }
 }
