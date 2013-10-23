@@ -42,7 +42,6 @@ public class ProjectCore extends Core {
         children.put( "information", new Information() );
 
         children.put( "profiles", new Profiles() );
-        children.put( "topics", new Topic.Topics() );
 
         //children.put( "login", new Login( this ) );
 
