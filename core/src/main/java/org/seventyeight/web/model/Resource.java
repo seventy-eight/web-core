@@ -18,6 +18,7 @@ import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +60,11 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @Override
+    public ResourceDescriptor<T> getDescriptor() {
+        return Core.getInstance().getDescriptor( getClass() );
+    }
+
+    @Override
     public List<AbstractExtension> getExtensions() {
         List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
         //es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );
@@ -95,7 +101,11 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     public Set<String> getConfiguredExtensionTypes() {
         MongoDocument doc = document.getSubDocument( Core.Relations.EXTENSIONS, null );
-        return doc.getKeys();
+        if( doc != null && !doc.isNull()) {
+            return doc.getKeys();
+        } else {
+            return Collections.EMPTY_SET;
+        }
     }
 
     public List<AbstractExtension> getConfiguredExtensions() throws ItemInstantiationException {
