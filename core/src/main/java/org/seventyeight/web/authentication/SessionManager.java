@@ -4,18 +4,17 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.ItemInstantiationException;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 
-public class SessionManager {
+public class SessionManager implements Node {
 	
 	private static Logger logger = Logger.getLogger( SessionManager.class );
 
@@ -48,7 +47,7 @@ public class SessionManager {
 		//Session session = createSessionNode( hash, calendar.getTime() );
 
         Session.SessionsDescriptor descriptor = Core.getInstance().getDescriptor( Session.class );
-        Session session = descriptor.newInstance( "Session for " + user.getDisplayName() );
+        Session session = descriptor.newInstance( "Session for " + user.getDisplayName(), this );
         session.getDocument().set( "created", new Date() );
         session.setEndDate( calendar.getTime() );
         //session.setCreated();
@@ -88,4 +87,19 @@ public class SessionManager {
         logger.debug( "[Removing sessions] " + hash );
         MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).remove( new MongoDBQuery().getId( hash ) );
 	}
+
+    @Override
+    public Node getParent() {
+        return Core.getInstance();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Session manager";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;
+    }
 }

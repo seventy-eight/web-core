@@ -3,6 +3,7 @@ package org.seventyeight.web.authentication;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.AbstractNode;
+import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.nodes.User;
@@ -100,16 +101,11 @@ public class Session extends AbstractNode<Session> {
         return document.get( "created" );
     }
 
-    public static class SessionsDescriptor extends ResourceDescriptor<Session> {
+    public static class SessionsDescriptor extends Descriptor<Session> {
 
         @Override
         public String getDisplayName() {
             return "Session";
-        }
-
-        @Override
-        public String getType() {
-            return "session";
         }
 
         @Override
