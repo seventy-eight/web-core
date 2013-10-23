@@ -1,4 +1,7 @@
+#set( $text = "" )
+#set( $text = $item.getMarkUp() )
+
 <tr>
-    <td>Text</td>
-    <td>#inputtext( "text", $item.getMarkUp() 0 true)</td>
+    <td class="configureText">Text</td>
+    <td>#inputtext( "text", $text 0 true)</td>
 </tr>
