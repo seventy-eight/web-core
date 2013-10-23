@@ -129,6 +129,14 @@ public abstract class ResourceDescriptor<T extends Resource<T>> extends Descript
 
         /* First, get by id */
         try {
+            if( Integer.parseInt( token ) > 0 ) {
+                return Core.getInstance().getNodeById( this, getType() + "-" + token );
+            }
+        } catch( Exception e ) {
+            logger.debug( "the id " + token + " for " + getType() + " does not exist, " + e.getMessage() );
+        }
+
+        try {
             return Core.getInstance().getNodeById( this, token );
         } catch( Exception e ) {
             logger.debug( "the id " + token + " does not exist, " + e.getMessage() );
