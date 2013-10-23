@@ -82,6 +82,13 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             return Core.getInstance().getItem( (Node) parent, d );
         }
 
+        public T getExtension( Descriptor parent ) throws ItemInstantiationException {
+            MongoDocument d = new MongoDocument().set( "class", getId() );
+
+            logger.debug( "EXTENSION SUBDOC " + d );
+            return Core.getInstance().getItem( (Node) parent, d );
+        }
+
         public boolean isApplicable( Node node ) {
             return true;
         }
