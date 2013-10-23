@@ -266,6 +266,7 @@ public class User extends Resource<User> {
         }
         */
 
+        /*
         @Override
         public Node getChild( String name ) throws NotFoundException {
             User user = getUserByUsername( this, name );
@@ -275,6 +276,7 @@ public class User extends Resource<User> {
                 throw new NotFoundException( "The user " + name + " was not found" );
             }
         }
+        */
 
         @Override
         public User newInstance( String title ) throws ItemInstantiationException {

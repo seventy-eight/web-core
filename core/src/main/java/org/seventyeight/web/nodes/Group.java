@@ -124,11 +124,6 @@ public class Group extends Resource<Group> {
     public static class GroupDescriptor extends ResourceDescriptor<Group> {
 
         @Override
-        public Node getChild( String name ) throws NotFoundException {
-            return null;
-        }
-
-        @Override
         public String getDisplayName() {
             return GROUP;
         }
