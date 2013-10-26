@@ -26,9 +26,8 @@ import java.util.List;
  * <pre>
  * {
  *     certificate: {
- *         added: date  // The date added
+ *         added: date  // The date added ??
  *         profile: pid // Last validator
- *         date: date   // Last validation
  *     }
  * }
  * </pre>
@@ -159,7 +158,7 @@ public class ProfileCertificate implements Node {
         }
     }
 
-    public Validation getLastValidation() throws ItemInstantiationException, NotFoundException {
+    public Validation getLastValidation2() throws ItemInstantiationException, NotFoundException {
         String pid = document.get( "profile", null );
         Date date = document.get( "date", null );
         if( pid != null && date != null ) {
@@ -177,6 +176,24 @@ public class ProfileCertificate implements Node {
             return null;
         }
         */
+    }
+
+    public Validation getLastValidation() {
+        MongoDocument d = getValidationData();
+        if( d != null && !d.isNull() ) {
+            List<MongoDocument> docs = d.getList( "validatedby" );
+            if( docs.size() > 0 ) {
+                MongoDocument v = docs.get( docs.size() - 1 );
+                String pid = v.get( "profile", null );
+                Date date = v.get( "date", null );
+                Profile profile = Profile.getNodeById( this, pid );
+                return new Validation( date, profile );
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public void doValidate( Request request, Response response ) throws NoAuthorizationException, IOException {
@@ -199,13 +216,17 @@ public class ProfileCertificate implements Node {
         MongoDBCollection.get( VALIDATIONS_COLLECTION ).remove( query );
     }
 
+    /**
+     *
+     * @param profile The {@link Profile} validating the {@link Certificate}.
+     */
     public void validateCertificate( Profile profile ) {
         logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
 
-        /* Update profile */
-        document.set( "profile", profile.getIdentifier() );
-        document.set( "date", new Date() );
-        Core.superSave( this );
+        /* Update profile, no */
+        //document.set( "profile", profile.getIdentifier() );
+        //document.set( "date", new Date() );
+        //Core.superSave( this );
 
         /* Update data, add! */
         logger.debug( "Adding data to " + VALIDATIONS_COLLECTION );
