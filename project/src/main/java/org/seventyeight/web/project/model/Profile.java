@@ -107,9 +107,9 @@ public class Profile extends User {
         return "Profile[" + getDisplayName() + "]";
     }
 
-    public void doListCertificates( Request request, Response response ) throws TemplateException {
+    public void doListSkills( Request request, Response response ) throws TemplateException {
         logger.debug( "DO LIST BEFORE" );
-        Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "listCertificates.vm" );
+        Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "listSkills.vm" );
         logger.debug( "DO LIST AFTER" );
     }
 
@@ -136,14 +136,14 @@ public class Profile extends User {
 
     }
 
-    public void validateCertificate( Certificate certificate, Profile profile ) {
-        logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
+    public void validateSkill( Skill skill, Profile profile ) {
+        logger.debug( "Validating skill " + skill + " for " + this + " by " + profile );
 
         MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
 
-        MongoDBQuery q = new MongoDBQuery().is( Certificate.CERTIFICATE_DOTTED, certificate.getIdentifier() ).getId( this.getIdentifier() );
-        //MongoUpdate u = new MongoUpdate().set( Certificate.CERTIFICATES + ".$.validatedby", d );
-        MongoUpdate u = new MongoUpdate().push( Certificate.CERTIFICATES + ".$.validatedby", d );
+        MongoDBQuery q = new MongoDBQuery().is( Skill.SKILL_DOTTED, skill.getIdentifier() ).getId( this.getIdentifier() );
+        //MongoUpdate u = new MongoUpdate().set( Skill.CERTIFICATES + ".$.validatedby", d );
+        MongoUpdate u = new MongoUpdate().push( Skill.SKILLS + ".$.validatedby", d );
         MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( q, u );
     }
 

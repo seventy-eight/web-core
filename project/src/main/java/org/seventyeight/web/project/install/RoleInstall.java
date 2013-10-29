@@ -5,7 +5,6 @@ import org.seventyeight.web.installers.DefaultNodeInstall;
 import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.project.model.Certificate;
 import org.seventyeight.web.project.model.Role;
 
 /**

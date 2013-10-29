@@ -1,4 +1,4 @@
-The certificate <a href="/certificate/$item.getCertificate().getDisplayName()/">$item.getCertificate().getDisplayName()</a> for <a href="/profile/$item.getProfile().getIdentifier()/">$item.getProfile().getDisplayName()</a> <br/>
+The skill <a href="/skill/$item.getSkill().getDisplayName()/">$item.getSkill().getDisplayName()</a> for <a href="/profile/$item.getProfile().getIdentifier()/">$item.getProfile().getDisplayName()</a> <br/>
 
 <table>
 

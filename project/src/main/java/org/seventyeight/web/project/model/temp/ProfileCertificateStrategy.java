@@ -4,13 +4,12 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.data.DataStrategy;
-import org.seventyeight.web.project.model.Certificate;
-import org.seventyeight.web.project.model.temp.ProfileCertificateDataNode;
+import org.seventyeight.web.project.model.Skill;
 
 /**
  * @author cwolfgang
  */
-public class ProfileCertificateStrategy extends DataStrategy<Certificate, ProfileCertificateDataNode> {
+public class ProfileCertificateStrategy extends DataStrategy<Skill, ProfileCertificateDataNode> {
 
     @Override
     public String getCollectionName() {
@@ -23,7 +22,7 @@ public class ProfileCertificateStrategy extends DataStrategy<Certificate, Profil
     }
 
     @Override
-    public void addDataNode( String identifier, Certificate node ) {
+    public void addDataNode( String identifier, Skill node ) {
 
         /* Find the latest data node */
         MongoDBQuery query = new MongoDBQuery().is( "identifier", identifier );

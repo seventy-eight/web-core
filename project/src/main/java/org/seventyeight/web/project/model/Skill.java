@@ -13,17 +13,17 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Certificate extends Resource<Certificate> {
+public class Skill extends Resource<Skill> {
 
-    private static Logger logger = Logger.getLogger( Certificate.class );
+    private static Logger logger = Logger.getLogger( Skill.class );
 
-    public static final String CERTIFICATE = "certificate";
-    public static final String CERTIFICATES = "certificates";
-    public static final String CERTIFICATE_NAME = "Certificate";
+    public static final String SKILL = "skill";
+    public static final String SKILLS = "skills";
+    public static final String SKILL_NAME = "Skill";
 
-    public static final String CERTIFICATE_DOTTED = CERTIFICATES + "." + CERTIFICATE;
+    public static final String SKILL_DOTTED = SKILLS + "." + SKILL;
 
-    public Certificate( Node parent, MongoDocument document ) {
+    public Skill( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -42,15 +42,15 @@ public class Certificate extends Resource<Certificate> {
         return "/theme/framed-certificate-small.png";
     }
 
-    public static Certificate createCertificate( String certName ) throws ItemInstantiationException {
-        Certificate cert = (Certificate) ((CertificateDescriptor)Core.getInstance().getDescriptor( Certificate.class )).newInstance( certName );
-        return cert;
+    public static Skill createSkill( String skillName ) throws ItemInstantiationException {
+        Skill skill = (Skill) ((SkillDescriptor)Core.getInstance().getDescriptor( Skill.class )).newInstance( skillName );
+        return skill;
     }
 
     public List<Profile> getProfiles() {
         logger.debug( "Getting members for " + this );
 
-        MongoDBQuery q = new MongoDBQuery().is( "extensions.action.certificates.certificates." + CERTIFICATE, getIdentifier() );
+        MongoDBQuery q = new MongoDBQuery().is( "extensions.action.skills.skills." + SKILL, getIdentifier() );
         List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q );
 
         logger.debug( "DOCS ARE: " + docs );
@@ -64,8 +64,8 @@ public class Certificate extends Resource<Certificate> {
         return users;
     }
 
-    public boolean hasCertificate( Profile profile ) {
-        MongoDBQuery q = new MongoDBQuery().is( "extensions.action.certificates.certificates." + CERTIFICATE, getIdentifier() ).getId( profile.getIdentifier() );
+    public boolean hasSkill( Profile profile ) {
+        MongoDBQuery q = new MongoDBQuery().is( "extensions.action.skills.skills." + SKILL, getIdentifier() ).getId( profile.getIdentifier() );
         MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( q );
 
         return ( docs != null && !docs.isNull() );
@@ -79,7 +79,7 @@ public class Certificate extends Resource<Certificate> {
         if( profileName != null ) {
             Profile profile = Profile.getProfileByUsername( this, profileName );
             if( profile != null ) {
-                profile.addCertificate( this );
+                profile.addSkill( this );
                 response.sendRedirect( "" );
                 return;
             } else {
@@ -95,27 +95,27 @@ public class Certificate extends Resource<Certificate> {
     */
 
     /**
-     * Get a {@link Certificate} by its title
+     * Get a {@link Skill} by its title
      */
-    public static Certificate getCertificateByTitle( String title, Node parent ) throws NotFoundException {
-        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ).is( "type", CERTIFICATE ) );
+    public static Skill getSkillByTitle( String title, Node parent ) throws NotFoundException {
+        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ).is( "type", SKILL ) );
         if( !doc.isNull() ) {
-            return new Certificate( parent, doc );
+            return new Skill( parent, doc );
         } else {
-            throw new NotFoundException( "The certificate \"" + title + "\" was not found" );
+            throw new NotFoundException( "The skill \"" + title + "\" was not found" );
         }
     }
 
-    public static class CertificateDescriptor extends ResourceDescriptor<Certificate> {
+    public static class SkillDescriptor extends ResourceDescriptor<Skill> {
 
         @Override
         public String getType() {
-            return CERTIFICATE;
+            return SKILL;
         }
 
         @Override
         public String getDisplayName() {
-            return CERTIFICATE_NAME;
+            return SKILL_NAME;
         }
 
         @Override
@@ -126,7 +126,7 @@ public class Certificate extends Resource<Certificate> {
         /*
         @Override
         public Node getChild( String name ) throws NotFoundException {
-            Certificate cert = getCertificateByTitle( name, this );
+            Skill cert = getSkillByTitle( name, this );
             if( cert != null ) {
                 return cert;
             } else {

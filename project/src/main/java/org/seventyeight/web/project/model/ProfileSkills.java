@@ -1,9 +1,7 @@
 package org.seventyeight.web.project.model;
 
 import com.google.gson.JsonObject;
-import com.mongodb.BasicDBObject;
 import org.apache.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
@@ -11,14 +9,12 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.model.data.DataElement;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,11 +22,11 @@ import java.util.*;
 /**
  * @author cwolfgang
  */
-public class ProfileCertificates extends Action<ProfileCertificates> implements Getable<ProfileCertificate> {
+public class ProfileSkills extends Action<ProfileSkills> implements Getable<ProfileSkill> {
 
-    private static Logger logger = Logger.getLogger( ProfileCertificates.class );
+    private static Logger logger = Logger.getLogger( ProfileSkills.class );
 
-    public ProfileCertificates( Node parent, MongoDocument document ) {
+    public ProfileSkills( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -41,7 +37,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
     @Override
     public String getDisplayName() {
-        return "Profile certificates";
+        return "Profile skills";
     }
 
     @Override
@@ -49,18 +45,18 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         return null;
     }
 
-    public boolean hasCertificate( String certificateId ) throws NotFoundException {
-        logger.debug( "Does " + this + " have " + certificateId );
-        //Certificate c = Certificate.getCertificateByTitle( certificateName, this );
-        //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Certificate.CERTIFICATES + "." +  ) )
+    public boolean hasSkill( String skillId ) throws NotFoundException {
+        logger.debug( "Does " + this + " have " + skillId );
+        //Skill c = Skill.getSkillByTitle( certificateName, this );
+        //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Skill.CERTIFICATES + "." +  ) )
 
         /*
-        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+        List<MongoDocument> docs = document.getList( Skill.CERTIFICATES );
 
         logger.debug( "DOCS: " + docs );
 
         for( MongoDocument d : docs ) {
-            if( d.get( Certificate.CERTIFICATE, "" ).equals( certificateId ) ) {
+            if( d.get( Skill.CERTIFICATE, "" ).equals( skillId ) ) {
                 return true;
             }
         }
@@ -69,7 +65,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         logger.debug( "SUB DOC: " + document );
         MongoDocument d = null;
         try {
-            d = ((MongoDocument)document.get( Certificate.CERTIFICATES )).getSubDocument( certificateId, null );
+            d = ((MongoDocument)document.get( Skill.SKILLS )).getSubDocument( skillId, null );
         } catch( Exception e ) {
             return false;
         }
@@ -83,15 +79,15 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         request.setResponseType( Request.ResponseType.HTTP_CODE );
         request.checkAuthorization( (Authorizer) parent, Authorizer.Authorization.MODERATE );
 
-        String title = request.getValue( "certificateTitle", null );
+        String title = request.getValue( "skillTitle", null );
         logger.debug( "Adding " + title + " to " + this );
 
         if( title != null ) {
-            Certificate c = null;
+            Skill c = null;
             try {
-                c = Certificate.getCertificateByTitle( title, this );
+                c = Skill.getSkillByTitle( title, this );
 
-                if( hasCertificate( c.getIdentifier() ) ) {
+                if( hasSkill( c.getIdentifier() ) ) {
                     //Response.NOT_ACCEPTABLE.render( request, response, "The certificate " + title + " is already possessed by " + this );
                     response.sendError( Response.SC_NOT_ACCEPTABLE, this + " already have " + c );
                     return;
@@ -99,25 +95,25 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             } catch( NotFoundException e ) {
                 logger.debug( e );
 
-                c = Certificate.createCertificate( title );
+                c = Skill.createSkill( title );
                 c.save();
             }
 
-            addCertificate( c );
+            addSkill( c );
             response.setStatus( HttpServletResponse.SC_OK );
         } else {
-            logger.debug( "No certificate title given" );
+            logger.debug( "No skill title given" );
             response.setStatus( HttpServletResponse.SC_NOT_FOUND );
         }
 
     }
 
     @Override
-    public ProfileCertificate get( String token ) throws NotFoundException {
-        logger.debug( "Get certificate " + token );
+    public ProfileSkill get( String token ) throws NotFoundException {
+        logger.debug( "Get skill " + token );
 
         /*
-        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+        List<MongoDocument> docs = document.getList( Skill.CERTIFICATES );
 
         MongoDBQuery q1 = new MongoDBQuery().is( ((ExtensionDescriptor)getDescriptor()).getMongoPath() + "certificates.certificate", token );
         MongoDocument fields = new MongoDocument(  ).set( "_id", 0 ).set( ((ExtensionDescriptor)getDescriptor()).getMongoPath() + "certificates.$", 1 );
@@ -125,18 +121,18 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         logger.debug( d );
         */
 
-        //MongoDocument d = ((MongoDocument)document.get( Certificate.CERTIFICATES )).getSubDocument( token, null );
-        String path = ((ExtensionDescriptor)getDescriptor()).getMongoPath() + Certificate.CERTIFICATES;
+        //MongoDocument d = ((MongoDocument)document.get( Skill.CERTIFICATES )).getSubDocument( token, null );
+        String path = ((ExtensionDescriptor)getDescriptor()).getMongoPath() + Skill.SKILLS;
         logger.debug( "PATH: " + path );
-        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+        List<MongoDocument> docs = document.getList( Skill.SKILLS );
 
         if( docs != null && docs.size() > 0 ) {
             for( MongoDocument d : docs ) {
-                if( d.get( "certificate", "" ).equals( token ) ) {
-                    logger.debug( "Found the profile certificate" );
+                if( d.get( "skill", "" ).equals( token ) ) {
+                    logger.debug( "Found the profile skill" );
                     try {
-                        Certificate c = (Certificate) Core.getInstance().getNodeById( this, token );
-                        return new ProfileCertificate( this, c, d );
+                        Skill c = (Skill) Core.getInstance().getNodeById( this, token );
+                        return new ProfileSkill( this, c, d );
                     } catch( ItemInstantiationException e ) {
                         throw new NotFoundException( e.getMessage(), "Error while finding", e );
                     }
@@ -146,22 +142,22 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             logger.debug( "D was null" );
         }
 
-        throw new NotFoundException( parent + " does not have the certificate " + token );
+        throw new NotFoundException( parent + " does not have the skill " + token );
     }
 
 
-    public List<ProfileCertificate> getCertificates( int offset, int number ) throws ItemInstantiationException, NotFoundException {
+    public List<ProfileSkill> getSkills( int offset, int number ) throws ItemInstantiationException, NotFoundException {
         /*
-        MongoDBQuery query = new MongoDBQuery().is( ProfileCertificate.NODEID, ((Profile)getParent()).getIdentifier() );
+        MongoDBQuery query = new MongoDBQuery().is( ProfileSkill.NODEID, ((Profile)getParent()).getIdentifier() );
         MongoDocument order = new MongoDocument(  ).set( "added", 1 );
-        List<MongoDocument> docs = MongoDBCollection.get( ProfileCertificate.COLLECTIONNAME ).find( query, offset, number, order );
+        List<MongoDocument> docs = MongoDBCollection.get( ProfileSkill.COLLECTIONNAME ).find( query, offset, number, order );
 
-        List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( docs.size() );
+        List<ProfileSkill> certificates = new ArrayList<ProfileSkill>( docs.size() );
 
         for( MongoDocument doc : docs ) {
-               Certificate c = (Certificate) Core.getInstance().getNodeById( this, (String) doc.get( Certificate.CERTIFICATE ) );
+               Skill c = (Skill) Core.getInstance().getNodeById( this, (String) doc.get( Skill.CERTIFICATE ) );
                //logger.debug( "------> " + map.get( key ) );
-               ProfileCertificate pc = new ProfileCertificate( this, c, doc );
+               ProfileSkill pc = new ProfileSkill( this, c, doc );
               //List<MongoDocument> sd = d.getList( "validatedby" );
               //pc.setValidations( sd );
                certificates.add( pc );
@@ -170,22 +166,22 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         return certificates;
         */
 
-        List<MongoDocument> docs = document.getList( Certificate.CERTIFICATES );
+        List<MongoDocument> docs = document.getList( Skill.SKILLS );
 
         if( docs != null && docs.size() > 0 ) {
 
             //Map map = docs.getMap();
-            List<ProfileCertificate> certificates = new ArrayList<ProfileCertificate>( docs.size() );
+            List<ProfileSkill> skills = new ArrayList<ProfileSkill>( docs.size() );
 
             for( MongoDocument d : docs ) {
-                Certificate c = (Certificate) Core.getInstance().getNodeById( this, d.get( Certificate.CERTIFICATE, "" ) );
+                Skill c = (Skill) Core.getInstance().getNodeById( this, d.get( Skill.SKILL, "" ) );
 
-                ProfileCertificate pc = new ProfileCertificate( this, c, d );
+                ProfileSkill pc = new ProfileSkill( this, c, d );
 
-                certificates.add( pc );
+                skills.add( pc );
             }
 
-            return certificates;
+            return skills;
         } else {
             return Collections.emptyList();
         }
@@ -196,16 +192,16 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
     }
 
-    public void addCertificate( Certificate certificate ) {
-        logger.debug( "Adding certificate " + certificate );
+    public void addSkill( Skill skill ) {
+        logger.debug( "Adding skill " + skill );
 
-        //MongoDocument certs = document.get( Certificate.CERTIFICATES );
+        //MongoDocument certs = document.get( Skill.CERTIFICATES );
 
-            //certs.set( certificate.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
-        document.addToList( Certificate.CERTIFICATES, new MongoDocument().set( Certificate.CERTIFICATE, certificate.getIdentifier() ).set( "added", new Date() ) );
+            //certs.set( skill.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
+        document.addToList( Skill.SKILLS, new MongoDocument().set( Skill.SKILL, skill.getIdentifier() ).set( "added", new Date() ) );
         //} else {
-        //    MongoDocument d = new MongoDocument().set( certificate.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
-        //    document.set( Certificate.CERTIFICATES, d );
+        //    MongoDocument d = new MongoDocument().set( skill.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
+        //    document.set( Skill.CERTIFICATES, d );
         //}
 
         ((Profile)parent).save();
@@ -216,16 +212,16 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public static class ProfileCertificateDescriptor extends Action.ActionDescriptor<ProfileCertificates> {
+    public static class ProfileSkillDescriptor extends Action.ActionDescriptor<ProfileSkills> {
 
         @Override
         public String getDisplayName() {
-            return "Profile certificates";
+            return "Profile skills";
         }
 
         @Override
         public String getExtensionName() {
-            return "certificates";
+            return "skills";
         }
 
         /*
@@ -246,12 +242,12 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
             ss.add( new VerifiedBy() );
             ss.add( new ValidatedAfter() );
-            ss.add( new CertificateId() );
+            ss.add( new SkillId() );
 
             return ss;
         }
 
-        private class CertificateId extends Searchable {
+        private class SkillId extends Searchable {
 
             @Override
             public Class<? extends Node> getClazz() {
@@ -260,19 +256,19 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
 
             @Override
             public String getName() {
-                return "Certificate id";
+                return "Skill id";
             }
 
             @Override
             public String getMethodName() {
-                return "certificate-id";
+                return "skill-id";
             }
 
             @Override
             public MongoDBQuery search( String term ) {
                 logger.debug( "SEARCHING FOR " + term );
                 //query.elemMatch( CERTIFICATES, (MongoDocument) new MongoDocument().set( CERTIFICATE, term ) );
-                return new MongoDBQuery().is( getMongoPath() + Certificate.CERTIFICATES + "." + Certificate.CERTIFICATE, term );
+                return new MongoDBQuery().is( getMongoPath() + Skill.SKILLS + "." + Skill.SKILL, term );
             }
         }
 
@@ -299,7 +295,7 @@ public class ProfileCertificates extends Action<ProfileCertificates> implements 
             public MongoDBQuery search( String term ) {
                 try {
                     Date date = format.parse( term );
-                    return new MongoDBQuery().greaterThan( "extensions.action.certificates.certificates.date", date );
+                    return new MongoDBQuery().greaterThan( "extensions.action.skills.skills.date", date );
                 } catch( ParseException e ) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }

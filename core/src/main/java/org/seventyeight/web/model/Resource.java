@@ -1,6 +1,5 @@
 package org.seventyeight.web.model;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -88,6 +87,19 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         } else {
             return "/theme/framed-question-mark-small.png";
         }
+    }
+
+    public List<Action.ActionDescriptor<?>> getActions() {
+
+        List<Action.ActionDescriptor<?>> ds = new ArrayList<Action.ActionDescriptor<?>>(  );
+
+        for( Descriptor d : Core.getInstance().getExtensionDescriptors( Action.class ) ) {
+            if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) ) {
+                ds.add( (Action.ActionDescriptor<?>) d );
+            }
+        }
+
+        return ds;
     }
 
     protected void setMandatoryFields( User owner ) {

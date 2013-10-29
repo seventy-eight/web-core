@@ -6,7 +6,7 @@ import org.seventyeight.web.ProjectCore;
 import org.seventyeight.web.WebCoreEnv;
 import org.seventyeight.web.project.install.CertificateInstall;
 import org.seventyeight.web.project.install.ProfileInstall;
-import org.seventyeight.web.project.model.Certificate;
+import org.seventyeight.web.project.model.Skill;
 import org.seventyeight.web.project.model.Profile;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class ProjectEnvironment extends WebCoreEnv<ProjectCore> {
         return (Profile) ui.getValue();
     }
 
-    public Certificate createCertificate( String name, Profile owner ) throws DatabaseException {
+    public Skill createCertificate( String name, Profile owner ) throws DatabaseException {
         CertificateInstall i = new CertificateInstall( name, owner );
         i.install();
         return i.getValue();

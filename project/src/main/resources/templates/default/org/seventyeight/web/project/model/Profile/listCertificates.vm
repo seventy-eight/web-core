@@ -11,12 +11,12 @@ BAM!
     <thead class="header">
     <tr>
         <td>
-            Certificates
+            Skills
         </td>
     </tr>
 
     </thead>
-    #foreach($c in $item.getCertificates(0,10))
+    #foreach($c in $item.getSkills(0,10))
         <tr>
             <td>
                 $c

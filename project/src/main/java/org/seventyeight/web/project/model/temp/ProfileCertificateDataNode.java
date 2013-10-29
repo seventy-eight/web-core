@@ -3,19 +3,20 @@ package org.seventyeight.web.project.model.temp;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.data.DataNode;
-import org.seventyeight.web.project.model.Certificate;
+import org.seventyeight.web.project.model.Skill;
 
 /**
  * @author cwolfgang
+ * @deprecated
  */
-public class ProfileCertificateDataNode extends DataNode<Certificate> {
+public class ProfileCertificateDataNode extends DataNode<Skill> {
 
     public ProfileCertificateDataNode( MongoDocument document ) {
         super( document );
     }
 
     @Override
-    public <E extends Element<Certificate>> E getElement( MongoDocument document ) {
+    public <E extends Element<Skill>> E getElement( MongoDocument document ) {
         return (E) new ProfileCertificateElement( document );
     }
 
@@ -34,7 +35,7 @@ public class ProfileCertificateDataNode extends DataNode<Certificate> {
         return null;
     }
 
-    public class ProfileCertificateElement extends Element<Certificate> {
+    public class ProfileCertificateElement extends Element<Skill> {
 
         public ProfileCertificateElement( MongoDocument document ) {
             super( document );

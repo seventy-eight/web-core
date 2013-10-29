@@ -14,7 +14,11 @@
         <td style="width:auto;height: 100%">
             #render( $item "view" )
         </td>
-        <td style="text-align: center">RIGTH</td>
+        <td style="text-align: center; vertical-align: top">
+            #foreach($action in $item.getActions())
+                <div class="button">$action.getDisplayName()</div><br />
+            #end
+        </td>
     </tr>
 
     <tr>

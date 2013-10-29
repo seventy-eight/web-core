@@ -8,7 +8,7 @@
             </a>
         </td>
 
-        <td id="certificates">
+        <td id="skills">
 
         </td>
     </tr>
@@ -31,8 +31,8 @@
     $(function() {
         $.ajax({
             type: "GET",
-            url: "certificates/list",
-            success: function(data, textStatus, jqxhr){$('#certificates').html("SNADE:" + data)},
+            url: "skills/list",
+            success: function(data, textStatus, jqxhr){$('#skills').html("SNADE:" + data)},
             error: function(ajax, text, error) {alert(error)}
         });
     });

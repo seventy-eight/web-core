@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * <pre>
  * {
- *     certificate: {
+ *     skill: {
  *         added: date  // The date added ??
  *         profile: pid // Last validator
  *     }
@@ -34,32 +34,32 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public class ProfileCertificate implements Node {
+public class ProfileSkill implements Node {
 
-    private static Logger logger = Logger.getLogger( ProfileCertificate.class );
+    private static Logger logger = Logger.getLogger( ProfileSkill.class );
 
     public static final String LAST_VALIDATION = "lastValidation";
-    public static final String VALIDATIONS_COLLECTION = "certificateValidations";
+    public static final String VALIDATIONS_COLLECTION = "skillValidations";
 
     private Node parent;
-    private Certificate certificate;
+    private Skill skill;
     private MongoDocument document;
     private List<Validation> validations;
 
-    public ProfileCertificate( Node parent, Certificate certificate, MongoDocument document ) {
-        this.certificate = certificate;
+    public ProfileSkill( Node parent, Skill skill, MongoDocument document ) {
+        this.skill = skill;
         this.parent = parent;
         this.document = document;
     }
 
-    public static ProfileCertificate create( Profile profile, Certificate certificate ) {
+    public static ProfileSkill create( Profile profile, Skill skill ) {
         /*
         MongoDocument d = createDocument( profile.getIdentifier() );
 
-        d.set( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        d.set( Skill.CERTIFICATE, skill.getIdentifier() );
         d.setList( VALIDATEDBY );
 
-        ProfileCertificate e = new ProfileCertificate( profile, certificate, d );
+        ProfileSkill e = new ProfileSkill( profile, skill, d );
 
         return e;
         */
@@ -95,11 +95,11 @@ public class ProfileCertificate implements Node {
     }
 
     public void remove() {
-        logger.debug( "Removing certificate and validations" );
+        logger.debug( "Removing skill and validations" );
         /* Remove from profile */
         MongoDBQuery query = new MongoDBQuery().getId( getProfile().getIdentifier() );
-        //MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates.certificate", certificate.getIdentifier() );
-        MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates", "certificate", certificate.getIdentifier() );
+        //MongoUpdate pull = new MongoUpdate().pull( "extensions.action.certificates.certificates.skill", skill.getIdentifier() );
+        MongoUpdate pull = new MongoUpdate().pull( "extensions.action.skills.skills", "skill", skill.getIdentifier() );
         MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( query, pull );
 
         /* Remove validations */
@@ -135,7 +135,7 @@ public class ProfileCertificate implements Node {
 
     @Override
     public String getDisplayName() {
-        return "Profile certificate";
+        return "Profile skill";
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ProfileCertificate implements Node {
     }
 
     public MongoDocument getValidationData() {
-        MongoDBQuery query = new MongoDBQuery().is( "profile", getProfile().getIdentifier() ).is( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        MongoDBQuery query = new MongoDBQuery().is( "profile", getProfile().getIdentifier() ).is( Skill.SKILL, skill.getIdentifier() );
         return MongoDBCollection.get( VALIDATIONS_COLLECTION ).findOne( query );
     }
 
@@ -203,7 +203,7 @@ public class ProfileCertificate implements Node {
         request.setResponseType( Request.ResponseType.HTTP_CODE );
         //request.checkAuthorization( (Authorizer) pr, Authorizer.Authorization.MODERATE );
         if( request.isAuthenticated() ) {
-            validateCertificate( user );
+            validateSkill( user );
         } else {
             throw new NoAuthorizationException( "You are not authenticated" );
         }
@@ -212,16 +212,16 @@ public class ProfileCertificate implements Node {
     }
 
     private void removeValidations() {
-        MongoDBQuery query = new MongoDBQuery().is( "profile", getProfile().getIdentifier() ).is( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        MongoDBQuery query = new MongoDBQuery().is( "profile", getProfile().getIdentifier() ).is( Skill.SKILL, skill.getIdentifier() );
         MongoDBCollection.get( VALIDATIONS_COLLECTION ).remove( query );
     }
 
     /**
      *
-     * @param profile The {@link Profile} validating the {@link Certificate}.
+     * @param profile The {@link Profile} validating the {@link Skill}.
      */
-    public void validateCertificate( Profile profile ) {
-        logger.debug( "Validating certificate " + certificate + " for " + this + " by " + profile );
+    public void validateSkill( Profile profile ) {
+        logger.debug( "Validating skill " + skill + " for " + this + " by " + profile );
 
         /* Update profile, no */
         //document.set( "profile", profile.getIdentifier() );
@@ -232,7 +232,7 @@ public class ProfileCertificate implements Node {
         logger.debug( "Adding data to " + VALIDATIONS_COLLECTION );
         MongoDocument doc = getValidationData();
         if( doc == null || doc.isNull() ) {
-            doc = Validation.createNode( getProfile(), certificate );
+            doc = Validation.createNode( getProfile(), skill );
         }
 
         doc.addToList( "validatedby", Validation.create( profile ) );
@@ -252,15 +252,15 @@ public class ProfileCertificate implements Node {
         return Core.superGet( parent );
     }
 
-    public Certificate getCertificate() {
-        return certificate;
+    public Skill getSkill() {
+        return skill;
     }
 
     /**
      * <pre>
      * {
      *     profile: pid,
-     *     certificate: cid,
+     *     skill: cid,
      *     validations : [
      *         {
      *             profile: pid,
@@ -291,8 +291,8 @@ public class ProfileCertificate implements Node {
             return new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
         }
 
-        public static MongoDocument createNode( Profile profile, Certificate certificate ) {
-            MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( Certificate.CERTIFICATE, certificate.getIdentifier() );
+        public static MongoDocument createNode( Profile profile, Skill skill ) {
+            MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( Skill.SKILL, skill.getIdentifier() );
             return d;
         }
     }

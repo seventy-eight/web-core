@@ -50,7 +50,7 @@ public class ProjectCore extends Core {
         CertificateSearch cs = new CertificateSearch( search );
         NodeSearch ns = new NodeSearch( search );
 
-        //search.addAction( Certificate.CERTIFICATE, cs );
+        //search.addAction( Skill.CERTIFICATE, cs );
         //search.addAction( "node", ns );
 
         children.put( "search", search );
@@ -60,7 +60,7 @@ public class ProjectCore extends Core {
 
         //AddCertificate ac = new AddCertificate( add );
 
-        //add.addAction( Certificate.CERTIFICATE, ac );
+        //add.addAction( Skill.CERTIFICATE, ac );
 
         children.put( "add", add );
 
@@ -69,7 +69,7 @@ public class ProjectCore extends Core {
         //addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileResource.FileDescriptor() );
-        addDescriptor( new Certificate.CertificateDescriptor() );
+        addDescriptor( new Skill.SkillDescriptor() );
         addDescriptor( new Topic.TopicDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
@@ -77,7 +77,7 @@ public class ProjectCore extends Core {
         addDescriptor( new Collection.CollectionDescriptor() );
 
         addDescriptor( new Signature.SignatureDescriptor() );
-        addDescriptor( new ProfileCertificates.ProfileCertificateDescriptor() );
+        addDescriptor( new ProfileSkills.ProfileSkillDescriptor() );
         addDescriptor( new GetAction.GetDescriptor() );
 
         addSearchable( new TitleSearch() );

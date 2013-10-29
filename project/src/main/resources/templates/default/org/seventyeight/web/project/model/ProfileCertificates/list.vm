@@ -1,12 +1,12 @@
-<div id="certlist" style="width: 400px">
+<div id="skilllist" style="width: 400px">
     <div>
-            Certificates
+            Skills
     </div>
 
-    #foreach($c in $item.getCertificates(0,10))
-        <div id="row$c.getCertificate().getIdentifier()">
+    #foreach($c in $item.getSkills(0,10))
+        <div id="row$c.getSkill().getIdentifier()">
             <h3 style="font-size: 18px; background-color: #998223; font-weight: bold; margin-bottom: 2px">
-                <a href="certificates/get/$c.getCertificate().getIdentifier()">$c.getCertificate().getDisplayName()</a>
+                <a href="Skills/get/$c.getSkill().getIdentifier()">$c.getSkill().getDisplayName()</a>
             </h3>
             <div>
                 #set($v = false)
@@ -19,10 +19,10 @@
             </div>
             <div>
                 #if($request.isAuthenticated() && $request.isUser($item.getParent()))
-                    <button type="button" onclick="doRemoveCert(this,'$c.getCertificate().getIdentifier()')">Remove</button>
+                    <button type="button" onclick="doRemoveSkill(this,'$c.getSkill().getIdentifier()')">Remove</button>
                 #end
                 #if($request.isAuthenticated() && !$request.isUser($item.getParent()))
-                    <button type="button" onclick="doValidateCert(this,'$c.getCertificate().getIdentifier()')">Validate</button>
+                    <button type="button" onclick="doValidateSkill(this,'$c.getSkill().getIdentifier()')">Validate</button>
                 #end
             </div>
 
@@ -31,56 +31,56 @@
 </div>
 
 #if($request.isUser($item.getParent()) )
-<input name="certificateTitle" type="text" id="addcert" onkeypress="doSubmitCert(event);">
-<button type="button" id="submitCert" onclick="sendCert()">Send</button>
+<input name="skillTitle" type="text" id="addskill" onkeypress="doSubmitSkill(event);">
+<button type="button" id="submitSkill" onclick="sendSkill()">Send</button>
 #end
 
 
 
 <script type="text/javascript">
 
-    function doRemoveCert(obj,id) {
+    function doRemoveSkill(obj,id) {
         $.ajax({
             type: "GET",
-            url: "certificates/get/" + id + "/remove",
+            url: "Skills/get/" + id + "/remove",
             success: function(data, textStatus, jqxhr){$(obj).hide(400);$("#row"+id).hide(600)},
             error: function(ajax, text, error) {alert(error)}
         });
     }
 
-function doValidateCert(obj,id) {
+function doValidateSkill(obj,id) {
     $.ajax({
         type: "GET",
-        url: "certificates/get/" + id + "/validate",
+        url: "skills/get/" + id + "/validate",
         success: function(data, textStatus, jqxhr){$(obj).hide(400)},
         error: function(ajax, text, error) {alert(error)}
     });
 }
 
-function sendCert() {
-    d = $("#addcert").val();
+function sendSkill() {
+    d = $("#addskill").val();
     $.ajax({
         type: "POST",
-        url: "certificates/add",
-        data: $("#addcert").serialize(),
-        //success: addCert($("#addcert").val()),
-        success: function(data, textStatus, jqxhr){addCert($("#addcert").val())},
+        url: "skills/add",
+        data: $("#addskill").serialize(),
+        //success: addSkill($("#addskill").val()),
+        success: function(data, textStatus, jqxhr){addSkill($("#addskill").val())},
         error: function(ajax, text, error) {alert(error)}
     });
 
 }
 
-function doSubmitCert(e)
+function doSubmitSkill(e)
 {
     e = e || window.event;
-    if ($("#addcert").is(":focus") && e.keyCode == 13)
+    if ($("#addskill").is(":focus") && e.keyCode == 13)
     {
-        $('#submitCert').click();
+        $('#submitSkill').click();
     }
 }
 
-function addCert( cert) {
-    $('#certlist tr:last').after('<tr><td>' +  cert + '</td></tr>');
+function addSkill( skill) {
+    $('#skilllist tr:last').after('<tr><td>' +  skill + '</td></tr>');
 }
 
 

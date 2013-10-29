@@ -592,6 +592,12 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         return getDescriptor( Class.forName( className ) );
     }
 
+    /**
+     * Get the mapping from  the {@link Describable} class to a {@link Descriptor} instance.
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public <T extends Descriptor> T getDescriptor( Class<?> clazz ) {
         logger.debug( "Getting descriptor for " + clazz );
 

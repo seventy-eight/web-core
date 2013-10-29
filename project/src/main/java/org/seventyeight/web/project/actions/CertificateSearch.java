@@ -2,9 +2,8 @@ package org.seventyeight.web.project.actions;
 
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.SearchAction;
-import org.seventyeight.web.project.model.Certificate;
+import org.seventyeight.web.project.model.Skill;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -12,6 +11,7 @@ import java.io.IOException;
 
 /**
  * @author cwolfgang
+ * @deprecated
  */
 public class CertificateSearch extends SearchAction {
 
@@ -25,7 +25,7 @@ public class CertificateSearch extends SearchAction {
 
     @Override
     public String getDisplayName() {
-        return Certificate.CERTIFICATE_NAME + " search";
+        return Skill.SKILL_NAME + " search";
     }
 
     @Override

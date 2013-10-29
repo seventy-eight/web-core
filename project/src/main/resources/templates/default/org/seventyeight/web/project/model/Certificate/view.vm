@@ -1,9 +1,9 @@
 
 #if( $request.isAuthenticated() )
-    #if($item.hasCertificate($request.getUser()))
-        You have this certificate
+    #if($item.hasSkill($request.getUser()))
+        You have this skill
     #else
-        <a href="" class="button" id="addCert">I have this certificate</a>
+        <a href="" class="button" id="addCert">I have this skill</a>
     #end
 #end
 
@@ -17,8 +17,8 @@ $item.getProfiles()
         e.preventDefault();
         $.ajax({
             type: "POST",
-            url: "/profile/$request.getUser().getIdentifier()/certificates/add",
-            data: { certificateTitle: "$item.getDisplayName()" },
+            url: "/profile/$request.getUser().getIdentifier()/skills/add",
+            data: { skillTitle: "$item.getDisplayName()" },
             success: function(data, textStatus, jqxhr){$('#addCert').hide(0)},
             error: function(ajax, text, error) {alert(error)}
         });
