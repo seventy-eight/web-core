@@ -117,6 +117,7 @@ public class TemplateManager {
 		
 		/* Generate templatePathsStr */
 		this.templatePathsStr = "";
+        logger.debug( "------>" + templatePaths );
 		for( File f : templatePaths ) {
             logger.info( "[Template directory] " + f.getAbsoluteFile() );
 			this.templatePathsStr += f.toString() + ", ";
@@ -244,7 +245,7 @@ public class TemplateManager {
         public String render( Template template ) {
             StringWriter writer = new StringWriter();
 
-			logger.debug( "[Rendering] " + template.getName() );
+			logger.debug( "[Rendering] " + template.getName() + ", " + template.isSourceModified() + ", " + template.requiresChecking() );
 
             context.put( "core", Core.getInstance() );
             context.put( "theme", theme );

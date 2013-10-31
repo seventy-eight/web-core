@@ -21,7 +21,7 @@ public class ProjectListener extends DatabaseContextListener<ProjectCore> {
     private static Logger logger = Logger.getLogger( ProjectListener.class );
 
     public ProjectListener() {
-        extraTemplatePaths.add( "WEB-INF/classes/templates" );
+        //extraTemplatePaths.add( "WEB-INF/classes/templates" );
     }
 
     @Override

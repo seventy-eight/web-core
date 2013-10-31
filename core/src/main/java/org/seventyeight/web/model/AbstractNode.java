@@ -189,6 +189,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public boolean isOwner( User user ) {
+        logger.debug( "USER: " + user );
+        logger.debug( "OWENR: " + getOwnerId() );
         return user.getIdentifier().equals( getOwnerId() );
     }
 

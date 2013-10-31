@@ -2,6 +2,7 @@ package org.seventyeight.web.servlet;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
@@ -82,6 +83,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     public Request( HttpServletRequest httpServletRequest ) {
         super( httpServletRequest );
         setRequestMethod( httpServletRequest.getMethod() );
+        this.template = Core.getInstance().getDefaultTemplate();
     }
 
     public void setRequestMethod( String m ) {

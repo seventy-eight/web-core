@@ -116,4 +116,9 @@ public class ProjectCore extends Core {
     public void save() {
         logger.fatal( "SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
     }
+
+    @Override
+    public String getDefaultTemplate() {
+        return "org/seventyeight/web/project/main.vm";
+    }
 }

@@ -92,22 +92,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
             //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
-            /* Specialized templates paths comes first */
-            String templatePathStr = System.getProperty( "templatePath", null );
-            if( templatePathStr != null ) {
-                logger.debug( "Template path: " + templatePathStr );
-                templatePaths.add( new File( templatePathStr ) );
-            }
-
-            /**/
-            logger.debug( "Adding extra template paths" );
-            for( String tpath : extraTemplatePaths ) {
-                File f = new File( path, tpath );
-                logger.debug( "Extra template path: " + f.getAbsoluteFile() );
-                templatePaths.add( f );
-            }
-
-            logger.info( "Loading plugins" );
+            logger.info( "[System] Loading plugins" );
             for( File plugin : plugins ) {
                 logger.info( "Loading " + plugin );
 
@@ -121,10 +106,12 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                 File f1 = new File( plugin, "templates" );
                 if( f1.exists() ) {
                     templatePaths.add( f1 );
+                    logger.info( "[Template] Adding templates " + f1 );
                 }
 
                 File f2 = new File( plugin, "lib" );
                 if( f2.exists() ) {
+                    logger.info( "[Template] Adding libs " + f2 );
                     templatePaths.add( f2 );
 
                     File[] libs = f2.listFiles( new FF() );
@@ -133,6 +120,34 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                     }
                 }
             }
+
+            logger.info( "[System] Adding additional resources" );
+            String[] ar = System.getProperty( "additional", "" ).split( "\\s*,\\s*" );
+            for( String additional : ar ) {
+                logger.info( "[System] Adding resources from " + additional );
+                File afile = new File( additional );
+
+                File atemplates = new File( additional, "templates" );
+                if( atemplates.exists() ) {
+                    logger.info( "[Template] Adding templates " + atemplates );
+                    templatePaths.add( atemplates );
+                }
+
+                File alibs = new File( additional, "lib" );
+                if( alibs.exists() ) {
+                    logger.info( "[Template] Adding libs " + alibs );
+                    templatePaths.add( alibs );
+
+                    File[] libs = alibs.listFiles( new FF() );
+                    for( File lib : libs ) {
+                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                    }
+                }
+            }
+
+
+
+
 
             //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
 
@@ -181,11 +196,10 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         }
         */
 
-        logger.info( "Loading templates" );
+        logger.info( "Loading templates: " + templatePaths );
         core.getTemplateManager().setTemplateDirectories( templatePaths );
         logger.debug( core.getTemplateManager().toString() );
         core.getTemplateManager().initialize();
-
 
         try {
             install();

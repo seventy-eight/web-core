@@ -1,4 +1,6 @@
 
+<a href="$item.getUrl()" class="button">Profile</a>
+
 <table style="width: 100%">
     <tr>
         <td style="width:250px; vertical-align: top">

@@ -694,6 +694,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         return defaultTheme;
     }
 
+    public String getDefaultTemplate() {
+        return "org/seventyeight/web/main.vm";
+    }
+
     public TemplateManager getTemplateManager() {
         return templateManager;
     }

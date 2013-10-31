@@ -29,6 +29,43 @@ body {
     z-index: -9999;
 }
 
+.wrap {
+    position:relative;
+    margin:0 auto;
+    /*replace 900px with your width*/
+    width:1000px;
+}
+
+#headerMenu, #footerMenu {
+    width:100%;
+    float:left;
+}
+
+#headerMenu {
+    position:fixed;
+    z-index:99998;
+    /*Making sure it sticks to left of window in IE7*/
+    left:0;
+    /*Change to reflect height of your header.
+    Remember to accomadate for padding!*/
+    height:22px;
+    border-style: solid;
+    border-width: 0px;
+    border-bottom-width: 5px;
+    background-color: red;
+}
+
+#footerMenu {
+    border-style: solid;
+    border-width: 0px;
+    border-top-width: 5px;
+
+    background-color: red;
+    position:fixed;
+    bottom:0;
+    z-index:999999;
+}
+
 .pseudoParent {
     position: relative;
     width: 0;
@@ -195,3 +232,39 @@ a.button:hover {
     background-color: #63829e;
     border-color: #6d8da9;
 }
+
+
+ul.navlist {
+    font: bold 11px;
+    text-align: center;
+    vertical-align: middle;
+    list-style-type: none;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #000000;
+    margin: 0;
+}
+
+ul.navlist li {
+    float: left;
+    height: 21px;
+    background-color: #cfc;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+ul.navlist li.active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+li.active a { color: #000; }
+
+.navlist a {
+    float: left;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 4px;
+}
+
+.navlist a:hover { background: #fff; }

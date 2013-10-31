@@ -4,11 +4,13 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.ItemInstantiationException;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,6 @@ public class SessionManager implements Node {
 	public Session createSession( User user, Date date, int ttl ) throws ItemInstantiationException, AuthenticationException {
 		logger.debug( "Creating session for " + user + ", " + ttl );
 
-        /*
 		String hash = "";
 		try {
 			hash = Utils.md5( user.getUsername() + date.getTime() );
@@ -38,8 +39,7 @@ public class SessionManager implements Node {
 			logger.warn( "Unable to create session: " + e.getMessage() );
 			throw new AuthenticationException( e );
 		}
-		*/
-		
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime( date );
 		calendar.add( Calendar.SECOND, ttl );
@@ -52,7 +52,7 @@ public class SessionManager implements Node {
         session.setEndDate( calendar.getTime() );
         //session.setCreated();
         session.setTimeToLive( ttl );
-        //session.setHash( hash );
+        session.getDocument().set( "_id", hash );
         session.setUser( user );
 
 		return session;
