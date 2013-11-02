@@ -43,7 +43,7 @@
 
         <div style="width: 100%; border-style: none; margin-bottom: 5px">
             #if($request.isAuthenticated())
-                <a href="" class="button">HEJ</a>
+                <a href="/res" class="button">HEJ</a>
             #else
                 <a href="" class="button">Sign up</a>
                 <a href="/login" class="button">Log in</a>
