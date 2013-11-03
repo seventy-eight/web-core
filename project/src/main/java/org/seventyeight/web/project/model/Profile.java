@@ -8,6 +8,7 @@ import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.Partitioned;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
@@ -15,12 +16,13 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author cwolfgang
  */
-public class Profile extends User {
+public class Profile extends User implements Partitioned {
 
     private static Logger logger = Logger.getLogger( Profile.class );
 
@@ -134,6 +136,16 @@ public class Profile extends User {
 
     public void getLastValidation() {
 
+    }
+
+    @Override
+    public List<String> getPartitions() {
+        List<String> parts = new ArrayList<String>( 4 );
+        parts.add( "Profile" );
+        parts.add( "Companies" );
+        parts.add( "Project" );
+        parts.add( "Certificates" );
+        return parts;
     }
 
     public void validateSkill( Skill skill, Profile profile ) {

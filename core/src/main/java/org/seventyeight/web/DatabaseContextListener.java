@@ -92,6 +92,31 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
             //paths.add( new File( "/home/wolfgang/projects/graph-dragon/system/target/classes/templates" ) );
             //paths.add( new File( "C:/projects/graph-dragon/system/target/classes/templates" ) );
 
+            logger.info( "[System] Adding additional resources" );
+            String[] ar = System.getProperty( "additional", "" ).split( "\\s*,\\s*" );
+            for( String additional : ar ) {
+                logger.info( "[System] Adding resources from " + additional );
+                File afile = new File( additional );
+
+                File atemplates = new File( additional, "templates" );
+                if( atemplates.exists() ) {
+                    logger.info( "[Template] Adding templates " + atemplates );
+                    templatePaths.add( atemplates );
+                }
+
+                File alibs = new File( additional, "lib" );
+                if( alibs.exists() ) {
+                    logger.info( "[Template] Adding libs " + alibs );
+                    templatePaths.add( alibs );
+
+                    File[] libs = alibs.listFiles( new FF() );
+                    for( File lib : libs ) {
+                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                    }
+                }
+            }
+
+
             logger.info( "[System] Loading plugins" );
             for( File plugin : plugins ) {
                 logger.info( "Loading " + plugin );
@@ -120,33 +145,6 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
                     }
                 }
             }
-
-            logger.info( "[System] Adding additional resources" );
-            String[] ar = System.getProperty( "additional", "" ).split( "\\s*,\\s*" );
-            for( String additional : ar ) {
-                logger.info( "[System] Adding resources from " + additional );
-                File afile = new File( additional );
-
-                File atemplates = new File( additional, "templates" );
-                if( atemplates.exists() ) {
-                    logger.info( "[Template] Adding templates " + atemplates );
-                    templatePaths.add( atemplates );
-                }
-
-                File alibs = new File( additional, "lib" );
-                if( alibs.exists() ) {
-                    logger.info( "[Template] Adding libs " + alibs );
-                    templatePaths.add( alibs );
-
-                    File[] libs = alibs.listFiles( new FF() );
-                    for( File lib : libs ) {
-                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
-                    }
-                }
-            }
-
-
-
 
 
             //paths.add( new File( "C:/Users/Christian/projects/web-core/system/src/main/resources/templates" ) );
