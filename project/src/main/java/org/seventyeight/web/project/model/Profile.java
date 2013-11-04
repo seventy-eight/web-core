@@ -148,6 +148,11 @@ public class Profile extends User implements Partitioned {
         return parts;
     }
 
+    @Override
+    public String getActivePartition() {
+        return "Profile";
+    }
+
     public void validateSkill( Skill skill, Profile profile ) {
         logger.debug( "Validating skill " + skill + " for " + this + " by " + profile );
 

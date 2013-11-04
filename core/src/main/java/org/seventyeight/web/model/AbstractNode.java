@@ -168,14 +168,30 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     /**
      * Return a {@link List} of {@link org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor}'s that are applicable and have a certain template.
      */
-    public List<AbstractExtension.ExtensionDescriptor<?>> getLayoutableHavingTemplate( String template ) {
+    public List<Layoutable> getLayoutableHavingTemplate( String template ) {
+        List<Layoutable> ds = new ArrayList<Layoutable>(  );
+
+        logger.debug( "Layoutable: " + Core.getInstance().getExtensions( Layoutable.class ) );
+        //logger.debug( "LIST: " +  );
+
+        for( Layoutable d : Core.getInstance().getExtensions( Layoutable.class ) ) {
+            if( d.isApplicable( this ) &&
+                Core.getInstance().getTemplateManager().templateForClassExists( Core.getInstance().getDefaultTheme(), d.getClass(), template ) ) {
+                ds.add( d );
+            }
+        }
+
+        return ds;
+    }
+
+    public List<AbstractExtension.ExtensionDescriptor<?>> getLayoutableHavingTemplate2( String template ) {
         List<AbstractExtension.ExtensionDescriptor<?>> ds = new ArrayList<AbstractExtension.ExtensionDescriptor<?>>(  );
 
         logger.debug( "DS: " + Core.getInstance().getExtensionDescriptors( Layoutable.class ) );
 
         for( Descriptor d : Core.getInstance().getExtensionDescriptors( Layoutable.class ) ) {
             if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) &&
-                   Core.getInstance().getTemplateManager().templateForClassExists( Core.getInstance().getDefaultTheme(), d.getClazz(), template ) ) {
+                Core.getInstance().getTemplateManager().templateForClassExists( Core.getInstance().getDefaultTheme(), d.getClazz(), template ) ) {
                 ds.add( (AbstractExtension.ExtensionDescriptor<?>) d );
             }
         }

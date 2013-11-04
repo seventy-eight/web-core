@@ -216,6 +216,12 @@ public class TemplateManager {
 		}
 		*/
 
+        public Renderer inject( String identifier, Object object ) {
+            logger.debug( "Injecting " + object + " as " + identifier );
+            context.put( identifier, object );
+            return this;
+        }
+
         public Renderer setTheme( AbstractTheme theme ) {
             this.theme = theme;
             return this;

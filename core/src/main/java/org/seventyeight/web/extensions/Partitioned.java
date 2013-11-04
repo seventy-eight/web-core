@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface Partitioned {
     public List<String> getPartitions();
+    public String getActivePartition();
 }

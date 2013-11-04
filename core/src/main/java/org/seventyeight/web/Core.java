@@ -620,6 +620,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
      * @return
      */
     public <T extends Descriptor> List<T> getExtensionDescriptors( Class clazz ) {
+
         if( descriptorList.containsKey( clazz ) ) {
             return (List<T>) descriptorList.get( clazz );
         } else {
@@ -638,12 +639,19 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     /**
      * Add an extension implementing a certain interface.
      */
-    public <T> void addExtension( Class<T> clazz, Object extension ) {
-        if( !extensionsList.containsKey( clazz ) ) {
-            extensionsList.put( clazz, new ArrayList<T>() );
-        }
+    public <T> void addExtension( Object extension ) {
+        logger.debug( "Adding " + extension );
 
-        extensionsList.get( clazz ).add( extension );
+        List<Class<?>> interfaces = ClassUtils.getInterfaces( extension.getClass() );
+        interfaces.addAll( ClassUtils.getClasses( extension.getClass() ) );
+
+        for( Class<?> i : interfaces ) {
+            if( !extensionsList.containsKey( i ) ) {
+                extensionsList.put( i, new ArrayList<T>() );
+            }
+
+            extensionsList.get( i ).add( extension );
+        }
     }
 
     /**

@@ -1,16 +1,12 @@
 <table style="width:100%;height: 100%;border-collapse: collapse">
 
-    <tr>
-        <td colspan="2" class="nothing">
-            <ul class="navlist">
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Companies</a></li>
-                <li><a href="#">Groups</a></li>
-                <li><a class="active" href="#">Certificates</a></li>
-                <li><a href="#">Stuff</a></li>
-            </ul>
-        </td>
-    </tr>
+    #foreach( $action in $item.getLayoutableHavingTemplate( "top.vm" ) )
+        <tr>
+            <td colspan="2" class="nothing">
+                #render( $action "top" false "" $item true )
+            </td>
+        </tr>
+    #end
 
     <tr>
         <td style="width:auto; text-align: left" class="headerContrast" colspan="2">

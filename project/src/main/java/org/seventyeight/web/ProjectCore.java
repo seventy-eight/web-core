@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.GravatarPortrait;
+import org.seventyeight.web.extensions.TabbedPartitionedResource;
 import org.seventyeight.web.extensions.UploadablePortrait;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
@@ -86,6 +87,8 @@ public class ProjectCore extends Core {
 
         addDescriptor( new GravatarPortrait.GravatarPortraitDescriptor() );
         addDescriptor( new UploadablePortrait.UploadablePortraitDescriptor() );
+
+        addExtension( new TabbedPartitionedResource() );
 
         //addDescriptor( new  );
 
