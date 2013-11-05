@@ -1,5 +1,7 @@
 package org.seventyeight.web.extensions;
 
+import org.seventyeight.web.servlet.Request;
+
 import java.util.List;
 
 /**
@@ -7,5 +9,5 @@ import java.util.List;
  */
 public interface Partitioned {
     public List<String> getPartitions();
-    public String getActivePartition();
+    public String getActivePartition( Request request );
 }

@@ -80,7 +80,9 @@ public class RenderObject extends Directive {
             TemplateManager.Renderer render = Core.getInstance().getTemplateManager().getRenderer( request );
 
             if( newContext ) {
-                render.setContext( new VelocityContext() );
+                VelocityContext nc = new VelocityContext();
+                nc.put( "request", request );
+                render.setContext( nc );
             }
 
             if( injected != null ) {

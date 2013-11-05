@@ -1,6 +1,6 @@
 <ul class="navlist">
     #foreach( $part in $context.getPartitions() )
-        #if( $part.equals( $context.getActivePartition()) )
+        #if( $part.equals( $context.getActivePartition($request)) )
             <li><a href="?part=$part" class="active">$part</a></li>
         #else
             <li><a href="?part=$part">$part</a></li>

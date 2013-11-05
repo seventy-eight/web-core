@@ -149,8 +149,13 @@ public class Profile extends User implements Partitioned {
     }
 
     @Override
-    public String getActivePartition() {
-        return "Profile";
+    public String getActivePartition( Request request ) {
+        String current = request.getValue( "part", null );
+        if( current != null && current.length() > 0 ) {
+            return current;
+        } else {
+            return "Profile";
+        }
     }
 
     public void validateSkill( Skill skill, Profile profile ) {
