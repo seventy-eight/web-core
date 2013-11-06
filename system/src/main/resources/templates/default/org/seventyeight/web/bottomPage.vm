@@ -1,0 +1,13 @@
+
+<div style="width: 100%; float: left">
+
+    <div id="footerMenu">
+        <div class="wrap">
+            Time taken: $seconds
+        </div>
+    </div>
+</div>
+
+
+    </body>
+</html>

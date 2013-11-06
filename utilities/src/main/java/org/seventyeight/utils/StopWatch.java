@@ -110,6 +110,30 @@ public class StopWatch {
         return sb.toString();
     }
 
+    public String simplePrint( long precision ) {
+        StringBuilder sb = new StringBuilder();
+
+        long now = System.nanoTime();
+        long full = now - initial;
+
+        //System.out.println( "NOW: " + now + ", INITIAL: " + initial + " = " + ( ( now - initial ) / PRECISION_NANO ) );
+
+        if( tasks.size() > 0 ) {
+            long total = 0;
+            for( Task t : tasks ) {
+                total += t.nano;
+            }
+
+            for( Task t : tasks ) {
+                Double p = Math.round( ( (double)t.nano / total ) * 10000.0 ) / 100.0;
+            }
+        }
+
+        sb.append( "Total time. Overall:" + toSeconds( full, precision ) + "s. Aggregated: " + toSeconds( totalTime, precision ) );
+
+        return sb.toString();
+    }
+
     private String spaces( int max, int length ) {
         return repeat( max, length, " " );
     }
