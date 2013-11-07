@@ -1,0 +1,23 @@
+<div id="skills">
+
+</div>
+
+
+<script type="text/javascript">
+
+    $(function() {
+        $( "#dialog" ).dialog({ autoOpen: false, width: 700 });
+        $( "#opener" ).click(function() {
+            $( "#dialog" ).dialog( "open" );
+        });
+    });
+
+    $(function() {
+        $.ajax({
+            type: "GET",
+            url: "skills/list",
+            success: function(data, textStatus, jqxhr){$('#skills').html("SNADE:" + data)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    });
+</script>

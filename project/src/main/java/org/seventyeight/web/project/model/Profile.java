@@ -142,9 +142,10 @@ public class Profile extends User implements Partitioned {
     public List<String> getPartitions() {
         List<String> parts = new ArrayList<String>( 4 );
         parts.add( "Profile" );
+        parts.add( "Experience" );
         parts.add( "Companies" );
-        parts.add( "Project" );
-        parts.add( "Certificates" );
+        parts.add( "Projects" );
+        parts.add( "Skills" );
         return parts;
     }
 
