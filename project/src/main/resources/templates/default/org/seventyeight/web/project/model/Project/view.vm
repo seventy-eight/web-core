@@ -1,0 +1,7 @@
+J&aelig;s
+
+<div style="width:100%; text-align: center; border-style: solid">
+    <div style="width:90%; text-align: left">
+        $item.getDescription()
+    </div>
+</div>

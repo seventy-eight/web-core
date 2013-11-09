@@ -1,0 +1,9 @@
+<tr>
+    <td>
+        Description
+    </td>
+
+    <td>
+        <textarea name="description" class="input"></textarea>
+    </td>
+</tr>
