@@ -7,6 +7,8 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.markup.HtmlGenerator;
+import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
@@ -87,6 +89,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
 
         public void save() throws SavingException {
+
         }
 
         protected String set( String key ) throws SavingException {
@@ -473,6 +476,104 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
     }
 
+    /* Texts */
+    public static final String TEXTS_COLLECTION = "texts";
+    private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
+
+    public enum TextType {
+        markUp,
+        html
+    }
+
+    public String getText( String type, String language ) {
+        logger.debug( "Getting " + type + " for " + getIdentifier() );
+
+        MongoDBQuery query = new MongoDBQuery().is( "identifier", getIdentifier() ).is( "type", type ).is( "language", language );
+        MongoDocument doc = MongoDBCollection.get( TEXTS_COLLECTION ).findOne( query );
+
+        if( doc == null || doc.isNull() ) {
+            query = new MongoDBQuery().is( "identifier", getIdentifier() ).is( "type", type );
+            doc = MongoDBCollection.get( TEXTS_COLLECTION ).findOne( query );
+
+            if( doc == null || doc.isNull() ) {
+                throw new IllegalStateException( language + " not found for " + type );
+            }
+        }
+
+        return doc.getr( "texts" ).get( TextType.html.name(), "" );
+    }
+
+    /**
+     * Set an internationalized text.
+     * @param type The type of text, eg description
+     * @param text The text itself
+     * @param language
+     */
+    public void setText( String type, String text, String language ) {
+        logger.debug( "Setting " + type + " for " + getIdentifier() );
+
+        MongoDBQuery query = new MongoDBQuery().is( "identifier", getIdentifier() ).is( "type", type ).is( "language", language );
+        MongoDocument doc = MongoDBCollection.get( TEXTS_COLLECTION ).findOne( query );
+
+        if( doc == null || doc.isNull() ) {
+            doc = createTextDocument( type, text, language );
+        } else {
+            updateTextDocument( doc, text );
+        }
+
+        MongoDBCollection.get( TEXTS_COLLECTION ).save( doc );
+    }
+
+    public void updateTextDocument( MongoDocument doc, String text ) {
+        // Meta data
+        doc.set( "revision", doc.get( "revision", 1 ) + 1 );
+        doc.set( "updated", new Date() );
+
+        StringBuilder output = textParser.parse( text );
+
+        // Set the version of the parser and generator
+        String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
+        doc.set( "textParserVersion", version );
+
+        // Set the texts
+        MongoDocument texts = doc.getSubDocument( "texts", null );
+        if( texts == null || texts.isNull() ) {
+            texts = new MongoDocument();
+            doc.set( "texts", texts );
+        }
+        texts.set( TextType.markUp.name(), text );
+        texts.set( TextType.html.name(), output.toString() );
+    }
+
+    /**
+     * Create a text document
+     */
+    public MongoDocument createTextDocument( String type, String text, String language ) {
+        logger.debug( "Creating text document" );
+
+        MongoDocument doc = new MongoDocument();
+
+        // Set meta data
+        doc.set( "identifier", this.getIdentifier() );
+        doc.set( "language", language );
+        doc.set( "type", type );
+        doc.set( "created", new Date() );
+        doc.set( "revision", 1 );
+
+        StringBuilder output = textParser.parse( text );
+
+        // Set the version of the parser and generator
+        String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
+        doc.set( "textParserVersion", version );
+
+        // Set the texts
+        MongoDocument texts = new MongoDocument();
+        texts.set( TextType.markUp.name(), text );
+        texts.set( TextType.html.name(), output.toString() );
+        doc.set( "texts", texts );
+
+        return doc;
+    }
 
 
     @Override

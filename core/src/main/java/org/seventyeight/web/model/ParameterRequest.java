@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.servlet.Request;
 
 public interface ParameterRequest {	
 	public User getUser();
@@ -17,4 +18,6 @@ public interface ParameterRequest {
 
     public PersistedObject getModelObject();
     public void setModelObject( PersistedObject modelObject );
+
+    public Request.Language getLanguage();
 }
