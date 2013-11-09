@@ -14,6 +14,8 @@ public class Company extends Resource<Company> {
         super( parent, document );
     }
 
+
+
     public static class CompanyDescriptor extends ResourceDescriptor<Company> {
 
         @Override

@@ -68,6 +68,7 @@ public class ProjectCore extends Core {
         /**/
         addDescriptor( new Profile.ProfileDescriptor() );
         addDescriptor( new Company.CompanyDescriptor() );
+        addDescriptor( new Project.ProjectDescriptor() );
         //addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileResource.FileDescriptor() );
