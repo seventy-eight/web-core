@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Profile extends User implements Partitioned {
+public class Profile extends User {
 
     private static Logger logger = Logger.getLogger( Profile.class );
 
@@ -140,7 +140,7 @@ public class Profile extends User implements Partitioned {
 
     @Override
     public List<String> getPartitions() {
-        List<String> parts = new ArrayList<String>( 4 );
+        List<String> parts = super.getPartitions();
         parts.add( "Profile" );
         parts.add( "Experience" );
         parts.add( "Companies" );

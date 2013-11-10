@@ -8,6 +8,8 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
+import org.seventyeight.web.extensions.PartitionContributor;
+import org.seventyeight.web.extensions.Partitioned;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -24,7 +26,7 @@ import java.util.Set;
 /**
  * @author cwolfgang
  */
-public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent {
+public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent, Partitioned {
 
     public static final String RESOURCES_COLLECTION_NAME = "resources";
 
@@ -142,5 +144,21 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         return extensions;
     }
 
+    @Override
+    public List<String> getPartitions() {
+        List<String> partitions = new ArrayList<String>();
 
+        // Get extensions adding to the list
+        for( PartitionContributor pc : Core.getInstance().getExtensions( PartitionContributor.class ) ) {
+            pc.insertContributions( partitions );
+        }
+
+        return partitions;
+    }
+
+    @Override
+    public String getActivePartition( Request request ) {
+        String current = request.getValue( "part", "" );
+        return current;
+    }
 }
