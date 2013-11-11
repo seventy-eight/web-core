@@ -8,7 +8,6 @@ import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Date;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.extensions.Partitioned;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
@@ -16,7 +15,6 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -138,24 +136,25 @@ public class Profile extends User {
 
     }
 
+    public static String[] partitionViews = new String[] {"Profile", "Experience", "Companies", "Projects", "Skills"};
+
     @Override
-    public List<String> getPartitions() {
-        List<String> parts = super.getPartitions();
-        parts.add( "Profile" );
-        parts.add( "Experience" );
-        parts.add( "Companies" );
-        parts.add( "Projects" );
-        parts.add( "Skills" );
+    public List<ContributingPartitionView> getPartitions() {
+        List<ContributingPartitionView> parts = super.getPartitions();
+        parts.add( new ContributingPartitionView( partitionViews, this ) );
+
+
+
         return parts;
     }
 
     @Override
-    public String getActivePartition( Request request ) {
+    public ContributingPartitionView getActivePartition( Request request ) {
         String current = request.getValue( "part", null );
         if( current != null && current.length() > 0 ) {
-            return current;
+            return new ContributingPartitionView( new String[] {current}, this );
         } else {
-            return "Profile";
+            return new ContributingPartitionView( new String[] {"Profile"}, this );
         }
     }
 

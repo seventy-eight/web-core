@@ -74,6 +74,8 @@ public class RenderObject extends Directive {
 
         Request request = (Request) context.get( "request" );
 
+        logger.debug( "Rendering " + obj );
+
         if( template == null ) {
             return false;
         } else {

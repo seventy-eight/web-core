@@ -1,12 +1,16 @@
-#set($parts = $context.getPartitions())
-
+#set($partList = $context.getPartitions())
+PARTLIST: $partList
 #if(!$parts.isEmpty())
     <ul class="navlist">
-        #foreach( $part in $parts )
-            #if( $part.equals( $context.getActivePartition($request)) )
-                <li><a href="?part=$part" class="active">$part</a></li>
-            #else
-                <li><a href="?part=$part">$part</a></li>
+        #foreach( $parts in $partList )
+            PARTs: $parts .> $parts.viewNames----$parts.titles ,
+            #foreach($part in $parts.viewName)
+                PART: $part
+                #if( $part.equals( $context.getActivePartition($request)) )
+                    <li><a href="?part=$part.viewName" class="active">$part.title</a></li>
+                #else
+                    <li><a href="?part=$part.viewName">$part.title</a></li>
+                #end
             #end
 
         #end
