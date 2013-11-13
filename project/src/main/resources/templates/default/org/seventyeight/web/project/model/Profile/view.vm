@@ -1,3 +1,29 @@
-#set($part = $item.getActivePartition($request))
-#set($view = "view$part" )
-#render($item $view)
+
+<table style="width: 100%">
+    <tr>
+        <td style="width:250px; vertical-align: top">
+            <a href="#" id="opener">
+            $item.getDisplayName()<br/>
+            <img src="$item.getPortrait()">
+            </a>
+        </td>
+
+    </tr>
+</table>
+
+<div id="dialog" title="Select profile portrait" style="width:500px">
+    #set( $up = $item.getPortraitExtension() )
+    #singleExtensionConfiguration( "org.seventyeight.web.extensions.UserPortrait" $up "setPortrait" )
+</div>
+
+<script type="text/javascript">
+
+    $(function() {
+        $( "#dialog" ).dialog({ autoOpen: false, width: 700 });
+        $( "#opener" ).click(function() {
+            $( "#dialog" ).dialog( "open" );
+        });
+    });
+</script>
+
+

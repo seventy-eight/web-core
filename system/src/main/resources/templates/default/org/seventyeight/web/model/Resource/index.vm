@@ -20,11 +20,9 @@
 
     <tr>
         <td style="width:auto;height: 100%">
-            #set($parts = $item.getActivePartition($request))
-            #foreach($viewName in $parts.viewName)
-                #set($view = "view$viewName" )
-                #render($parts.partition $view)
-            #end
+            #set($part = $item.getActivePartition($request))
+            #set($view = "$part.getViewName()" )
+            #render($part.getPartition() $view)
         </td>
         <td style="text-align: center; vertical-align: top">
             #foreach($action in $item.getActions())

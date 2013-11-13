@@ -15,6 +15,7 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,9 +142,11 @@ public class Profile extends User {
     @Override
     public List<ContributingPartitionView> getPartitions() {
         List<ContributingPartitionView> parts = super.getPartitions();
-        parts.add( new ContributingPartitionView( partitionViews, this ) );
 
-
+        parts.add( new ContributingPartitionView( "Experience", this ) );
+        parts.add( new ContributingPartitionView( "Companies", this ) );
+        parts.add( new ContributingPartitionView( "Projects", this ) );
+        parts.add( new ContributingPartitionView( "Skils", this ) );
 
         return parts;
     }
@@ -152,9 +155,9 @@ public class Profile extends User {
     public ContributingPartitionView getActivePartition( Request request ) {
         String current = request.getValue( "part", null );
         if( current != null && current.length() > 0 ) {
-            return new ContributingPartitionView( new String[] {current}, this );
+            return new ContributingPartitionView( current, this );
         } else {
-            return new ContributingPartitionView( new String[] {"Profile"}, this );
+            return new ContributingPartitionView( "view", "Profile", this );
         }
     }
 

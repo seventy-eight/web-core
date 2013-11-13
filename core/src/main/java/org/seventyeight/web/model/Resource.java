@@ -147,7 +147,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     @Override
     public List<ContributingPartitionView> getPartitions() {
         List<ContributingPartitionView> partitions = new ArrayList<ContributingPartitionView>();
-        partitions.add( new ContributingPartitionView( new String[] {""}, new String[] {"Main"}, this ) );
+        partitions.add( new ContributingPartitionView( "view", "Main", this ) );
 
         // Get extensions adding to the list
         for( PartitionContributor pc : Core.getInstance().getExtensions( PartitionContributor.class ) ) {
@@ -160,6 +160,6 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     @Override
     public ContributingPartitionView getActivePartition( Request request ) {
         String current = request.getValue( "part", "" );
-        return new ContributingPartitionView( new String[] {current}, new String[] {( current.isEmpty() ? "Main" : current )}, this );
+        return new ContributingPartitionView( current, "Main", this );
     }
 }
