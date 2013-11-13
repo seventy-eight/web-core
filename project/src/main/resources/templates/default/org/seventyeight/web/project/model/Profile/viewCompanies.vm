@@ -1,4 +1,6 @@
-<div id="skills">
+COMPANIES
+
+<div id="companies">
 
 </div>
 
@@ -8,8 +10,8 @@
     $(function() {
         $.ajax({
             type: "GET",
-            url: "skills/list",
-            success: function(data, textStatus, jqxhr){$('#skills').html("SNADE:" + data)},
+            url: "companies/list",
+            success: function(data, textStatus, jqxhr){$('#companies').html("SNADE:" + data)},
             error: function(ajax, text, error) {alert(error)}
         });
     });

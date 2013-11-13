@@ -137,16 +137,14 @@ public class Profile extends User {
 
     }
 
-    public static String[] partitionViews = new String[] {"Profile", "Experience", "Companies", "Projects", "Skills"};
-
     @Override
     public List<ContributingPartitionView> getPartitions() {
         List<ContributingPartitionView> parts = super.getPartitions();
 
-        parts.add( new ContributingPartitionView( "Experience", this ) );
-        parts.add( new ContributingPartitionView( "Companies", this ) );
-        parts.add( new ContributingPartitionView( "Projects", this ) );
-        parts.add( new ContributingPartitionView( "Skils", this ) );
+        parts.add( new ContributingPartitionView( "viewExperience", "Experience", this ) );
+        parts.add( new ContributingPartitionView( "viewCompanies", "Companies", this ) );
+        parts.add( new ContributingPartitionView( "viewProjects", "Projects", this ) );
+        parts.add( new ContributingPartitionView( "viewSkills", "Skills", this ) );
 
         return parts;
     }

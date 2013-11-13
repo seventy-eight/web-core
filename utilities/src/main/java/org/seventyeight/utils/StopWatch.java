@@ -139,7 +139,11 @@ public class StopWatch {
     }
 
     private String repeat( int max, int length, String chr ) {
-        return new String( new char[max - length] ).replace( "\0", chr );
+        if( max > length ) {
+            return new String( new char[max - length] ).replace( "\0", chr );
+        } else {
+            return " ";
+        }
     }
 
     public void reset() {

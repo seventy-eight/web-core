@@ -72,7 +72,9 @@ public class ProjectCore extends Core {
         //addDescriptor( new Group.GroupDescriptor() );
         addDescriptor( new Role.RoleDescriptor() );
         addDescriptor( new FileResource.FileDescriptor() );
+
         addDescriptor( new Skill.SkillDescriptor() );
+
         addDescriptor( new Topic.TopicDescriptor() );
 
         addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
@@ -81,6 +83,8 @@ public class ProjectCore extends Core {
 
         addDescriptor( new Signature.SignatureDescriptor() );
         addDescriptor( new ProfileSkills.ProfileSkillDescriptor() );
+        addDescriptor( new ProfileCompanies.ProfileCompaniesDescriptor() );
+
         addDescriptor( new GetAction.GetDescriptor() );
 
         addSearchable( new TitleSearch() );

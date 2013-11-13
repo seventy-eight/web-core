@@ -34,6 +34,7 @@ public class StaticFiles implements Autonomous, Node {
     @Override
     public void autonomize( Request request, Response response ) throws IOException {
         String requestedFile = request.getPathInfo();
+        request.setResponseType( Request.ResponseType.HTTP_CODE );
 
         requestedFile = requestedFile.replaceFirst( "^/?.*?/", "" );
         logger.debug( "[Request file] " + requestedFile );

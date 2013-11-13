@@ -160,6 +160,10 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     @Override
     public ContributingPartitionView getActivePartition( Request request ) {
         String current = request.getValue( "part", "" );
-        return new ContributingPartitionView( current, "Main", this );
+        if( current.length() > 0 ) {
+            return new ContributingPartitionView( current, current, this );
+        } else {
+            return new ContributingPartitionView( "view", "Main", this );
+        }
     }
 }
