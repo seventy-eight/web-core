@@ -87,7 +87,7 @@ public class ProfileSkill implements Node {
     }
 
     public void doRemove( Request request, Response response ) throws NoAuthorizationException {
-        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        response.setRenderType( Response.RenderType.NONE );
         request.checkAuthorization( (Authorizer) parent.getParent(), Authorizer.Authorization.MODERATE );
 
         remove();
@@ -200,7 +200,7 @@ public class ProfileSkill implements Node {
         //Profile profile = (Profile) parent.getParent();
         Profile user = (Profile) request.getUser();
 
-        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        response.setRenderType( Response.RenderType.NONE );
         //request.checkAuthorization( (Authorizer) pr, Authorizer.Authorization.MODERATE );
         if( request.isAuthenticated() ) {
             validateSkill( user );

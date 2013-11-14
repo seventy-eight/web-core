@@ -109,6 +109,11 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
         }
     }
 
+    @Override
+    public boolean isApplicable( Node node ) {
+        return node instanceof Profile;
+    }
+
     public static class SignatureDescriptor extends Action.ActionDescriptor<Signature> {
 
         @Override

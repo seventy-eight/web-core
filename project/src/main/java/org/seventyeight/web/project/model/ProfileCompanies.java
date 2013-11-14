@@ -74,7 +74,7 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
 
     @PostMethod
     public void doAdd( Request request, Response response ) throws NoAuthorizationException, IOException, ItemInstantiationException {
-        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        response.setRenderType( Response.RenderType.NONE );
         request.checkAuthorization( (Authorizer) parent, Authorizer.Authorization.MODERATE );
 
         String title = request.getValue( "companyTitle", null );

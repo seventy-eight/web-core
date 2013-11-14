@@ -76,7 +76,7 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
 
     @PostMethod
     public void doAdd( Request request, Response response ) throws ItemInstantiationException, IOException, TemplateException, NoAuthorizationException {
-        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        response.setRenderType( Response.RenderType.NONE );
         request.checkAuthorization( (Authorizer) parent, Authorizer.Authorization.MODERATE );
 
         String title = request.getValue( "skillTitle", null );

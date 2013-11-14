@@ -66,13 +66,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
     }
 
-    public enum ResponseType {
-        PAGED,
-        HTTP_CODE
-    }
-
-    private ResponseType responseType = ResponseType.PAGED;
-
     public enum RequestMethod {
         GET,
         POST,
@@ -257,18 +250,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         } else {
             return false;
         }
-    }
-
-    public ResponseType getResponseType() {
-        return responseType;
-    }
-
-    public boolean isPagedResponseType() {
-        return responseType == ResponseType.PAGED;
-    }
-
-    public void setResponseType( ResponseType responseType ) {
-        this.responseType = responseType;
     }
 
     public boolean isUser( User user ) {

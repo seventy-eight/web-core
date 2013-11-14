@@ -3,6 +3,7 @@ package org.seventyeight.web.utilities;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.model.CoreRequest;
+import org.seventyeight.web.servlet.Request;
 
 import java.util.HashMap;
 
@@ -70,5 +71,10 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
         } else {
             return defaultValue;
         }
+    }
+
+    @Override
+    public Request.Language getLanguage() {
+        return Request.Language.American;
     }
 }

@@ -5,10 +5,8 @@ import org.apache.velocity.VelocityContext;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.HttpException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.ExecuteUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -79,11 +77,11 @@ public class Rest extends HttpServlet {
         logger.debug( "THE USER: " + request.getUser() );
 
         try {
-            // Render main page
+            // Render the page
             Core.getInstance().render( request, response );
         } catch( CoreException e ) {
             e.printStackTrace();
-            if( request.isPagedResponseType() ) {
+            if( response.isRenderingMain() ) {
                 response.renderError( request, e );
             } else {
                 response.sendError( e.getCode(), e.getMessage() );
@@ -97,14 +95,15 @@ public class Rest extends HttpServlet {
         sw.stop();
 
         // Render the bottom
-        try {
-            if( request.isPagedResponseType() ) {
+        if( response.isRenderingMain() ) {
+            try {
                 vc.put( "seconds", sw.getSeconds() );
                 response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/bottomPage.vm" ) );
+            } catch( TemplateException e ) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-        } catch( TemplateException e ) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+
 
         //logger.info( sw.print( 1000 ) );
         System.out.println( sw.print( 1000 ) );

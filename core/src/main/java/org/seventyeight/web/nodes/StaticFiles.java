@@ -3,10 +3,8 @@ package org.seventyeight.web.nodes;
 import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -34,7 +32,7 @@ public class StaticFiles implements Autonomous, Node {
     @Override
     public void autonomize( Request request, Response response ) throws IOException {
         String requestedFile = request.getPathInfo();
-        request.setResponseType( Request.ResponseType.HTTP_CODE );
+        response.setRenderType( Response.RenderType.NONE );
 
         requestedFile = requestedFile.replaceFirst( "^/?.*?/", "" );
         logger.debug( "[Request file] " + requestedFile );

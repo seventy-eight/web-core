@@ -4,10 +4,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.ExceptionHeader;
-import org.seventyeight.web.model.HttpException;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -27,6 +24,14 @@ public class Response extends HttpServletResponseWrapper {
     private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1
     // week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
+
+
+    public enum RenderType {
+        MAIN,
+        NONE
+    }
+
+    private RenderType renderType = RenderType.MAIN;
 
 
     public Response( HttpServletResponse response ) {
@@ -545,6 +550,18 @@ public class Response extends HttpServletResponseWrapper {
 
             response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
         }
+    }
+
+    public RenderType getRenderType() {
+        return renderType;
+    }
+
+    public boolean isRenderingMain() {
+        return renderType == RenderType.MAIN;
+    }
+
+    public void setRenderType( RenderType renderType ) {
+        this.renderType = renderType;
     }
 
 }
