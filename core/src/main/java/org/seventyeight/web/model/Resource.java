@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * @author cwolfgang
  */
-public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent, Partitioned {
+public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent, Partitioned, AccessControlled {
 
     public static final String RESOURCES_COLLECTION_NAME = "resources";
 

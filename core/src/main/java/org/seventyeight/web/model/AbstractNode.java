@@ -11,6 +11,7 @@ import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.Ownable;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -29,7 +30,7 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements TopLevelNode, Authorizer, Describable<T> {
+public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements TopLevelNode, Describable<T>, Ownable {
 
     private static Logger logger = Logger.getLogger( AbstractNode.class );
 
@@ -229,47 +230,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     public void save() {
         logger.debug( "BEFORE SAVING: " + document );
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
-    }
-
-    @Override
-    public Authorization getAuthorization( User user ) throws AuthorizationException {
-        logger.debug( "Authorizing " + user + " for " + this );
-
-        /* First check ownerships */
-        if( isOwner( user ) ) {
-            logger.debug( "Is owner" );
-            return Authorization.MODERATE;
-        }
-
-        List<MongoDocument> docs = document.getList( MODERATORS );
-        logger.debug( "Mods: " + docs );
-        for( MongoDocument d : docs ) {
-            Authoritative a = null;
-            try {
-                a = (Authoritative) getSubDocument( d );
-            } catch( ItemInstantiationException e ) {
-                throw new AuthorizationException( e );
-            }
-            if( a.isAuthoritative( user ) ) {
-                return Authorization.MODERATE;
-            }
-        }
-
-        List<MongoDocument> viewers = document.getList( VIEWERS );
-        for( MongoDocument d : docs ) {
-            Authoritative a = null;
-            try {
-                a = (Authoritative) getSubDocument( d );
-            } catch( ItemInstantiationException e ) {
-                throw new AuthorizationException( e );
-            }
-            if( a.isAuthoritative( user ) ) {
-                return Authorization.VIEW;
-            }
-        }
-
-        logger.debug( "None of the above" );
-        return Authorization.NONE;
     }
 
     public void setOwner( User owner ) {

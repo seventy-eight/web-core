@@ -1,4 +1,4 @@
-package org.seventyeight.web.model;
+package org.seventyeight.web.authorization;
 
 /**
  * @author cwolfgang
