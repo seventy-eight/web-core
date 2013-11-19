@@ -1,8 +1,8 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.ExecuteUtils;
@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class ViewWrapper implements Node, Autonomous {
 
-    private static Logger logger = Logger.getLogger( ViewWrapper.class );
+    private static Logger logger = LogManager.getLogger( ViewWrapper.class );
 
     private Node node;
     private String view;

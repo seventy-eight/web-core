@@ -1,10 +1,8 @@
 package org.seventyeight.web.project.install;
 
-import org.apache.log4j.Logger;
-import org.seventyeight.database.DBInstallable;
-import org.seventyeight.database.DatabaseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.CoreException;
 import org.seventyeight.web.installers.NodeInstaller;
 import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.nodes.User;
@@ -16,7 +14,7 @@ import org.seventyeight.web.utilities.Parameters;
  */
 public class ProfileInstall extends NodeInstaller<User> {
 
-    private static Logger logger = Logger.getLogger( ProfileInstall.class );
+    private static Logger logger = LogManager.getLogger( ProfileInstall.class );
 
     protected String firstName;
     protected String lastName;

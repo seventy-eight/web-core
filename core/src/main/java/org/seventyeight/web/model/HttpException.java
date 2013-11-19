@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.CoreException;
 
 /**
@@ -8,7 +9,7 @@ import org.seventyeight.web.CoreException;
  */
 public class HttpException extends CoreException {
 
-    private static Logger logger = Logger.getLogger( HttpException.class );
+    private static Logger logger = LogManager.getLogger( HttpException.class );
 
     private int code = 400;
     private String header = null;

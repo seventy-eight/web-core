@@ -1,8 +1,8 @@
 package org.seventyeight.web.extensions.filetype;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
-import org.seventyeight.database.annotations.Persisted;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
@@ -14,7 +14,7 @@ import org.seventyeight.web.servlet.Response;
  */
 public class ImageFileType extends FileType<ImageFileType> {
 
-    private static Logger logger = Logger.getLogger( ImageFileType.class );
+    private static Logger logger = LogManager.getLogger( ImageFileType.class );
 
     public ImageFileType( MongoDocument document ) {
         super( document );

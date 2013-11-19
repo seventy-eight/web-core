@@ -1,7 +1,8 @@
 package org.seventyeight.web.actions;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
@@ -10,7 +11,7 @@ import org.seventyeight.web.model.*;
  */
 public class Get implements Node, Parent {
 
-    private Logger logger = Logger.getLogger( Get.class );
+    private Logger logger = LogManager.getLogger( Get.class );
 
     private Node parent;
 

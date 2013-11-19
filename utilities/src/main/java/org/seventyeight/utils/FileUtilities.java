@@ -1,7 +1,8 @@
 package org.seventyeight.utils;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.zip.ZipFile;
 
 public class FileUtilities {
 
-	private static Logger logger = Logger.getLogger( FileUtilities.class );
+	private static Logger logger = LogManager.getLogger( FileUtilities.class );
 	
 	public static void extractArchive( File archive, File outputDir ) {
 		extractArchive( archive, outputDir, null );

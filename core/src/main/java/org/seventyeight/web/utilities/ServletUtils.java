@@ -5,8 +5,9 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.structure.Tuple;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.web.Core;
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class ServletUtils {
 
-    private static Logger logger = Logger.getLogger( ServletUtils.class );
+    private static Logger logger = LogManager.getLogger( ServletUtils.class );
 
     public static class Copier implements Runnable {
         AsyncContext ctx;

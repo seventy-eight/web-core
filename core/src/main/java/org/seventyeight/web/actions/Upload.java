@@ -1,6 +1,7 @@
 package org.seventyeight.web.actions;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -26,7 +27,7 @@ import java.util.concurrent.Executor;
  */
 public class Upload implements Node {
 
-    private static Logger logger = Logger.getLogger( Upload.class );
+    private static Logger logger = LogManager.getLogger( Upload.class );
 
     private static SimpleDateFormat formatYear = new SimpleDateFormat( "yyyy" );
     private static SimpleDateFormat formatMonth = new SimpleDateFormat( "MM" );

@@ -1,7 +1,8 @@
 package org.seventyeight.web.extensions;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Attachments extends Action<Attachments> {
 
-    private static Logger logger = Logger.getLogger( Attachments.class );
+    private static Logger logger = LogManager.getLogger( Attachments.class );
 
     public static final String FILE_ATTACHMENTS_ELEMENT = "attachments";
 

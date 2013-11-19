@@ -1,6 +1,7 @@
 package org.seventyeight;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -14,7 +15,7 @@ import java.util.StringTokenizer;
  */
 public class TokenList {
 
-    private static Logger logger = Logger.getLogger( TokenList.class );
+    private static Logger logger = LogManager.getLogger( TokenList.class );
 
     private List<String> list;
     private int number = 0;

@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public abstract class ResourceDescriptor<T extends Resource<T>> extends Descriptor<T> implements Node, Getable<T> {
 
-    private static Logger logger = Logger.getLogger( ResourceDescriptor.class );
+    private static Logger logger = LogManager.getLogger( ResourceDescriptor.class );
 
     @Override
     public Node getParent() {

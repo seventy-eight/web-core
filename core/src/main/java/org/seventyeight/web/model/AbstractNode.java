@@ -1,7 +1,8 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
@@ -32,7 +33,7 @@ import java.util.List;
  */
 public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements TopLevelNode, Describable<T>, Ownable {
 
-    private static Logger logger = Logger.getLogger( AbstractNode.class );
+    private static Logger logger = LogManager.getLogger( AbstractNode.class );
 
     public static final String MODERATORS = "moderators";
     public static final String VIEWERS = "viewers";

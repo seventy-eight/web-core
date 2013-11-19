@@ -1,6 +1,7 @@
 package org.seventyeight.web.servlet;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -18,7 +19,7 @@ import java.util.zip.GZIPOutputStream;
  */
 public class Response extends HttpServletResponseWrapper {
 
-    private static Logger logger = Logger.getLogger( Response.class );
+    private static Logger logger = LogManager.getLogger( Response.class );
 
     private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
     private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1

@@ -1,6 +1,7 @@
 package org.seventyeight.web.nodes;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.Autonomous;
@@ -17,7 +18,7 @@ import java.net.URLDecoder;
  */
 public class StaticFiles implements Autonomous, Node {
 
-    private static Logger logger = Logger.getLogger( StaticFiles.class );
+    private static Logger logger = LogManager.getLogger( StaticFiles.class );
 
     @Override
     public Node getParent() {

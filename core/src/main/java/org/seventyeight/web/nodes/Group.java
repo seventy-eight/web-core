@@ -1,6 +1,7 @@
 package org.seventyeight.web.nodes;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class Group extends Resource<Group> {
 
-    private static Logger logger = Logger.getLogger( Group.class );
+    private static Logger logger = LogManager.getLogger( Group.class );
 
     public static final String GROUPS = "groups";
     public static final String GROUP = "group";

@@ -1,20 +1,21 @@
 package org.seventyeight.web.nodes;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
-import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.filetype.FileType;
-import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.Descriptor;
+import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.UploadableNode;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.ServletUtils;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class FileResource extends UploadableNode<FileResource> {
 
-    private static Logger logger = Logger.getLogger( FileResource.class );
+    private static Logger logger = LogManager.getLogger( FileResource.class );
 
     private static SimpleDateFormat formatYear = new SimpleDateFormat( "yyyy" );
     private static SimpleDateFormat formatMonth = new SimpleDateFormat( "MM" );

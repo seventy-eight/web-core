@@ -1,6 +1,7 @@
 package org.seventyeight.web.velocity.html;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
@@ -8,7 +9,6 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 
@@ -17,7 +17,7 @@ import java.io.Writer;
 
 public class RenderStatic extends Directive {
 
-	private Logger logger = Logger.getLogger( RenderStatic.class );
+	private static Logger logger = LogManager.getLogger( RenderStatic.class );
 	
 	@Override
 	public String getName() {

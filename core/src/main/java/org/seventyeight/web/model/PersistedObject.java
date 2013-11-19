@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public abstract class PersistedObject implements Savable, Documented {
 
-    private static Logger logger = Logger.getLogger( PersistedObject.class );
+    private static Logger logger = LogManager.getLogger( PersistedObject.class );
 
     public static final String EXTENSIONS = "extensions";
 

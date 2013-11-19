@@ -1,12 +1,13 @@
 package org.seventyeight.web.nodes;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public abstract class AbstractUserContainerNode<C extends User, T extends AbstractUserContainerNode<C, T>> extends Resource<T> {
 
-    private static Logger logger = Logger.getLogger( AbstractUserContainerNode.class );
+    private static Logger logger = LogManager.getLogger( AbstractUserContainerNode.class );
 
     public AbstractUserContainerNode( Node parent, MongoDocument document ) {
         super( parent, document );

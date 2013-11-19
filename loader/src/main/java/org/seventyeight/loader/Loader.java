@@ -1,6 +1,7 @@
 package org.seventyeight.loader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class Loader extends HashMap<Class<? extends Annotation>, Handler> {
 
-    private static Logger logger = Logger.getLogger( Loader.class );
+    private static Logger logger = LogManager.getLogger( Loader.class );
 
 	protected ClassLoader cl;
 

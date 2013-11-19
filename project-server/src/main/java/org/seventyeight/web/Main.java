@@ -1,31 +1,25 @@
 package org.seventyeight.web;
 
-import java.io.File;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.webapp.Configuration;
-import org.eclipse.jetty.webapp.FragmentConfiguration;
-import org.eclipse.jetty.webapp.JettyWebXmlConfiguration;
-import org.eclipse.jetty.webapp.MetaInfConfiguration;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.webapp.WebInfConfiguration;
-import org.eclipse.jetty.webapp.WebXmlConfiguration;
-import org.eclipse.jetty.annotations.AnnotationConfiguration;
+import org.eclipse.jetty.webapp.*;
 import org.seventyeight.utils.FileUtilities;
+
+import java.io.File;
 
 public class Main {
 
     public static final String WARFILE = "project.war";
 
     private static int port = 8080;
-    private static Logger logger = Logger.getLogger( Main.class );
+    private static Logger logger = LogManager.getLogger( Main.class );
 
     public static void main( String[] args ) throws Exception {
 
@@ -86,7 +80,7 @@ public class Main {
                 new WebInfConfiguration(),
                 new WebXmlConfiguration(),
                 new MetaInfConfiguration(),
-                new FragmentConfiguration(),
+                //new FragmentConfiguration(),
                 new EnvConfiguration(),
                 new PlusConfiguration(),
                 new JettyWebXmlConfiguration()

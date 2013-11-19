@@ -1,14 +1,11 @@
 package org.seventyeight.web.authorization;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.AbstractNode;
-import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
-import org.seventyeight.web.nodes.Collection;
 import org.seventyeight.web.nodes.User;
 
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ import java.util.List;
  */
 public class BasicResourceBasedSecurity extends ACL {
 
-    private static Logger logger = Logger.getLogger( BasicResourceBasedSecurity.class );
+    private static Logger logger = LogManager.getLogger( BasicResourceBasedSecurity.class );
 
     public BasicResourceBasedSecurity( Node parent, MongoDocument document ) {
         super( parent, document );

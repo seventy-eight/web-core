@@ -1,6 +1,7 @@
 package org.seventyeight.markup;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public abstract class Parser {
 
-    private static Logger logger = Logger.getLogger( Parser.class );
+    private static Logger logger = LogManager.getLogger( Parser.class );
 
     private Generator generator;
 

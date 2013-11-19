@@ -1,7 +1,8 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -32,7 +33,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     public static final String RESOURCES_COLLECTION_NAME = "resources";
 
-    private static Logger logger = Logger.getLogger( Resource.class );
+    private static Logger logger = LogManager.getLogger( Resource.class );
 
     public Resource( Node parent, MongoDocument document ) {
         super( parent, document );

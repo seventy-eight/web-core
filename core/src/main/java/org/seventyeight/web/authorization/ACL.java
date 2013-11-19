@@ -1,6 +1,7 @@
 package org.seventyeight.web.authorization;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public abstract class ACL {
 
-    private static Logger logger = Logger.getLogger( ACL.class );
+    private static Logger logger = LogManager.getLogger( ACL.class );
 
     public enum Permission {
         NONE("none"),

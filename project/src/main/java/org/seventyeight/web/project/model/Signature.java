@@ -1,13 +1,13 @@
 package org.seventyeight.web.project.model;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.ProjectCore;
 import org.seventyeight.web.actions.AbstractUploadAction;
 import org.seventyeight.web.authorization.ACL;
-import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -15,14 +15,13 @@ import org.seventyeight.web.servlet.Response;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 /**
  * @author cwolfgang
  */
 public class Signature extends AbstractUploadAction<Signature> implements Layoutable {
 
-    private static Logger logger = Logger.getLogger( Signature.class );
+    private static Logger logger = LogManager.getLogger( Signature.class );
 
     public Signature( Node parent, MongoDocument document ) {
         super( parent, document );

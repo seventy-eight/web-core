@@ -1,7 +1,8 @@
 package org.seventyeight.web.utilities;
 
 import com.google.gson.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.model.ParameterRequest;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class JsonUtils {
 
-    private static Logger logger = Logger.getLogger( JsonUtils.class );
+    private static Logger logger = LogManager.getLogger( JsonUtils.class );
 
     private JsonUtils() {
 

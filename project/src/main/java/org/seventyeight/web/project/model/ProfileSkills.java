@@ -1,7 +1,8 @@
 package org.seventyeight.web.project.model;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
@@ -18,14 +19,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author cwolfgang
  */
 public class ProfileSkills extends Action<ProfileSkills> implements Getable<ProfileSkill> {
 
-    private static Logger logger = Logger.getLogger( ProfileSkills.class );
+    private static Logger logger = LogManager.getLogger( ProfileSkills.class );
 
     public ProfileSkills( Node parent, MongoDocument document ) {
         super( parent, document );

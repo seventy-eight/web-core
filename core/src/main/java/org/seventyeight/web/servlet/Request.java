@@ -1,12 +1,16 @@
 package org.seventyeight.web.servlet;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
-import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.AbstractTheme;
+import org.seventyeight.web.model.CoreRequest;
+import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.nodes.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +21,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
-    private static Logger logger = Logger.getLogger( Request.class );
+    private static Logger logger = LogManager.getLogger( Request.class );
 
     private static final String __MULTIPART = "multipart/form-data";
 

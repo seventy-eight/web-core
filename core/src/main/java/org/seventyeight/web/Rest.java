@@ -1,6 +1,7 @@
 package org.seventyeight.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 @WebServlet( asyncSupported = true )
 public class Rest extends HttpServlet {
 
-    private static Logger logger = Logger.getLogger( Rest.class );
+    private static Logger logger = LogManager.getLogger( Rest.class );
 
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {

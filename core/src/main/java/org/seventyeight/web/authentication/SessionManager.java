@@ -1,14 +1,15 @@
 package org.seventyeight.web.authentication;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.model.ItemInstantiationException;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class SessionManager implements Node {
 	
-	private static Logger logger = Logger.getLogger( SessionManager.class );
+	private static Logger logger = LogManager.getLogger( SessionManager.class );
 
     public static final String SESSIONS = "sessions";
     public static final String SESSION = "session";

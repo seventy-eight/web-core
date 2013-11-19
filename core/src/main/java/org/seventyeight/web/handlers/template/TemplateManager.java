@@ -1,6 +1,7 @@
 package org.seventyeight.web.handlers.template;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -19,7 +20,7 @@ import java.util.*;
 
 public class TemplateManager {
 
-	private static Logger logger = Logger.getLogger( TemplateManager.class );
+	private static Logger logger = LogManager.getLogger( TemplateManager.class );
 	
 	private VelocityEngine engine = new VelocityEngine();
 	private Properties velocityProperties = new Properties();

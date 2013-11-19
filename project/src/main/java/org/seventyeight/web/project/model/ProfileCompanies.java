@@ -1,7 +1,8 @@
 package org.seventyeight.web.project.model;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
@@ -22,7 +23,7 @@ import java.util.Date;
  */
 public class ProfileCompanies extends Action<ProfileCompanies> implements Getable<ProfileCompanies> {
 
-    private static Logger logger = Logger.getLogger( ProfileCompanies.class );
+    private static Logger logger = LogManager.getLogger( ProfileCompanies.class );
 
     public ProfileCompanies( Node parent, MongoDocument document ) {
         super( parent, document );

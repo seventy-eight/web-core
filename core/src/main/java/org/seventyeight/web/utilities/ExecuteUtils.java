@@ -1,9 +1,9 @@
 package org.seventyeight.web.utilities;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.web.Core;
-import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  */
 public class ExecuteUtils {
 
-    public static Logger logger = Logger.getLogger( ExecuteUtils.class );
+    public static Logger logger = LogManager.getLogger( ExecuteUtils.class );
 
     private ExecuteUtils() {
 

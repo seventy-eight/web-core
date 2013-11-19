@@ -1,6 +1,7 @@
 package org.seventyeight.database.mongodb;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.Installation;
 import org.seventyeight.loader.Handler;
 import org.seventyeight.loader.Loader;
@@ -13,7 +14,7 @@ import java.lang.annotation.Annotation;
 public class MongoDBInstaller {
 
 
-    private static Logger logger = Logger.getLogger( MongoDBInstaller.class );
+    private static Logger logger = LogManager.getLogger( MongoDBInstaller.class );
 
     private org.seventyeight.loader.ClassLoader classLoader = null;
     private Loader loader;

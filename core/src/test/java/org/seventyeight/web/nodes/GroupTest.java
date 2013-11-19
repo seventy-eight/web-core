@@ -1,13 +1,12 @@
 package org.seventyeight.web.nodes;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.DummyCoreEnvironment;
 import org.seventyeight.web.WebCoreEnv;
-import org.seventyeight.web.installers.UserInstall;
-import org.seventyeight.web.model.ItemInstantiationException;
 
 import static com.mongodb.util.MyAsserts.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -20,7 +19,7 @@ import static org.junit.Assert.assertThat;
  */
 public class GroupTest {
 
-    private static Logger logger = Logger.getLogger( GroupTest.class );
+    private static Logger logger = LogManager.getLogger( GroupTest.class );
 
     @Rule
     public WebCoreEnv env = new DummyCoreEnvironment( "seventyeight-test-group-test" );

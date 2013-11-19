@@ -1,20 +1,21 @@
 package org.seventyeight.web.utilities;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.nodes.Group;
-import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
+import org.seventyeight.web.nodes.Group;
+import org.seventyeight.web.nodes.User;
 
 /**
  * @author cwolfgang
  */
 public class Installer {
 
-    private static Logger logger = Logger.getLogger( Installer.class );
+    private static Logger logger = LogManager.getLogger( Installer.class );
 
     private Core core;
 

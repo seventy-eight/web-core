@@ -1,11 +1,10 @@
 package org.seventyeight.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
-import org.seventyeight.web.installers.ArticleInstall;
-import org.seventyeight.web.installers.GroupInstall;
-import org.seventyeight.web.model.NotFoundException;
-import org.seventyeight.web.project.install.*;
+import org.seventyeight.web.project.install.ProfileInstall;
+import org.seventyeight.web.project.install.RoleInstall;
 import org.seventyeight.web.project.model.Profile;
 import org.seventyeight.web.project.model.Role;
 
@@ -18,7 +17,7 @@ import java.io.File;
 @WebListener
 public class ProjectListener extends DatabaseContextListener<ProjectCore> {
 
-    private static Logger logger = Logger.getLogger( ProjectListener.class );
+    private static Logger logger = LogManager.getLogger( ProjectListener.class );
 
     public ProjectListener() {
         //extraTemplatePaths.add( "WEB-INF/classes/templates" );

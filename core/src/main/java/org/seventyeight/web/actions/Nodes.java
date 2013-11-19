@@ -1,6 +1,7 @@
 package org.seventyeight.web.actions;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class Nodes implements Node {
 
-    private static Logger logger = Logger.getLogger( Nodes.class );
+    private static Logger logger = LogManager.getLogger( Nodes.class );
 
     public List<Node> getNodes( int offset, int number ) {
         List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( new MongoDBQuery(), offset, number );

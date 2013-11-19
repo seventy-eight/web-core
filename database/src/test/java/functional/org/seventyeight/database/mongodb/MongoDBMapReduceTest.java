@@ -1,6 +1,8 @@
 package functional.org.seventyeight.database.mongodb;
 
 import com.mongodb.MapReduceCommand;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.seventyeight.database.mongodb.*;
@@ -18,6 +20,8 @@ import static junit.framework.Assert.assertNotNull;
  * @author cwolfgang
  */
 public class MongoDBMapReduceTest {
+
+    private static Logger logger = LogManager.getLogger( MongoDBMapReduceTest.class );
 
     public static final String COLLECTION_NAME = "webtest";
 
@@ -175,6 +179,13 @@ public class MongoDBMapReduceTest {
 
         List<MongoDocument> docs2 = MongoDBCollection.get( "search01" ).find( new MongoDBQuery() );
         System.out.println(docs2);
+    }
+
+    @Test
+    public void loggerTest() {
+        logger.debug( "debug" );
+        logger.info( "info" );
+        logger.error( "error" );
     }
 
     protected void createTests() {

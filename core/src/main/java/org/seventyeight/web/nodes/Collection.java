@@ -2,7 +2,8 @@ package org.seventyeight.web.nodes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class Collection extends Resource<Collection> {
 
-    private static Logger logger = Logger.getLogger( Collection.class );
+    private static Logger logger = LogManager.getLogger( Collection.class );
 
     public static final String SORT_FIELD = "sort";
     public static final String ELEMENTS_FIELD = "elements";

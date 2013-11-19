@@ -1,7 +1,8 @@
 package org.seventyeight.database.mongodb;
 
 import com.mongodb.BasicDBObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.Document;
 
 /**
@@ -9,7 +10,7 @@ import org.seventyeight.database.Document;
  */
 public class MongoUpdate {
 
-    private static Logger logger = Logger.getLogger( MongoUpdate.class );
+    private static Logger logger = LogManager.getLogger( MongoUpdate.class );
 
     private BasicDBObject update = new BasicDBObject();
 

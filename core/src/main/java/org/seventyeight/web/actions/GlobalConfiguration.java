@@ -1,6 +1,7 @@
 package org.seventyeight.web.actions;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -13,7 +14,7 @@ import java.io.IOException;
  */
 public class GlobalConfiguration implements Node, Parent {
 
-    private static Logger logger = Logger.getLogger( GlobalConfiguration.class );
+    private static Logger logger = LogManager.getLogger( GlobalConfiguration.class );
 
     @Override
     public Node getParent() {

@@ -3,7 +3,8 @@ package org.seventyeight.database.mongodb;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Set;
  */
 public class MongoDatabase {
 
-    private static Logger logger = Logger.getLogger( MongoDatabase.class );
+    private static Logger logger = LogManager.getLogger( MongoDatabase.class );
 
     private DB db;
 

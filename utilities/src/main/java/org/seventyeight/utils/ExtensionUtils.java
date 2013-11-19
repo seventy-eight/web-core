@@ -5,9 +5,9 @@ package org.seventyeight.utils;
  *         Date: 21-12-12
  *         Time: 20:46
  */
-public class ExtensionUtills {
+public class ExtensionUtils {
 
-    private ExtensionUtills() {}
+    private ExtensionUtils() {}
 
     public static boolean isDescendant( ) {
         return true;

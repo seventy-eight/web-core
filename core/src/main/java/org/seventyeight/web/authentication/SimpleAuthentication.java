@@ -1,10 +1,11 @@
 package org.seventyeight.web.authentication;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -15,7 +16,7 @@ import java.util.Date;
 
 public class SimpleAuthentication implements Authentication {
 
-	private static Logger logger = Logger.getLogger( SimpleAuthentication.class );
+	private static Logger logger = LogManager.getLogger( SimpleAuthentication.class );
 	
 	public void authenticate( Request request, Response response ) throws AuthenticationException {
 

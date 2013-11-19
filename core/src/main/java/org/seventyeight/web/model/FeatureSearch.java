@@ -1,14 +1,10 @@
 package org.seventyeight.web.model;
 
-import com.mongodb.MapReduceCommand;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBMapReduce;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.web.Core;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class FeatureSearch {
 
-    private static Logger logger = Logger.getLogger( FeatureSearch.class );
+    private static Logger logger = LogManager.getLogger( FeatureSearch.class );
 
     public static final String regex = "(?:([\\w-]+)\\s*:\\s*(?:\"([^\"]*)\"|([\\S]+)))|(?:\"([^\"]*)\"|([\\S]+))";
     public static final String regexSimple = "(?:\"([^\"]*)\"|([\\S]+))";

@@ -1,6 +1,7 @@
 package org.seventyeight.web.velocity;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.TimeUtils;
 
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 public class DateUtils {
 
-    private static Logger logger = Logger.getLogger( DateUtils.class );
+    private static Logger logger = LogManager.getLogger( DateUtils.class );
 
     public String getDateString( Date date ) {
         return TimeUtils.getSmallTimeString( System.currentTimeMillis() - date.getTime() );

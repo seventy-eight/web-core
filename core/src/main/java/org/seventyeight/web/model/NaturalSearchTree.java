@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.structure.Tree;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class NaturalSearchTree extends Tree<NaturalSearchTree.AbstractSearchTreeData> {
 
-    private static Logger logger = Logger.getLogger( NaturalSearchTree.class );
+    private static Logger logger = LogManager.getLogger( NaturalSearchTree.class );
 
     public NaturalSearchTree( AbstractSearchTreeData rootData ) {
         super( rootData );

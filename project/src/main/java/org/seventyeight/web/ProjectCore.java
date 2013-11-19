@@ -1,8 +1,8 @@
 package org.seventyeight.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
-import org.seventyeight.web.actions.Search;
 import org.seventyeight.web.extensions.GravatarPortrait;
 import org.seventyeight.web.extensions.TabbedPartitionedResource;
 import org.seventyeight.web.extensions.UploadablePortrait;
@@ -11,7 +11,8 @@ import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
-import org.seventyeight.web.project.actions.*;
+import org.seventyeight.web.project.actions.AddNode;
+import org.seventyeight.web.project.actions.CertificateSearch;
 import org.seventyeight.web.project.model.*;
 
 import java.io.File;
@@ -21,7 +22,7 @@ import java.io.File;
  */
 public class ProjectCore extends Core {
 
-    private static Logger logger = Logger.getLogger( ProjectCore.class );
+    private static Logger logger = LogManager.getLogger( ProjectCore.class );
 
     private File signaturePath;
 

@@ -1,6 +1,7 @@
 package org.seventyeight.web.project.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -15,7 +16,6 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class Profile extends User {
 
-    private static Logger logger = Logger.getLogger( Profile.class );
+    private static Logger logger = LogManager.getLogger( Profile.class );
 
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";

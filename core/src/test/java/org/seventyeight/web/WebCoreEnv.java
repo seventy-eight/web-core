@@ -1,6 +1,7 @@
 package org.seventyeight.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -20,7 +21,7 @@ import java.net.UnknownHostException;
  */
 public abstract class WebCoreEnv<C extends Core> implements TestRule {
 
-    private static Logger logger = Logger.getLogger( WebCoreEnv.class );
+    private static Logger logger = LogManager.getLogger( WebCoreEnv.class );
 
     protected File path;
     protected String databaseName;

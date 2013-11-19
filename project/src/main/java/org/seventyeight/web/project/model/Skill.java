@@ -1,6 +1,7 @@
 package org.seventyeight.web.project.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class Skill extends Resource<Skill> {
 
-    private static Logger logger = Logger.getLogger( Skill.class );
+    private static Logger logger = LogManager.getLogger( Skill.class );
 
     public static final String SKILL = "skill";
     public static final String SKILLS = "skills";

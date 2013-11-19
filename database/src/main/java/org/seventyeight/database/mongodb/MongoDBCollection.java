@@ -4,8 +4,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import org.apache.log4j.Logger;
-import org.bson.types.ObjectId;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class MongoDBCollection {
 
-    private static Logger logger = Logger.getLogger( MongoDBCollection.class );
+    private static Logger logger = LogManager.getLogger( MongoDBCollection.class );
 
     private DBCollection collection;
 

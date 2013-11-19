@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 
@@ -9,7 +10,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractTheme {
 
-	private Logger logger = Logger.getLogger( AbstractTheme.class );
+	private Logger logger = LogManager.getLogger( AbstractTheme.class );
 
 	public AbstractTheme() {
 		logger.debug( "Creating theme" );

@@ -1,23 +1,18 @@
 package org.seventyeight.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.utils.TimeUtils;
-import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.SavingException;
 import org.seventyeight.web.utilities.Installer;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -26,7 +21,7 @@ import java.util.concurrent.Executors;
  */
 //@WebListener
 public abstract class DatabaseContextListener<T extends Core> implements ServletContextListener {
-    private static Logger logger = Logger.getLogger( DatabaseContextListener.class );
+    private static Logger logger = LogManager.getLogger( DatabaseContextListener.class );
 
     private long seconds;
 

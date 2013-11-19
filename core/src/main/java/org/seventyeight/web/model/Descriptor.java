@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
@@ -15,12 +16,11 @@ import org.seventyeight.web.servlet.Response;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public abstract class Descriptor<T extends Describable<T>> {
 	
-	private static Logger logger = Logger.getLogger( Descriptor.class );
+	private static Logger logger = LogManager.getLogger( Descriptor.class );
 
     public static final String DATA_COLLECTION = "data";
 	

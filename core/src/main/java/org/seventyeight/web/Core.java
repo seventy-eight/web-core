@@ -1,7 +1,8 @@
 package org.seventyeight.web;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.TokenList;
 import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
@@ -13,7 +14,8 @@ import org.seventyeight.web.actions.ResourceAction;
 import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.nodes.*;
+import org.seventyeight.web.nodes.Group;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
@@ -26,17 +28,15 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * @author cwolfgang
  */
 public abstract class Core implements TopLevelNode, RootNode, Parent {
 
-    private static Logger logger = Logger.getLogger( Core.class );
+    private static Logger logger = LogManager.getLogger( Core.class );
 
     public static final String NAME_FIELD = "title";
 

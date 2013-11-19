@@ -1,18 +1,15 @@
 package org.seventyeight.web.nodes;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
-import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.Response;
-
-import java.io.IOException;
 
 /**
  * Basic {@link Resource} for texts.
@@ -21,7 +18,7 @@ import java.io.IOException;
  */
 public class Topic extends Resource<Topic> {
 
-    private static Logger logger = Logger.getLogger( Topic.class );
+    private static Logger logger = LogManager.getLogger( Topic.class );
 
     private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
 

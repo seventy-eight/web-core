@@ -3,7 +3,8 @@ package org.seventyeight.web.actions;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> extends Action<T> {
 
-    private static Logger logger = Logger.getLogger( AbstractUploadAction.class );
+    private static Logger logger = LogManager.getLogger( AbstractUploadAction.class );
 
     protected AbstractUploadAction( Node parent, MongoDocument document ) {
         super( parent, document );

@@ -2,17 +2,19 @@ package org.seventyeight.web.actions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.FeatureSearch;
+import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.ExecuteUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 public class Search implements Node {
 
-    private static Logger logger = Logger.getLogger( Search.class );
+    private static Logger logger = LogManager.getLogger( Search.class );
 
     @Override
     public Node getParent() {

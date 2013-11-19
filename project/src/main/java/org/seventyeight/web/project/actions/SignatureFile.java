@@ -1,6 +1,7 @@
 package org.seventyeight.web.project.actions;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.ProjectCore;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -18,7 +19,7 @@ import java.net.URLDecoder;
  */
 public class SignatureFile implements Autonomous, Node {
 
-    private static Logger logger = Logger.getLogger( SignatureFile.class );
+    private static Logger logger = LogManager.getLogger( SignatureFile.class );
 
     @Override
     public Node getParent() {

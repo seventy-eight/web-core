@@ -1,7 +1,7 @@
 package org.seventyeight.web.velocity.html;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
@@ -20,7 +20,7 @@ import java.io.Writer;
 
 public class RenderObject extends Directive {
 
-	private Logger logger = Logger.getLogger( RenderObject.class );
+	private static Logger logger = LogManager.getLogger( RenderObject.class );
 	
 	@Override
 	public String getName() {

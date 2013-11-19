@@ -1,13 +1,14 @@
 package org.seventyeight.markup;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author cwolfgang
  */
 public class HtmlGenerator implements Generator {
 
-    private static Logger logger = Logger.getLogger( HtmlGenerator.class );
+    private static Logger logger = LogManager.getLogger( HtmlGenerator.class.getName() );
 
     private Parser.MarkUp lastMarkUp;
 

@@ -1,12 +1,12 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
-import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.UserPortrait;
@@ -14,7 +14,6 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.List;
  */
 public class User extends Resource<User> {
 
-    private static Logger logger = Logger.getLogger( User.class );
+    private static Logger logger = LogManager.getLogger( User.class );
 
     public static final String USERS = "users";
 

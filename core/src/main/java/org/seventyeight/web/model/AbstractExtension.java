@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public abstract class AbstractExtension<T extends AbstractExtension<T>> extends PersistedObject implements Describable<T> {
 
-    private static Logger logger = Logger.getLogger( AbstractExtension.class );
+    private static Logger logger = LogManager.getLogger( AbstractExtension.class );
 
     protected Node parent;
 

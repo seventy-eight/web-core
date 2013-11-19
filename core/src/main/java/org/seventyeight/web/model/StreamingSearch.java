@@ -2,7 +2,8 @@ package org.seventyeight.web.model;
 
 import com.mongodb.MapReduceCommand;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBMapReduce;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.web.Core;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class StreamingSearch {
 
-    private static Logger logger = Logger.getLogger( StreamingSearch.class );
+    private static Logger logger = LogManager.getLogger( StreamingSearch.class );
 
     private static final File mapFile = new File( StreamingSearch.class.getResource( "search.resources.map.js" ).getFile() );
     private static final File reduceFile = new File( StreamingSearch.class.getResource( "search.resources.reduce.js" ).getFile() );
