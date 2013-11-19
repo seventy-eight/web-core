@@ -9,6 +9,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -88,7 +89,7 @@ public class ProfileSkill implements Node {
 
     public void doRemove( Request request, Response response ) throws NoAuthorizationException {
         response.setRenderType( Response.RenderType.NONE );
-        request.checkAuthorization( (Authorizer) parent.getParent(), Authorizer.Authorization.MODERATE );
+        request.checkPermissions( parent.getParent(), ACL.Permission.ADMIN );
 
         remove();
         response.setStatus( HttpServletResponse.SC_OK );
@@ -201,7 +202,7 @@ public class ProfileSkill implements Node {
         Profile user = (Profile) request.getUser();
 
         response.setRenderType( Response.RenderType.NONE );
-        //request.checkAuthorization( (Authorizer) pr, Authorizer.Authorization.MODERATE );
+        //request.checkPermissions( (Authorizer) pr, Authorizer.Authorization.MODERATE );
         if( request.isAuthenticated() ) {
             validateSkill( user );
         } else {

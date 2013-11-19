@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -77,7 +78,7 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
     @PostMethod
     public void doAdd( Request request, Response response ) throws ItemInstantiationException, IOException, TemplateException, NoAuthorizationException {
         response.setRenderType( Response.RenderType.NONE );
-        request.checkAuthorization( (Authorizer) parent, Authorizer.Authorization.MODERATE );
+        request.checkPermissions( parent, ACL.Permission.ADMIN );
 
         String title = request.getValue( "skillTitle", null );
         logger.debug( "Adding " + title + " to " + this );

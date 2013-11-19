@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 
@@ -35,8 +37,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private String[] requestParts;
 
     private Language language = Language.American;
-
-    Authorizer.Authorization authorization = null;
 
     public enum Language {
         American( "English", "en_US" ),
@@ -129,40 +129,21 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         this.authenticated = authenticated;
     }
 
-    public void checkAuthorization( Node node, Authorizer.Authorization authorization ) throws NoAuthorizationException {
+    public void checkPermissions( Node node, ACL.Permission permission ) throws NoAuthorizationException {
         logger.debug( "Checking authorization for " + user );
 
         while( node != null ) {
             logger.debug( "Checking " + node );
-            if( node instanceof Authorizer ) {
-                checkAuthorization( (Authorizer)node, authorization );
+            if( node instanceof AccessControlled ) {
+                if( ((AccessControlled)node).getACL().getPermission( user ).ordinal() < permission.ordinal() ) {
+                    throw new NoAuthorizationException( user + " was not authorized to " + node );
+                }
             }
 
             node = node.getParent();
         }
 
         logger.debug( "Was authorized" );
-    }
-
-    public void checkAuthorization( Authorizer authorizer, Authorizer.Authorization authorization ) throws NoAuthorizationException {
-
-        try {
-            this.authorization = authorizer.getAuthorization( this.user );
-        } catch( AuthorizationException e ) {
-            throw new NoAuthorizationException( e );
-        }
-
-        logger.debug( "User authorization: " + this.authorization + ", required: " + authorization );
-
-        if( this.authorization.ordinal() >= authorization.ordinal() ) {
-            return;
-        } else {
-            throw new NoAuthorizationException( user + " was not authorized to " + authorizer );
-        }
-    }
-
-    public Authorizer.Authorization getAuthorization() {
-        return authorization;
     }
 
     public String getTemplate() {

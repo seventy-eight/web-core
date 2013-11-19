@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
@@ -35,15 +36,15 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
     /**
      * Get the filename for the upload. The filename must not contain the extension.
      * @param thisFilename The uploaded filename without extension
-     * @return An extensionless filename
+     * @return An extension-less filename
      */
     public abstract String getFilename( String thisFilename );
 
-    public abstract Authorizer.Authorization getUploadAuthorization();
+    public abstract ACL.Permission getUploadPermission();
 
     @PostMethod
     public void doUpload( Request request, Response response ) throws Exception {
-        request.checkAuthorization( getParent(), getUploadAuthorization() );
+        request.checkPermissions( getParent(), getUploadPermission() );
         logger.debug( "Uploading file" );
 
         //String relativePath = request.getUser().getIdentifier();

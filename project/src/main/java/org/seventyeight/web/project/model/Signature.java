@@ -6,6 +6,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.ProjectCore;
 import org.seventyeight.web.actions.AbstractUploadAction;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
@@ -47,8 +48,8 @@ public class Signature extends AbstractUploadAction<Signature> implements Layout
     }
 
     @Override
-    public Authorizer.Authorization getUploadAuthorization() {
-        return Authorizer.Authorization.MODERATE;
+    public ACL.Permission getUploadPermission() {
+        return ACL.Permission.ADMIN;
     }
 
     @Override

@@ -7,6 +7,8 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.extensions.PartitionContributor;
 import org.seventyeight.web.extensions.Partitioned;
@@ -164,6 +166,19 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             return new ContributingPartitionView( current, current, this );
         } else {
             return new ContributingPartitionView( "view", "Main", this );
+        }
+    }
+
+    @Override
+    public ACL getACL() {
+        MongoDocument doc = document.get( "acl" );
+
+        //
+        if( doc == null || doc.isNull() ) {
+            return ACL.ALL_ACCESS;
+        } else {
+            // TODO
+            return ACL.ALL_ACCESS;
         }
     }
 }

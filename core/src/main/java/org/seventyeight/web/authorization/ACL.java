@@ -5,6 +5,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,4 +53,28 @@ public abstract class ACL {
     public abstract List<Authorizable> getAuthorized( Permission permission );
 
     public abstract Permission getPermission( User user );
+
+    public static final AllAccess ALL_ACCESS = new AllAccess( null, null );
+
+    private static class AllAccess extends ACL {
+
+        public AllAccess( Node parent, MongoDocument document ) {
+            super( parent, document );
+        }
+
+        @Override
+        public boolean hasPermission( User user, Permission permission ) {
+            return true;
+        }
+
+        @Override
+        public List<Authorizable> getAuthorized( Permission permission ) {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public Permission getPermission( User user ) {
+            return Permission.ADMIN;
+        }
+    }
 }
