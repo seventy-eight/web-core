@@ -67,7 +67,7 @@ public class ClassUtils {
 
 
     public static List<Class<?>> getInterfaces( Class<?> clazz ) {
-        System.out.println( "[CLASS=" + clazz + "]" );
+        //System.out.println( "[CLASS=" + clazz + "]" );
         List<Class<?>> interfaces = new ArrayList<Class<?>>();
         interfaces.addAll( Arrays.asList( clazz.getInterfaces() ) );
 

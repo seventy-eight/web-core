@@ -46,7 +46,7 @@ public class TemplateManager {
      * Throws a TemplateException if not found.
      */
     public Template getTemplate( AbstractTheme theme, String template ) throws TemplateException {
-        logger.debug( "[Finding] " + template + " for " + theme.getName() );
+        logger.debug( "[Finding] {} for {}", template, theme.getName() );
         try {
             return _getTemplate( theme, template );
         } catch( TemplateException e ) {
@@ -66,7 +66,7 @@ public class TemplateManager {
 	}
 
     public void addTemplateLibrary( String lib ) {
-        logger.info( "Adding " + lib );
+        logger.info( "Adding {}", lib );
         libsList.add( lib );
     }
 	
@@ -99,11 +99,11 @@ public class TemplateManager {
 	}
 	
 	public File getThemeFile( AbstractTheme theme, String filename ) throws IOException {
-		logger.debug( "Scanning " + templatePaths );
+		logger.debug( "Scanning {}", templatePaths );
 		for( File path : templatePaths ) {
 			File file = new File( new File( path, theme.getName() ), filename );
 			if( file.exists() ) {
-				logger.debug( "Returning " + file );
+				logger.debug( "Returning {}", file );
 				return file;
 			}
 		}
@@ -118,9 +118,9 @@ public class TemplateManager {
 		
 		/* Generate templatePathsStr */
 		this.templatePathsStr = "";
-        logger.debug( "------>" + templatePaths );
+        logger.debug( "------> {}", templatePaths );
 		for( File f : templatePaths ) {
-            logger.info( "[Template directory] " + f.getAbsoluteFile() );
+            logger.info( "[Template directory] {}", f.getAbsoluteFile() );
 			this.templatePathsStr += f.toString() + ", ";
 		}
 		
@@ -148,7 +148,7 @@ public class TemplateManager {
 				                                       + "org.seventyeight.web.velocity.html.FileInputDirective" );
 
         String l = getListAsCommaString( libsList );
-        logger.debug( "L: " + l );
+        logger.debug( "L: {}", l );
         velocityProperties.setProperty( "velocimacro.library", l );
         velocityProperties.setProperty( "velocimacro.library.autoreload", "true" );
 		
@@ -218,7 +218,7 @@ public class TemplateManager {
 		*/
 
         public Renderer inject( String identifier, Object object ) {
-            logger.debug( "Injecting " + object + " as " + identifier );
+            logger.debug( "Injecting {} as {}", object, identifier );
             context.put( identifier, object );
             return this;
         }
@@ -252,19 +252,19 @@ public class TemplateManager {
         public String render( Template template ) {
             StringWriter writer = new StringWriter();
 
-			logger.debug( "[Rendering] " + template.getName() + ", " + template.isSourceModified() + ", " + template.requiresChecking() );
+			logger.debug( "[Rendering] {}, {}, {}", template.getName(), template.isSourceModified(), template.requiresChecking() );
 
             context.put( "core", Core.getInstance() );
             context.put( "theme", theme );
             //context.put( "url" );
 
 			/* I18N */
-            logger.debug( "LANG: " + language );
+            logger.debug( "LANG: {}", language );
 			context.put( "locale", language.getIdentifier() );
             //context.put( "dateTool", new DateTool() );
             context.put( "dateUtils", new DateUtils() );
 			
-			template.merge( context, writer );
+			//template.merge( context, writer );
 			
 			return writer.toString();
 		}

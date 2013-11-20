@@ -342,20 +342,20 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         Exception exception = null;
         try {
             node = resolveNode( tokens );
-            logger.debug("Found node " + node );
+            logger.debug("Found node {}", node );
             if( !tokens.isEndsWithSlash() && tokens.isEmpty() ) {
                 response.sendRedirect( request.getRequestURI() + "/" );
                 return;
             }
         } catch( NotFoundException e ) {
-            logger.debug( "Exception is set to " + e );
+            logger.debug( "Exception is set to {}", e );
             exception = e;
         } catch( Exception e ) {
             throw new CoreException( e );
         }
 
         if( node instanceof Autonomous ) {
-            logger.debug( node + " is autonomous" );
+            logger.debug( "{} is autonomous", node );
             try {
                 ((Autonomous)node).autonomize( request, response );
             } catch( IOException e ) {
@@ -391,7 +391,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     }
 
     private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Exception {
-        logger.debug( "Rendering object " + obj + ", tokens: " + tokens );
+        logger.debug( "Rendering object {}, tokens: {}", obj, tokens );
         switch( tokens.left() ) {
                 /* If the last token on the path is a valid node */
             case 0:
@@ -431,8 +431,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
         while( tokens.hasMore() ) {
             String token = tokens.next();
-            logger.debug( "Current: " + current );
-            logger.debug( "Token  : " + token );
+            logger.debug( "Current: {}", current );
+            logger.debug( "Token  : {}", token );
 
             /* Find a child node */
 
@@ -440,19 +440,19 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             if( current instanceof Parent ) {
                 next = ((Parent)current).getChild( token );
             }
-            logger.debug( "Found node is " + next );
+            logger.debug( "Found node is {}", next );
 
             /* If there's no child, try an action */
             if( next == null ) {
 
                 AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
-                logger.debug( "Found descriptor " + d + " for " + token );
+                logger.debug( "Found descriptor {} for {}", d, token );
                 if( d != null ) {
                     if( d.isApplicable( current ) ) {
                         if( current instanceof PersistedObject ) {
                             //logger.debug( "CURRENT IS " + current );
                             next = (Node) d.getExtension( (PersistedObject) current );
-                            logger.debug( "Found action is " + next );
+                            logger.debug( "Found action is {}", next );
                             //logger.debug( "TEMP PARENT: " + next.getParent() );
                         } else if( current instanceof Descriptor ) {
                             next = (Node) d.getExtension( (Descriptor) current );
@@ -468,7 +468,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             }
 
             if( next instanceof Autonomous ) {
-                logger.debug( current + " is autonomous" );
+                logger.debug( "{} is autonomous", current );
                 return next;
             }
 
@@ -524,12 +524,12 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     */
 
     public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
-        logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
+        logger.debug( "Adding {}, {}", descriptor, descriptor.getClazz() );
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         /* Determine if the descriptor has something to be loaded */
         descriptor.loadFromDisk();
-        logger.debug( "Adding " + descriptor + ", " + descriptor.getClazz() );
+        logger.debug( "Adding {}, {}", descriptor, descriptor.getClazz() );
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
         for( Class<?> i : interfaces ) {
@@ -561,7 +561,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
             AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
-            logger.debug( "Adding extension descriptor " + ed.getTypeName() + ", " + ed.getExtensionName() );
+            logger.debug( "Adding extension descriptor {}, {}", ed.getTypeName(), ed.getExtensionName() );
             if( !extensionDescriptors.containsKey( ed.getTypeName() ) ) {
                 extensionDescriptors.put( ed.getTypeName(), new HashMap<String, AbstractExtension.ExtensionDescriptor<?>>() );
             }

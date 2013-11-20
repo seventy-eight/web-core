@@ -29,7 +29,7 @@ public class ExecuteUtils {
     }
 
     public static void execute( Request request, Response response, Object object, String urlName, Class<?> imposter ) throws Exception {
-        logger.debug( "EXECUTE: " + object + ", " + urlName );
+        logger.debug( "Executing: {}, {}", object, urlName );
 
         if( imposter == null ) {
             imposter = object.getClass();
@@ -42,7 +42,7 @@ public class ExecuteUtils {
         } catch( InvocationTargetException e ) {
             throw (Exception)e.getCause();
         } catch( ReflectiveOperationException e ) {
-            logger.debug( object + " does not have " + urlName + ", " + e.getMessage() );
+            logger.debug( "{} does not have {}, {} ", object, urlName, e.getMessage() );
         }
 
         if( !request.isRequestPost() ) {
@@ -60,7 +60,7 @@ public class ExecuteUtils {
     }
 
     private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        logger.debug( "Executing method : " + actionMethod + " on " + object );
+        logger.debug( "Executing method : {} on {}", actionMethod, object );
 
         Method method = getRequestMethod( object, actionMethod, request.getRequestMethod() );
 

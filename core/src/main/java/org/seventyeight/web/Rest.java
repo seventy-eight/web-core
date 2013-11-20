@@ -41,16 +41,16 @@ public class Rest extends HttpServlet {
 
         sw.start( rqs.getRequestURI() );
 
-        logger.debug( "Query  : " + rqs.getQueryString() );
-        logger.debug( "URI    : " + rqs.getRequestURI() );
-        logger.debug( "METHOD : " + rqs.getMethod() );
+        logger.debug( "Query  : {]", rqs.getQueryString() );
+        logger.debug( "URI    : {}", rqs.getRequestURI() );
+        logger.debug( "METHOD : {}", rqs.getMethod() );
 
         /* Instantiating request */
         Request request = new Request( rqs );
         Response response = new Response( rsp );
         response.setCharacterEncoding( "UTF-8" );
 
-        logger.debug( "[Parameters] " + rqs.getParameterMap() );
+        logger.debug( "[Parameters] {}", rqs.getParameterMap() );
 
         /* Instantiating context */
         VelocityContext vc = new VelocityContext();
@@ -59,14 +59,14 @@ public class Rest extends HttpServlet {
         request.setContext( vc );
         request.getContext().put( "request", request );
         request.setRequestParts( rqs.getRequestURI().split( "/" ) );
-        logger.debug( "------ " + Arrays.asList( request.getRequestParts() ) + " ------" );
+        logger.debug( "------ {} -----", Arrays.asList( request.getRequestParts() ) );
 
         vc.put( "currentUrl", rqs.getRequestURI() );
 
         request.setUser( Core.getInstance().getAnonymousUser() );
         request.setTheme( Core.getInstance().getDefaultTheme() );
 
-        logger.debug( "THE USER: " + request.getUser() );
+        logger.debug( "THE USER: {}", request.getUser() );
 
         try {
             logger.debug( "AUTHENTICATING" );
@@ -75,7 +75,7 @@ public class Rest extends HttpServlet {
             logger.warn( "Unable to authenticate", e );
         }
 
-        logger.debug( "THE USER: " + request.getUser() );
+        logger.debug( "THE USER: {}", request.getUser() );
 
         try {
             // Render the page
@@ -111,7 +111,7 @@ public class Rest extends HttpServlet {
     }
 
     private void generateException( Request request, PrintWriter writer, Throwable e, String message ) {
-        logger.error( "Generating error: " + e.getMessage() );
+        logger.error( "Generating error: {}", e.getMessage() );
         try {
             VelocityContext vc = new VelocityContext();
             vc.put( "stacktrace", e.getStackTrace() );
