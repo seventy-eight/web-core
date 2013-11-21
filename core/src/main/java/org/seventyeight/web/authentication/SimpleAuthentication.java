@@ -21,8 +21,11 @@ public class SimpleAuthentication implements Authentication {
 	public void authenticate( Request request, Response response ) throws AuthenticationException {
 
 		String hash = null;
-		
-		for( Cookie cookie : request.getCookies() ) {
+
+        request.getStopWatch().stop();
+        request.getStopWatch().start( "Finding cookies" );
+
+        for( Cookie cookie : request.getCookies() ) {
 			logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
 			if( cookie.getName().equals( __SESSION_ID ) ) {
 				hash = cookie.getValue();
@@ -31,6 +34,9 @@ public class SimpleAuthentication implements Authentication {
 		}
 
         Session session = null;
+
+        request.getStopWatch().stop();
+        request.getStopWatch().start( "Creating session" );
 
         if( hash == null ) {
             if( request.getValue( __NAME_KEY, null ) != null && request.getValue( __PASS_KEY, null ) != null ) {
@@ -48,8 +54,12 @@ public class SimpleAuthentication implements Authentication {
 			session = Core.getInstance().getSessionManager().getSession( hash );
 		}
 
+        request.getStopWatch().stop();
+        request.getStopWatch().start( "Getting user" );
+
         if( session != null ) {
             User user = User.getUserByUsername( Core.getInstance(), session.getUser() );
+            //User user = null;
             if( user != null ) {
                 logger.debug( "Session user is " + user );
                 request.setAuthenticated( true );
