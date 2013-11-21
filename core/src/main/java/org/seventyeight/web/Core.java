@@ -364,6 +364,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             return;
         }
 
+        request.getStopWatch().stop();
+        request.getStopWatch().start( "Rendering" );
+
         /* Only try to find a valid view if there was a valid node found on the path */
         if( node != null ) {
                 try {

@@ -3,6 +3,7 @@ package org.seventyeight.web.servlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
@@ -41,6 +42,8 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private String[] requestParts;
 
     private Language language = Language.American;
+
+    private StopWatch stopWatch = null;
 
     public enum Language {
         American( "English", "en_US" ),
@@ -247,5 +250,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public void setStopWatch( StopWatch stopWatch ) {
+        this.stopWatch = stopWatch;
+    }
+
+    public StopWatch getStopWatch() {
+        return stopWatch;
     }
 }

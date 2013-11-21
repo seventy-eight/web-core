@@ -50,6 +50,8 @@ public class Rest extends HttpServlet {
         Response response = new Response( rsp );
         response.setCharacterEncoding( "UTF-8" );
 
+        request.setStopWatch( sw );
+
         logger.debug( "[Parameters] {}", rqs.getParameterMap() );
 
         /* Instantiating context */
@@ -66,6 +68,9 @@ public class Rest extends HttpServlet {
         request.setUser( Core.getInstance().getAnonymousUser() );
         request.setTheme( Core.getInstance().getDefaultTheme() );
 
+        request.getStopWatch().stop();
+        request.getStopWatch().start( "Authentication" );
+
         logger.debug( "THE USER: {}", request.getUser() );
 
         try {
@@ -76,6 +81,9 @@ public class Rest extends HttpServlet {
         }
 
         logger.debug( "THE USER: {}", request.getUser() );
+
+        request.getStopWatch().stop();
+        request.getStopWatch().start( "Resolving" );
 
         try {
             // Render the page
@@ -107,7 +115,7 @@ public class Rest extends HttpServlet {
 
 
         //logger.info( sw.print( 1000 ) );
-        System.out.println( sw.print( 1000 ) );
+        System.out.println( sw.print( 10000 ) );
     }
 
     private void generateException( Request request, PrintWriter writer, Throwable e, String message ) {

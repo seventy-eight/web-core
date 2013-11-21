@@ -264,7 +264,7 @@ public class TemplateManager {
             //context.put( "dateTool", new DateTool() );
             context.put( "dateUtils", new DateUtils() );
 			
-			//template.merge( context, writer );
+			template.merge( context, writer );
 			
 			return writer.toString();
 		}
