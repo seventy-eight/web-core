@@ -41,6 +41,10 @@ Utils.updateProgress = function( resourceId, element ) {
 
 }
 
+Utils.onChangeYear = function($element) {
+    alert($element);
+}
+
 Utils.popupselect = function( myurl, height ) {
 		var w1 = screen.width * 0.9;
 		var w2 = screen.width * 0.05;

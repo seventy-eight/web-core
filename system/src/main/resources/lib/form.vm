@@ -207,3 +207,23 @@
         </tr>
     </table>
 #end
+
+
+#macro(monthSelect $name $default)
+    #set($months = {1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "Novemeber", 12: "December"})
+    <select name="$name">
+        #foreach($key in $months.keySet())
+            #if($key.equals($default) or $months.get($key).equals($default))
+                <option value="$key" selected>$months.get($key)</option>
+            #else
+                <option value="$key">$months.get($key)</option>
+            #end
+
+        #end
+
+    </select>
+#end
+
+#macro(yearSelect $name $default)
+    <input type="text" name="$name" value="$default" maxlength="4" onchange="Utils.onChangeYear(this);">
+#end

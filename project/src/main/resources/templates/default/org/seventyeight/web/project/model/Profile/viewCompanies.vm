@@ -15,4 +15,38 @@ COMPANIES
             error: function(ajax, text, error) {alert(error)}
         });
     });
+
+    $(function() {
+        $( "#search" ).autocomplete({
+            source: "/company/search",
+            select: function( event, ui ) {
+                this.value = ui.item.first;
+                $("#identifier").val(ui.item.second);
+                return false;
+            }
+        }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li>" )
+                    .append( "<a>" + item.first + ", " + item.second + "</a>" )
+                    .appendTo( ul );
+        };
+    });
 </script>
+
+ADD COMPANY
+
+<br />
+
+<form>
+    <div style="text-align: left">
+        Company<br>
+        <div class="ui-widget">
+            <input id="search"><input id="identifier">
+        </div>
+
+        Time period<br>
+        #monthSelect("start")
+        #yearSelect("startYear")
+
+    </div>
+
+</form>
