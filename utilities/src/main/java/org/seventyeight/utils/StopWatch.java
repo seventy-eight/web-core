@@ -81,6 +81,10 @@ public class StopWatch {
     private static final int MAX_TIME_LENGTH = 10;
 
     public String print( long precision ) {
+        return print( precision, true );
+    }
+
+    public String print( long precision, boolean millis ) {
         StringBuilder sb = new StringBuilder();
 
         long now = System.nanoTime();
@@ -99,13 +103,15 @@ public class StopWatch {
 
             for( Task t : tasks ) {
                 Double p = Math.round( ( (double)t.nano / total ) * 10000.0 ) / 100.0;
-                sb.append( " " + t.title + spaces( MAX_TITLE_LENGTH, t.title.length() ) + p + "%" + spaces( MAX_PERCENTAGE_LENGTH, ( p + "" ).length() ) + toSeconds( t.nano, precision ) + SEP );
+                sb.append( " " + t.title + spaces( MAX_TITLE_LENGTH, t.title.length() ) + p + "%" + spaces( MAX_PERCENTAGE_LENGTH, ( p + "" ).length() ) +
+                           ( millis ? toMillis( t.nano, precision ) : toSeconds( t.nano, precision ) ) + SEP );
             }
 
             sb.append( "-" + repeat( MAX_PERCENTAGE_LENGTH + MAX_TIME_LENGTH + MAX_TITLE_LENGTH, 0, "-" ) + SEP );
         }
 
-        sb.append( "Total time. Overall:" + toSeconds( full, precision ) + "s. Aggregated: " + toSeconds( totalTime, precision ) );
+        sb.append( "Total time. Overall:" + ( millis ? toMillis( full, precision ) : toSeconds( full, precision ) ) + "s. Aggregated: " +
+                   ( millis ? toMillis( totalTime, precision ) : toSeconds( totalTime, precision ) ) );
 
         return sb.toString();
     }
@@ -160,6 +166,10 @@ public class StopWatch {
 
     public static double toSeconds( long time, long precision ) {
         return ( ( Math.round( ( (double) time / PRECISION_NANO ) * precision ) ) / (double) precision );
+    }
+
+    public static double toMillis( long time, long precision ) {
+        return ( ( Math.round( ( (double) time / PRECISION_MICRO ) * precision ) ) / (double) precision );
     }
 
     public String toString() {
