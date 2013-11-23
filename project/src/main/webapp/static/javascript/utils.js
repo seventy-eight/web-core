@@ -37,12 +37,21 @@ Utils.updateProgress = function( resourceId, element ) {
             }
         }
     )
-
-
 }
 
-Utils.onChangeYear = function($element) {
-    alert($element);
+Utils.onChangeYear = function(element) {
+    if(element.value.length  > 0) {
+        var pattern = new RegExp("(19|20)\\d{2}");
+        if( pattern.test(element.value) ) {
+            return true;
+        } else {
+            alert("Illegal year, reverting to 2000.");
+            element.value = 2000;
+            return false;
+        }
+    } else {
+        return true;
+    }
 }
 
 Utils.popupselect = function( myurl, height ) {

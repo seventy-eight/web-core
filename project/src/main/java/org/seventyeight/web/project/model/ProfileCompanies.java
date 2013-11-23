@@ -1,5 +1,7 @@
 package org.seventyeight.web.project.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,10 @@ import org.seventyeight.web.servlet.Response;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -50,12 +55,13 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
     }
 
     public boolean isAffiliatedWith( String companyId ) {
-        logger.debug( "Is " + this + " affiliated with " + companyId );
+        logger.debug( "Is " + getParent() + " affiliated with " + companyId );
 
         logger.debug( "Document: " + document );
         MongoDocument d;
         try {
-            d = ((MongoDocument)document.get( Skill.SKILLS )).getSubDocument( companyId, null );
+            d = ((MongoDocument)document.get( Company.COMPANIES )).getSubDocument( companyId, null );
+            logger.debug( "SUB DOCUMENT: " + d );
         } catch( Exception e ) {
             return false;
         }
@@ -91,10 +97,12 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
             try {
                 c = Company.getCompanyByTitle( title, this );
 
+                /*
                 if( isAffiliatedWith( c.getIdentifier() ) ) {
                     response.sendError( Response.SC_NOT_ACCEPTABLE, this + " already have " + c );
                     return;
                 }
+                */
             } catch( NotFoundException e ) {
                 logger.debug( e );
 
@@ -115,12 +123,15 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
                 fromMonth = 0;
             }
 
-            try {
-                toYear = Integer.parseInt( toYearString );
-                toMonth = Integer.parseInt( toMonthString );
-            } catch( NumberFormatException e ) {
-                toYear = 0;
-                toMonth = 0;
+            // Only do this if from* is given
+            if( fromMonth > 0 && fromYear > 0 ) {
+                try {
+                    toYear = Integer.parseInt( toYearString );
+                    toMonth = Integer.parseInt( toMonthString );
+                } catch( NumberFormatException e ) {
+                    toYear = 0;
+                    toMonth = 0;
+                }
             }
 
             addCompany( c, fromYear, fromMonth, toYear, toMonth );
@@ -134,6 +145,26 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
     public void doList( Request request, Response response ) throws IOException, TemplateException {
         PrintWriter writer = response.getWriter();
         writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
+    }
+
+    public void doGetList( Request request, Response response ) throws IOException, TemplateException, NotFoundException, ItemInstantiationException {
+        logger.debug( "Getting company list for{}", getParent() );
+        response.setRenderType( Response.RenderType.NONE );
+
+        List<MongoDocument> docs = document.getList( Company.COMPANIES );
+
+        if( docs.size() > 0 ) {
+            for( MongoDocument d : docs ) {
+                Node n = Core.getInstance().getNodeById( this, d.get( "company", "" ) );
+                d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+            }
+            PrintWriter writer = response.getWriter();
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            writer.write( gson.toJson( docs ) );
+        } else {
+            response.getWriter().write( "{}" );
+        }
     }
 
     public static class ProfileCompaniesDescriptor extends ActionDescriptor<ProfileCompanies> {

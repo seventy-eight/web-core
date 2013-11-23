@@ -4,17 +4,34 @@ COMPANIES
 
 </div>
 
+<table>
+
+    <tr id="bottom">
+        <td colspan="2">
+
+        </td>
+    </tr>
+
+</table>
+
 
 <script type="text/javascript">
 
     $(function() {
         $.ajax({
             type: "GET",
-            url: "companies/list",
-            success: function(data, textStatus, jqxhr){$('#companies').html("SNADE:" + data)},
+            url: "companies/getList",
+            //success: function(data, textStatus, jqxhr){$('#companies').html("SNADE:" + eval(data))},
+            success: function(data, textStatus, jqxhr){populate(eval(data));},
             error: function(ajax, text, error) {alert(error)}
         });
     });
+
+    function populate(data) {
+        for( i = 0 ; i < data.length ; i++ ) {
+            $('<tr><td id="node' + (i) + '">' + data[i].document.badge + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
+        }
+    }
 
     $(function() {
         $( "#search" ).autocomplete({
@@ -36,16 +53,47 @@ ADD COMPANY
 
 <br />
 
-<form>
+<form action="companies/add" method="post">
     <div style="text-align: left">
         Company<br>
         <div class="ui-widget">
-            <input id="search"><input id="identifier">
+            <input name="companyTitle" id="search"><input id="identifier">
         </div>
 
-        Time period<br>
-        #monthSelect("start")
-        #yearSelect("startYear")
+        <table>
+            <tr>
+                <td colspan="3">
+                    Time period
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    From
+                </td>
+                <td>
+                    #monthSelect("fromMonth")
+                </td>
+                <td>
+                    #yearSelect("fromYear")
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    To
+                </td>
+                <td>
+                    #monthSelect("toMonth")
+                </td>
+                <td>
+                    #yearSelect("toYear")
+                </td>
+            </tr>
+
+        </table>
+
+        <input type="submit" value="Add">
 
     </div>
 
