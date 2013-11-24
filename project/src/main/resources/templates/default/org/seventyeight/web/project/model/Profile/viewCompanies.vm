@@ -20,16 +20,19 @@ COMPANIES
     $(function() {
         $.ajax({
             type: "GET",
-            url: "companies/getList",
-            //success: function(data, textStatus, jqxhr){$('#companies').html("SNADE:" + eval(data))},
-            success: function(data, textStatus, jqxhr){populate(eval(data));},
+            url: "companies/list",
+            success: function(data, textStatus, jqxhr){$('#companies').html(data)},
+            //success: function(data, textStatus, jqxhr){populate(eval(data));},
             error: function(ajax, text, error) {alert(error)}
         });
     });
 
     function populate(data) {
         for( i = 0 ; i < data.length ; i++ ) {
-            $('<tr><td id="node' + (i) + '">' + data[i].document.badge + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
+            //$('<tr><td id="node' + (i) + '">' + data[i].document.badge + '</td></tr>').hide().insertBefore("#companies").fadeIn(600);
+            $('<div id="node' + (i) + '" style="text-align:left">' + data[i].document.companyTitle + '<br/>' +
+                    'From: ' + data[i].document.fromYear + ' '  + data[i].document.fromMonth +
+                    '<br/>To: ' + data[i].document.toYear + ' ' + data[i].document.toMonth + ' </div>').hide().insertBefore("#companies").fadeIn(600);
         }
     }
 
@@ -54,15 +57,18 @@ ADD COMPANY
 <br />
 
 <form action="companies/add" method="post">
-    <div style="text-align: left">
+    <div style="text-align: left; width: 500px">
         Company<br>
         <div class="ui-widget">
             <input name="companyTitle" id="search"><input id="identifier">
         </div>
 
+        Position title:<br>
+        <input type="text" name="positionTitle" style="width: 100%">
+
         <table>
             <tr>
-                <td colspan="3">
+                <td colspan="4">
                     Time period
                 </td>
             </tr>
@@ -77,6 +83,9 @@ ADD COMPANY
                 <td>
                     #yearSelect("fromYear")
                 </td>
+                <td>
+
+                </td>
             </tr>
 
             <tr>
@@ -88,6 +97,9 @@ ADD COMPANY
                 </td>
                 <td>
                     #yearSelect("toYear")
+                </td>
+                <td>
+                    <input type="checkbox" name="currentPosition" onclick="Utils.disableOnChecked(this, ['toMonth', 'toYear'])">
                 </td>
             </tr>
 

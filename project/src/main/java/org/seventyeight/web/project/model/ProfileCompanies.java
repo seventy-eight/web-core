@@ -18,10 +18,7 @@ import org.seventyeight.web.servlet.Response;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author cwolfgang
@@ -69,12 +66,14 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
         return ( d != null && !d.isNull() );
     }
 
-    public void addCompany( Company company, int fromYear, int fromMonth, int toYear, int toMonth ) {
+    public void addCompany( Company company, String positionTitle, int fromYear, int fromMonth, int toYear, int toMonth, boolean currentPosition ) {
         logger.debug( "Adding company " + company );
 
         MongoDocument cdoc = new MongoDocument().set( Company.COMPANY, company.getIdentifier() ).set( "added", new Date() );
+        cdoc.set( "position", positionTitle );
         cdoc.set( "fromYear", fromYear ).set( "fromMonth", fromMonth );
         cdoc.set( "toYear", toYear ).set( "toMonth", toMonth );
+        cdoc.set( "currentPosition", currentPosition );
         document.addToList( Company.COMPANIES, cdoc );
 
         ((Profile)parent).save();
@@ -123,8 +122,10 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
                 fromMonth = 0;
             }
 
+            boolean currentPosition = request.getValue( "currentPosition", "" ).length() > 0;
+
             // Only do this if from* is given
-            if( fromMonth > 0 && fromYear > 0 ) {
+            if( !currentPosition && fromMonth > 0 && fromYear > 0 ) {
                 try {
                     toYear = Integer.parseInt( toYearString );
                     toMonth = Integer.parseInt( toMonthString );
@@ -134,7 +135,9 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
                 }
             }
 
-            addCompany( c, fromYear, fromMonth, toYear, toMonth );
+            String positionTitle = request.getValue( "positionTitle", "" );
+
+            addCompany( c, positionTitle, fromYear, fromMonth, toYear, toMonth, currentPosition );
             response.setStatus( HttpServletResponse.SC_OK );
         } else {
             logger.debug( "No company title given" );
@@ -155,8 +158,9 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
 
         if( docs.size() > 0 ) {
             for( MongoDocument d : docs ) {
-                Node n = Core.getInstance().getNodeById( this, d.get( "company", "" ) );
-                d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+                Company n = Core.getInstance().getNodeById( this, d.get( "company", "" ) );
+                d.set( "companyTitle", n.getTitle() );
+                //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
             }
             PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
@@ -164,6 +168,64 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
             writer.write( gson.toJson( docs ) );
         } else {
             response.getWriter().write( "{}" );
+        }
+    }
+
+    public Profile getProfile() {
+        return (Profile) parent;
+    }
+
+    public List<ProfileCompany> getProfileCompanies() throws NotFoundException, ItemInstantiationException {
+        logger.debug( "Getting companies for{}", getParent() );
+
+        List<MongoDocument> docs = document.getList( Company.COMPANIES );
+
+        if( docs.size() > 0 ) {
+            List<ProfileCompany> companies = new ArrayList<ProfileCompany>( docs.size() );
+
+            for( MongoDocument d : docs ) {
+                Company company = Core.getInstance().getNodeById( this, d.get( "company", "" ) );
+                companies.add( new ProfileCompany( company, d ) );
+            }
+
+            // Sort the list
+            Collections.sort( companies, sorter );
+
+            return companies;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private static final PCSorter sorter = new PCSorter();
+
+    private static class PCSorter implements Comparator<ProfileCompany> {
+
+        @Override
+        public int compare( ProfileCompany profileCompany, ProfileCompany profileCompany2 ) {
+            if( profileCompany.pc.get( "fromYear", 0 ) == profileCompany2.pc.get( "fromYear", 0 ) ) {
+                return profileCompany2.pc.get( "fromMonth", 0 ) - profileCompany.pc.get( "fromMonth", 0 );
+            } else {
+                return profileCompany2.pc.get( "fromYear", 0 ) - profileCompany.pc.get( "fromYear", 0 );
+            }
+        }
+    }
+
+    public static class ProfileCompany {
+        private Company company;
+        private MongoDocument pc;
+
+        public ProfileCompany( Company company, MongoDocument pc ) {
+            this.company = company;
+            this.pc = pc;
+        }
+
+        public Company getCompany() {
+            return company;
+        }
+
+        public MongoDocument getPc() {
+            return pc;
         }
     }
 

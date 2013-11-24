@@ -54,6 +54,17 @@ Utils.onChangeYear = function(element) {
     }
 }
 
+Utils.disableOnChecked = function(element, inputNames) {
+    var disable = false;
+    if( $(element).is(":checked") ) {
+        disable = true;
+    }
+    for(i in inputNames) {
+        var inputName = inputNames[i];
+        $("form [name="+inputName+"]").prop('disabled', disable);
+    }
+}
+
 Utils.popupselect = function( myurl, height ) {
 		var w1 = screen.width * 0.9;
 		var w2 = screen.width * 0.05;
