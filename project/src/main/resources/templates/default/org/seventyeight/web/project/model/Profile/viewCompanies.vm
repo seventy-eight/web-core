@@ -4,17 +4,6 @@ COMPANIES
 
 </div>
 
-<table>
-
-    <tr id="bottom">
-        <td colspan="2">
-
-        </td>
-    </tr>
-
-</table>
-
-
 <script type="text/javascript">
 
     $(function() {

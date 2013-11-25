@@ -147,6 +147,7 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
 
     public void doList( Request request, Response response ) throws IOException, TemplateException {
         PrintWriter writer = response.getWriter();
+        // TODO Add some cache thingy here.
         writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
     }
 
@@ -203,10 +204,16 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
 
         @Override
         public int compare( ProfileCompany profileCompany, ProfileCompany profileCompany2 ) {
-            if( profileCompany.pc.get( "fromYear", 0 ) == profileCompany2.pc.get( "fromYear", 0 ) ) {
-                return profileCompany2.pc.get( "fromMonth", 0 ) - profileCompany.pc.get( "fromMonth", 0 );
+            if( profileCompany.pc.get( "currentPosition", false ) && !profileCompany2.pc.get( "currentPosition", false ) ) {
+                return -1;
+            } else if( !profileCompany.pc.get( "currentPosition", false ) && profileCompany2.pc.get( "currentPosition", false ) ) {
+                return 1;
             } else {
-                return profileCompany2.pc.get( "fromYear", 0 ) - profileCompany.pc.get( "fromYear", 0 );
+                if( profileCompany2.pc.get( "toYear", 0 ) == profileCompany.pc.get( "toYear", 0 ) ) {
+                    return profileCompany2.pc.get( "toMonth", 0 ) - profileCompany.pc.get( "toMonth", 0 );
+                } else {
+                    return profileCompany2.pc.get( "toYear", 0 ) - profileCompany.pc.get( "toYear", 0 );
+                }
             }
         }
     }
