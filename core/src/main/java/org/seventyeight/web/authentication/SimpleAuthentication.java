@@ -22,7 +22,6 @@ public class SimpleAuthentication implements Authentication {
 
 		String hash = null;
 
-        request.getStopWatch().stop();
         request.getStopWatch().start( "Finding cookies" );
 
         for( Cookie cookie : request.getCookies() ) {
@@ -35,7 +34,7 @@ public class SimpleAuthentication implements Authentication {
 
         Session session = null;
 
-        request.getStopWatch().stop();
+        request.getStopWatch().stop( "Finding cookies" );
         request.getStopWatch().start( "Creating session" );
 
         if( hash == null ) {
@@ -54,7 +53,7 @@ public class SimpleAuthentication implements Authentication {
 			session = Core.getInstance().getSessionManager().getSession( hash );
 		}
 
-        request.getStopWatch().stop();
+        request.getStopWatch().stop( "Creating session" );
         request.getStopWatch().start( "Getting user" );
 
         if( session != null ) {

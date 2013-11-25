@@ -63,18 +63,17 @@ public class SessionManager implements Node {
 		logger.debug( "Getting session for " + hash );
 
         MongoDBQuery query = new MongoDBQuery().getId( hash );
-        List<MongoDocument> docs = MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).find( query );
+        MongoDocument doc = MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).findOne( query );
 
-        logger.debug( "DOCS: " + docs );
+        logger.debug( "Session doc: " + doc );
 
         Session actual = null;
-        for( MongoDocument doc : docs ) {
+        if( doc != null && !doc.isNull() ) {
             Session session = new Session( Core.getInstance(), doc );
             logger.debug( "Comparing " + session.getEndingAsDate() + " with " + new Date() + "(" + session.getCreated() + ")" );
             if( session.getEndingAsDate().after( new Date() ) ) {
                 logger.debug( "A valid session found" );
                 actual = session;
-                break;
             } else {
                 logger.debug( "Session has expired" );
                 /* TODO remove session??? */

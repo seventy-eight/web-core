@@ -45,6 +45,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     public static final String TEMPLATE_PATH_NAME = "templates";
     public static final String THEMES_PATH_NAME = "themes";
     public static final String PLUGINS_PATH_NAME = "plugins";
+    public static final String CACHE_PATH_NAME = "cache";
 
     /**
      * The instance of {@link Core}
@@ -128,6 +129,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     protected File orientdbPath;
     protected File pluginsPath;
     protected File uploadPath;
+    protected File cachePath;
 
     protected File portraitPath;
 
@@ -159,6 +161,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
+        this.cachePath = new File( path, CACHE_PATH_NAME );
         this.portraitPath = new File( path, "portraits" );
 
         addDescriptor( new Session.SessionsDescriptor() );
@@ -337,6 +340,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
      * Render the path from the URL
      */
     public void render( Request request, Response response ) throws CoreException {
+
+        request.getStopWatch().start( "Resolve node" );
         TokenList tokens = new TokenList( request.getRequestURI() );
         Node node = null;
         Exception exception = null;
@@ -364,7 +369,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             return;
         }
 
-        request.getStopWatch().stop();
+        request.getStopWatch().stop( "Resolve node" );
+
         request.getStopWatch().start( "Rendering" );
 
         /* Only try to find a valid view if there was a valid node found on the path */
@@ -809,6 +815,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     public void setThemesPath( File path ) {
         this.themesPath = path;
+    }
+
+    public File getCachePath() {
+        return cachePath;
     }
 
     public org.seventyeight.loader.ClassLoader getClassLoader() {

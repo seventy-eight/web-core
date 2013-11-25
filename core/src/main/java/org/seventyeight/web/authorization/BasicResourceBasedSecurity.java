@@ -25,6 +25,8 @@ public class BasicResourceBasedSecurity extends ACL {
 
     private static Logger logger = LogManager.getLogger( BasicResourceBasedSecurity.class );
 
+    private Permission permission = null;
+
     public BasicResourceBasedSecurity( Node parent, MongoDocument document ) {
         super( parent, document );
     }
@@ -58,6 +60,13 @@ public class BasicResourceBasedSecurity extends ACL {
 
     @Override
     public Permission getPermission( User user ) {
+        if( permission != null ) {
+            permission = _getPermission( user );
+        }
+        return permission;
+    }
+
+    private Permission _getPermission( User user ) {
         /* Owner? */
         if( getParent() instanceof Ownable ) {
             logger.debug( "Parent is ownable." );
@@ -83,5 +92,10 @@ public class BasicResourceBasedSecurity extends ACL {
 
         logger.debug( user + " has no permissions at all" );
         return Permission.NONE;
+    }
+
+    @Override
+    public String toString() {
+        return "BRBS permission, " + permission;
     }
 }

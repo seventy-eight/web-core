@@ -75,7 +75,7 @@ public abstract class ResourceDescriptor<T extends Resource<T>> extends Descript
     }
 
     private boolean titleExists( String title, String type ) {
-        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ) );
+        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ).is( "type", type ) );
         return !doc.isNull();
     }
 

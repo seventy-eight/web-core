@@ -68,7 +68,7 @@ public class Rest extends HttpServlet {
         request.setUser( Core.getInstance().getAnonymousUser() );
         request.setTheme( Core.getInstance().getDefaultTheme() );
 
-        request.getStopWatch().stop();
+        request.getStopWatch().stop( rqs.getRequestURI() );
         request.getStopWatch().start( "Authentication" );
 
         logger.debug( "THE USER: {}", request.getUser() );
@@ -81,9 +81,10 @@ public class Rest extends HttpServlet {
         }
 
         logger.debug( "THE USER: {}", request.getUser() );
+        request.getStopWatch().stop( "Getting user" );
 
-        request.getStopWatch().stop();
-        request.getStopWatch().start( "Resolving" );
+        request.getStopWatch().stop( "Authentication" );
+        request.getStopWatch().start( "Render page" );
 
         try {
             // Render the page

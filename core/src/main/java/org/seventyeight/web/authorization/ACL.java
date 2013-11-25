@@ -47,8 +47,16 @@ public abstract class ACL {
 
     public abstract boolean hasPermission( User user, Permission permission );
 
-    public boolean canModerate( User user ) {
+    public boolean canRead( User user ) {
+        return getPermission( user ).ordinal() >= Permission.READ.ordinal();
+    }
+
+    public boolean canWrite( User user ) {
         return getPermission( user ).ordinal() >= Permission.WRITE.ordinal();
+    }
+
+    public boolean isAdmin( User user ) {
+        return getPermission( user ).ordinal() >= Permission.ADMIN.ordinal();
     }
 
     public abstract List<Authorizable> getAuthorized( Permission permission );

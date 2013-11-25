@@ -6,6 +6,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractTheme;
 import org.seventyeight.web.model.NotFoundException;
@@ -195,6 +196,8 @@ public class TemplateManager {
 		private Request.Language language;
         private VelocityContext context;
 
+        private StopWatch stopWatch;
+
         public Renderer( AbstractTheme theme ) {
             this.theme = theme;
         }
@@ -204,6 +207,7 @@ public class TemplateManager {
             //this.locale = request.getLocale();
             this.context = request.getContext();
             this.language = request.getLanguage();
+            this.stopWatch = request.getStopWatch();
         }
 
         public Renderer setContext( VelocityContext context ) {
@@ -251,6 +255,7 @@ public class TemplateManager {
         }
 
         public String render( Template template ) {
+            stopWatch.start( "Render " + template.getName() );
             StringWriter writer = new StringWriter();
 
 			logger.debug( "[Rendering] {}, {}, {}", template.getName(), template.isSourceModified(), template.requiresChecking() );
@@ -266,7 +271,8 @@ public class TemplateManager {
             context.put( "dateUtils", new DateUtils() );
 			
 			template.merge( context, writer );
-			
+
+            stopWatch.stop( "Render " + template.getName() );
 			return writer.toString();
 		}
 
