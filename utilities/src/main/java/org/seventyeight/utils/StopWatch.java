@@ -1,14 +1,17 @@
 package org.seventyeight.utils;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class StopWatch {
 
     private static final String SEP = System.getProperty( "line.separator" );
 
     private class Task {
-        long nano;
+        long totalNanos = 0;
+        long startTime;
         String title;
 
         public Task( String title ) {
@@ -21,59 +24,50 @@ public class StopWatch {
     public static final long PRECISION_MICRO  = 1000000;
     public static final long PRECISION_NANO   = 1000000000;
 
-    private List<Task> tasks = new LinkedList<Task>();
-    private Task currentTask;
+    private Map<String, Task> tasks = new HashMap<String, Task>();
+    //private Task currentTask;
 
     public StopWatch() {
         this.initial = System.nanoTime();
     }
 
     private long initial = 0;
-    private long startTime = 0;
-    private long endTime = 0;
-    private long totalTime = 0;
 
     public void start() {
         start( "N/A" );
     }
 
     public void start( String title ) {
-        this.startTime = System.nanoTime();
+        long now = System.nanoTime();
 
-        currentTask = new Task( title );
-    }
-
-    long getStartTime() {
-        return this.startTime;
-    }
-
-    long getEndTime() {
-        return this.endTime;
-    }
-
-    public void stop() {
-        if( currentTask != null ) {
-            this.endTime = System.nanoTime();
-
-            currentTask.nano = this.endTime - this.startTime;
-
-            this.totalTime += currentTask.nano;
-
-            tasks.add( currentTask );
-            currentTask = null;
-        } else {
-            throw new IllegalStateException( "No current tasks. Stop watch could have been stopped twice?" );
+        if( !tasks.containsKey( title ) ) {
+            tasks.put( title, new Task( title ) );
         }
+        Task task = tasks.get( title );
+        task.startTime = now;
     }
 
-    public long getTime() {
-        this.endTime = System.nanoTime();
+    public void stop( String title ) {
+        if( !tasks.containsKey( title ) ) {
+            throw new IllegalStateException( "Task " + title + " does not exist." );
+        }
 
-        return ( this.endTime - this.startTime ) + this.totalTime;
+        Task task = tasks.get( title );
+        long now = System.nanoTime();
+        task.totalNanos += (now-task.startTime);
+        task.startTime = 0;
     }
 
-    public long getCurrentTime() {
-        return ( this.endTime - this.startTime );
+    /**
+     * Stop all tasks
+     */
+    public void stop() {
+        for( String key : tasks.keySet() ) {
+            Task task = tasks.get( key );
+            if( task.startTime > 0 ) {
+                stop( key );
+            }
+        }
     }
 
     private static final int MAX_TITLE_LENGTH = 32;
@@ -92,26 +86,27 @@ public class StopWatch {
 
         //System.out.println( "NOW: " + now + ", INITIAL: " + initial + " = " + ( ( now - initial ) / PRECISION_NANO ) );
 
+        long total = 0;
         if( tasks.size() > 0 ) {
-            long total = 0;
-            for( Task t : tasks ) {
-                total += t.nano;
+            for( String title : tasks.keySet() ) {
+                Task t = tasks.get( title );
+                total += t.totalNanos;
             }
 
             sb.append( " Title                           %          Seconds" + SEP );
             sb.append( "-" + repeat( MAX_PERCENTAGE_LENGTH + MAX_TIME_LENGTH + MAX_TITLE_LENGTH, 0, "-" ) + SEP );
 
-            for( Task t : tasks ) {
-                Double p = Math.round( ( (double)t.nano / total ) * 10000.0 ) / 100.0;
+            for( String title : tasks.keySet() ) {
+                Task t = tasks.get( title );
+                Double p = Math.round( ( (double)t.totalNanos / total ) * 10000.0 ) / 100.0;
                 sb.append( " " + t.title + spaces( MAX_TITLE_LENGTH, t.title.length() ) + p + "%" + spaces( MAX_PERCENTAGE_LENGTH, ( p + "" ).length() ) +
-                           ( millis ? toMillis( t.nano, precision ) : toSeconds( t.nano, precision ) ) + SEP );
+                           ( millis ? toMillis( t.totalNanos, precision ) : toSeconds( t.totalNanos, precision ) ) + SEP );
             }
 
             sb.append( "-" + repeat( MAX_PERCENTAGE_LENGTH + MAX_TIME_LENGTH + MAX_TITLE_LENGTH, 0, "-" ) + SEP );
         }
 
-        sb.append( "Total time. Overall:" + ( millis ? toMillis( full, precision ) : toSeconds( full, precision ) ) + "s. Aggregated: " +
-                   ( millis ? toMillis( totalTime, precision ) : toSeconds( totalTime, precision ) ) );
+        sb.append( "Total time: " + ( millis ? toMillis( full, precision ) : toSeconds( full, precision ) ) + "s" );
 
         return sb.toString();
     }
@@ -124,18 +119,20 @@ public class StopWatch {
 
         //System.out.println( "NOW: " + now + ", INITIAL: " + initial + " = " + ( ( now - initial ) / PRECISION_NANO ) );
 
+        long total = 0;
         if( tasks.size() > 0 ) {
-            long total = 0;
-            for( Task t : tasks ) {
-                total += t.nano;
+            for( String title : tasks.keySet() ) {
+                Task t = tasks.get( title );
+                total += t.totalNanos;
             }
 
-            for( Task t : tasks ) {
-                Double p = Math.round( ( (double)t.nano / total ) * 10000.0 ) / 100.0;
+            for( String title : tasks.keySet() ) {
+                Task t = tasks.get( title );
+                Double p = Math.round( ( (double)t.totalNanos / total ) * 10000.0 ) / 100.0;
             }
         }
 
-        sb.append( "Total time. Overall:" + toSeconds( full, precision ) + "s. Aggregated: " + toSeconds( totalTime, precision ) );
+        sb.append( "Total time : " + toSeconds( full, precision ) + "s" );
 
         return sb.toString();
     }
@@ -154,14 +151,12 @@ public class StopWatch {
 
     public void reset() {
         initial = System.nanoTime();
-        startTime = 0;
-        endTime = 0;
-        totalTime = 0;
-        tasks = new LinkedList<Task>();
+        tasks = new HashMap<String, Task>();
     }
 
     public double getSeconds() {
-        return ( (double) totalTime / 1000000000 );
+        long now = System.nanoTime();
+        return ( (double) (now-initial) / 1000000000 );
     }
 
     public static double toSeconds( long time, long precision ) {
@@ -173,6 +168,6 @@ public class StopWatch {
     }
 
     public String toString() {
-        return startTime + " -> " + endTime + " = " + ( endTime - startTime );
+        return getSeconds() + "s";
     }
 }
