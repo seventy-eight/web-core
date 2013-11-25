@@ -132,6 +132,10 @@ public class ProfileSkill implements Node {
         writer.write( gson.toJson( strings ) );
     }
 
+    public String getDescription() {
+        return document.get( "description", "" );
+    }
+
     @Override
     public Node getParent() {
         return parent;

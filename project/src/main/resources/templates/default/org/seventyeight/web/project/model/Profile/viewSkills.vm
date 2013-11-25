@@ -2,6 +2,16 @@
 
 </div>
 
+<form action="" method="post" id="addskill">
+    <div class="ui-widget">
+        <input name="skillTitle" id="search">
+    </div>
+
+    <textarea name="skillDescription" id="skillDescription"></textarea>
+
+    <button type="button" id="submitSkill" onclick="sendSkill()">Add</button>
+
+</form>
 
 <script type="text/javascript">
 
@@ -9,8 +19,57 @@
         $.ajax({
             type: "GET",
             url: "skills/list",
-            success: function(data, textStatus, jqxhr){$('#skills').html("SNADE:" + data)},
+            success: function(data, textStatus, jqxhr){$('#skills').html(data)},
             error: function(ajax, text, error) {alert(error)}
         });
     });
+
+    $(function() {
+        $( "#search" ).autocomplete({
+            source: "/skill/search",
+            select: function( event, ui ) {
+                this.value = ui.item.first;
+                return false;
+            }
+        }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li>" )
+                    .append( "<a>" + item.first + ", " + item.second + "</a>" )
+                    .appendTo( ul );
+        };
+    });
+
+
+    function sendSkill() {
+        d = $("#addskill").val();
+        $.ajax({
+            type: "POST",
+            url: "skills/add",
+            data: $("#addskill").serialize(),
+            //success: addSkill($("#addskill").val()),
+            success: function(data, textStatus, jqxhr){addSkill($("#search").val(), $('#skillDescription').val())},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+
+    function doSubmitSkill(e)
+    {
+        e = e || window.event;
+        if ($("#addskill").is(":focus") && e.keyCode == 13)
+        {
+            $('#submitSkill').click();
+        }
+    }
+
+    function addSkill( skill, desc ) {
+        // Reset the fields
+        $('#search').val("");
+        $('#skillDescription').val("");
+        //$('#profileSkillList div:last').after('<div>' +  skill + '</div>');
+        //$('#profileSkillList div:last').after('<div>HEJ</div>');
+        $('<div class="boxed">' + skill + '<br/>'  + desc + '</div>').appendTo($('#profileSkillList'));
+        //alert("LAST: " + $('#profileSkillList div:last'));
+        //alert($('#profileSkillList').html());
+    }
+
 </script>

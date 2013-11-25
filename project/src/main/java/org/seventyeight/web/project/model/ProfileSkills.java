@@ -3,6 +3,7 @@ package org.seventyeight.web.project.model;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
@@ -52,31 +53,16 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
 
     public boolean hasSkill( String skillId ) throws NotFoundException {
         logger.debug( "Does " + this + " have " + skillId );
-        //Skill c = Skill.getSkillByTitle( certificateName, this );
-        //List<MongoDocument> docs = MongoDBCollection.get( Core.NODE_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Skill.CERTIFICATES + "." +  ) )
 
-        /*
-        List<MongoDocument> docs = document.getList( Skill.CERTIFICATES );
-
-        logger.debug( "DOCS: " + docs );
-
-        for( MongoDocument d : docs ) {
-            if( d.get( Skill.CERTIFICATE, "" ).equals( skillId ) ) {
-                return true;
-            }
-        }
-        */
-
-        logger.debug( "SUB DOC: " + document );
-        MongoDocument d = null;
-        try {
-            d = ((MongoDocument)document.get( Skill.SKILLS )).getSubDocument( skillId, null );
-        } catch( Exception e ) {
+        MongoDocument doc = new MongoDocument().set( "skill", skillId );
+        MongoDBQuery query = new MongoDBQuery().elemMatch( ((ActionDescriptor)getDescriptor()).getMongoPath() + "skills", doc ).getId( getProfile().getIdentifier() );
+        MongoDocument d = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( query );
+        logger.debug( "Found: " + d );
+        if( d == null || d.isNull() ) {
             return false;
+        } else {
+            return true;
         }
-
-
-        return ( d != null && !d.isNull() );
     }
 
     @PostMethod
@@ -93,7 +79,6 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
                 c = Skill.getSkillByTitle( title, this );
 
                 if( hasSkill( c.getIdentifier() ) ) {
-                    //Response.NOT_ACCEPTABLE.render( request, response, "The certificate " + title + " is already possessed by " + this );
                     response.sendError( Response.SC_NOT_ACCEPTABLE, this + " already have " + c );
                     return;
                 }
@@ -104,13 +89,14 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
                 c.save();
             }
 
-            addSkill( c );
+            String description = request.getValue( "skillDescription", "" );
+
+            addSkill( c, description );
             response.setStatus( HttpServletResponse.SC_OK );
         } else {
             logger.debug( "No skill title given" );
             response.setStatus( HttpServletResponse.SC_NOT_FOUND );
         }
-
     }
 
     @Override
@@ -150,34 +136,17 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
         throw new NotFoundException( parent + " does not have the skill " + token );
     }
 
+    public List<ProfileSkill> getSkills() throws NotFoundException, ItemInstantiationException {
+        return getSkills( 0, -1 );
+    }
 
     public List<ProfileSkill> getSkills( int offset, int number ) throws ItemInstantiationException, NotFoundException {
-        /*
-        MongoDBQuery query = new MongoDBQuery().is( ProfileSkill.NODEID, ((Profile)getParent()).getIdentifier() );
-        MongoDocument order = new MongoDocument(  ).set( "added", 1 );
-        List<MongoDocument> docs = MongoDBCollection.get( ProfileSkill.COLLECTIONNAME ).find( query, offset, number, order );
-
-        List<ProfileSkill> certificates = new ArrayList<ProfileSkill>( docs.size() );
-
-        for( MongoDocument doc : docs ) {
-               Skill c = (Skill) Core.getInstance().getNodeById( this, (String) doc.get( Skill.CERTIFICATE ) );
-               //logger.debug( "------> " + map.get( key ) );
-               ProfileSkill pc = new ProfileSkill( this, c, doc );
-              //List<MongoDocument> sd = d.getList( "validatedby" );
-              //pc.setValidations( sd );
-               certificates.add( pc );
-        }
-
-        return certificates;
-        */
-
         List<MongoDocument> docs = document.getList( Skill.SKILLS );
 
         if( docs != null && docs.size() > 0 ) {
-
-            //Map map = docs.getMap();
             List<ProfileSkill> skills = new ArrayList<ProfileSkill>( docs.size() );
 
+            // Todo Do something with offset and limit
             for( MongoDocument d : docs ) {
                 Skill c = (Skill) Core.getInstance().getNodeById( this, d.get( Skill.SKILL, "" ) );
 
@@ -194,22 +163,20 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
 
     public void doList( Request request, Response response ) throws IOException, TemplateException {
         PrintWriter writer = response.getWriter();
+        // TODO cache
         writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
     }
 
-    public void addSkill( Skill skill ) {
+    public void addSkill( Skill skill, String description ) {
         logger.debug( "Adding skill " + skill );
 
-        //MongoDocument certs = document.get( Skill.CERTIFICATES );
-
-            //certs.set( skill.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
-        document.addToList( Skill.SKILLS, new MongoDocument().set( Skill.SKILL, skill.getIdentifier() ).set( "added", new Date() ) );
-        //} else {
-        //    MongoDocument d = new MongoDocument().set( skill.getIdentifier(), new MongoDocument().set( "added", new Date() ) );
-        //    document.set( Skill.CERTIFICATES, d );
-        //}
+        document.addToList( Skill.SKILLS, new MongoDocument().set( Skill.SKILL, skill.getIdentifier() ).set( "added", new Date() ).set( "description", description ) );
 
         ((Profile)parent).save();
+    }
+
+    public Profile getProfile() {
+        return (Profile) parent;
     }
 
     @Override

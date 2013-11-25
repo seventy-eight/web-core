@@ -1,0 +1,87 @@
+<div id="skilllist" style="width: 400px">
+    <div>
+            Skills
+    </div>
+
+    #foreach($c in $item.getSkills(0,10))
+        <div id="row$c.getSkill().getIdentifier()">
+            <h3 style="font-size: 18px; background-color: #998223; font-weight: bold; margin-bottom: 2px">
+                <a href="Skills/get/$c.getSkill().getIdentifier()">$c.getSkill().getDisplayName()</a>
+            </h3>
+            <div>
+                #set($v = false)
+                #set($v = $c.getLastValidation())
+                #if($v)
+                    Last validated by $v.getProfile().getDisplayName(), $dateUtils.getDateString($v.getDate()) ago
+                #else
+                    Never validated
+                #end
+            </div>
+            <div>
+                #if($request.isAuthenticated() && $request.isUser($item.getParent()))
+                    <button type="button" onclick="doRemoveSkill(this,'$c.getSkill().getIdentifier()')">Remove</button>
+                #end
+                #if($request.isAuthenticated() && !$request.isUser($item.getParent()))
+                    <button type="button" onclick="doValidateSkill(this,'$c.getSkill().getIdentifier()')">Validate</button>
+                #end
+            </div>
+
+        </div>
+    #end
+</div>
+
+#if($request.isUser($item.getParent()) )
+<input name="skillTitle" type="text" id="addskill" onkeypress="doSubmitSkill(event);">
+<button type="button" id="submitSkill" onclick="sendSkill()">Send</button>
+#end
+
+
+
+<script type="text/javascript">
+
+    function doRemoveSkill(obj,id) {
+        $.ajax({
+            type: "GET",
+            url: "skills/get/" + id + "/remove",
+            success: function(data, textStatus, jqxhr){$(obj).hide(400);$("#row"+id).hide(600)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+function doValidateSkill(obj,id) {
+    $.ajax({
+        type: "GET",
+        url: "skills/get/" + id + "/validate",
+        success: function(data, textStatus, jqxhr){$(obj).hide(400)},
+        error: function(ajax, text, error) {alert(error)}
+    });
+}
+
+function sendSkill() {
+    d = $("#addskill").val();
+    $.ajax({
+        type: "POST",
+        url: "skills/add",
+        data: $("#addskill").serialize(),
+        //success: addSkill($("#addskill").val()),
+        success: function(data, textStatus, jqxhr){addSkill($("#addskill").val())},
+        error: function(ajax, text, error) {alert(error)}
+    });
+
+}
+
+function doSubmitSkill(e)
+{
+    e = e || window.event;
+    if ($("#addskill").is(":focus") && e.keyCode == 13)
+    {
+        $('#submitSkill').click();
+    }
+}
+
+function addSkill( skill) {
+    $('#skilllist tr:last').after('<tr><td>' +  skill + '</td></tr>');
+}
+
+
+</script>

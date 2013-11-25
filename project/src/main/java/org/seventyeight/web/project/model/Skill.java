@@ -1,13 +1,20 @@
 package org.seventyeight.web.project.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.structure.Tuple;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,17 +131,36 @@ public class Skill extends Resource<Skill> {
             return false;
         }
 
-        /*
-        @Override
-        public Node getChild( String name ) throws NotFoundException {
-            Skill cert = getSkillByTitle( name, this );
-            if( cert != null ) {
-                return cert;
+        public void doSearch( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException {
+            int offset = request.getInteger( "offset", 0 );
+            int number = request.getInteger( "number", 10 );
+            String term = request.getValue( "term", null );
+
+            logger.debug( term + ", OFFSET: " + offset + ", NUMBER: " + number );
+
+            response.setRenderType( Response.RenderType.NONE );
+
+            if( term == null || term.isEmpty() ) {
+                response.getWriter().print( "{}" );
             } else {
-                throw new NotFoundException( "The certificate " + cert + " was not found" );
+                MongoDBQuery dbquery = new MongoDBQuery().regex( "title", "(?i)" + term + ".*" ).is( "type", "skill" );
+                logger.debug( "QUERY: " + dbquery );
+
+                List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
+
+                List<Tuple<String, String>> companies = new ArrayList<Tuple<String, String>>(  );
+
+                for( MongoDocument d : docs ) {
+                    logger.debug( "DOX: " + d );
+                    companies.add( new Tuple<String, String>( d.get( "title", "" ), d.get( "_id", "" ) ) );
+                }
+
+                PrintWriter writer = response.getWriter();
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                writer.write( gson.toJson( companies ) );
             }
         }
-        */
 
 
     }
