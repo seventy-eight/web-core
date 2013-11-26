@@ -2,7 +2,7 @@
     <div style="background-color: #eeeeee; width: auto; border-radius: 10px;padding: 2px 2px 2px 2px;border-color: #000000;border-width: 2px">
         <a href="/profile/$item.getUsername()/"><img src="$item.getPortrait()" style="display: inline-block;vertical-align:middle;"></a>
         <div style="display: inline-block;vertical-align:top">
-            <h3 style="paddin:0px;margin: 0px"><a href="/profile/$item.getUsername()/">$item.getDisplayName()</a></h3>
+            <h3 style="paddin:0px;margin: 0px"><a href="$item.getUrl()">$item.getDisplayName()</a></h3>
             <a href="">$item.getEmail()</a><br/>
             seen
         </div>

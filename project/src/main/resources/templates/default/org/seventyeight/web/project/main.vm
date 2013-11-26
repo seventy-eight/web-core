@@ -43,9 +43,10 @@
 
         <div style="width: 100%; border-style: none; margin-bottom: 5px">
             #if($request.isAuthenticated())
+                <a href="$request.getUser().getUrl()" class="button">Profile</a>
                 <a href="/company/new" class="button">Create company</a>
                 <a href="/project/new" class="button">Create project</a>
-                <a href="$request.getUser().getUrl()" class="button">Profile</a>
+                <a href="/search" class="button">Search</a>
             #else
                 <a href="" class="button">Sign up</a>
                 <a href="/login" class="button">Log in</a>

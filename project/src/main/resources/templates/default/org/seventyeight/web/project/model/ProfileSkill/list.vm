@@ -1,39 +1,10 @@
-<div id="profileSkillList" style="width: 100%">
-    #foreach($skill in $item.getSkills())
-    <div class="boxed" id="row$skill.getSkill().getIdentifier()">
-        <a href="skills/get/$skill.getSkill().getIdentifier()" class="header">$skill.getSkill().getTitle()</a>
-        #if($item.getProfile().getACL().canWrite($request.getUser()))
-            <a href="#" class="greenButton" style="float: right" onclick="doValidateSkill(this,'$skill.getSkill().getIdentifier()')">Validate</a>
-        #end
-
-        #if($item.getProfile().getACL().isAdmin($request.getUser()))
-            <a href="#" class="redButton" style="float: right" onclick="doRemoveSkill(this,'$skill.getSkill().getIdentifier()')">Remove</a>
-        #end
+<div id="validations" style="width: 100%">
+    #foreach($validation in $item.getValidations())
+    <div class="boxed">
+        <span class="header">$validation.getProfile().getDisplayName()</span>
         <br/>
-        $skill.getDescription()
+        $dateUtils.getDateString($validation.getDate())
     </div>
     #end
 </div>
 
-
-<script type="text/javascript">
-
-    function doRemoveSkill(obj,id) {
-        $.ajax({
-            type: "GET",
-            url: "skills/get/" + id + "/remove",
-            success: function(data, textStatus, jqxhr){$(obj).hide(400);$("#row"+id).hide(600)},
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
-
-    function doValidateSkill(obj,id) {
-        $.ajax({
-            type: "GET",
-            url: "skills/get/" + id + "/validate",
-            success: function(data, textStatus, jqxhr){$(obj).hide(400)},
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
-
-</script>
