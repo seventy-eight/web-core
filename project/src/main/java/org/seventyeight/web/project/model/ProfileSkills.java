@@ -163,6 +163,7 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
 
     public void doList( Request request, Response response ) throws IOException, TemplateException {
         PrintWriter writer = response.getWriter();
+        response.setRenderType( Response.RenderType.NONE );
         // TODO cache
         writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
     }
@@ -212,11 +213,36 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
         public List<Searchable> getSearchables() {
             List<Searchable> ss = new ArrayList<Searchable>( 3 );
 
-            ss.add( new VerifiedBy() );
-            ss.add( new ValidatedAfter() );
+            //ss.add( new VerifiedBy() );
+            //ss.add( new ValidatedAfter() );
             ss.add( new SkillId() );
 
             return ss;
+        }
+
+        private class HasSkill extends Searchable {
+
+            @Override
+            public Class<? extends Node> getClazz() {
+                return Profile.class;
+            }
+
+            @Override
+            public String getName() {
+                return "Has skill";
+            }
+
+            @Override
+            public String getMethodName() {
+                return "has-skill";
+            }
+
+            @Override
+            public MongoDBQuery search( String term ) {
+                logger.debug( "Has skill {}", term );
+                //query.elemMatch( CERTIFICATES, (MongoDocument) new MongoDocument().set( CERTIFICATE, term ) );
+                return new MongoDBQuery().is( getMongoPath() + Skill.SKILLS + "." + Skill.SKILL, term );
+            }
         }
 
         private class SkillId extends Searchable {

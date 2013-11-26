@@ -90,6 +90,31 @@ public class ProfileSkill implements Node {
         writer.write( gson.toJson( docs ) );
     }
 
+    public List<Validation> getValidations() throws NotFoundException, ItemInstantiationException {
+        logger.debug( "Getting validations for {}", getProfile() );
+        List<MongoDocument> docs = getValidationDocuments();
+        if( docs.size() > 0 ) {
+            List<Validation> validations = new ArrayList<Validation>( docs.size() );
+            for( MongoDocument d : docs ) {
+                Profile p = Core.getInstance().getNodeById( this, d.get( "profile", "" ) );
+                Date date = d.get( "date", null );
+                validations.add( new Validation( date, p ) );
+            }
+
+            return validations;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public void doList( Request request, Response response ) throws IOException, TemplateException {
+        PrintWriter writer = response.getWriter();
+        response.setRenderType( Response.RenderType.NONE );
+        // TODO cache
+        writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
+    }
+
+
     public void doRemove( Request request, Response response ) throws NoAuthorizationException {
         response.setRenderType( Response.RenderType.NONE );
         request.checkPermissions( parent.getParent(), ACL.Permission.ADMIN );

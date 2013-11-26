@@ -17,7 +17,7 @@ $item.getProfiles()
         e.preventDefault();
         $.ajax({
             type: "POST",
-            url: "/profile/$request.getUser().getIdentifier()/skills/add",
+            url: "/profile/get/$request.getUser().getIdentifier()/skills/add",
             data: { skillTitle: "$item.getDisplayName()" },
             success: function(data, textStatus, jqxhr){$('#addCert').hide(0)},
             error: function(ajax, text, error) {alert(error)}
