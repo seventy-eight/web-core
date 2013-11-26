@@ -43,6 +43,7 @@ public class Search implements Node {
     }
 
     public void doSearch( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+        response.setRenderType( Response.RenderType.NONE );
         int offset = request.getInt( "offset", 0 );
         int number = request.getInt( "number", 10 );
         String query = request.getValue( "query", null );
@@ -58,6 +59,7 @@ public class Search implements Node {
             for( MongoDocument d : docs ) {
                 Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
                 d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+                d.removeField( "extensions" );
             }
 
             PrintWriter writer = response.getWriter();

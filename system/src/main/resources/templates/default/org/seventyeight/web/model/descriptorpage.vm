@@ -3,6 +3,6 @@
     <input type="hidden" name="class" value="$class" />
     <input type="hidden" name="locked" value="$locked" />
     <table style="width:100%">
-        $content
+        $configuration
     </table>
 </div>

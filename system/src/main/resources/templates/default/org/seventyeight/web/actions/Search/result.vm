@@ -1,7 +1,7 @@
-<table>
+<table style="width: 100%; text-align: center">
 
     <tr id="bottom">
-        <td colspan="2" onclick="get(currentOffset, 10);">
+        <td colspan="1" onclick="get(currentOffset, 10);">
             More
         </td>
     </tr>
@@ -21,7 +21,7 @@
             type: "GET",
             url: "search",
             data: { query: "$request.getValue("query")", offset: offset, number: number },
-            success: function(data, textStatus, jqxhr){populate(eval(data), offset)},
+            success: function(data, textStatus, jqxhr){populate(eval(data), offset);},
             error: function(ajax, text, error) {alert(error)}
         });
 
@@ -33,7 +33,7 @@
             $('#bottom').hide();
         } else {
             for( i = 0 ; i < data.length ; i++ ) {
-                $('<tr><td id="node' + (i+offset) + '">' + data[i].document.badge + '</td><td>' + data[i].document.revision + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
+                $('<tr><td id="node' + (i+offset) + '" style="text-align:center">' + data[i].document.badge + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
                 //getNode(data[i].document._id, "node" + (i+offset));
             }
 

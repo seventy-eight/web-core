@@ -50,10 +50,13 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     @PostMethod
     public void doSetPortrait( Request request, Response response ) throws IOException, JsonException {
         logger.debug( "Setting portrait" );
+        response.setRenderType( Response.RenderType.NONE );
 
         JsonObject json = JsonUtils.getJsonFromRequest( request );
         List<JsonObject> objs = JsonUtils.getJsonObjects( json );
-        setPortrait( request, objs.get( 0 ) );
+        if( !objs.isEmpty() ) {
+            setPortrait( request, objs.get( 0 ) );
+        }
 
         /* Redirect */
         response.sendRedirect( "" );
