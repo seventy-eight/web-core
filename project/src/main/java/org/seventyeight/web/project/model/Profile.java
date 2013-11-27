@@ -10,6 +10,7 @@ import org.seventyeight.utils.Date;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -17,6 +18,7 @@ import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * @author cwolfgang
@@ -24,6 +26,8 @@ import java.util.List;
 public class Profile extends User {
 
     private static Logger logger = LogManager.getLogger( Profile.class );
+
+    private static ResourceBundle rb = TemplateManager.getBundle( Profile.class );
 
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
@@ -141,10 +145,10 @@ public class Profile extends User {
     public List<ContributingPartitionView> getPartitions() {
         List<ContributingPartitionView> parts = super.getPartitions();
 
-        parts.add( new ContributingPartitionView( "viewExperience", "Experience", this ) );
-        parts.add( new ContributingPartitionView( "viewCompanies", "Companies", this ) );
-        parts.add( new ContributingPartitionView( "viewProjects", "Projects", this ) );
-        parts.add( new ContributingPartitionView( "viewSkills", "Skills", this ) );
+        parts.add( new ContributingPartitionView( "viewExperience", rb.getString( "view.experience" ), this ) );
+        parts.add( new ContributingPartitionView( "viewCompanies", rb.getString( "view.companies" ), this ) );
+        parts.add( new ContributingPartitionView( "viewProjects", rb.getString( "view.projects" ), this ) );
+        parts.add( new ContributingPartitionView( "viewSkills", rb.getString( "view.skills" ), this ) );
 
         return parts;
     }

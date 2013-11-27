@@ -16,6 +16,7 @@ import org.seventyeight.web.nodes.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.Locale;
 
 /**
  * @author cwolfgang
@@ -41,37 +42,9 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private String[] requestParts;
 
-    private Language language = Language.American;
+    private Locale language = new Locale( "da", "DK" );
 
     private StopWatch stopWatch = null;
-
-    public enum Language {
-        American( "English", "en_US" ),
-        English( "English", "en_GB" ),
-        Danish( "Dansk", "da_DK" );
-
-        private String name;
-        private String identifier;
-
-        Language( String name, String identifier ) {
-            this.name = name;
-            this.identifier = identifier;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getIdentifier() {
-            return identifier;
-        }
-
-
-        @Override
-        public String toString() {
-            return identifier;
-        }
-    }
 
     public enum RequestMethod {
         GET,
@@ -248,7 +221,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
     }
 
-    public Language getLanguage() {
+    public Locale getLocale() {
         return language;
     }
 

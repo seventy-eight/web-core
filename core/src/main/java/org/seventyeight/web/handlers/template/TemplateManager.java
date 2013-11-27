@@ -193,7 +193,7 @@ public class TemplateManager {
 	public class Renderer {
 		//private Writer writer = new StringWriter();
 		private AbstractTheme theme;
-		private Request.Language language;
+		private Locale locale;
         private VelocityContext context;
 
         private StopWatch stopWatch;
@@ -206,7 +206,7 @@ public class TemplateManager {
             this.theme = request.getTheme();
             //this.locale = request.getLocale();
             this.context = request.getContext();
-            this.language = request.getLanguage();
+            this.locale = request.getLocale();
             this.stopWatch = request.getStopWatch();
         }
 
@@ -233,8 +233,8 @@ public class TemplateManager {
             return this;
         }
 
-        public Renderer setLanguage( Request.Language language ) {
-            this.language = language;
+        public Renderer setLocale( Locale locale ) {
+            this.locale = locale;
             return this;
         }
 
@@ -265,8 +265,8 @@ public class TemplateManager {
             //context.put( "url" );
 
 			/* I18N */
-            logger.debug( "LANG: {}", language );
-			context.put( "locale", language.getIdentifier() );
+            logger.debug( "LANG: {}", locale );
+			context.put( "locale", locale );
             //context.put( "dateTool", new DateTool() );
             context.put( "dateUtils", new DateUtils() );
 			
@@ -284,6 +284,7 @@ public class TemplateManager {
          * @throws TemplateException
          */
 		public String render( Object object, String template ) throws TemplateException {
+            context.put( "rb", getBundle( object.getClass() ) );
 			context.put( "item", object );
 			return render( template );
 		}
@@ -303,6 +304,7 @@ public class TemplateManager {
         public String renderObject( Object object, String method, boolean trySuper ) throws TemplateException {
             Template template = getTemplate( theme, object, method, trySuper );
             context.put( "item", object );
+            context.put( "rb", getBundle( object.getClass() ) );
             return render( template );
         }
 
@@ -313,6 +315,7 @@ public class TemplateManager {
 
         public String renderClass( Class clazz, String method, boolean trySuper ) throws NotFoundException {
             Template template = getTemplateFromClass( theme, clazz, method, trySuper );
+            context.put( "rb", getBundle( clazz ) );
             return render( template );
         }
 
@@ -320,16 +323,29 @@ public class TemplateManager {
         public String renderClass( Object object, Class clazz, String method ) throws NotFoundException {
             Template template = getTemplateFromClass( theme, clazz, method, true );
             context.put( "item", object );
+            context.put( "rb", getBundle( clazz ) );
             return render( template );
         }
 
         public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws NotFoundException {
             Template template = getTemplateFromClass( theme, clazz, method, trySuper );
             context.put( "item", object );
+            context.put( "rb", getBundle( clazz ) );
             return render( template );
         }
 
 	}
+
+    public static ResourceBundle getBundle( Class<?> clazz ) {
+        try {
+            return ResourceBundle.getBundle( "templates.default." + clazz.getName() + ".messages" );
+        } catch( MissingResourceException e ) {
+            // Can I live without it?
+            return null;
+        }
+
+        //return ResourceBundle.getBundle( "templates/default/" + getUrlFromClass( clazz ) + "/messages" );
+    }
 
     /**
      * Given a class, get the corresponding template

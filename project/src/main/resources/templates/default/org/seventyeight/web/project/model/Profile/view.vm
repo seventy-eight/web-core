@@ -11,6 +11,8 @@
     </tr>
 </table>
 
+RB : #i18n("hi")
+
 <div id="dialog" title="Select profile portrait" style="width:500px">
     #set( $up = $item.getPortraitExtension() )
     #singleExtensionConfiguration( "org.seventyeight.web.extensions.UserPortrait" $up "setPortrait" )

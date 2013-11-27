@@ -12,6 +12,7 @@ import org.seventyeight.web.handlers.Dictionary;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 public class I18NDirective extends Directive {
 
@@ -32,19 +33,11 @@ public class I18NDirective extends Directive {
 
 		String text = "";
 		//Locale locale = (Locale) context.get( "locale" );
-		Dictionary dictionary = (Dictionary)context.get( "i18n" );
-		
-		try {
-			if( node.jjtGetChild( 0 ) != null ) {
-				text = String.valueOf( node.jjtGetChild( 0 ).value( context ) );
-			}
-			
-		} catch( Exception e ) {
-			/* ... And we're done */
-		}
-		
-		if( dictionary != null ) {
-			//writer.write( dictionary.get( locale.getLanguage(), text ) );
+		text = String.valueOf( node.jjtGetChild( 0 ).value( context ) );
+
+        ResourceBundle rb = (ResourceBundle) context.get( "rb" );
+		if( rb != null ) {
+			writer.write( rb.getString( text ) );
 		} else {
 			writer.write( text );
 		}

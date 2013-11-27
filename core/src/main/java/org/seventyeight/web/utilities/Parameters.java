@@ -74,7 +74,7 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     }
 
     @Override
-    public Request.Language getLanguage() {
+    public Request.Language getLocale() {
         return Request.Language.American;
     }
 }
