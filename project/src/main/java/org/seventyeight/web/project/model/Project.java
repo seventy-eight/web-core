@@ -28,7 +28,7 @@ public class Project extends Resource<Project> {
             super.save();
 
             String description = request.getValue( "description", "" );
-            modelObject.setText( "description", description, request.getLocale().getIdentifier() );
+            modelObject.setText( "description", description, request.getLocale().getLanguage() );
         }
     }
 

@@ -6,6 +6,7 @@ import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.servlet.Request;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * @author cwolfgang
@@ -74,7 +75,7 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     }
 
     @Override
-    public Request.Language getLocale() {
-        return Request.Language.American;
+    public Locale getLocale() {
+        return new Locale( "da", "DK" );
     }
 }

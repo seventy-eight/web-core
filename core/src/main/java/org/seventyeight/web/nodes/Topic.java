@@ -11,6 +11,8 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 
+import java.util.Locale;
+
 /**
  * Basic {@link Resource} for texts.
  *
@@ -103,7 +105,7 @@ public class Topic extends Resource<Topic> {
         return "/theme/notepad-small.png";
     }
 
-    public static Topic create( String title, Request.Language language, String text, User owner ) throws ItemInstantiationException {
+    public static Topic create( String title, Locale language, String text, User owner ) throws ItemInstantiationException {
         logger.debug( "Creating topic " + title + " for " + owner );
         TopicDescriptor d = Core.getInstance().getDescriptor( Topic.class );
         Topic topic = d.newInstance( title );

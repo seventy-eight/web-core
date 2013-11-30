@@ -1,4 +1,4 @@
-#set($partList = $context.getPartitions())
+#set($partList = $context.getPartitions($request.getLocale()))
 #if(!$parts.isEmpty())
     <ul class="navlist">
         #foreach( $part in $partList )

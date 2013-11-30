@@ -21,10 +21,7 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author cwolfgang
@@ -151,7 +148,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @Override
-    public List<ContributingPartitionView> getPartitions() {
+    public List<ContributingPartitionView> getPartitions( Locale locale ) {
         List<ContributingPartitionView> partitions = new ArrayList<ContributingPartitionView>();
         partitions.add( new ContributingPartitionView( "view", "Main", this ) );
 

@@ -51,6 +51,8 @@
                 <a href="" class="button">Sign up</a>
                 <a href="/login" class="button">Log in</a>
             #end
+            <a href="/language/set?l=da_DK" class="button">Danish</a>
+            <a href="/language/set?l=en_US" class="button">English</a>
 
         </div>
 

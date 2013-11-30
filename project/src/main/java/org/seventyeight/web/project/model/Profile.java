@@ -18,6 +18,7 @@ import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -26,8 +27,6 @@ import java.util.ResourceBundle;
 public class Profile extends User {
 
     private static Logger logger = LogManager.getLogger( Profile.class );
-
-    private static ResourceBundle rb = TemplateManager.getBundle( Profile.class );
 
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
@@ -142,14 +141,17 @@ public class Profile extends User {
     }
 
     @Override
-    public List<ContributingPartitionView> getPartitions() {
-        List<ContributingPartitionView> parts = super.getPartitions();
+    public List<ContributingPartitionView> getPartitions( Locale locale ) {
+        logger.debug( "------------------------------- 1 ------------------------------------" );
+        List<ContributingPartitionView> parts = super.getPartitions( locale );
 
-        parts.add( new ContributingPartitionView( "viewExperience", rb.getString( "view.experience" ), this ) );
-        parts.add( new ContributingPartitionView( "viewCompanies", rb.getString( "view.companies" ), this ) );
-        parts.add( new ContributingPartitionView( "viewProjects", rb.getString( "view.projects" ), this ) );
-        parts.add( new ContributingPartitionView( "viewSkills", rb.getString( "view.skills" ), this ) );
+        logger.debug( "------------------------------- 2 ------------------------------------" );
+        parts.add( new ContributingPartitionView( "viewExperience", Core.getInstance().getMessages().getString( "view.experience", Profile.class, locale ), this ) );
+        parts.add( new ContributingPartitionView( "viewCompanies", Core.getInstance().getMessages().getString( "view.companies", Profile.class, locale ), this ) );
+        parts.add( new ContributingPartitionView( "viewProjects", Core.getInstance().getMessages().getString( "view.projects", Profile.class, locale ), this ) );
+        parts.add( new ContributingPartitionView( "viewSkills", Core.getInstance().getMessages().getString( "view.skills", Profile.class, locale ), this ) );
 
+        logger.debug( parts );
         return parts;
     }
 

@@ -20,6 +20,7 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.Default;
 import org.seventyeight.web.utilities.ExecuteUtils;
+import org.seventyeight.web.utilities.ResourceBundles;
 
 import javax.servlet.http.Cookie;
 import java.io.File;
@@ -53,6 +54,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     protected static Core instance;
 
     protected TemplateManager templateManager = new TemplateManager();
+
+    protected ResourceBundles resourceBundles = new ResourceBundles();
 
     protected Authentication authentication = new SimpleAuthentication();
     protected SessionManager sessionManager = new SessionManager();
@@ -725,6 +728,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     public SessionManager getSessionManager() {
         return sessionManager;
+    }
+
+    public ResourceBundles getMessages() {
+        return resourceBundles;
     }
 
     public void setAnonymous( User anonymous ) {

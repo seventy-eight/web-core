@@ -45,8 +45,10 @@ public class Rest extends HttpServlet {
         logger.debug( "URI    : {}", rqs.getRequestURI() );
         logger.debug( "METHOD : {}", rqs.getMethod() );
 
-        /* Instantiating request */
+        /* Instantiating request and response */
         Request request = new Request( rqs );
+        request.setLocaleFromCookie( "language" );
+
         Response response = new Response( rsp );
         response.setCharacterEncoding( "UTF-8" );
 

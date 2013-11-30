@@ -14,9 +14,12 @@ import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.nodes.User;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author cwolfgang
@@ -42,7 +45,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private String[] requestParts;
 
-    private Locale language = new Locale( "da", "DK" );
+    private Locale locale = new Locale( "da", "DK" );
 
     private StopWatch stopWatch = null;
 
@@ -222,7 +225,21 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     public Locale getLocale() {
-        return language;
+        return locale;
+    }
+
+    public void setLocaleFromCookie( String name) {
+        Cookie cookie = getCookie( name );
+        String language;
+        if( cookie != null ) {
+            language = cookie.getValue();
+        } else {
+            language = "en_US";
+        }
+
+        logger.debug( "Setting language to {}.", language );
+
+        this.locale = new Locale( language );
     }
 
     public void setStopWatch( StopWatch stopWatch ) {
@@ -231,5 +248,22 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public StopWatch getStopWatch() {
         return stopWatch;
+    }
+
+    private Map<String, Cookie> cookies;
+
+    public Cookie getCookie( String name ) {
+        if( cookies == null ) {
+            logger.debug( "Getting COOOOOOOOKEIESS:...." );
+            cookies = new HashMap<String, Cookie>(  );
+            for( Cookie cookie : getCookies() ) {
+                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
+                cookies.put( cookie.getName(), cookie );
+            }
+        }
+
+        logger.debug( "COOKIES: " + cookies );
+
+        return cookies.get( name );
     }
 }
