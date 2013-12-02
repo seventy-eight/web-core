@@ -10,16 +10,13 @@ import org.seventyeight.utils.Date;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * @author cwolfgang
@@ -136,16 +133,49 @@ public class Profile extends User {
         role.addMember( this );
     }
 
-    public void getLastValidation() {
+    public ProfileSkills getProfileSkills() {
+        ProfileSkills.ProfileSkillsDescriptor d = Core.getInstance().getDescriptor( ProfileSkills.class );
+        MongoDocument doc = d.getExtensionSubDocument( this );
+        return new ProfileSkills( this, doc );
+    }
 
+    public ProfileCompanies getProfileCompanies() {
+        ProfileCompanies.ProfileCompaniesDescriptor d = Core.getInstance().getDescriptor( ProfileCompanies.class );
+        MongoDocument doc = d.getExtensionSubDocument( this );
+        return new ProfileCompanies( this, doc );
+    }
+
+    public List<Experience> getExperience() throws NotFoundException, ItemInstantiationException {
+        List<Experience> experiences = new ArrayList<Experience>(  );
+        experiences.addAll( getProfileSkills().getSkills() );
+        experiences.addAll( getProfileCompanies().getProfileCompanies() );
+
+        Collections.sort( experiences, new DateSorter() );
+
+        return experiences;
+    }
+
+    private static class DateSorter implements Comparator<Experience> {
+        @Override
+        public int compare( Experience experience, Experience experience2 ) {
+            if( experience.getDate() != null && experience2.getDate() != null ) {
+                return experience2.getDate().compareTo( experience.getDate() );
+            } else {
+                if( experience.getDate() != null ) {
+                    return -1;
+                } else if( experience2.getDate() != null ) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
     }
 
     @Override
     public List<ContributingPartitionView> getPartitions( Locale locale ) {
-        logger.debug( "------------------------------- 1 ------------------------------------" );
         List<ContributingPartitionView> parts = super.getPartitions( locale );
 
-        logger.debug( "------------------------------- 2 ------------------------------------" );
         parts.add( new ContributingPartitionView( "viewExperience", Core.getInstance().getMessages().getString( "view.experience", Profile.class, locale ), this ) );
         parts.add( new ContributingPartitionView( "viewCompanies", Core.getInstance().getMessages().getString( "view.companies", Profile.class, locale ), this ) );
         parts.add( new ContributingPartitionView( "viewProjects", Core.getInstance().getMessages().getString( "view.projects", Profile.class, locale ), this ) );

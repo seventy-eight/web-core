@@ -9,6 +9,8 @@
 
     <textarea name="skillDescription" id="skillDescription"></textarea>
 
+    Date: <input name="received" value="">
+
     <button type="button" id="submitSkill" onclick="sendSkill()">Add</button>
 
 </form>

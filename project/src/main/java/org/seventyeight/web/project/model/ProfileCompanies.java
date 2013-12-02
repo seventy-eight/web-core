@@ -3,10 +3,11 @@ package org.seventyeight.web.project.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.utils.PostMethod;
+import org.seventyeight.utils.*;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
@@ -18,7 +19,10 @@ import org.seventyeight.web.servlet.Response;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 /**
  * @author cwolfgang
@@ -26,6 +30,8 @@ import java.util.*;
 public class ProfileCompanies extends Action<ProfileCompanies> implements Getable<ProfileCompanies> {
 
     private static Logger logger = LogManager.getLogger( ProfileCompanies.class );
+
+    private static SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd" );
 
     public ProfileCompanies( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -218,7 +224,7 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
         }
     }
 
-    public static class ProfileCompany {
+    public static class ProfileCompany implements Experience {
         private Company company;
         private MongoDocument pc;
 
@@ -233,6 +239,32 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
 
         public MongoDocument getPc() {
             return pc;
+        }
+
+        @Override
+        public Date getDate() {
+            int fromMonth = pc.get( "fromMonth", 0 );
+            int fromYear = pc.get( "fromYear", 0 );
+
+            Date date = null;
+            String f = fromYear + "-" + fromMonth + "-01";
+            try {
+                date = format.parse( f );
+            } catch( ParseException e ) {
+                logger.log( Level.ERROR, "Unable to parse format, " + f, e );
+            }
+
+            return date;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return getCompany().getDisplayName();
+        }
+
+        @Override
+        public String getType() {
+            return "Company";
         }
     }
 

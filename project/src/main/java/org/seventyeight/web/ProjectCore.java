@@ -84,7 +84,7 @@ public class ProjectCore extends Core {
         addDescriptor( new Collection.CollectionDescriptor() );
 
         addDescriptor( new Signature.SignatureDescriptor() );
-        addDescriptor( new ProfileSkills.ProfileSkillDescriptor() );
+        addDescriptor( new ProfileSkills.ProfileSkillsDescriptor() );
         addDescriptor( new ProfileCompanies.ProfileCompaniesDescriptor() );
 
         addDescriptor( new GetAction.GetDescriptor() );

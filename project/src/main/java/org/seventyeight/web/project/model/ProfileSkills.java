@@ -32,6 +32,8 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
 
     private static Logger logger = LogManager.getLogger( ProfileSkills.class );
 
+    private static SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd" );
+
     public ProfileSkills( Node parent, MongoDocument document ) {
         super( parent, document );
     }
@@ -90,8 +92,16 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
             }
 
             String description = request.getValue( "skillDescription", "" );
+            String dateString = request.getValue( "received", "" );
 
-            addSkill( c, description );
+            Date d = null;
+            try {
+                d = format.parse( dateString );
+            } catch( ParseException e ) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+            addSkill( c, description, d );
             response.setStatus( HttpServletResponse.SC_OK );
         } else {
             logger.debug( "No skill title given" );
@@ -161,6 +171,8 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
         }
     }
 
+
+
     public void doList( Request request, Response response ) throws IOException, TemplateException {
         PrintWriter writer = response.getWriter();
         response.setRenderType( Response.RenderType.NONE );
@@ -168,10 +180,10 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
         writer.write( ( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "list.vm" ) ) );
     }
 
-    public void addSkill( Skill skill, String description ) {
+    public void addSkill( Skill skill, String description, Date received ) {
         logger.debug( "Adding skill " + skill );
 
-        document.addToList( Skill.SKILLS, new MongoDocument().set( Skill.SKILL, skill.getIdentifier() ).set( "added", new Date() ).set( "description", description ) );
+        document.addToList( Skill.SKILLS, new MongoDocument().set( Skill.SKILL, skill.getIdentifier() ).set( "added", new Date() ).set( "description", description ).set( "received", received ) );
 
         ((Profile)parent).save();
     }
@@ -185,7 +197,7 @@ public class ProfileSkills extends Action<ProfileSkills> implements Getable<Prof
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public static class ProfileSkillDescriptor extends Action.ActionDescriptor<ProfileSkills> {
+    public static class ProfileSkillsDescriptor extends Action.ActionDescriptor<ProfileSkills> {
 
         @Override
         public String getDisplayName() {

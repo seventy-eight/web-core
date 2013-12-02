@@ -2,6 +2,7 @@ package org.seventyeight.web.project.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -31,6 +32,7 @@ import java.util.List;
  * {
  *     skill: {
  *         added: date  // The date added ??
+ *         received: date // Date received
  *         profile: pid // Last validator
  *     }
  * }
@@ -38,7 +40,7 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public class ProfileSkill implements Node {
+public class ProfileSkill implements Node, Experience {
 
     private static Logger logger = LogManager.getLogger( ProfileSkill.class );
 
@@ -56,26 +58,17 @@ public class ProfileSkill implements Node {
         this.document = document;
     }
 
-    public static ProfileSkill create( Profile profile, Skill skill ) {
-        /*
-        MongoDocument d = createDocument( profile.getIdentifier() );
-
-        d.set( Skill.CERTIFICATE, skill.getIdentifier() );
-        d.setList( VALIDATEDBY );
-
-        ProfileSkill e = new ProfileSkill( profile, skill, d );
-
-        return e;
-        */
-        return null;
-    }
-
     public int getNumberOfValidations() {
         try {
             return getValidationDocuments().size();
         } catch( Exception e ) {
             return 0;
         }
+    }
+
+    @Override
+    public String getType() {
+        return "Skill";
     }
 
     public void doGetValidations( Request request, Response response ) throws IOException {
@@ -168,7 +161,13 @@ public class ProfileSkill implements Node {
 
     @Override
     public String getDisplayName() {
-        return "Profile skill";
+        try {
+            Skill c = Core.getInstance().getNodeById( getParent(), document.get( Skill.SKILL, "" ) );
+            return c.getDisplayName();
+        } catch( Exception e ) {
+            logger.log( Level.ERROR, "Unable to get display name for " + this, e );
+            return "N/A";
+        }
     }
 
     @Override
@@ -265,7 +264,7 @@ public class ProfileSkill implements Node {
         logger.debug( "Adding data to " + VALIDATIONS_COLLECTION );
         MongoDocument doc = getValidationData();
         if( doc == null || doc.isNull() ) {
-            doc = Validation.createNode( getProfile(), skill );
+            doc = Validation.createValidationNode( getProfile(), skill );
         }
 
         doc.addToList( "validatedby", Validation.create( profile ) );
@@ -287,6 +286,14 @@ public class ProfileSkill implements Node {
 
     public Skill getSkill() {
         return skill;
+    }
+
+
+
+    @Override
+    public Date getDate() {
+        Date date = document.get( "received", null );
+        return date;
     }
 
     /**
@@ -324,7 +331,7 @@ public class ProfileSkill implements Node {
             return new MongoDocument().set( "profile", profile.getIdentifier() ).set( "date", new Date() );
         }
 
-        public static MongoDocument createNode( Profile profile, Skill skill ) {
+        public static MongoDocument createValidationNode( Profile profile, Skill skill ) {
             MongoDocument d = new MongoDocument().set( "profile", profile.getIdentifier() ).set( Skill.SKILL, skill.getIdentifier() );
             return d;
         }
