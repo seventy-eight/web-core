@@ -225,5 +225,5 @@
 #end
 
 #macro(yearSelect $name $default)
-    <input type="text" name="$name" value="$default" maxlength="4" onchange="Utils.onChangeYear(this);">
+    <input type="text" name="$name" value="$!default" maxlength="4" onchange="Utils.onChangeYear(this);">
 #end
