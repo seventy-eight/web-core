@@ -43,7 +43,7 @@ ADD COMPANY
 
 <br />
 
-<form action="companies/add" method="post">
+<form action="" method="post" id="addcompany">
     <div style="text-align: left; width: 500px">
         Company<br>
         <div class="ui-widget">
@@ -51,7 +51,7 @@ ADD COMPANY
         </div>
 
         Position title:<br>
-        <input type="text" name="positionTitle" style="width: 100%">
+        <input type="text" name="positionTitle" style="width: 100%" id="positionTitle">
 
         <table>
             <tr>
@@ -92,8 +92,44 @@ ADD COMPANY
 
         </table>
 
-        <input type="submit" value="Add">
+        <button type="button" id="submitCompany" onclick="sendCompany()">Add</button>
 
     </div>
 
 </form>
+
+<script type="text/javascript">
+
+    function sendCompany() {
+        d = $("#addCompany").val();
+        $.ajax({
+            type: "POST",
+            url: "companies/add",
+            data: $("#addcompany").serialize(),
+            //success: addSkill($("#addskill").val()),
+            success: function(data, textStatus, jqxhr){addCompany($("#search").val(), $('#positionTitle').val())},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+
+    function doSubmitCompany(e)
+    {
+        e = e || window.event;
+        if ($("#search").is(":focus") && e.keyCode == 13)
+        {
+            $('#submitCompany').click();
+        }
+    }
+
+    function addCompany( company, position ) {
+        // Reset the fields
+        $('#search').val("");
+        $('#positionTitle').val("");
+        $('<div class="boxed">' + company + '<br/>'  + position + '</div>').appendTo($('#companies'));
+    }
+
+</script>
+
+
+
