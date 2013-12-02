@@ -1,1 +1,14 @@
-JAJAJAJJA
+
+<div style="width: 100%">
+#foreach($e in $item.getExperience())
+    <div class="boxed">
+        #if($e.getDate())
+            $e.getDate(),
+        #else
+            No date,
+        #end
+        $e.getDisplayName()<br/>
+        $e.getType()
+    </div>
+#end
+</div>
