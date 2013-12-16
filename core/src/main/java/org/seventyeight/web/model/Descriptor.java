@@ -18,7 +18,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Descriptor<T extends Describable<T>> {
+public abstract class Descriptor<T extends Describable<T>> extends Configurable {
 	
 	private static Logger logger = LogManager.getLogger( Descriptor.class );
 
@@ -156,61 +156,5 @@ public abstract class Descriptor<T extends Describable<T>> {
         return true;
     }
 
-    /*
-    public String getGlobalConfigurationPage() {
 
-    }
-    */
-
-    public void doSubmit( Request request, Response response ) throws IOException {
-        save( request, response );
-        MongoDocument doc = getDescriptorDocument();
-        try {
-            SimpleORM.storeFromObject( this, doc );
-        } catch( IllegalAccessException e ) {
-            throw new IOException( e );
-        }
-
-        logger.debug( "SAVING " + doc );
-        MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).save( doc );
-
-        /* TODO get a better URL */
-        response.sendRedirect( "/" );
-    }
-
-    public void loadFromDisk() throws CoreException {
-        MongoDocument doc = getDescriptorDocument();
-        logger.debug( "Configuration for " + this.getDisplayName() + ": " + doc );
-        try {
-            SimpleORM.bindToObject( this, doc );
-        } catch( IllegalAccessException e ) {
-            throw new CoreException( "Unable to load " + this, e );
-        }
-    }
-
-    /**
-     * Get the {@link MongoDocument} for the {@link Descriptor}. Will never return null.
-     * @return
-     */
-    public MongoDocument getDescriptorDocument() {
-        MongoDocument doc = MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "_id", this.getId() ) );
-        if( !doc.isNull() ) {
-            logger.debug( "Had a configuration" );
-            return doc;
-        } else {
-            logger.debug( "New empty document" );
-            MongoDocument newdoc = new MongoDocument();
-            newdoc.set( "_id", getId() );
-            return newdoc;
-        }
-    }
-
-    /**
-     * Base class that does nothing
-     * @param request
-     * @param response
-     */
-    public void save( Request request, Response response ) {
-        logger.debug( "Saving " + getClass() );
-    }
 }
