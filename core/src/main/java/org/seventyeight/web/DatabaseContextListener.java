@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.utils.TimeUtils;
+import org.seventyeight.web.extensions.StartupListener;
 import org.seventyeight.web.utilities.Installer;
 
 import javax.servlet.ServletContextEvent;
@@ -205,6 +206,12 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         Executor executor =  Executors.newCachedThreadPool();
         sce.getServletContext().setAttribute( "executor", executor );
 
+        // Run onStartup listeners
+        List<StartupListener> listeners = Core.getInstance().getExtensions( StartupListener.class );
+        logger.info( "Running {} startup listener{}.", listeners.size(), (listeners.size() == 1 ? "" : "s" ) );
+        for( StartupListener listener : listeners ) {
+            listener.onStartup();
+        }
 
         registerShutdownHook();
     }

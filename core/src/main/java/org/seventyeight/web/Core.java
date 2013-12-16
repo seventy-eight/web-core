@@ -1,6 +1,7 @@
 package org.seventyeight.web;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.TokenList;
@@ -540,7 +541,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         /* Determine if the descriptor has something to be loaded */
-        descriptor.loadFromDisk();
+        descriptor.loadConfiguration();
         logger.debug( "Adding {}, {}", descriptor, descriptor.getClazz() );
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
@@ -663,6 +664,15 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             }
 
             extensionsList.get( i ).add( extension );
+        }
+
+        // Verify document if documented
+        if( extension instanceof Configurable ) {
+            try {
+                ( (Configurable) extension ).loadConfiguration();
+            } catch( CoreException e ) {
+                logger.log( Level.ERROR, "Unable to load the configuration for {}.", extension, e );
+            }
         }
     }
 
