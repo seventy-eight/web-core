@@ -1,4 +1,8 @@
-<table style="width:100%;height: 100%;border-collapse: collapse">
+<table style="width:100%;height: 100%;border-collapse: collapse; max-width: inherit">
+
+    <tbody style="max-width: inherit">
+
+
 
     #foreach( $action in $item.getLayoutableHavingTemplate( "top.vm" ) )
         <tr>
@@ -18,8 +22,8 @@
         </td>
     </tr>
 
-    <tr>
-        <td style="width:auto;height: 100%">
+    <tr style="max-width: inherit;">
+        <td style="width:auto;height: 100%;max-width: inherit;padding: 0px; margin: 0px">
             #set($part = $item.getActivePartition($request))
             #set($view = "$part.getViewName()" )
             #render($part.getPartition() $view)
@@ -61,5 +65,7 @@
             . Revision $item.getRevision()
         </td>
     </tr>
+
+    </tbody>
 
 </table>
