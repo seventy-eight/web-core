@@ -4,53 +4,36 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author cwolfgang
  */
-public class ImageFileType extends FileType<ImageFileType> {
+public class ImageFileType extends FileType {
 
     private static Logger logger = LogManager.getLogger( ImageFileType.class );
 
-    public ImageFileType( MongoDocument document ) {
-        super( document );
-    }
+    private Integer thumbWidth;
+
+    private Integer thumbHeight;
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        /* No op for now */
+    public List<String> getFileExtensions() {
+        List<String> exts = new ArrayList<String>( 2 );
+        exts.add( "jpg" );
+        exts.add( "png" );
+        return exts;
     }
 
-    public static class ImageFileTypeDescriptor extends Descriptor<ImageFileType> implements Node {
-
-        private Integer thumbWidth;
-
-        private Integer thumbHeight;
-
-        @Override
-        public String getDisplayName() {
-            return "Images";
-        }
-
-        @Override
-        public Node getParent() {
-            return null;
-        }
-
-        @Override
-        public String getMainTemplate() {
-            return Core.MAIN_TEMPLATE;
-        }
-
-        @Override
-        public void save( Request request, Response response ) {
-            thumbWidth = Integer.parseInt( request.getValue( "twidth", "80" ) );
-            thumbHeight = Integer.parseInt( request.getValue( "theight", "120" ) );
-        }
+    //@Override
+    public void save( Request request, Response response ) {
+        thumbWidth = Integer.parseInt( request.getValue( "twidth", "80" ) );
+        thumbHeight = Integer.parseInt( request.getValue( "theight", "120" ) );
     }
 }
 
