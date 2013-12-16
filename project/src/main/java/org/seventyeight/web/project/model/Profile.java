@@ -130,7 +130,10 @@ public class Profile extends User {
     }
 
     public void addRole( Role role ) {
-        role.addMember( this );
+        if( !role.hasRole( this ) ) {
+            logger.info( "[Grant {} the role {}]", this, role );
+            role.addMember( this );
+        }
     }
 
     public ProfileSkills getProfileSkills() {

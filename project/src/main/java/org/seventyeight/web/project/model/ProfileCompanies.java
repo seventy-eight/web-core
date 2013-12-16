@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.*;
 import org.seventyeight.web.Core;
@@ -242,19 +243,15 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
         }
 
         @Override
-        public Date getDate() {
+        public DateTime getDate() {
             int fromMonth = pc.get( "fromMonth", 0 );
             int fromYear = pc.get( "fromYear", 0 );
 
-            Date date = null;
-            String f = fromYear + "-" + fromMonth + "-01";
-            try {
-                date = format.parse( f );
-            } catch( ParseException e ) {
-                logger.log( Level.ERROR, "Unable to parse format, " + f, e );
+            if( fromMonth > 0 && fromYear > 0 ) {
+                return new DateTime( fromYear + "-" + fromMonth + "-01T10:00:00.000+00:00" );
+            } else {
+                return new DateTime("1970-01-01T10:00:00.000+00:00");
             }
-
-            return date;
         }
 
         @Override
@@ -265,6 +262,11 @@ public class ProfileCompanies extends Action<ProfileCompanies> implements Getabl
         @Override
         public String getType() {
             return "Company";
+        }
+
+        @Override
+        public String getUrl() {
+            return company.getUrl();
         }
     }
 
