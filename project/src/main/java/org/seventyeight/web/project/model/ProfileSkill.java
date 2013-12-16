@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -69,6 +70,11 @@ public class ProfileSkill implements Node, Experience {
     @Override
     public String getType() {
         return "Skill";
+    }
+
+    @Override
+    public String getUrl() {
+        return skill.getUrl();
     }
 
     public void doGetValidations( Request request, Response response ) throws IOException {
@@ -288,12 +294,10 @@ public class ProfileSkill implements Node, Experience {
         return skill;
     }
 
-
-
     @Override
-    public Date getDate() {
+    public DateTime getDate() {
         Date date = document.get( "received", null );
-        return date;
+        return new DateTime( date );
     }
 
     /**
