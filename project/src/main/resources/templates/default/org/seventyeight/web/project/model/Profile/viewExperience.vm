@@ -1,13 +1,18 @@
 
 <div style="width: 100%">
+#set($currentYear = 3000)
 #foreach($e in $item.getExperience())
+    #if($e.getDate().getYear() < $currentYear)
+        #set($currentYear = $e.getDate().getYear())
+        <h2>$currentYear</h2>
+    #end
     <div class="boxed">
         #if($e.getDate())
-            $e.getDate(),
+            $e.getDate().monthOfYear().getAsText() $e.getDate().getDayOfMonth(),
         #else
             No date,
         #end
-        $e.getDisplayName()<br/>
+        <a href="$e.getUrl()">$e.getDisplayName()</a><br/>
         $e.getType()
     </div>
 #end

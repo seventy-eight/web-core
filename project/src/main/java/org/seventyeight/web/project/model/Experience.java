@@ -1,12 +1,13 @@
 package org.seventyeight.web.project.model;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * @author cwolfgang
  */
 public interface Experience {
-    public Date getDate();
+    public DateTime getDate();
     public String getDisplayName();
     public String getType();
+    public String getUrl();
 }
