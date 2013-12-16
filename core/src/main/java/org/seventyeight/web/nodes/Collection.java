@@ -99,7 +99,7 @@ public class Collection extends Resource<Collection> {
         //document.addToList( "elements", new MongoDocument().set( "id", resource.getIdentifier() ).set( "sort", sortValue ) );
         int sortValue = length();
         logger.debug( "Next element is at " + sortValue );
-        MongoDocument field = new MongoDocument().set( "id", id ).set( SORT_FIELD, sortValue );
+        MongoDocument field = new MongoDocument().set( "_id", id ).set( SORT_FIELD, sortValue );
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
         MongoDocument sort = new MongoDocument().set( SORT_FIELD, 1 );
         MongoUpdate update = new MongoUpdate().push( "elements", field, sort );

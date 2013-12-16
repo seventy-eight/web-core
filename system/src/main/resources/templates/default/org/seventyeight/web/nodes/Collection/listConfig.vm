@@ -1,0 +1,28 @@
+<input id="collectionQuery" type="text" style="width: 80%">
+
+<div id="resourceList">
+
+</div>
+
+<input type="button" value="More" id="moreButton" onclick="getMoreResources()">
+
+<script type="text/javascript">
+    function getMoreResources() {
+        $.ajax({
+            url: "/resources/search",
+            type: "POST",
+            data: {query:$("#collectionQuery").val()},
+            success: function(data, textStatus, jqxhr){addResources(data);},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+    function addResources(dataList) {
+        for(idx in dataList) {
+
+            var data = dataList[idx];
+            var json = eval(data);
+            $('<div class="boxed">' + json.document.badge + '</div>').appendTo($('#resourceList'));
+        }
+    }
+</script>
