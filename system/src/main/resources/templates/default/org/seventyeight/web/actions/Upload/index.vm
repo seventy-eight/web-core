@@ -1,32 +1,38 @@
-#set( $exists = ( $item.getFile() ) )
-
-#if( !$exists )
-<div id="uploadNewFile" style="display: none">
-#else
-<div id="uploadNewFile" style="">
-#end
-$exists.getName()<br> <a href="#" onclick="$('#uploadNewFile').hide();$('#theForm').show()">Upload another file</a>
-</div>
-
-#if( !$exists )
-<div id="theForm" style="">
-#else
-<div id="theForm" style="display: none">
-#end
-<div style="display: none; width:0%; height: 20px; background-color: #000000" id="progress">
-
-</div>
-<div id="outer">
-    <form action="upload" method="post" enctype="multipart/form-data" target="uploadTarget" onsubmit="Utils.getProgress( $item.getIdentifier(), 'outer', 'progress' )">
-        <input type="file" name="filename" multiple>
-        <input type="submit" value="Upload">
+<div id="fileupload">
+    <form method="post" enctype="multipart/form-data" action="upload">
+        <div class="fileupload-buttonbar">
+            <label class="fileinput-button">
+                <span>Upload</span>
+                <input type="file" name="files[]" multiple>
+            </label>
+        </div>
     </form>
+    <div class="fileupload-content">
+        <table class="files"></table>
+    </div>
 </div>
 
-<iframe id="uploadTarget" name="uploadTarget" src="#" style="width:0;height:0;border-style: none;"></iframe>
+<div id="uploaded">
+
 </div>
 
-
-    <form action="/file-upload"
-          class="dropzone"
-          id="my-awesome-dropzone"></form>
+<script>
+    $(function () {
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            started: function() {
+              alert("YEAH");
+            },
+            added: function() {
+                alert("ADDEDYEAH");
+            },
+            autoUpload: true,
+            done: function (e, data) {
+                alert(data);
+                //$.each(data.result.files, function (index, file) {
+                    //$('<p/>').text(file.name).appendTo("#uploaded");
+                //});
+            }
+        });
+    });
+</script>
