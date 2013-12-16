@@ -8,16 +8,15 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.filetype.FileType;
-import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.UploadableNode;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.ServletUtils;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author cwolfgang
@@ -46,6 +45,21 @@ public class FileResource extends UploadableNode<FileResource> {
     @Override
     public String getMainTemplate() {
         return null;
+    }
+
+    public FileType getFileType() {
+        return getDescriptor().getDescriptor( getFileExtension() );
+    }
+
+    @Override
+    public FileDescriptor getDescriptor() {
+        return Core.getInstance().getDescriptor( FileResource.class );
+    }
+
+    public void doFile( Request request, Response response ) throws IOException {
+        response.setRenderType( Response.RenderType.NONE );
+        response.deliverFile( request, getFile(), true );
+
     }
 
     public static String getUploadDestination( Request request ) {
@@ -90,6 +104,8 @@ public class FileResource extends UploadableNode<FileResource> {
 
     public static class FileDescriptor extends UploadableDescriptor<FileResource> {
 
+        private ConcurrentHashMap<String, FileType> fileTypes = new ConcurrentHashMap<String, FileType>(  );
+
         @Override
         public String getType() {
             return "file";
@@ -98,6 +114,25 @@ public class FileResource extends UploadableNode<FileResource> {
         @Override
         public String getDisplayName() {
             return "File";
+        }
+
+        public void addFileType( FileType fileType ) {
+            logger.debug( "Adding {} for {}", fileType, fileType.getFileExtensions() );
+            logger.debug( "FILETYPRD: {}", fileTypes );
+
+            if( fileTypes == null ) {
+                fileTypes = new ConcurrentHashMap<String, FileType>(  );
+            }
+
+            logger.debug( "FILETYPRD2: {}", fileTypes );
+
+            for( String ext : fileType.getFileExtensions() ) {
+                fileTypes.put( ext, fileType );
+            }
+        }
+
+        public FileType getDescriptor( String extension ) {
+            return fileTypes.get( extension );
         }
 
         /*

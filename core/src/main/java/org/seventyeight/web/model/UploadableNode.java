@@ -37,7 +37,8 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
 
     public File getFile() {
         //return new File( getFilename() );
-        return new File( Core.getInstance().getUploadPath(), ( String ) this.document.get( "file" ) );
+        File file = new File( new File( Core.getInstance().getUploadPath(), getPath() ), getFilename() );
+        return file;
     }
 
     public void setFileExtension( String ext ) {
@@ -48,6 +49,15 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
         return this.document.get( EXTENSION );
     }
 
+    public void setSize( long size ) {
+        this.document.set( "size", size );
+    }
+
+    public long getSize() {
+        return this.document.get( "size", 0l );
+    }
+
+    /*
     public void setExpectedFileSize( long byteSize ) {
         this.document.set( EXPECTEDSIZE, byteSize );
     }
@@ -55,6 +65,7 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
     public long getExpectedFileSize() {
         return this.document.get( EXPECTEDSIZE );
     }
+    */
 
     public void setPath( String path ) {
         this.document.set( "path", path );

@@ -1,5 +1,10 @@
 package org.seventyeight.web.actions;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -14,10 +19,12 @@ import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.ServletUtils;
+import org.seventyeight.web.utilities.UploadHandler;
 
 import javax.servlet.AsyncContext;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -38,6 +45,7 @@ public class Upload implements Node {
     }
     */
 
+    /*
     public void doInfo( Request request, Response response ) throws IOException, ItemInstantiationException {
         String id = request.getValue( "id" );
         FileResource fileResource = getFileByUploadId( this, id );
@@ -47,22 +55,13 @@ public class Upload implements Node {
             long currentSize = file.length();
             Double ratio = Math.floor( ( (double)currentSize / (double) fileResource.getExpectedFileSize() ) * 10000 ) / 100.0;
 
-            /*
-            logger.fatal( "File: " + file );
-            logger.fatal( "Exists: " + file.exists() );
-            logger.fatal( "File node: " + fileResource );
-            logger.fatal( "Current: " + currentSize );
-            logger.fatal( "Expected: " + fileResource.getExpectedFileSize() );
-            logger.fatal( "Ratio: " + ratio );
-            */
-
             response.getWriter().write( ratio.toString() );
         } catch( Exception e ) {
-            /* TODO do something clever instead */
             logger.fatal( "Failed due to " + e.getMessage() );
             response.getWriter().write( "0" );
         }
     }
+    */
 
     protected static FileResource getFileByUploadId( Node parent, String uploadId ) throws ItemInstantiationException {
         MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
@@ -76,10 +75,8 @@ public class Upload implements Node {
 
     @PostMethod
     public void doUpload( Request request, Response response ) throws IOException, SavingException, ItemInstantiationException, ClassNotFoundException {
-        AsyncContext aCtx = request.startAsync( request, response );
-
-
-        String filename = request.getValue( "ax-file-name" );
+        //AsyncContext aCtx = request.startAsync( request, response );
+        response.setRenderType( Response.RenderType.NONE );
 
         /* Somehow get the right uploadable descriptor */
         List<Descriptor> descriptors = Core.getInstance().getExtensionDescriptors( Uploadable.class );
@@ -87,35 +84,73 @@ public class Upload implements Node {
 
         }
 
-        /* Create new file */
-        UploadableNode f = null;
-        try {
-            FileResource.FileDescriptor d = Core.getInstance().getDescriptor( FileResource.class );
-            f = (UploadableNode) d.newInstance( filename );
-        } catch( ItemInstantiationException e ) {
-            throw new IOException( e );
-        }
-
-        String uid = request.getValue( "upload-identity" );
-        long byteSize = Long.valueOf( (String)request.getValue( "ax-fileSize" ) );
-        f.setUploadIdentity( uid );
-        f.setFilename( filename );
-        f.setExpectedFileSize( byteSize );
-        //f.setOwner( request.getUser() );
-        //f.save();
-        f.save( request, null );
-
-        logger.debug( "File identifier: " + f.getIdentifier() );
-
         logger.debug( "SERVLET THREAD: " + Thread.currentThread().getId() + " - " + Thread.currentThread().getName() );
         //uploadExecutor.execute( new ServletUtils.FileUploader( aCtx, request.getUser().getIdentifier().toString(), (String) f.getIdentifier() ) );
 
-        Executor executor = (Executor)request.getServletContext().getAttribute("executor");
-        executor.execute( new ServletUtils.Copier( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
+        //Executor executor = (Executor)request.getServletContext().getAttribute("executor");
+        //executor.execute( new ServletUtils.Copier( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
+        //executor.execute( new ServletUtils.FileUploader( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
+        //executor.execute( new UploadHandler( aCtx, request.getUser().getIdentifier().toString(), UploadHandler.commonsUploader, UploadHandler.DefaultFilenamer ) );
 
-        logger.debug( "Executed: " + f.getIdentifier() );
 
-        response.getWriter().println( "done" );
+        List<FileItem> items = null;
+        try {
+            items = UploadHandler.commonsUploader.getItems( request );
+        } catch( FileUploadException e ) {
+            logger.error( e.getMessage() );
+            return;
+        }
+
+        for( FileItem item : items ) {
+            try {
+                if( UploadHandler.commonsUploader.isValid( item ) ) {
+                    String filename = UploadHandler.commonsUploader.getUploadFilename( item );
+                    UploadHandler.UploadFile uf = UploadHandler.DefaultFilenamer.getUploadDestination( request.getUser().getIdentifier().toString(), filename );
+
+                    UploadHandler.commonsUploader.write( item, uf.file );
+
+                    FileResource fr = null;
+                    try {
+                        fr = FileResource.create( filename );
+                        fr.setPath( uf.relativePath );
+                        fr.setFilename( filename );
+                        fr.setFileExtension( uf.extension );
+                        fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
+                        fr.save();
+                    } catch( ItemInstantiationException e ) {
+                        logger.log( Level.ERROR, "Failed to create file resource for {}", item, e );
+                        // TODO Delete uploaded file?
+                    }
+                }
+            } catch( Exception e ) {
+                logger.log( Level.ERROR, "Unable to store {}", item, e );
+            }
+        }
+
+
+        logger.debug( "Executed!" );
+
+        UploadResponse r = new UploadResponse();
+        r.name = "NAME";
+        r.size = 1000;
+        r.length = 2000;
+        r.deleteUrl = "http://jajdjawd";
+        r.thumbnailUrl = "/images/none";
+
+        PrintWriter writer = response.getWriter();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        writer.write( gson.toJson( r ) );
+    }
+
+    private static class UploadResponse {
+        public String name;
+        public long size;
+        public long length;
+        public String url;
+        public String thumbnailUrl;
+        public String deleteUrl;
+        public String deleteType = "DELETE";
     }
 
     /**
