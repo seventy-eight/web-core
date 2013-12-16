@@ -4,6 +4,8 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.Searchable;
 
+import java.util.regex.Pattern;
+
 /**
  * @author cwolfgang
  */
@@ -25,6 +27,6 @@ public class TypeSearch extends Searchable {
 
     @Override
     public MongoDBQuery search( String term ) {
-        return new MongoDBQuery().regex( "type", "(?i)" + term );
+        return new MongoDBQuery().regex( "type", "^" + term + "$", Pattern.CASE_INSENSITIVE );
     }
 }
