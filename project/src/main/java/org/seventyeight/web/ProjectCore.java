@@ -11,6 +11,7 @@ import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
+import org.seventyeight.web.nodes.listeners.FileTypeListener;
 import org.seventyeight.web.project.actions.AddNode;
 import org.seventyeight.web.project.actions.CertificateSearch;
 import org.seventyeight.web.project.model.*;
@@ -40,6 +41,9 @@ public class ProjectCore extends Core {
         children.put( "nodes", new Nodes() );
         children.put( "configuration", new GlobalConfiguration() );
         children.put( "search2", new org.seventyeight.web.actions.Search() );
+
+        children.put( "resources", new ResourcesAction() );
+
 
         children.put( "information", new Information() );
 
@@ -79,7 +83,7 @@ public class ProjectCore extends Core {
 
         addDescriptor( new Topic.TopicDescriptor() );
 
-        addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
+        //addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
 
         addDescriptor( new Collection.CollectionDescriptor() );
 
@@ -96,6 +100,9 @@ public class ProjectCore extends Core {
         addDescriptor( new UploadablePortrait.UploadablePortraitDescriptor() );
 
         addExtension( new TabbedPartitionedResource() );
+
+        addExtension( new FileTypeListener() );
+        addExtension( new ImageFileType() );
 
         //addDescriptor( new  );
 
