@@ -207,6 +207,12 @@ public class MongoDBQuery {
         return this;
     }
 
+    public MongoDBQuery regex( String field, String regex, int modifiers ) {
+        query.put( field ).regex( Pattern.compile( regex, modifiers ) );
+
+        return this;
+    }
+
     public MongoDBQuery regex( String field, Pattern pattern ) {
         query.put( field ).regex( pattern );
 
