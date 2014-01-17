@@ -7,11 +7,13 @@ import org.seventyeight.web.extensions.GravatarPortrait;
 import org.seventyeight.web.extensions.TabbedPartitionedResource;
 import org.seventyeight.web.extensions.UploadablePortrait;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
+import org.seventyeight.web.extensions.search.CollectionFormatter;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.nodes.listeners.FileTypeListener;
+import org.seventyeight.web.nodes.listeners.SearchFormatListener;
 import org.seventyeight.web.project.actions.AddNode;
 import org.seventyeight.web.project.actions.CertificateSearch;
 import org.seventyeight.web.project.model.*;
@@ -103,6 +105,9 @@ public class ProjectCore extends Core {
 
         addExtension( new FileTypeListener() );
         addExtension( new ImageFileType() );
+
+        addExtension( new SearchFormatListener() );
+        addExtension( new CollectionFormatter() );
 
         //addDescriptor( new  );
 

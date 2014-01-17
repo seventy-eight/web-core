@@ -9,6 +9,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.search.SearchFormatter;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.FeatureSearch;
 import org.seventyeight.web.model.ItemInstantiationException;
@@ -21,6 +22,7 @@ import org.seventyeight.web.servlet.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author cwolfgang
@@ -28,6 +30,8 @@ import java.util.List;
 public class ResourcesAction implements Node {
 
     private static Logger logger = LogManager.getLogger( ResourcesAction.class );
+
+    private ConcurrentHashMap<String, SearchFormatter> formatters = new ConcurrentHashMap<String, SearchFormatter>(  );
 
     @Override
     public Node getParent() {
@@ -42,6 +46,11 @@ public class ResourcesAction implements Node {
     @Override
     public String getMainTemplate() {
         return null;
+    }
+
+    public void addFormatter( SearchFormatter formatter ) {
+        logger.debug( "Adding formatter {}", formatter.getName() );
+        formatters.put( formatter.getName(), formatter );
     }
 
     @PostMethod
@@ -63,10 +72,21 @@ public class ResourcesAction implements Node {
 
             logger.debug( "DOCS: " + docs );
 
+            //
+            String[] formatters = request.getValue( "format", "" ).split( "," );
+
+
             for( MongoDocument d : docs ) {
                 logger.debug( "TYPE: {}, {}", d.get( "type", "N/A" ), d.getIdentifier() );
                 Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
                 d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+
+                if( formatters.length > 0 ) {
+                    for( String formatter : formatters ) {
+                        logger.debug( "FORMAYTERERE: {}, {}", formatter, this.formatters.get( formatter ) );
+                        this.formatters.get( formatter ).format( d, n );
+                    }
+                }
                 //d.removeField( "extensions" );
             }
 

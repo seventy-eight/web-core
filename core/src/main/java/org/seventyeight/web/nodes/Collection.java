@@ -14,6 +14,7 @@ import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.SearchHelper;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -62,6 +63,23 @@ public class Collection extends Resource<Collection> {
         } else {
             response.setStatus( HttpServletResponse.SC_BAD_REQUEST );
         }
+    }
+
+    @PostMethod
+    public void doSearch( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+        SearchHelper sh = new SearchHelper( this, request, response );
+        sh.search();
+
+        for( MongoDocument d : sh.getDocuments() ) {
+            d.set( "incollection", containsId( d.getIdentifier() ) );
+        }
+
+        sh.render();
+    }
+
+    public boolean containsId( String id ) {
+        MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() ).is( ELEMENTS_FIELD + "._id", id );
+        return MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).count( query ) > 0;
     }
 
     public void doFetch( Request request, Response response ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {

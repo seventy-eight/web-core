@@ -31,7 +31,7 @@ public class CMSCore extends Core {
         addDescriptor( new User.UserDescriptor() );
         addDescriptor( new FileResource.FileDescriptor() );
 
-        addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
+        //addDescriptor( new ImageFileType.ImageFileTypeDescriptor() );
         //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );

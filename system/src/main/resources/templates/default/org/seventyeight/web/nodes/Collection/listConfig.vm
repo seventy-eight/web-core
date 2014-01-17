@@ -1,15 +1,18 @@
 <input id="collectionQuery" type="text" style="width: 80%">
 
-<div id="resourceList">
-
-</div>
+<table style="width: 100%">
+    <tr id="resourceList">
+        <td></td>
+        <td></td>
+    </tr>
+</table>
 
 <input type="button" value="More" id="moreButton" onclick="getMoreResources()">
 
 <script type="text/javascript">
     function getMoreResources() {
         $.ajax({
-            url: "/resources/search",
+            url: "search",
             type: "POST",
             data: {query:$("#collectionQuery").val()},
             success: function(data, textStatus, jqxhr){addResources(data);},
@@ -22,7 +25,27 @@
 
             var data = dataList[idx];
             var json = eval(data);
-            $('<div class="boxed">' + json.document.badge + '</div>').appendTo($('#resourceList'));
+            //$('<tr><td class="boxed" style="width:60%">' + json.document.badge + '</td><td style="width: 40%">' + printCollection(json.document.incollection) + '</td></tr>').appendTo($('#resourceList'));
+            $('<tr><td class="boxed" style="width:60%">' + json.document.badge + '</td><td style="width: 40%; text-align: left">' + printCollection(json.document._id, json.document.incollection) + '</td></tr>').insertBefore($('#resourceList'));
         }
+    }
+
+    function printCollection(id, inCollection) {
+        if(inCollection) {
+            return '<a href="remove?id=' + id + '">YAY</a>';
+        } else {
+            return "<span onclick=\"addResourceToCollection('" + id + "');\">NAY</span>";
+        }
+    }
+
+    function addResourceToCollection(id) {
+        alert("ADDING " + id);
+        $.ajax({
+            url: "add",
+            type: "POST",
+            data: {id:id},
+            success: function(data, textStatus, jqxhr){alert('Successful');},
+            error: function(ajax, text, error) {alert(error)}
+        });
     }
 </script>
