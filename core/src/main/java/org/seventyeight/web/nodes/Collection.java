@@ -36,8 +36,14 @@ public class Collection extends Resource<Collection> {
         super( parent, document );
     }
 
-    public void get( int offset, int number ) {
-        MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
+    public void getResources(int offset, int number) throws NotFoundException, ItemInstantiationException {
+        List<MongoDocument> docs = document.getList( "elements" );
+
+        for(MongoDocument d : docs) {
+            Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
+            //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+            d.removeField( "extensions" );
+        }
 
     }
 
@@ -85,27 +91,29 @@ public class Collection extends Resource<Collection> {
     public void doFetch( Request request, Response response ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );
+        response.setRenderType( Response.RenderType.NONE );
 
         logger.debug( "Fetching " + number + " from " + offset + " from " + this );
 
-        int stop = offset + number;
-
         List<MongoDocument> docs = document.getList( ELEMENTS_FIELD );
         List<MongoDocument> result = new ArrayList<MongoDocument>( number );
+
+        int stop = docs.size() > offset + number ? offset + number : docs.size();
 
         if( docs.size() > offset ) {
             //for( MongoDocument d : docs ) {
             for( int i = offset ; i < stop ; i++ ) {
                 MongoDocument d = docs.get( i );
                 Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
-                d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+                d.set( "avatar", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+                result.add( d );
             }
         }
 
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        writer.write( gson.toJson( docs ) );
+        writer.write( gson.toJson( result ) );
     }
 
     public void addCall( Resource<?> resource ) {

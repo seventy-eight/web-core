@@ -1,1 +1,28 @@
-$item.getResources()
+<div id="resourceList">
+
+</div>
+
+
+<script type="text/javascript">
+
+    $(function(){
+        getMoreResources();
+    });
+
+    function getMoreResources(offset, number) {
+        $.ajax({
+            url: "fetch",
+            type: "GET",
+            data: {offset:offset, number:number},
+            success: function(data, textStatus, jqxhr){addResources(data);},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+    function addResources(dataList) {
+        var json = eval(dataList);
+        for(e in json) {
+            $('<div style="float:left;padding: 2px">' + json[e].document.avatar + '</div>').insertBefore($('#resourceList'));
+        }
+    }
+</script>
