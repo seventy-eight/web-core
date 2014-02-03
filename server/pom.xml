@@ -31,8 +31,8 @@
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>
-                                    <directory>${project.parent.basedir}/cms-war/target/</directory>
-                                    <include>cms-war.war</include>
+                                    <directory>${project.parent.basedir}/cms/target/</directory>
+                                    <include>cms.war</include>
                                 </resource>
                             </resources>
                         </configuration>
@@ -55,7 +55,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>org.seventyeight.web.Main</mainClass>
+                            <mainClass>org.seventyeight.web.Server</mainClass>
                         </manifest>
                     </archive>
 
@@ -87,7 +87,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.seventyeight.web.Main</mainClass>
+                            <mainClass>org.seventyeight.web.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -137,6 +137,7 @@
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
+
     </dependencies>
 
 

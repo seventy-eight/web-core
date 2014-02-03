@@ -29,11 +29,12 @@ public class FileUtilities {
 				}
 			}
 		} catch( Exception e ) {
-			logger.debug( e.getMessage() );
+			logger.error( e.getMessage() );
 		}
 	}
 	
 	public static void extractFile( File archive, File outputDir, String filename ) {
+        logger.debug( "Extracting {} from {}", filename, archive );
 		try {
 			ZipFile zipfile = new ZipFile( archive );
 			for( Enumeration<? extends ZipEntry> e = zipfile.entries(); e.hasMoreElements(); ) {
@@ -44,7 +45,7 @@ public class FileUtilities {
 				}
 			}
 		} catch( Exception e ) {
-			logger.debug( e.getMessage() );
+			logger.error( e.getMessage() );
 		}
 	}
 

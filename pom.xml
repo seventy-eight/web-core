@@ -22,10 +22,7 @@
         <module>core</module>
         <module>system</module>
         <module>cms</module>
-        <module>cms-war</module>
         <module>server</module>
-        <module>project</module>
-        <module>project-server</module>
     </modules>
 	
 	<build>
