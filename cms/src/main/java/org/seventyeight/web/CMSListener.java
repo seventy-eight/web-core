@@ -3,6 +3,7 @@ package org.seventyeight.web;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
+import org.seventyeight.web.installers.UserInstall;
 
 import javax.servlet.annotation.WebListener;
 import java.io.File;
@@ -21,6 +22,13 @@ public class CMSListener extends DatabaseContextListener<CMSCore> {
 
     @Override
     protected void install() throws DatabaseException {
+        UserInstall wolle = new UserInstall( "wolle", "wolle@ejbyurterne.dk" );
+        wolle.install();
+        wolle.after();
+
+        UserInstall anonymous = new UserInstall( "anonymous", "anonymous@ejbyurterne.dk" );
+        anonymous.install();
+        anonymous.after();
     }
 
     @Override

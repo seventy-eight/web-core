@@ -1,5 +1,7 @@
 package org.seventyeight.web.installers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DBInstallable;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.Core;
@@ -13,6 +15,8 @@ import org.seventyeight.web.utilities.Parameters;
  * @author cwolfgang
  */
 public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInstallable<T> {
+
+    private static Logger logger = LogManager.getLogger( NodeInstaller.class );
 
     protected String title;
 
@@ -32,6 +36,8 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
     public void install() throws DatabaseException {
         node = getNodeFromDB();
         if( node == null ) {
+            logger.info( "Installing {}", title );
+
             Parameters p = new Parameters();
             setParameters( p );
             try {

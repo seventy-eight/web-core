@@ -14,6 +14,8 @@ import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.nodes.listeners.FileTypeListener;
 import org.seventyeight.web.nodes.listeners.SearchFormatListener;
+import org.seventyeight.web.nodes.listeners.WidgetListener;
+import org.seventyeight.web.widgets.ActivityWidget;
 
 import java.io.File;
 
@@ -42,10 +44,15 @@ public class CMSCore extends Core {
 
         children.put( "resources", new ResourcesAction() );
 
+        WidgetAction widgets = new WidgetAction();
+        children.put( "widgets", widgets );
+
 
         children.put( "information", new Information() );
 
         children.put( "language", new LanguageAction() );
+
+        addDescriptor( new User.UserDescriptor() );
 
         addDescriptor( new FileResource.FileDescriptor() );
 
@@ -63,11 +70,14 @@ public class CMSCore extends Core {
 
         addExtension( new TabbedPartitionedResource() );
 
+        addExtension( new ActivityWidget() );
+
         addExtension( new FileTypeListener() );
         addExtension( new ImageFileType() );
 
         addExtension( new SearchFormatListener() );
-        addExtension( new CollectionFormatter() );
+        //addExtension( new CollectionFormatter() );
+        addExtension( new WidgetListener() );
 
         //addDescriptor( new  );
 

@@ -1,0 +1,84 @@
+package org.seventyeight.web.actions;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.seventyeight.web.Core;
+import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
+
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @author cwolfgang
+ */
+public class WidgetAction implements Node, Parent {
+
+    private static Logger logger = LogManager.getLogger( WidgetAction.class );
+
+    private ConcurrentHashMap<String, Widget> widgets = new ConcurrentHashMap<String, Widget>(  );
+
+    private GetWidget getWidget = new GetWidget();
+
+    @Override
+    public Node getParent() {
+        return Core.getInstance();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Widgets";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;
+    }
+
+    public void addWidget( Widget widget ) {
+        logger.debug( "Adding widget {}", widget.getName() );
+        widgets.put( widget.getName(), widget );
+    }
+
+    public void doGet(Request request, Response response) {
+        response.setRenderType( Response.RenderType.NONE );
+
+
+    }
+
+    public Widget get( String token ) throws NotFoundException {
+        if(widgets.containsKey( token )) {
+            return widgets.get( token );
+        } else {
+            throw new NotFoundException( "No such widget, " + token );
+        }
+    }
+
+    @Override
+    public Node getChild( String name ) throws NotFoundException {
+        return getWidget;
+    }
+
+    public class GetWidget implements Node, Parent {
+
+        @Override
+        public Node getParent() {
+            return WidgetAction.this;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Get widget";
+        }
+
+        @Override
+        public String getMainTemplate() {
+            return null;
+        }
+
+        @Override
+        public Node getChild( String name ) throws NotFoundException {
+            return get( name );
+        }
+    }
+}

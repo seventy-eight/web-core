@@ -19,7 +19,6 @@ public class UserInstall extends NodeInstaller<User> {
         this.email = email;
     }
 
-
     @Override
     protected Descriptor<User> getDescriptor() {
         return Core.getInstance().getDescriptor( User.class );
@@ -29,6 +28,8 @@ public class UserInstall extends NodeInstaller<User> {
     protected void setParameters( Parameters parameters ) {
         parameters.put( "username", title );
         parameters.put( "email", email );
+        parameters.put( "password", "pass" );
+        parameters.put( "password_again", "pass" );
     }
 
     @Override
