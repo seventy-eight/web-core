@@ -5,15 +5,17 @@ import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.UserAgent;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
-import org.seventyeight.web.model.AbstractTheme;
+import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.nodes.User;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -31,7 +33,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private static final String __MULTIPART = "multipart/form-data";
 
     private RequestMethod method = RequestMethod.GET;
-    private AbstractTheme theme = null;
+    private Theme theme = null;
     private VelocityContext context;
 
     private PersistedObject modelObject;
@@ -60,6 +62,36 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         super( httpServletRequest );
         setRequestMethod( httpServletRequest.getMethod() );
         this.template = Core.getInstance().getDefaultTemplate();
+
+        //
+        ServletContext context = getSession().getServletContext();
+        Theme.Platform platform = (Theme.Platform) context.getAttribute( "platform" );
+        logger.debug( "PLATFORM: {}", platform );
+
+        if(platform == null) {
+            String userAgentString = getHeader("User-Agent");
+            UserAgent userAgent = UserAgent.getUserAgent( userAgentString );
+
+            if(userAgent.getPlatform() == UserAgent.Platform.Android ||
+               userAgent.getPlatform() == UserAgent.Platform.IPhone ||
+               userAgent.getPlatform() == UserAgent.Platform.IPod ||
+               userAgent.getPlatform() == UserAgent.Platform.IPad) {
+                platform = Theme.Platform.Mobile;
+            } else {
+                platform = Theme.Platform.Desktop;
+            }
+
+            context.setAttribute( "platform", platform );
+        }
+    }
+
+    public Theme.Platform getPlatform() {
+        Theme.Platform platform = (Theme.Platform) getSession().getServletContext().getAttribute( "platform" );
+        if(platform == null) {
+            platform = Theme.Platform.Desktop;
+        }
+
+        return platform;
     }
 
     public void setRequestMethod( String m ) {
@@ -137,11 +169,11 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         this.template = template;
     }
 
-    public void setTheme( AbstractTheme theme ) {
+    public void setTheme( Theme theme ) {
         this.theme = theme;
     }
 
-    public AbstractTheme getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 
@@ -198,7 +230,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     /**
-     * @deprecated use {@link getInteger} instead
+     * @deprecated use {@link #getInteger} instead
      */
     public int getInt( String key, int defaultValue ) {
         if( this.getParameter( key ) != null ) {

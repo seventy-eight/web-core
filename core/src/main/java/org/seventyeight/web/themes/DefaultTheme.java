@@ -1,16 +1,16 @@
 package org.seventyeight.web.themes;
 
-import org.seventyeight.web.model.AbstractTheme;
+import org.seventyeight.web.UserAgent;
+import org.seventyeight.web.model.Theme;
 
 /**
  * @author cwolfgang
- *         Date: 18-02-13
- *         Time: 23:03
  */
-public class Default extends AbstractTheme {
+public class DefaultTheme extends Theme {
 
     @Override
     public String getName() {
         return "default";
     }
+
 }

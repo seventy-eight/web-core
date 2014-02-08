@@ -8,7 +8,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.AbstractTheme;
+import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.Node;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class ThemeSelectInputDirective extends Directive {
 		
 		//logger.debug( "---- " + id + " ----" );
 		
-		AbstractTheme userTheme = null;
+		Theme userTheme = null;
 		if( id != null ) {
 			Node r = null;
 			try {
@@ -80,14 +80,14 @@ public class ThemeSelectInputDirective extends Directive {
 		}
 
         /*
-		Collection<AbstractTheme> themes = Core.getInstance().getAllThemes();
-        //List<AbstractTheme> themes = null;
+		Collection<Theme> themes = Core.getInstance().getAllThemes();
+        //List<Theme> themes = null;
 		
 		writer.write( "<select name=\"" + name + "\">" );
 		
 		//writer.writeToFile( "<option value=\"" + t.getName() + "\" selected>" + t.getName() + "</option>\n" );
 		
-		for( AbstractTheme t : themes ) {
+		for( Theme t : themes ) {
 
 			if( t.equals( userTheme ) ) {
 				writer.write( "<option value=\"" + t.getName() + "\" selected>" + t.getName() + "</option>\n" );

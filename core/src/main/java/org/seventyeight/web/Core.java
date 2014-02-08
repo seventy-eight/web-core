@@ -19,7 +19,7 @@ import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.themes.Default;
+import org.seventyeight.web.themes.DefaultTheme;
 import org.seventyeight.web.utilities.ExecuteUtils;
 import org.seventyeight.web.utilities.ResourceBundles;
 
@@ -143,7 +143,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     protected File themesPath;
 
 
-    protected AbstractTheme defaultTheme = new Default();
+    protected Theme defaultTheme = new DefaultTheme();
 
     public static class Relations {
         public static final String EXTENSIONS = "extensions";
@@ -720,7 +720,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         throw new IllegalStateException( "No top level node" );
     }
 
-    public AbstractTheme getDefaultTheme() {
+    public Theme getDefaultTheme() {
         return defaultTheme;
     }
 
@@ -815,7 +815,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         return plugins;
     }
 
-    public File getThemeFile( AbstractTheme theme, String filename ) throws IOException {
+    public File getThemeFile( Theme theme, String filename ) throws IOException {
         logger.debug( "Getting theme file " + filename + " for " + theme );
 
         File themePath = new File( themesPath, theme.getName() );
