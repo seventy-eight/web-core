@@ -4,7 +4,7 @@
 
 
 
-    #foreach( $action in $item.getLayoutableHavingTemplate( "top.vm" ) )
+    #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlayform(), "top.vm" ) )
         <tr>
             <td colspan="2" class="nothing">
                 #render( $action "top" false "" $item true )
@@ -43,7 +43,7 @@
                     #render( $action "bottom" )
                 #end
 
-                #foreach( $action in $item.getLayoutableHavingTemplate( "bottom.vm" ) )
+                #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlayform(), "bottom.vm" ) )
                     #renderStatic( $action.getClazz() "bottom" )
                 #end
 
