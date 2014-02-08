@@ -18,8 +18,10 @@ public abstract class AbstractTheme {
 	
 	public abstract String getName();
 
+    public abstract String getPlatform();
+
     @Override
     public String toString() {
-        return getName();
+        return getName() + " for " + getPlatform();
     }
 }

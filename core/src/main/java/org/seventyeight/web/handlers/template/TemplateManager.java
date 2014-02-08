@@ -35,9 +35,9 @@ public class TemplateManager {
 
 	private Template _getTemplate( AbstractTheme theme, String template ) throws TemplateException {
 		try {
-		    return engine.getTemplate( theme.getName() + "/" + template );
+		    return engine.getTemplate( theme.getName() + "/" + theme.getPlatform() + "/" + template );
 		} catch( ResourceNotFoundException e ) {
-			throw new TemplateException( "The template " + template + " for " + theme.getName() + " does not exist" );
+			throw new TemplateException( "The template " + template + " for " + theme + " does not exist" );
 		}
 	}
 
