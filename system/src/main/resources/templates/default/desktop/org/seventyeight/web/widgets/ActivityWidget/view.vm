@@ -1,1 +1,5 @@
 BOOM! SHAKALAKA
+
+#foreach($r in $item.getActivities())
+    $r.get("title")<br>
+#end

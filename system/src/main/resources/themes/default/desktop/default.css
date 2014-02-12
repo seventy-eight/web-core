@@ -73,6 +73,11 @@ body {
     width: 100%;
 }
 
+.widget {
+    border-style: solid;
+    background-color: #abcacb;
+}
+
 table.listing {
     border-style: solid;
     border-width: 2px;

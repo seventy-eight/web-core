@@ -1,4 +1,5 @@
 #macro(widget $name $title $containerId)
+<div class="headerContrast" style="width: 100%; min-width: inherit">$title</div>
 <div id="widgetContainer$containerId" class="widget">
 
 </div>
