@@ -41,7 +41,7 @@ public class ThemeFiles implements Autonomous, Node {
 
         File themeFile = null;
         try {
-            themeFile = Core.getInstance().getThemeFile( request.getTheme(), filename );
+            themeFile = Core.getInstance().getThemeFile( request.getTheme(), request.getPlatform(), filename );
         } catch ( IOException e ) {
             try {
                 Response.NOT_FOUND_404.render( request, response );

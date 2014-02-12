@@ -815,13 +815,13 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         return plugins;
     }
 
-    public File getThemeFile( Theme theme, String filename ) throws IOException {
-        logger.debug( "Getting theme file " + filename + " for " + theme );
+    public File getThemeFile( Theme theme, Theme.Platform platform, String filename ) throws IOException {
+        logger.debug( "Getting theme file {} for {}/{}", filename, theme, platform );
 
-        File themePath = new File( themesPath, theme.getName() );
+        File themePath = new File( new File( themesPath, theme.getName() ), platform.getName() );
         File themeFile = new File( themePath, filename );
 
-        logger.debug( "Getting theme file " + themeFile + " for " + theme );
+        logger.debug( "Getting theme file " + themeFile );
 
         if( themeFile.exists() ) {
             return themeFile;
