@@ -1,17 +1,1 @@
-<div id="widgetContainer">
-
-</div>
-
-
-<script type="text/javascript">
-
-    $(function() {
-        $.ajax({
-            type: "GET",
-            url: "/widgets/Activity widget/view",
-            success: function(data, textStatus, jqxhr){$('#widgetContainer').html(data)},
-            error: function(ajax, text, error) {alert(error)}
-        });
-    });
-
-</script>
+#widget("Activity widget" "TITLE" "widget1")
