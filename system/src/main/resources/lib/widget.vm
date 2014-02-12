@@ -1,5 +1,5 @@
-#macro(widget $name $title)
-<div id="widgetContainer$name" class="widget">
+#macro(widget $name $title $containerId)
+<div id="widgetContainer$containerId" class="widget">
 
 </div>
 
@@ -8,8 +8,8 @@
     $(function() {
         $.ajax({
             type: "GET",
-            url: "/widgets/Activity widget/view",
-            success: function(data, textStatus, jqxhr){$('#widgetContainer$name').html(data)},
+            url: "/widgets/get/$name/view",
+            success: function(data, textStatus, jqxhr){$('#widgetContainer$containerId').html(data)},
             error: function(ajax, text, error) {alert(error)}
         });
     });
