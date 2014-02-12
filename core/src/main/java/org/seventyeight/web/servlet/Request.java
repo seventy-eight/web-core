@@ -72,6 +72,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
             String userAgentString = getHeader("User-Agent");
             UserAgent userAgent = UserAgent.getUserAgent( userAgentString );
 
+            // Determine platform
             if(userAgent.getPlatform() == UserAgent.Platform.Android ||
                userAgent.getPlatform() == UserAgent.Platform.IPhone ||
                userAgent.getPlatform() == UserAgent.Platform.IPod ||
