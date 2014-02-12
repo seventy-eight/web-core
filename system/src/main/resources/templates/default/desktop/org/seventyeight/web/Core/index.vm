@@ -1,1 +1,11 @@
-#widget("Activity widget" "TITLE" "widget1")
+<table style="min-width: inherit; width: 100%">
+    <tr>
+        <td style="width: 40%">
+            #widget("Activity widget" "Last users" "widget1")
+        </td>
+        <td style="width: 60%">
+            #widget("Activity widget" "Activities" "widget2")
+        </td>
+    </tr>
+</table>
+
