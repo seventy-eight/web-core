@@ -1,7 +1,7 @@
-<div id="widgetContainer">
+#macro(widget $name $title)
+<div id="widgetContainer$name" class="widget">
 
 </div>
-
 
 <script type="text/javascript">
 
@@ -9,9 +9,10 @@
         $.ajax({
             type: "GET",
             url: "/widgets/Activity widget/view",
-            success: function(data, textStatus, jqxhr){$('#widgetContainer').html(data)},
+            success: function(data, textStatus, jqxhr){$('#widgetContainer$name').html(data)},
             error: function(ajax, text, error) {alert(error)}
         });
     });
 
 </script>
+#end

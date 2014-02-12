@@ -48,7 +48,21 @@ public class WidgetDirective extends Directive {
 		
 		//writer.writeToFile( "<input type=\"text\" name=\"" + name + "\" value=\"" + value + "\" " + ( maxLength > 0 ? "maxlength=\"" + maxLength + "\"" : "" ) + " onclick=\"" + onClick + "\"" + ( readonly ? " readonly" : "" ) + ">" );
 
+        writer.write( "<div id=\"widgetContainer\">\n" +
+                      "</div>\n" +
+                      "<script type=\"text/javascript\">\n" +
+                      "    $(function() {\n" +
+                      "        $.ajax({\n" +
+                      "            type: \"GET\",\n" +
+                      "            url: \"/widgets/Activity widget/view\",\n" +
+                      "            success: function(data, textStatus, jqxhr){$('#widgetContainer').html(data)},\n" +
+                      "            error: function(ajax, text, error) {alert(error)}\n" +
+                      "        });\n" +
+                      "    });\n" +
+                      "</script>" );
+
 		return true;
 	}
+
 
 }

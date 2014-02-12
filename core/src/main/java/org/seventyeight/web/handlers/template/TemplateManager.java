@@ -137,7 +137,7 @@ public class TemplateManager {
 		/* Custom directives */
 		velocityProperties.setProperty( "userdirective", "org.seventyeight.web.velocity.html.TextInputDirective,"
 				                                       + "org.seventyeight.web.velocity.html.AdvancedFileInputDirective,"
-				                                       + "org.seventyeight.web.velocity.html.WidgetDirective,"
+				                                       //+ "org.seventyeight.web.velocity.html.WidgetDirective,"
 				                                       + "org.seventyeight.web.velocity.html.GroupSelectInputDirective,"
 				                                       + "org.seventyeight.web.velocity.html.ThemeSelectInputDirective,"
 				                                       + "org.seventyeight.web.velocity.html.I18NDirective,"
