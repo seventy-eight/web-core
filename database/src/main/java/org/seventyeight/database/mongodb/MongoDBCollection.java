@@ -65,11 +65,16 @@ public class MongoDBCollection {
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit ) {
-        return find( query, offset, limit, new MongoDocument(  ) );
+        return find( query, offset, limit, null );
     }
 
-    public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument order ) {
-        List<DBObject> objs = collection.find( query.getDocument() ).skip( offset ).limit( limit ).toArray();
+    public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument sort ) {
+        List<DBObject> objs;
+        if(sort != null && !sort.isNull()) {
+            objs = collection.find( query.getDocument() ).sort( sort.getDBObject() ).skip( offset ).limit( limit ).toArray();
+        } else {
+            objs = collection.find( query.getDocument() ).skip( offset ).limit( limit ).toArray();
+        }
         List<MongoDocument> docs = new ArrayList<MongoDocument>( objs.size() );
 
         for( DBObject obj : objs ) {
