@@ -170,6 +170,15 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
 
+    public void doAddComment(Request request, Response response) {
+        response.setRenderType( Response.RenderType.NONE );
+        String comment = request.getValue( "comment", "" );
+
+        if(comment.length() > 1) {
+
+        }
+    }
+
     @Override
     public ACL getACL() {
         MongoDocument doc = document.get( "acl" );
