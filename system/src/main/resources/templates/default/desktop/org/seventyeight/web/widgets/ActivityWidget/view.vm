@@ -1,5 +1,5 @@
 BOOM! SHAKALAKA
 
 #foreach($r in $item.getActivities())
-    $r.get("title")<br>
+    <a href="/resource/$r.get("_id")">$r.get("title")</a><br>
 #end

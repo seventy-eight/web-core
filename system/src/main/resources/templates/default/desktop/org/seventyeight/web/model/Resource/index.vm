@@ -35,6 +35,18 @@
         </td>
     </tr>
 
+    <!-- Comments -->
+    <tr>
+        <td colspan="2" style="width: 100%">
+            <div style="font-weight: bold; background-color: #978789; width: 100%">Comments</div>
+
+            <form>
+                <textarea style="width: 100%" name="comment"></textarea>
+                <a href="addComment" class="button">Send</a>
+            </form>
+        </td>
+    </tr>
+
     <tr>
         <td style="width:100%;height: 100%" colspan="3">
             <div style="width: 100%;min-height: 400px" align="center">
