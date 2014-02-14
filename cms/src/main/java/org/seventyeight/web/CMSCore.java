@@ -10,6 +10,7 @@ import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.search.CollectionFormatter;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
+import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.nodes.listeners.FileTypeListener;
@@ -51,6 +52,8 @@ public class CMSCore extends Core {
         children.put( "information", new Information() );
 
         children.put( "language", new LanguageAction() );
+
+        addDescriptor( new Comment.CommentDescriptor() );
 
         addDescriptor( new User.UserDescriptor() );
 

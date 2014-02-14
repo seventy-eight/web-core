@@ -64,7 +64,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @Override
-    public ResourceDescriptor<T> getDescriptor() {
+    public NodeDescriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
     }
 
@@ -170,12 +170,14 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
 
-    public void doAddComment(Request request, Response response) {
+    @PostMethod
+    public void doAddComment(Request request, Response response) throws ItemInstantiationException {
         response.setRenderType( Response.RenderType.NONE );
-        String comment = request.getValue( "comment", "" );
+        String text = request.getValue( "comment", "" );
+        String title = request.getValue( "title", "" );
 
-        if(comment.length() > 1) {
-
+        if(text.length() > 1) {
+            Comment comment = Comment.create( this, request.getUser(), this, title, text );
         }
     }
 

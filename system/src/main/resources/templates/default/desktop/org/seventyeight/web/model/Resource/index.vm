@@ -40,10 +40,24 @@
         <td colspan="2" style="width: 100%">
             <div style="font-weight: bold; background-color: #978789; width: 100%">Comments</div>
 
-            <form>
+            <form id="commentForm">
                 <textarea style="width: 100%" name="comment"></textarea>
-                <a href="addComment" class="button">Send</a>
+                <div id="commentSubmit" class="button">Send</div>
             </form>
+
+            <script type="text/javascript">
+                $( "#commentSubmit" ).click(function() {
+                    alert("dawda");
+                    $.ajax({
+                        type: "POST",
+                        url: "addComment",
+                        data: $("#commentForm").serialize(),
+                        success: function(data, textStatus, jqxhr){alert("Yalah")},
+                        error: function(ajax, text, error) {alert(error)}
+                    });
+                });
+            </script>
+
         </td>
     </tr>
 

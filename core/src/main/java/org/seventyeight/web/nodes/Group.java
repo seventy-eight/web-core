@@ -122,7 +122,7 @@ public class Group extends Resource<Group> {
         return "org/seventyeight/web/main.vm";
     }
 
-    public static class GroupDescriptor extends ResourceDescriptor<Group> {
+    public static class GroupDescriptor extends NodeDescriptor<Group> {
 
         @Override
         public String getDisplayName() {

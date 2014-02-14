@@ -19,6 +19,8 @@ public class Comment extends AbstractNode<Comment> {
     public static final String RESOURCE_FIELD = "resource";
     public static final String PARENT_FIELD = "parent";
 
+    public static final String COMMENTS_COLLECTION = "comments";
+
     public Comment(Node parent, MongoDocument document) {
         super(parent, document);
     }
@@ -29,15 +31,17 @@ public class Comment extends AbstractNode<Comment> {
     }
 
     public static Comment create(Resource<?> resource, User user, AbstractNode<?> parent, String title, String text) throws ItemInstantiationException {
-        MongoDocument document = new MongoDocument();
-        document.set( USER_FIELD, user.getIdentifier() );
-        document.set( DATE_FIELD, new Date() );
-        document.set( TEXT_FIELD, text );
-        document.set( RESOURCE_FIELD, resource.getIdentifier() );
-        document.set( PARENT_FIELD, parent.getIdentifier() );
 
         CommentDescriptor cd = Core.getInstance().getDescriptor( Comment.class );
         Comment instance = cd.newInstance( title, resource );
+
+        instance.getDocument().set( USER_FIELD, user.getIdentifier() );
+        instance.getDocument().set( DATE_FIELD, new Date() );
+        instance.getDocument().set( TEXT_FIELD, text );
+        instance.getDocument().set( RESOURCE_FIELD, resource.getIdentifier() );
+        instance.getDocument().set( PARENT_FIELD, parent.getIdentifier() );
+
+        instance.save();
 
         return instance;
     }
@@ -47,11 +51,21 @@ public class Comment extends AbstractNode<Comment> {
         return this;
     }
 
-    public static class CommentDescriptor extends Descriptor<Comment> {
+    public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
         @Override
         public String getDisplayName() {
             return "Comment";
+        }
+
+        @Override
+        public String getType() {
+            return "comment";
+        }
+
+        @Override
+        public String getCollectionName() {
+            return COMMENTS_COLLECTION;
         }
     }
 }

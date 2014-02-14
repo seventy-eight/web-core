@@ -20,9 +20,9 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class ResourceDescriptor<T extends Resource<T>> extends Descriptor<T> implements Node, Getable<T> {
+public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descriptor<T> implements Node, Getable<T> {
 
-    private static Logger logger = LogManager.getLogger( ResourceDescriptor.class );
+    private static Logger logger = LogManager.getLogger( NodeDescriptor.class );
 
     @Override
     public Node getParent() {

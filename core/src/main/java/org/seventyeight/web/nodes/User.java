@@ -244,7 +244,7 @@ public class User extends Resource<User> {
         }
     }
 
-    public static class UserDescriptor extends ResourceDescriptor<User> {
+    public static class UserDescriptor extends NodeDescriptor<User> {
 
         public String testString;
 

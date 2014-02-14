@@ -9,7 +9,6 @@ import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.servlet.Request;
 
 import java.util.Locale;
 
@@ -163,7 +162,7 @@ public class Topic extends Resource<Topic> {
         }
     }
 
-    public static class TopicDescriptor extends ResourceDescriptor<Topic> {
+    public static class TopicDescriptor extends NodeDescriptor<Topic> {
 
         @Override
         public String getType() {

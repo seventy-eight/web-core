@@ -42,9 +42,9 @@ public class NewContent implements Node {
         }
 
         /* Get the resource descriptor from the className name */
-        ResourceDescriptor<?> descriptor = null;
+        NodeDescriptor<?> descriptor = null;
         try {
-            descriptor = (ResourceDescriptor<?>) Core.getInstance().getDescriptor( className );
+            descriptor = (NodeDescriptor<?>) Core.getInstance().getDescriptor( className );
         } catch( ClassNotFoundException e ) {
             throw new IOException( e );
         }

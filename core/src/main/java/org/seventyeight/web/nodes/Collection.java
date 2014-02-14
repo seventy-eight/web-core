@@ -190,7 +190,7 @@ public class Collection extends Resource<Collection> {
         MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).remove( query );
     }
 
-    public static class CollectionDescriptor extends ResourceDescriptor<Collection> {
+    public static class CollectionDescriptor extends NodeDescriptor<Collection> {
 
         @Override
         public String getType() {
