@@ -1,7 +1,11 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.markup.HtmlGenerator;
+import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
 
@@ -11,6 +15,10 @@ import java.util.Date;
  * @author cwolfgang
  */
 public class Comment extends AbstractNode<Comment> {
+
+    private static Logger logger = LogManager.getLogger( Comment.class );
+
+    private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
 
     public static final String TITLE_FIELD = "title";
     public static final String TEXT_FIELD = "text";
@@ -37,17 +45,51 @@ public class Comment extends AbstractNode<Comment> {
 
         instance.getDocument().set( USER_FIELD, user.getIdentifier() );
         instance.getDocument().set( DATE_FIELD, new Date() );
-        instance.getDocument().set( TEXT_FIELD, text );
         instance.getDocument().set( RESOURCE_FIELD, resource.getIdentifier() );
         instance.getDocument().set( PARENT_FIELD, parent.getIdentifier() );
+
+        instance.setText( text );
 
         instance.save();
 
         return instance;
     }
 
+    protected void setTextParserVersion( String version ) {
+        document.set( "textParserVersion", version );
+    }
+
+    /**
+     * Assuming the text field is created
+     */
+    public void setText( String text, TextType type ) {
+        logger.debug( "Setting text for " + this );
+
+        MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
+        if( texts != null && !texts.isNull() ) {
+            texts.set( type.name(), text );
+        } else {
+            throw new IllegalStateException( TEXT_FIELD + " field was not found!" );
+        }
+    }
+
     public Comment setText(String text) {
-        document.set( TEXT_FIELD, text );
+        MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
+        if( texts == null ) {
+            logger.debug( "Creating text field" );
+            texts = new MongoDocument();
+            document.set( TEXT_FIELD, texts );
+        }
+
+        StringBuilder output = textParser.parse( text );
+
+        // Set the version of the parser and generator
+        String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
+        setTextParserVersion( version );
+
+        setText( text, TextType.markUp );
+        setText( output.toString(), TextType.html );
+
         return this;
     }
 

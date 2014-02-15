@@ -171,13 +171,19 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @PostMethod
-    public void doAddComment(Request request, Response response) throws ItemInstantiationException {
+    public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );
+
         String text = request.getValue( "comment", "" );
-        String title = request.getValue( "title", "" );
+        String title = request.getValue( "commentTitle", "" );
 
         if(text.length() > 1) {
             Comment comment = Comment.create( this, request.getUser(), this, title, text );
+            if(comment != null) {
+                update( request.getUser(), false );
+            }
+        } else {
+            throw new IllegalStateException( "No text provided!" );
         }
     }
 

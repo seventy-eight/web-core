@@ -260,6 +260,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public void update( User owner ) {
+        update( owner, true );
+    }
+
+    public void update( User owner, boolean updateRevision ) {
         logger.debug( "Updating " + this );
 
         Date now = new Date();
@@ -270,7 +274,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
 
         document.set( "updated", now );
-        document.set( "revision", getRevision() + 1 );
+        if(updateRevision) {
+            document.set( "revision", getRevision() + 1 );
+        }
     }
 
     public Date getUpdated() {

@@ -41,8 +41,9 @@
             <div style="font-weight: bold; background-color: #978789; width: 100%">Comments</div>
 
             <form id="commentForm">
+                <input type="text" name="commentTitle" style="width: 100%">
                 <textarea style="width: 100%" name="comment"></textarea>
-                <div id="commentSubmit" class="button">Send</div>
+                <a href="#" id="commentSubmit" class="button">Send</a>
             </form>
 
             <script type="text/javascript">
