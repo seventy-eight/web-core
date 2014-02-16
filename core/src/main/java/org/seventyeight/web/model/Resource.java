@@ -1,5 +1,7 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +23,7 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -185,6 +188,29 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         } else {
             throw new IllegalStateException( "No text provided!" );
         }
+    }
+
+    public void doGetComments(Request request, Response response) throws IOException, TemplateException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        int number = request.getInteger( "number", 10 );
+        int offset = request.getInteger( "offset", 0 );
+
+        MongoDBQuery query = new MongoDBQuery().is( "resource", getIdentifier() );
+        MongoDocument sort = new MongoDocument().set( "created", 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( query, offset, number, sort );
+
+        List<String> comments = new ArrayList<String>( docs.size() );
+
+        for(MongoDocument d : docs) {
+            Comment c = new Comment( this, d );
+            comments.add( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+        }
+
+        PrintWriter writer = response.getWriter();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        writer.write( gson.toJson( comments ) );
     }
 
     @Override

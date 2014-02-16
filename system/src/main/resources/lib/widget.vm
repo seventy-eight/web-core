@@ -17,3 +17,32 @@
 
 </script>
 #end
+
+#macro(comments $resource)
+<div class="headerContrast" style="width: 100%; min-width: inherit">Comments</div>
+<div id="commentsContainer" class="widget">
+
+</div>
+
+<script type="text/javascript">
+
+    $(function() {
+        $.ajax({
+            type: "GET",
+            url: "/resource/$resource.getIdentifier()/getComments",
+            //success: function(data, textStatus, jqxhr){$('#commentsContainer').html(data)},
+            success: function(data, textStatus, jqxhr){addComments(data)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    });
+
+    function addComments(data) {
+        var json = eval(data);
+
+        for( i = 0 ; i < json.length ; i++ ) {
+            $(json[i]).hide().insertBefore("#commentsContainer").fadeIn(600);
+        }
+    }
+
+</script>
+#end

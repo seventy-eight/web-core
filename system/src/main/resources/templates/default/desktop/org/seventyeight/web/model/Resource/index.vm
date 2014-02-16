@@ -38,7 +38,8 @@
     <!-- Comments -->
     <tr>
         <td colspan="2" style="width: 100%">
-            <div style="font-weight: bold; background-color: #978789; width: 100%">Comments</div>
+
+            #comments($item)
 
             <form id="commentForm">
                 <input type="text" name="commentTitle" style="width: 100%">
