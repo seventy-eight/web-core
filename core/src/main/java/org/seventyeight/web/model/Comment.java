@@ -59,6 +59,27 @@ public class Comment extends AbstractNode<Comment> {
         document.set( "textParserVersion", version );
     }
 
+    public String getText( TextType type ) {
+        MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
+        if( texts == null || texts.isNull() ) {
+            return "";
+        } else {
+            return texts.get( type.name(), "" );
+        }
+    }
+
+    /**
+     * Get the HTML version of the text
+     */
+    public String getText() {
+        return getText( TextType.html );
+    }
+
+    public String getMarkUp() {
+        return getText( TextType.markUp );
+    }
+
+
     /**
      * Assuming the text field is created
      */

@@ -184,6 +184,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             Comment comment = Comment.create( this, request.getUser(), this, title, text );
             if(comment != null) {
                 update( request.getUser(), false );
+                save();
             }
         } else {
             throw new IllegalStateException( "No text provided!" );

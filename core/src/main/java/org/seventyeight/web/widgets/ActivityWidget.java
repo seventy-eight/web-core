@@ -35,7 +35,7 @@ public class ActivityWidget extends Widget {
     }
 
     public List<MongoDocument> getActivities() {
-        MongoDocument sort = new MongoDocument().set( "updated", 1 );
+        MongoDocument sort = new MongoDocument().set( "updated", -1 );
         MongoDBQuery query = new MongoDBQuery();
         return MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( query, 0, 10, sort );
     }
