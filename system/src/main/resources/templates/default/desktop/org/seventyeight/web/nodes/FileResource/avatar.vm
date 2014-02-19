@@ -1,0 +1,1 @@
+#render($item "avatar" false $item.getFileType().getClass())

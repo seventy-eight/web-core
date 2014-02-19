@@ -229,11 +229,15 @@ public class User extends Resource<User> {
      * Get a {@link User} by Username. Returns null if not found.
      */
     public static User getUserByUsername( Node parent, String username ) {
-        MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
+        if(username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+        MongoDocument userDoc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
 
-        if( docs != null ) {
+        logger.debug( "USER DOOOOOOOOOOOOC: {}", userDoc );
+        if( userDoc != null && !userDoc.isNull() ) {
             try {
-                return Core.getInstance().getItem( parent, docs );
+                return Core.getInstance().getItem( parent, userDoc );
             } catch( ItemInstantiationException e ) {
                 logger.error( e );
                 return null;
@@ -242,6 +246,12 @@ public class User extends Resource<User> {
             logger.debug( "The user " + username + " was not found" );
             return null;
         }
+    }
+
+    @Override
+    public User getOwner() throws ItemInstantiationException {
+        logger.debug( "Return myself, {}", this );
+        return this;
     }
 
     public static class UserDescriptor extends NodeDescriptor<User> {

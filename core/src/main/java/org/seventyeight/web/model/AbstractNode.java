@@ -246,11 +246,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         return document.get( "owner" );
     }
 
-    public Date getCreatedAsDate() {
-        //return new Date( (Long)getField( "created" ) );
-        return DatatypeConverter.parseDateTime( (String) getField( "created" ) ).getTime();
-    }
-
     public String getType() {
         return document.get( "type", "unknown" );
     }
@@ -297,23 +292,20 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public void delete() {
-        document.set( "deleted", new Date().getTime() );
+        document.set( "deleted", new Date() );
     }
 
-
-    public Date getDeletedAsDate() {
-        Long l = getField( "deleted", null );
-        if( l != null ) {
-            return new Date( l );
-        } else {
-            return null;
-        }
-    }
-
-    public Long getDeleted() {
+    public Date getDeleted() {
         return getField( "deleted" );
     }
 
+    public Date getUpdatedOrCreated() {
+        if(getUpdated() != null) {
+            return getUpdated();
+        } else {
+            return getCreated();
+        }
+    }
 
     public Long getViews() {
         return getField( "views", 0l );

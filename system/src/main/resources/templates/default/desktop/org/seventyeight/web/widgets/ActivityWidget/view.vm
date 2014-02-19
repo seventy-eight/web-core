@@ -1,3 +1,29 @@
-#foreach($r in $item.getActivities())
-    <a href="/resource/$r.get("_id")">$r.get("title")</a><br>
+<table style="width: 100%">
+#foreach($r in $item.getActivities($request))
+    <tr>
+        <td>
+            $r.getUser()
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left" class="header">
+            <a href="/resource/$r.getIdentifier()">$r.getTitle()</a><br>
+        </td>
+
+        <td style="width: 15%">
+            $dateUtils.getDateString($r.getDate())
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left; vertical-align: top">
+
+        </td>
+
+        <td style="text-align: center">
+            #render($r.getResource() "avatar" true)
+        </td>
+    </tr>
 #end
+</table>

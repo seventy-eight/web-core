@@ -185,6 +185,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             if(comment != null) {
                 update( request.getUser(), false );
                 save();
+
+                Activity.create( request.getUser(), Activity.DefaultTypes.COMMENTED, this );
             }
         } else {
             throw new IllegalStateException( "No text provided!" );

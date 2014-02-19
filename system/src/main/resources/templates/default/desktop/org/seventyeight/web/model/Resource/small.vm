@@ -1,0 +1,1 @@
+<a href="$item.getUrl()"><img src="$item.getPortrait()" style="width: 50px"></a>

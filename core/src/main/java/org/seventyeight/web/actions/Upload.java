@@ -116,6 +116,7 @@ public class Upload implements Node {
                         fr.setFilename( filename );
                         fr.setFileExtension( uf.extension );
                         fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
+                        fr.setOwner( request.getUser() );
                         fr.save();
                     } catch( ItemInstantiationException e ) {
                         logger.log( Level.ERROR, "Failed to create file resource for {}", item, e );
