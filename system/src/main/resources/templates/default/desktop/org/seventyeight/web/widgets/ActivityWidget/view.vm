@@ -2,19 +2,15 @@
 #foreach($r in $item.getActivities($request))
     <tr>
         <td>
-            $r.getUser()
-        </td>
-    </tr>
-
-    <tr>
-        <td style="text-align: left" class="header">
-            <a href="/resource/$r.getIdentifier()">$r.getTitle()</a><br>
+            #render($r.getUser() "small", false)
+            $r.getUser() $r.getType() on <a href="/resource/$r.getIdentifier()">$r.getResource().getTitle()</a>
         </td>
 
         <td style="width: 15%">
             $dateUtils.getDateString($r.getDate())
         </td>
     </tr>
+
 
     <tr>
         <td style="text-align: left; vertical-align: top">
