@@ -2,8 +2,12 @@
 #foreach($r in $item.getActivities($request))
     <tr>
         <td>
-            #render($r.getUser() "small", false)
-            $r.getUser() $r.getType() on <a href="/resource/$r.getIdentifier()">$r.getResource().getTitle()</a>
+            #render($r.getUser() "small", true)
+            $message.get("greetings")
+        </td>
+
+        <td style="text-align: left">
+            $r.getUser().getDisplayName() $r.getType() on <a href="/resource/$r.getIdentifier()">$r.getResource().getTitle()</a>
         </td>
 
         <td style="width: 15%">
@@ -13,13 +17,11 @@
 
 
     <tr>
-        <td style="text-align: left; vertical-align: top">
 
-        </td>
-
-        <td style="text-align: center">
+        <td style="text-align: center" colspan="3">
             #render($r.getResource() "avatar" true)
         </td>
+
     </tr>
 #end
 </table>

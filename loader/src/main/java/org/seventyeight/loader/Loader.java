@@ -25,6 +25,8 @@ public class Loader extends HashMap<Class<? extends Annotation>, Handler> {
 	}
 	
 	public void load( File path ) throws IOException {
+        logger.debug( "Adding {} to class loader", path );
+
 		/* Add URL to */
 		cl.addUrls( new URL[] { path.toURI().toURL() } );
 		

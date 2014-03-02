@@ -7,6 +7,7 @@ import org.seventyeight.web.extensions.GravatarPortrait;
 import org.seventyeight.web.extensions.TabbedPartitionedResource;
 import org.seventyeight.web.extensions.UploadablePortrait;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
+import org.seventyeight.web.extensions.listernes.ActivityNodeListener;
 import org.seventyeight.web.extensions.search.CollectionFormatter;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
@@ -81,6 +82,8 @@ public class CMSCore extends Core {
         addExtension( new SearchFormatListener() );
         //addExtension( new CollectionFormatter() );
         addExtension( new WidgetListener() );
+
+        addExtension( new ActivityNodeListener() );
 
         //addDescriptor( new  );
 

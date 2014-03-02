@@ -15,6 +15,7 @@ import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -118,6 +119,12 @@ public class Upload implements Node {
                         fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
                         fr.setOwner( request.getUser() );
                         fr.save();
+
+                        logger.debug( "THE OWNER IS {}", fr.getOwner() );
+
+                        // Fire on created node, TODO: Perhaps an onCreatedResource?
+                        NodeListener.fireOnNodeCreated( fr );
+
                     } catch( ItemInstantiationException e ) {
                         logger.log( Level.ERROR, "Failed to create file resource for {}", item, e );
                         // TODO Delete uploaded file?

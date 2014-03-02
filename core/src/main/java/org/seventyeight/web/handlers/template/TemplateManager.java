@@ -12,6 +12,7 @@ import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.velocity.DateUtils;
+import org.seventyeight.web.velocity.Message;
 
 import java.io.File;
 import java.io.IOException;
@@ -199,6 +200,8 @@ public class TemplateManager {
 
         private StopWatch stopWatch;
 
+        private Message message;
+
         public Renderer( Theme theme ) {
             this.theme = theme;
         }
@@ -212,7 +215,6 @@ public class TemplateManager {
 
             //
             platform = request.getPlatform();
-
         }
 
         public Renderer setContext( VelocityContext context ) {
@@ -276,6 +278,9 @@ public class TemplateManager {
 			/* I18N */
             logger.debug( "LANG: {}", locale );
 			context.put( "locale", locale );
+            logger.debug( "MESSAGE: {}", "templates." + templatePathToClass( template.getName() ) );
+            message = new Message( "templates." + templatePathToClass( template.getName() ), locale );
+            context.put( "message", message );
             //context.put( "dateTool", new DateTool() );
             context.put( "dateUtils", new DateUtils() );
 			
@@ -463,6 +468,14 @@ public class TemplateManager {
         return clazz.replace( '.', '/' ).replace( '$', '/' );
     }
 
+    public static String templatePathToClass(String templatePath) {
+        int idx = templatePath.lastIndexOf( "/" );
+        if(idx > -1) {
+            return templatePath.substring( 0, idx ).replace( "/", "." );
+        } else {
+            throw new IllegalArgumentException( templatePath + " is not a path?" );
+        }
+    }
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

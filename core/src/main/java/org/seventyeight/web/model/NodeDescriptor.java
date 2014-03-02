@@ -8,6 +8,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ResourceExtension;
+import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 

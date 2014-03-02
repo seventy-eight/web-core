@@ -847,7 +847,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             logger.debug( "Plugin " + p );
             try {
                 /* Maybe check for classes directory */
-                pluginLoader.load( p, "" );
+                //pluginLoader.load( p, "" );
+                pluginLoader.load( p );
             } catch( Exception e ) {
                 logger.error( "Unable to load " + p, e );
             }

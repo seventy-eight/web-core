@@ -60,6 +60,7 @@ public class Activity implements Documented {
     }
 
     public static Activity create(User user, ActivityType type, Resource<?> resource) {
+        logger.debug( "FIELDS: {}, {}", user, resource );
         MongoDocument document = new MongoDocument().set( "user", user.getIdentifier() ).set( "type", type.getName() ).set( "date", new Date() ).set( "resource", resource.getIdentifier() );
 
         logger.debug( "Saving document, {}", document );
