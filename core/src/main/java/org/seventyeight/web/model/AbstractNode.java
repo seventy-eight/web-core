@@ -238,8 +238,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         document.set( "owner", owner.getIdentifier() );
     }
 
-    public User getOwner() throws ItemInstantiationException {
-        return User.getUserByUsername( this, (String) document.get( "owner" ) );
+    public User getOwner() throws ItemInstantiationException, NotFoundException {
+        //return User.getUserByUsername( this, (String) document.get( "owner" ) );
+        return Core.getInstance().getNodeById( this, (String) document.get( "owner" ) );
     }
 
     public String getOwnerName() {
