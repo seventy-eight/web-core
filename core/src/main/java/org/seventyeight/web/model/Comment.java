@@ -125,10 +125,5 @@ public class Comment extends AbstractNode<Comment> {
         public String getType() {
             return "comment";
         }
-
-        @Override
-        public String getCollectionName() {
-            return COMMENTS_COLLECTION;
-        }
     }
 }

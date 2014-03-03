@@ -147,7 +147,7 @@ public class Topic extends Resource<Topic> {
     }
 
     public static Topic getTopicByTitle( Node parent, String title ) {
-        MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
+        MongoDocument docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
 
         if( docs != null ) {
             try {

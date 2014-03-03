@@ -143,7 +143,7 @@ public class StreamingSearch {
         /* Generate collection name */
         collectionName = "search" + System.currentTimeMillis();
 
-        MongoDBMapReduce mmr = new MongoDBMapReduce( mapFunction, reduceFunction ).setCollection( Core.RESOURCES_COLLECTION_NAME ).setOutputType( MapReduceCommand.OutputType.REDUCE );
+        MongoDBMapReduce mmr = new MongoDBMapReduce( mapFunction, reduceFunction ).setCollection( Core.NODES_COLLECTION_NAME ).setOutputType( MapReduceCommand.OutputType.REDUCE );
         mmr.execute( collectionName );
 
         return this;

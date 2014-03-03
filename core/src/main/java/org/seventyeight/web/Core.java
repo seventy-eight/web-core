@@ -73,7 +73,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     /**
      * The collection name for {@link Node}s
      */
-    public static final String RESOURCES_COLLECTION_NAME = "resources";
+    public static final String NODES_COLLECTION_NAME = "nodes";
 
     /**
      * The collection name for {@link Descriptor}s
@@ -311,7 +311,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     public <T extends Node> T getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Getting node by id: " + id );
-        MongoDocument d = MongoDBCollection.get( RESOURCES_COLLECTION_NAME ).getDocumentById( id );
+        MongoDocument d = MongoDBCollection.get( NODES_COLLECTION_NAME ).getDocumentById( id );
 
         if( d != null && !d.isNull() ) {
             PersistedObject obj = getItem( parent, d );

@@ -27,7 +27,7 @@ public class NodeSearch extends SearchAction {
         if( type != null ) {
             q.is( "type", type );
         }
-        return MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q, 0, limit );
+        return MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q, 0, limit );
     }
 
     /*

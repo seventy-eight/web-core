@@ -35,18 +35,18 @@ public class ActivityWidget extends Widget {
         return "Activity widget";
     }
 
-    public List<Activity> getActivities(Request request) throws NotFoundException, ItemInstantiationException {
-        MongoDocument sort = new MongoDocument().set( "date", -1 );
-        MongoDBQuery query = new MongoDBQuery();
-        List<MongoDocument> docs = MongoDBCollection.get( Activity.ACTIVITY_COLLECTION ).find( query, 0, 10, sort );
-        List<Activity> nodes = new ArrayList<Activity>( docs.size() );
+    public List<AbstractNode<?>> getActivities(Request request) throws NotFoundException, ItemInstantiationException {
+        MongoDocument sort = new MongoDocument().set( "updated", -1 );
+        MongoDBQuery query = new MongoDBQuery().notExists( "parent" );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
+        List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            //AbstractNode<?> n = Core.getInstance().getNodeById( this, d.getIdentifier() );
+            AbstractNode<?> n = Core.getInstance().getNodeById( this, d.getIdentifier() );
             //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
-            //nodes.add( n );
+            nodes.add( n );
 
-            nodes.add( new Activity( d ) );
+            //nodes.add( new Activity( d ) );
         }
 
         return nodes;

@@ -1,25 +1,15 @@
 <table style="width: 100%">
 #foreach($r in $item.getActivities($request))
     <tr>
-        <td>
-            #render($r.getUser() "small", true)
-            $message.get("greetings")
-        </td>
-
-        <td style="text-align: left">
-            $r.getUser().getDisplayName() $r.getType() on <a href="/resource/$r.getIdentifier()">$r.getResource().getTitle()</a>
-        </td>
-
-        <td style="width: 15%">
-            $dateUtils.getDateString($r.getDate())
+        <td style="width: 100%;text-align: center; padding-left: 10px">
+            Updated $dateUtils.getDateString($r.getUpdated()) ago
         </td>
     </tr>
 
 
     <tr>
-
-        <td style="text-align: center" colspan="3">
-            #render($r.getResource() "avatar" true)
+        <td style="text-align: center;" colspan="">
+            #render($r "wide" true)
         </td>
 
     </tr>

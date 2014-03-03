@@ -20,7 +20,7 @@ public class Nodes implements Node {
     private static Logger logger = LogManager.getLogger( Nodes.class );
 
     public List<Node> getNodes( int offset, int number ) {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( new MongoDBQuery(), offset, number );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( new MongoDBQuery(), offset, number );
 
         List<Node> nodes = new ArrayList<Node>( docs.size() );
 

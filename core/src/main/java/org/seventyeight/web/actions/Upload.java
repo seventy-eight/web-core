@@ -19,16 +19,13 @@ import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.ServletUtils;
 import org.seventyeight.web.utilities.UploadHandler;
 
-import javax.servlet.AsyncContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 /**
  * @author cwolfgang
@@ -65,7 +62,7 @@ public class Upload implements Node {
     */
 
     protected static FileResource getFileByUploadId( Node parent, String uploadId ) throws ItemInstantiationException {
-        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
+        MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
 
         if( doc != null ) {
             return new FileResource( parent, doc );

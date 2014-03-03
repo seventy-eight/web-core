@@ -8,7 +8,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ResourceExtension;
-import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -76,7 +75,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     private boolean titleExists( String title, String type ) {
-        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ).is( "type", type ) );
+        MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ).is( "type", type ) );
         return !doc.isNull();
     }
 
@@ -99,6 +98,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         document.set( "class", clazz.getName() );
         Date now = new Date();
         document.set( "created", now );
+        document.set( "updated", now );
         //document.set( "updated", now );
         document.set( "revision", 0 );
 
@@ -107,7 +107,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     @Override
     public String getCollectionName() {
-        return Core.RESOURCES_COLLECTION_NAME;
+        return Core.NODES_COLLECTION_NAME;
     }
 
     public abstract String getType();

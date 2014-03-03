@@ -54,7 +54,7 @@ public class Search implements Node {
             MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( query );
             logger.debug( "QUERY: " + dbquery );
 
-            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
+            List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( dbquery, offset, number );
 
             for( MongoDocument d : docs ) {
                 Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );

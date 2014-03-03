@@ -34,7 +34,7 @@ public class FileResource extends UploadableNode<FileResource> {
 
     @Override
     public String getPortrait() {
-        return null;
+        return getUrl() + "file";
     }
 
     @Override
@@ -85,7 +85,7 @@ public class FileResource extends UploadableNode<FileResource> {
     }
 
     public static FileResource getFileByFilename( Node parent, String filename ) throws ItemInstantiationException {
-        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( new MongoDBQuery().is( "filename", filename ), 0, 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( new MongoDBQuery().is( "filename", filename ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
             return new FileResource( parent, docs.get( 0 ) );

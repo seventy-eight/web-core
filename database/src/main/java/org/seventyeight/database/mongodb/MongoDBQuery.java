@@ -52,6 +52,12 @@ public class MongoDBQuery {
         return this;
     }
 
+    public MongoDBQuery notExists( String field ) {
+        query.put( field ).exists( false );
+
+        return this;
+    }
+
     public MongoDBQuery greaterThan( String field, Object value ) {
         if( value instanceof MongoDocument ) {
             query.put( field ).greaterThan( ((MongoDocument)value).getDBObject() );

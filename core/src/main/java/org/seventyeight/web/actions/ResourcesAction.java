@@ -68,7 +68,7 @@ public class ResourcesAction implements Node {
             MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( query );
             logger.debug( "QUERY: " + dbquery );
 
-            List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
+            List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( dbquery, offset, number );
 
             logger.debug( "DOCS: " + docs );
 
@@ -122,7 +122,7 @@ public class ResourcesAction implements Node {
 
         logger.debug( "Query: {}", query );
 
-        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( query, offset, number );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number );
 
         if( docs.size() > 0 ) {
             PrintWriter writer = response.getWriter();

@@ -64,7 +64,7 @@ public class SearchHelper {
             MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( query );
             logger.debug( "QUERY: " + dbquery );
 
-            documents = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( dbquery, offset, number );
+            documents = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( dbquery, offset, number );
 
             logger.debug( "DOCS: " + documents );
         } else {

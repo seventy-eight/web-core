@@ -19,7 +19,6 @@ import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -379,7 +378,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         if( type != null && !type.isEmpty() ) {
             q.is( "type", type );
         }
-        MongoDocument docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( q );
+        MongoDocument docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( q );
         logger.debug( "DOC IS: " + docs );
 
         if( docs != null ) {
@@ -400,7 +399,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         if( type != null && !type.isEmpty() ) {
             q.is( "type", type );
         }
-        List<MongoDocument> docs = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).find( q );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q );
         logger.debug( "Docs are: " + docs );
 
         List<N> nodes = new ArrayList<N>( docs.size() );
@@ -422,7 +421,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public static <N extends Node> N getNodeById( Node parent, String id ) {
-        MongoDocument doc = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).getDocumentById( id );
+        MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).getDocumentById( id );
         if( doc != null ) {
             try {
                 return (N) Core.getInstance().getItem( parent, doc );

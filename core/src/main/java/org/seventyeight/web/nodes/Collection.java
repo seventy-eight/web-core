@@ -85,7 +85,7 @@ public class Collection extends Resource<Collection> {
 
     public boolean containsId( String id ) {
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() ).is( ELEMENTS_FIELD + "._id", id );
-        return MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).count( query ) > 0;
+        return MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).count( query ) > 0;
     }
 
     public void doFetch( Request request, Response response ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
@@ -130,7 +130,7 @@ public class Collection extends Resource<Collection> {
         MongoDocument sort = new MongoDocument().set( SORT_FIELD, 1 );
         MongoUpdate update = new MongoUpdate().push( "elements", field, sort );
 
-        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( query, update );
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
     }
 
     public void add( Resource<?> resource ) {
@@ -166,7 +166,7 @@ public class Collection extends Resource<Collection> {
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
         MongoUpdate update = new MongoUpdate().pull( ELEMENTS_FIELD, new MongoDocument() );
 
-        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( query, update );
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
     }
 
     public void removeAll() {
@@ -179,7 +179,7 @@ public class Collection extends Resource<Collection> {
         MongoDBQuery query = new MongoDBQuery().elemMatch( "elements", getID ).getId( this.getIdentifier() );
         MongoUpdate update = new MongoUpdate().set( "elements.$.sort", sortValue );
 
-        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).update( query, update );
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
     }
 
     public void remove( Resource<?> resource ) {
@@ -187,7 +187,7 @@ public class Collection extends Resource<Collection> {
         MongoDocument getID = new MongoDocument().set( "id", resource.getIdentifier() );
         MongoDBQuery query = new MongoDBQuery().elemMatch( "elements", getID ).getId( this.getIdentifier() );
 
-        MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).remove( query );
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).remove( query );
     }
 
     public static class CollectionDescriptor extends NodeDescriptor<Collection> {

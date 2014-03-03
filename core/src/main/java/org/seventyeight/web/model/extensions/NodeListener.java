@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.NotFoundException;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public abstract class NodeListener {
     private static Logger logger = LogManager.getLogger(NodeListener.class);
 
-    public void onNodeCreated(AbstractNode<?> node) throws ItemInstantiationException {
+    public void onNodeCreated(AbstractNode<?> node) throws ItemInstantiationException, NotFoundException, Exception {
         // No op
     }
 
@@ -23,7 +24,7 @@ public abstract class NodeListener {
         for(NodeListener listener : getAll()) {
             try {
                 listener.onNodeCreated( node );
-            } catch( ItemInstantiationException e ) {
+            } catch( Exception e ) {
                 logger.log( Level.ERROR, "Unable to fire on created for " + node, e );
             }
         }
