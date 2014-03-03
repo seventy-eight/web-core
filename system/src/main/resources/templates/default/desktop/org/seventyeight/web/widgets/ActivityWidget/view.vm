@@ -3,7 +3,8 @@
 <table style="width: 100%; min-width: inherit; margin-top: 15px" class="widget">
     <tr>
         <td style="width: 100%;text-align: center; padding-left: 10px">
-            Updated $dateUtils.getDateString($r.getUpdated()) ago
+            Updated $dateUtils.getDateString($r.getUpdated()) ago<br>
+            $message.get("Updated", $dateUtils.getDateString($r.getUpdated()))
         </td>
     </tr>
 

@@ -38,6 +38,9 @@
 
 <body>
 
+$message2.get("test")
+$message.get("test")
+
 <div style="width: 100%; float: left">
 
 
