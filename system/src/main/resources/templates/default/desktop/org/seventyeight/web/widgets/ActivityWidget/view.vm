@@ -1,5 +1,6 @@
-<table style="width: 100%">
+
 #foreach($r in $item.getActivities($request))
+<table style="width: 100%; min-width: inherit; margin-top: 15px" class="widget">
     <tr>
         <td style="width: 100%;text-align: center; padding-left: 10px">
             Updated $dateUtils.getDateString($r.getUpdated()) ago
@@ -13,5 +14,5 @@
         </td>
 
     </tr>
-#end
 </table>
+#end
