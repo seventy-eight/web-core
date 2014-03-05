@@ -29,7 +29,11 @@ public class ResourceBundles {
         }
 
         ConcurrentMap<String, ResourceBundle> crmap = map.get( locale );
-        if( !crmap.containsKey( className ) ) {
+        if( crmap.containsKey( className ) ) {
+            logger.debug( "CRMAP: {}", crmap );
+            logger.debug( "Classname: {}, locale: {}", className, locale );
+            return crmap.get( className );
+        } else {
             logger.debug( "Adding {} to resource bundles.", className );
             logger.debug( "CRMAP: {}", crmap );
             logger.debug( "Classname: {}, locale: {}", className, locale );
@@ -37,9 +41,11 @@ public class ResourceBundles {
             if(rb != null) {
                 crmap.put( className, rb );
             }
+
+            return rb;
         }
 
-        return crmap.get( className );
+
     }
 
     public String getString( String message, Class<?> clazz, Locale locale, String ... args ) {
@@ -48,6 +54,8 @@ public class ResourceBundles {
 
     public String getString( String message, String clazz, Locale locale, String ... args ) {
         ResourceBundle bundle = getBundle( clazz, locale );
+
+        logger.debug( "BUNDLE: {}", bundle );
 
         String string;
         if( bundle != null ) {

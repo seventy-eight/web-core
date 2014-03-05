@@ -281,7 +281,7 @@ public class TemplateManager {
             logger.debug( "MESSAGE: {}", "templates." + templatePathToClass( template.getName() ) );
             message = new Message( "templates." + templatePathToClass( template.getName() ), locale );
             context.put( "message", message );
-            context.put( "message2", new Message( "stuff", locale ) );
+            //context.put( "message2", new Message( "stuff", locale ) );
             //context.put( "dateTool", new DateTool() );
             context.put( "dateUtils", new DateUtils() );
 			
