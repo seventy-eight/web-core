@@ -2,9 +2,11 @@ package org.seventyeight.web.utilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.DatabaseException;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.installers.UserInstall;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.SavingException;
 import org.seventyeight.web.nodes.Group;
@@ -23,14 +25,22 @@ public class Installer {
         this.core = Core.getInstance();
     }
 
-    public void install() throws ItemInstantiationException, ClassNotFoundException, SavingException {
+    public void install() throws ItemInstantiationException, ClassNotFoundException, SavingException, DatabaseException {
 
-        Core.getInstance().getDatabase().remove();
+        //Core.getInstance().getDatabase().remove();
+        logger.debug( "-------------------------------------------------------" );
 
         logger.info( "Installing users" );
-        User admin = installUser( "wolle", true );
-        User anonymous = installUser( "anonymous", false );
-        Core.getInstance().setAnonymous( anonymous );
+        UserInstall adminInstall = new UserInstall( "wolle", "wolle@ejbyurterne.dk" );
+        adminInstall.install();
+        adminInstall.after();
+
+        UserInstall aInstall = new UserInstall( "anonymous", "a@ejbyurterne.dk" ).setVisibility( false );
+        //User anonymous = installUser( "anonymous", false );
+        aInstall.install();
+        aInstall.after();
+        Core.getInstance().setAnonymous( aInstall.getValue() );
+        logger.fatal( "------- Setting anonymous, {} - {}", aInstall.getValue(), Core.getInstance().getAnonymousUser() );
 
         logger.info( "Installing groups" );
         //Group admins = installGroup( "Admins", admin );
@@ -41,30 +51,4 @@ public class Installer {
 
     }
 
-    public User installUser( String name, boolean visible ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
-        User user = (User) ((User.UserDescriptor)core.getDescriptor( User.class )).newInstance( name );
-
-        Parameters p = new Parameters();
-        p.put( "username", name );
-
-        if( visible ) {
-            user.setVisible( visible );
-        }
-
-        user.save( p, null );
-
-        return user;
-    }
-
-    public Group installGroup( String name, User owner ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
-        Group group = (Group) ((Group.GroupDescriptor)core.getDescriptor( Group.class )).newInstance( name );
-
-        Parameters p = new Parameters();
-        p.put( "name", name );
-        p.setUser( owner );
-
-        group.save( p, null );
-
-        return group;
-    }
 }

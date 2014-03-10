@@ -196,6 +196,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         core.getTemplateManager().initialize();
 
         try {
+            logger.debug( "--------------INSTALL-----------------------------------------" );
             install();
         } catch( DatabaseException e ) {
             logger.fatal( "Unable to install", e );

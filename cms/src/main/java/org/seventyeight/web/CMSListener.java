@@ -22,13 +22,7 @@ public class CMSListener extends DatabaseContextListener<CMSCore> {
 
     @Override
     protected void install() throws DatabaseException {
-        UserInstall wolle = new UserInstall( "wolle", "wolle@ejbyurterne.dk" );
-        wolle.install();
-        wolle.after();
-
-        UserInstall anonymous = new UserInstall( "anonymous", "anonymous@ejbyurterne.dk" );
-        anonymous.install();
-        anonymous.after();
+        super.install();
     }
 
     @Override

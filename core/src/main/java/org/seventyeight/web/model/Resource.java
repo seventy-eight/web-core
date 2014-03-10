@@ -199,10 +199,10 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         int number = request.getInteger( "number", 10 );
         int offset = request.getInteger( "offset", 0 );
 
-        MongoDBQuery query = new MongoDBQuery().is( "resource", getIdentifier() );
+        MongoDBQuery query = new MongoDBQuery().is( "resource", getIdentifier() ).is( "type", "comment" );
         MongoDocument sort = new MongoDocument().set( "created", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( query, offset, number, sort );
-
+        logger.debug( "DOCS:::" + docs );
         List<String> comments = new ArrayList<String>( docs.size() );
 
         for(MongoDocument d : docs) {

@@ -12,11 +12,17 @@ import org.seventyeight.web.utilities.Parameters;
 public class UserInstall extends NodeInstaller<User> {
 
     protected String email;
+    protected boolean visible = true;
 
     public UserInstall( String title, String email ) {
         super( title );
 
         this.email = email;
+    }
+
+    public UserInstall setVisibility(boolean visibility) {
+        this.visible = visibility;
+        return this;
     }
 
     @Override
