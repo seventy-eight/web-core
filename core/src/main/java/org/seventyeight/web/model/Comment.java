@@ -22,7 +22,7 @@ public class Comment extends AbstractNode<Comment> {
 
     public static final String TITLE_FIELD = "title";
     public static final String TEXT_FIELD = "text";
-    public static final String USER_FIELD = "user";
+    public static final String USER_FIELD = "owner";
     public static final String DATE_FIELD = "date";
     public static final String RESOURCE_FIELD = "resource";
     public static final String PARENT_FIELD = "parent";

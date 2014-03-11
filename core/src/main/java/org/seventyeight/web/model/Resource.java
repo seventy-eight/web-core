@@ -201,8 +201,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
         MongoDBQuery query = new MongoDBQuery().is( "resource", getIdentifier() ).is( "type", "comment" );
         MongoDocument sort = new MongoDocument().set( "created", 1 );
-        List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( query, offset, number, sort );
-        logger.debug( "DOCS:::" + docs );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
+
         List<String> comments = new ArrayList<String>( docs.size() );
 
         for(MongoDocument d : docs) {

@@ -38,7 +38,6 @@
 
     function addComments(data) {
         var json = eval(data);
-        alert("YEEAY " + json);
 
         for( i = 0 ; i < json.length ; i++ ) {
             //$(json[i]).hide().insertBefore("#commentsContainer").fadeIn(600);

@@ -1,3 +1,4 @@
-<div style="border-style: solid; width: auto;margin: 5px">
+<div style="width: auto;padding: 5px;text-align: left">
+<span class="header">$item.getDisplayName()</span>, $item.getOwner().getDisplayName()<br>
 $item.getText()
 </div>
