@@ -26,7 +26,7 @@
             var data = dataList[idx];
             var json = eval(data);
             //$('<tr><td class="boxed" style="width:60%">' + json.document.badge + '</td><td style="width: 40%">' + printCollection(json.document.incollection) + '</td></tr>').appendTo($('#resourceList'));
-            $('<tr><td class="boxed" style="width:60%">' + json.document.badge + '</td><td style="width: 40%; text-align: left">' + printCollection(json.document._id, json.document.incollection) + '</td></tr>').insertBefore($('#resourceList'));
+            $('<tr><td class="boxed" style="width:60%">' + json.document.avatar + '</td><td style="width: 40%; text-align: left">' + printCollection(json.document._id, json.document.incollection) + '</td></tr>').insertBefore($('#resourceList'));
         }
     }
 

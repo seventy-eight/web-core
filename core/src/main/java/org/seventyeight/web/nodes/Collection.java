@@ -127,8 +127,9 @@ public class Collection extends Resource<Collection> {
         logger.debug( "Next element is at " + sortValue );
         MongoDocument field = new MongoDocument().set( "_id", id ).set( SORT_FIELD, sortValue );
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
-        MongoDocument sort = new MongoDocument().set( SORT_FIELD, 1 );
-        MongoUpdate update = new MongoUpdate().push( "elements", field, sort );
+        //MongoDocument sort = new MongoDocument().set( SORT_FIELD, 1 );
+        //MongoUpdate update = new MongoUpdate().push( "elements", field, sort );
+        MongoUpdate update = new MongoUpdate().push( "elements", field );
 
         MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
     }

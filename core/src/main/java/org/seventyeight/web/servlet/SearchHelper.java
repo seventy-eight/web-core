@@ -89,6 +89,10 @@ public class SearchHelper {
                     d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
                 }
 
+                if( renderBadge ) {
+                    d.set( "avatar", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+                }
+
                 if( removeExtensionFields ) {
                     d.removeField( "extensions" );
                 }

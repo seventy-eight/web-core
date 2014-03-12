@@ -44,7 +44,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
      */
     public static boolean exists( String id ) {
         MongoDBQuery query = new MongoDBQuery().getId( id );
-        return MongoDBCollection.get( RESOURCES_COLLECTION_NAME ).count( query ) > 0;
+        return MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).count( query ) > 0;
     }
 
     @PostMethod
