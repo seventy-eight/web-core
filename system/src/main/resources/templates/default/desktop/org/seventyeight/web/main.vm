@@ -38,12 +38,7 @@
 
 <body>
 
-$message2.get("test")
-$message.get("test")
-
 <div style="width: 100%; float: left">
-
-
 
     <div style="text-align: center; width: 1000px; max-width: 1000px; border-style: none; margin : 0 auto">
         <div style="width: 100%;text-align: left; border-bottom-style: solid;height: 50px; margin-bottom: 5px; border-bottom-color: darkblue">

@@ -238,7 +238,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
     }
 
     public User getOwner() throws ItemInstantiationException, NotFoundException {
-        //return User.getUserByUsername( this, (String) document.get( "owner" ) );
         return Core.getInstance().getNodeById( this, (String) document.get( "owner" ) );
     }
 

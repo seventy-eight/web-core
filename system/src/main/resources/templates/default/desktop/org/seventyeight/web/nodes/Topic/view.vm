@@ -1,6 +1,5 @@
-<div style="padding-left: 25px">
+<div style="width:100%;padding-left: 25px;text-align: left">
 
 $item.getText()
 
 </div>
-ddd

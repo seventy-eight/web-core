@@ -20,7 +20,7 @@
 
 #macro(comments $resource)
 <div class="headerContrast" style="width: 100%; min-width: inherit">Comments</div>
-<div id="commentsContainer" class="widget" style="width: 100%">
+<div id="commentsContainer" style="min-width: inherit">
 
 </div>
 
@@ -41,7 +41,7 @@
 
         for( i = 0 ; i < json.length ; i++ ) {
             //$(json[i]).hide().insertBefore("#commentsContainer").fadeIn(600);
-            $("#commentsContainer").append(json[i]);
+            $("#commentsContainer").append(json[i] + "<br>");
         }
     }
 

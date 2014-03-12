@@ -37,11 +37,17 @@
 
     <!-- Comments -->
     <tr>
-        <td colspan="2" style="width: 100%">
+        <td colspan="2" style="width: 100%; text-align: center">
 
             #comments($item)
 
-            <form id="commentForm">
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" style="width: 100%; text-align: center;">
+
+            <form id="commentForm" style="min-width: inherit;">
                 <input type="text" name="commentTitle" style="width: 100%">
                 <textarea style="width: 100%" name="comment"></textarea>
                 <a href="#" id="commentSubmit" class="button">Send</a>
@@ -54,7 +60,7 @@
                         type: "POST",
                         url: "addComment",
                         data: $("#commentForm").serialize(),
-                        success: function(data, textStatus, jqxhr){alert("Yalah")},
+                        success: function(data, textStatus, jqxhr){alert("Yalah");$('#commentForm')[0].reset();},
                         error: function(ajax, text, error) {alert(error)}
                     });
                 });
@@ -62,6 +68,7 @@
 
         </td>
     </tr>
+
 
     <tr>
         <td style="width:100%;height: 100%" colspan="3">
