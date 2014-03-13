@@ -18,8 +18,5 @@ public interface ParameterRequest {
     public Integer getInteger( String key );
     public Integer getInteger( String key, Integer defaultValue );
 
-    public PersistedObject getModelObject();
-    public void setModelObject( PersistedObject modelObject );
-
     public Locale getLocale();
 }

@@ -18,7 +18,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Descriptor<T extends Describable<T>> extends Configurable {
+public abstract class Descriptor<T extends Describable<T>> extends Configurable implements Node {
 	
 	private static Logger logger = LogManager.getLogger( Descriptor.class );
 
@@ -46,9 +46,16 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
     //public abstract T newInstance( String title ) throws ItemInstantiationException;
 
-    public T newInstance( String title, Node parent ) throws ItemInstantiationException {
+    public T newInstance(CoreRequest request) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        return createSubDocument( title, parent );
+
+        // Mandatory
+        String title = request.getValue( "title" );
+        if(title == null) {
+            throw new IllegalArgumentException( "Title must be provided" );
+        }
+
+        return createSubDocument( title, this );
     }
 
     protected T createSubDocument( String title, Node parent ) throws ItemInstantiationException {

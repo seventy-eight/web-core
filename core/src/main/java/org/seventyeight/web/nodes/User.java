@@ -64,8 +64,8 @@ public class User extends Resource<User> {
         protected String username;
         protected String email;
 
-        public UserSaver( AbstractNode modelObject, CoreRequest request ) {
-            super( modelObject, request );
+        public UserSaver( AbstractNode node, CoreRequest request ) {
+            super( node, request );
         }
 
         @Override
@@ -173,7 +173,8 @@ public class User extends Resource<User> {
     public void setPortrait( Request request, JsonObject json ) {
         try {
             UserPortrait.UserPortraitDescriptor descriptor = (UserPortrait.UserPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
-            UserPortrait userPortrait = descriptor.newInstance( "portrait", this );
+            //UserPortrait userPortrait = descriptor.newInstance( "portrait", this );
+            UserPortrait userPortrait = descriptor.newInstance(request);
             userPortrait.save( request, json );
             document.set( "portrait", userPortrait.getDocument() );
             save();
@@ -270,31 +271,14 @@ public class User extends Resource<User> {
 
         /*
         @Override
-        public String getCollectionName() {
-            return USERS;
-        }
-        */
-
-        /*
-        @Override
-        public Node getChild( String name ) throws NotFoundException {
-            User user = getUserByUsername( this, name );
-            if( user != null ) {
-                return user;
-            } else {
-                throw new NotFoundException( "The user " + name + " was not found" );
-            }
-        }
-        */
-
-        @Override
-        public User newInstance( String title ) throws ItemInstantiationException {
-            User u = super.newInstance( title, this );
+        public User newInstance(CoreRequest request) throws ItemInstantiationException {
+            User u = super.newInstance(request);
             u.getDocument().set( "username", title );
             //u.getDocument().set( "_id", title );
 
             return u;
         }
+        */
 
         @Override
         public void save( Request request, Response response ) {

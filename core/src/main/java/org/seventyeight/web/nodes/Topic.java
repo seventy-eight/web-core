@@ -104,6 +104,7 @@ public class Topic extends Resource<Topic> {
         return "/theme/topic.png";
     }
 
+    /*
     public static Topic create( String title, Locale language, String text, User owner ) throws ItemInstantiationException {
         logger.debug( "Creating topic " + title + " for " + owner );
         TopicDescriptor d = Core.getInstance().getDescriptor( Topic.class );
@@ -115,6 +116,7 @@ public class Topic extends Resource<Topic> {
 
         return topic;
     }
+    */
 
     /**
      * Set the text as mark up and html.
