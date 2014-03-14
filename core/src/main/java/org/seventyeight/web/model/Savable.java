@@ -8,5 +8,5 @@ import org.seventyeight.database.mongodb.MongoDocument;
  */
 public interface Savable {
     public MongoDocument getDocument();
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException;
+    public void save();
 }

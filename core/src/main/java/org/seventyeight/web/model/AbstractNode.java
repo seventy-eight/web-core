@@ -45,73 +45,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         this.parent = parent;
     }
 
-
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        logger.debug( "Begin saving" );
-
-        Saver saver = getSaver( request );
-
-        saver.save();
-
-        if( jsonData != null ) {
-            logger.debug( "Handling extensions" );
-            handleJsonConfigurations( request, jsonData );
-        }
-
-        update( request.getUser() );
-
-        /*
-        if( saver.getId() != null ) {
-            logger.debug( "Setting id to " + saver.getId() );
-            document.set( "_id", saver.getId() );
-            //document.set( "_id", getUniqueIdentifier() );
-        }
-        */
-
-        /* Persist */
-        MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
-    }
-
-    public Saver getSaver( CoreRequest request ) {
-        return new Saver( this, request );
-    }
-
-    public static class Saver {
-        protected AbstractNode modelObject;
-        protected CoreRequest request;
-
-        public Saver( AbstractNode modelObject, CoreRequest request ) {
-            this.modelObject = modelObject;
-            this.request = request;
-        }
-
-        public PersistedObject getModelObject() {
-            return modelObject;
-        }
-
-        public void save() throws SavingException {
-
-        }
-
-        protected String set( String key ) throws SavingException {
-            return set( key, key, true );
-        }
-
-        protected String set( String formkey, String dbkey ) throws SavingException {
-            return set( formkey, dbkey, true );
-        }
-
-        protected String set( String formkey, String dbkey, boolean mandatory ) throws SavingException {
-            String v = request.getValue( formkey, null );
-            if( mandatory && ( v == null || v.isEmpty() ) ) {
-                throw new SavingException( "The " + formkey + " must be set" );
-            }
-            modelObject.document.set( dbkey, v );
-
-            return v;
-        }
-    }
-
+    /**
+     * Update the {@link AbstractNode} given the {@link CoreRequest}. <br/>
+     * The method should not save the node, merely update the fields.
+     */
     public abstract void update(CoreRequest request);
 
     public String getIdentifier() {
@@ -230,7 +167,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
      */
     @Override
     public void save() {
-        logger.debug( "BEFORE SAVING: " + document );
+        logger.debug( "Saving {}: {}", this, document );
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
     }
 

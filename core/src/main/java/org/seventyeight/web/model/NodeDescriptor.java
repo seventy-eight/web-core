@@ -37,12 +37,15 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     @Override
     public T newInstance( CoreRequest request ) throws ItemInstantiationException {
-        // Mandatory
         String title = request.getValue( "title" );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
+        return newInstance( request, title );
+    }
+
+    public T newInstance( CoreRequest request, String title ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -91,12 +94,13 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
 
     @PostMethod
-    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, SavingException, ClassNotFoundException {
+    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException {
         String title = request.getValue( "title", null );
         if( title != null ) {
             logger.debug( "Creating " + title );
             T instance = newInstance(request);
-            instance.save( request, null );
+            instance.update( request );
+            instance.save();
             response.sendRedirect( instance.getUrl() );
         } else {
             throw new ItemInstantiationException( "No title provided" );

@@ -31,26 +31,8 @@ public class Group extends Resource<Group> {
     }
 
     @Override
-    public Saver getSaver( CoreRequest request ) {
-        return new GroupSaver( this, request );
-    }
-
-    public class GroupSaver extends Saver {
-
-        public GroupSaver( AbstractNode modelObject, CoreRequest request ) {
-            super( modelObject, request );
-        }
-
-        @Override
-        public void save() throws SavingException {
-            /*
-            String name = request.getValue( "title", null );
-            if( name == null || name.isEmpty() ) {
-                throw new SavingException( "The title must be set" );
-            }
-            document.set( "title", name );
-            */
-        }
+    public void update( CoreRequest request ) {
+      /* Implementation is a no op */
     }
 
     public String getName() {

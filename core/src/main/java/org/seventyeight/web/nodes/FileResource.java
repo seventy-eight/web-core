@@ -70,9 +70,8 @@ public class FileResource extends UploadableNode<FileResource> {
         return strpath;
     }
 
-    public static FileResource create( String filename ) throws ItemInstantiationException {
-        FileDescriptor descriptor = Core.getInstance().getDescriptor( FileResource.class );
-        return descriptor.newInstance( filename );
+    @Override
+    public void update( CoreRequest request ) {
     }
 
     public static FileResource upload( Request request, Response response ) throws Exception {

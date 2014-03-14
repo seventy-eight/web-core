@@ -109,12 +109,13 @@ public class Upload implements Node {
 
                     FileResource fr = null;
                     try {
-                        fr = FileResource.create( filename );
+                        FileResource.FileDescriptor d = Core.getInstance().getDescriptor( FileResource.class );
+                        fr = d.newInstance( request, filename );
+
                         fr.setPath( uf.relativePath );
                         fr.setFilename( filename );
                         fr.setFileExtension( uf.extension );
                         fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
-                        fr.setOwner( request.getUser() );
                         fr.save();
 
                         logger.debug( "THE OWNER IS {}", fr.getOwner() );
