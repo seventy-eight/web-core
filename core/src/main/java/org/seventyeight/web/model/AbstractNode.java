@@ -112,6 +112,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         }
     }
 
+    public abstract void update(CoreRequest request);
+
     public String getIdentifier() {
         return document.get( "_id" ).toString();
     }
