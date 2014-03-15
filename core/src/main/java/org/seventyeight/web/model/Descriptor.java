@@ -3,17 +3,11 @@ package org.seventyeight.web.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.database.orm.SimpleORM;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.CoreException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.Response;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
@@ -40,13 +34,13 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
     /*
 	public T newInstance( String title ) throws ItemInstantiationException {
 		logger.debug( "New instance for " + clazz );
-		return createSubDocument( title, null );
+		return create( title, null );
 	}
 	*/
 
     //public abstract T newInstance( String title ) throws ItemInstantiationException;
 
-    public T newInstance(CoreRequest request) throws ItemInstantiationException {
+    public T newInstance(CoreRequest request, Node parent) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
 
         // Mandatory
@@ -55,11 +49,11 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
-        return createSubDocument( title, this );
+        return create( title, parent );
     }
 
-    protected T createSubDocument( String title, Node parent ) throws ItemInstantiationException {
-        logger.debug( "Creating sub document " + clazz.getName() );
+    protected T create( String title, Node parent ) throws ItemInstantiationException {
+        logger.debug( "Creating document " + clazz.getName() );
 
         MongoDocument document = new MongoDocument();
 

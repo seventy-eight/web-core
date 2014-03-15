@@ -10,6 +10,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ResourceExtension;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonException;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -53,7 +54,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             }
         }
 
-        T node = createNode(this);
+        T node = create( title, this );
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
@@ -65,36 +66,9 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
         return node;
     }
-
-    public T newInstance(ParameterRequest request) throws ItemInstantiationException {
-        // Mandatory
-        String title = request.getValue( "title" );
-        if(title == null) {
-            throw new IllegalArgumentException( "Title must be provided" );
-        }
-
-        if( !allowIdenticalNaming() ) {
-            if( titleExists( title, getType() ) ) {
-                throw new ItemInstantiationException( "Multiple instances of " + getType() + " with the same title is not allowed." );
-            }
-        }
-
-        T node = createNode(this);
-
-        node.getDocument().set( "type", getType() );
-        node.getDocument().set( "title", title );
-
-        node.getDocument().set( "owner", request.getUser().getIdentifier() );
-
-        /* Save */
-        MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
-
-        return node;
-    }
-
 
     @PostMethod
-    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException {
+    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
         String title = request.getValue( "title", null );
         if( title != null ) {
             logger.debug( "Creating " + title );
@@ -119,28 +93,18 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return !doc.isNull();
     }
 
-    protected T createNode( Node parent ) throws ItemInstantiationException {
-        logger.debug( "Creating " + clazz.getName() );
-
-        MongoDBCollection collection = MongoDBCollection.get( getCollectionName() );
-        MongoDocument document = new MongoDocument();
-
-        T instance = null;
-        try {
-            Constructor<T> c = clazz.getConstructor( Node.class, MongoDocument.class );
-            instance = c.newInstance( parent, document );
-        } catch( Exception e ) {
-            throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
-        }
+    @Override
+    protected T create( String title, Node parent ) throws ItemInstantiationException {
+        T instance = super.create( title, parent );
 
         String id = Core.getInstance().getUniqueName( this );
-        document.set( "_id", id );
-        document.set( "class", clazz.getName() );
+        instance.getDocument().set( "_id", id );
+        instance.getDocument().set( "class", clazz.getName() );
         Date now = new Date();
-        document.set( "created", now );
-        document.set( "updated", now );
+        instance.getDocument().set( "created", now );
+        instance.getDocument().set( "updated", now );
         //document.set( "updated", now );
-        document.set( "revision", 0 );
+        instance.getDocument().set( "revision", 0 );
 
         return instance;
     }

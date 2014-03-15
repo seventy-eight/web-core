@@ -45,11 +45,37 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         this.parent = parent;
     }
 
+    public final void update(Request request) throws JsonException, ClassNotFoundException, ItemInstantiationException {
+        logger.debug( "Updating {}", this );
+
+        JsonObject json = JsonUtils.getJsonFromRequest( request );
+        List<JsonObject> objs = JsonUtils.getJsonObjects( json );
+        if( !objs.isEmpty() ) {
+            updateExtensions( request, objs.get( 0 ) );
+        }
+
+        updateNode( request );
+    }
+
     /**
-     * Update the {@link AbstractNode} given the {@link CoreRequest}. <br/>
-     * The method should not save the node, merely update the fields.
+     * Update the {@link AbstractNode}'s extensions given a {@link CoreRequest} and a {@link JsonObject}. <br/>
+     * The method should not save the node, merely update.
      */
-    public abstract void update(CoreRequest request);
+    public final void updateExtensions(CoreRequest request, JsonObject json) throws ItemInstantiationException, ClassNotFoundException {
+        logger.debug( "Updating extensions for {}", this );
+
+        // Extension from json object
+        if( json != null ) {
+            logger.debug( "Handling json extension" );
+            handleJsonConfigurations( request, json );
+        }
+    }
+
+    /**
+     * Update the {@link AbstractNode}'s fields given a {@link CoreRequest}. <br/>
+     * The method should not save the node, merely update.
+     */
+    public abstract void updateNode(CoreRequest request);
 
     public String getIdentifier() {
         return document.get( "_id" ).toString();
