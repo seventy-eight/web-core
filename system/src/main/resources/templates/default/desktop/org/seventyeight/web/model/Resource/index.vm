@@ -53,11 +53,12 @@
             <form id="commentForm" style="min-width: inherit;">
                 <input type="text" name="title" style="width: 100%">
                 <textarea style="width: 100%" name="comment"></textarea>
-                <a href="#" id="commentSubmit" class="button">Send</a>
+                <button id="commentSubmit" class="button">Send</button>
             </form>
 
             <script type="text/javascript">
-                $( "#commentSubmit" ).click(function() {
+                $( "#commentSubmit" ).click(function(event) {
+                    event.preventDefault();
                     $.ajax({
                         type: "POST",
                         url: "addComment",
@@ -68,9 +69,9 @@
                 });
 
                 function addPost(d) {
-                    alert(d);
-                    var json = eval(d);
-                    alert(json);
+                    var json = eval("(" + d + ")");
+                    //$("#commentsContainer").append(json.view + "<br>").children(':last').hide().fadeIn(2000);
+                    $(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
                 }
             </script>
 

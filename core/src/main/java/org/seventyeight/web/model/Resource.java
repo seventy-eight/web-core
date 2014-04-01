@@ -230,7 +230,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
                 PrintWriter writer = response.getWriter();
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
-                writer.write( gson.toJson( comment.getDocument() ) );
+                //writer.write( gson.toJson( comment.getDocument() ) );
+                writer.write( comment.getDocument().toString() );
             }
         } else {
             throw new IllegalStateException( "No text provided!" );
