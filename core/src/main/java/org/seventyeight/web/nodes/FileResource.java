@@ -7,6 +7,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.filetype.DefaultFileType;
 import org.seventyeight.web.extensions.filetype.FileType;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -71,9 +72,10 @@ public class FileResource extends UploadableNode<FileResource> {
     }
 
     @Override
-    public void update( CoreRequest request ) {
+    public void updateNode( CoreRequest request ) {
     }
 
+    /*
     public static FileResource upload( Request request, Response response ) throws Exception {
         List<FileResource> fileResources = ServletUtils.upload2( request, Core.getInstance().getUploadPath(), getUploadDestination( request ), false, 1 );
         if( fileResources.size() > 0 ) {
@@ -82,6 +84,7 @@ public class FileResource extends UploadableNode<FileResource> {
             return null;
         }
     }
+    */
 
     public static FileResource getFileByFilename( Node parent, String filename ) throws ItemInstantiationException {
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( new MongoDBQuery().is( "filename", filename ), 0, 1 );
@@ -104,6 +107,8 @@ public class FileResource extends UploadableNode<FileResource> {
     public static class FileDescriptor extends UploadableDescriptor<FileResource> {
 
         private ConcurrentHashMap<String, FileType> fileTypes = new ConcurrentHashMap<String, FileType>(  );
+
+        private DefaultFileType dft = new DefaultFileType();
 
         @Override
         public String getType() {
@@ -131,7 +136,15 @@ public class FileResource extends UploadableNode<FileResource> {
         }
 
         public FileType getDescriptor( String extension ) {
-            return fileTypes.get( extension );
+            FileType f = fileTypes.get( extension.toLowerCase() );
+            if(f != null) {
+                return f;
+            } else {
+                if(dft == null) {
+                    dft = new DefaultFileType();
+                }
+                return dft;
+            }
         }
 
         /*

@@ -31,7 +31,7 @@ public class Group extends Resource<Group> {
     }
 
     @Override
-    public void update( CoreRequest request ) {
+    public void updateNode( CoreRequest request ) {
       /* Implementation is a no op */
     }
 

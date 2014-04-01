@@ -41,13 +41,14 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
             Parameters p = new Parameters();
             setParameters( p );
             try {
-                T instance = getDescriptor().newInstance( title, Core.getInstance() );
-                instance.save( p, null );
+                T instance = getDescriptor().newInstance( p, Core.getInstance() );
+                instance.update( p );
+                instance.save();
                 node = instance;
             } catch( CoreException e ) {
                 throw new DatabaseException( "Unable to install " + title, e );
             } catch( ClassNotFoundException e ) {
-                throw new DatabaseException( e );
+                throw new DatabaseException( "Unable to install " + title, e );
             }
         }
     }

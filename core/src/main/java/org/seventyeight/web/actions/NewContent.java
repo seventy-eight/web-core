@@ -59,7 +59,7 @@ public class NewContent implements Node {
         try {
             String title = request.getValue( "title", "" );
             logger.debug( "Title is " + title );
-            r = (AbstractNode) descriptor.newInstance( title );
+            r = (AbstractNode) descriptor.newInstance( request, this );
             r.save();
         } catch( ItemInstantiationException e ) {
             throw new IOException( e );

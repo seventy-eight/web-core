@@ -10,15 +10,17 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.extensions.NodeExtension;
-import org.seventyeight.web.extensions.PartitionContributor;
+import org.seventyeight.web.extensions.ViewContributor;
 import org.seventyeight.web.extensions.Partitioned;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.DocumentFinder;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
@@ -29,7 +31,7 @@ import java.util.*;
 /**
  * @author cwolfgang
  */
-public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent, Partitioned, AccessControlled {
+public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> implements CreatableNode, Portraitable, Parent, AccessControlled {
 
     public static final String RESOURCES_COLLECTION_NAME = "resources";
 
@@ -150,43 +152,85 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         return extensions;
     }
 
+    /*
     @Override
-    public List<ContributingPartitionView> getPartitions( Locale locale ) {
-        List<ContributingPartitionView> partitions = new ArrayList<ContributingPartitionView>();
-        partitions.add( new ContributingPartitionView( "view", "Main", this ) );
+    public List<ContributingView> getContributingViews( Locale locale ) {
+        List<ContributingView> partitions = new ArrayList<ContributingView>();
+        partitions.add( new ContributingView( "Main", "view", this ) );
 
         // Get extensions adding to the list
-        for( PartitionContributor pc : Core.getInstance().getExtensions( PartitionContributor.class ) ) {
-            pc.insertContributions( partitions );
+        for( ViewContributor pc : Core.getInstance().getExtensions( ViewContributor.class ) ) {
+            pc.addContributingViews( partitions );
         }
 
         return partitions;
     }
 
     @Override
-    public ContributingPartitionView getActivePartition( Request request ) {
-        String current = request.getValue( "part", "" );
+    public List<ContributingView> getAdministrativePartitions( Request request ) {
+        List<ContributingView> partitions = new ArrayList<ContributingView>();
+
+        try {
+            request.checkPermissions( this, ACL.Permission.ADMIN );
+            partitions.add( new ContributingView( Core.getInstance().getMessages().getString( "Configure", Resource.class, request.getLocale() ), "configure", this ) );
+        } catch( NoAuthorizationException e ) {
+            logger.debug( e.getMessage() );
+        }
+
+        return partitions;
+    }
+    */
+
+    /*
+    @Override
+    public ContributingView getActiveView( Request request ) {
+        //String current = request.getValue( "view", "" );
+        String current = request.getView();
         if( current.length() > 0 ) {
-            return new ContributingPartitionView( current, current, this );
+            return new ContributingView( current, current, this );
         } else {
-            return new ContributingPartitionView( "view", "Main", this );
+            return new ContributingView( "Main", "view", this );
+            //return null;
         }
     }
+    */
 
     @PostMethod
-    public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException {
+    public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException, ClassNotFoundException, JsonException, NotFoundException {
         response.setRenderType( Response.RenderType.NONE );
 
         String text = request.getValue( "comment", "" );
-        String title = request.getValue( "commentTitle", "" );
+        //String title = request.getValue( "commentTitle", "" );
 
         if(text.length() > 1) {
-            Comment comment = Comment.create( this, request.getUser(), this, title, text );
+            Comment.CommentDescriptor descriptor = Core.getInstance().getDescriptor( Comment.class );
+            Comment comment = descriptor.newInstance( request, this );
             if(comment != null) {
-                update( request.getUser(), false );
-                save();
+                comment.update( request );
+                comment.save();
 
-                Activity.create( request.getUser(), Activity.DefaultTypes.COMMENTED, this );
+                /*
+                update( null, false );
+                save();
+                */
+                setUpdatedCall( null );
+
+                int number = request.getInteger( "number", 1 );
+
+                /*
+                DocumentFinder finder = new DocumentFinder( this, request, 1, 0 );
+                finder.getQuery().is("owner", request.getUser().getIdentifier()).is( "type", "comment" );
+                finder.getSort().set( "created", 1 );
+
+                List<MongoDocument> d = finder.findNext();
+                */
+
+                comment.getDocument().set( "view", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
+
+                PrintWriter writer = response.getWriter();
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                writer.write( gson.toJson( comment.getDocument() ) );
             }
         } else {
             throw new IllegalStateException( "No text provided!" );
@@ -214,6 +258,29 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         writer.write( gson.toJson( comments ) );
+    }
+
+    public void doGetLatestComment(Request request, Response response) throws ItemInstantiationException, NotFoundException, TemplateException, IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        //String username = request.getValue( "username", null );
+        int number = request.getInteger( "number", 1 );
+
+        DocumentFinder finder = new DocumentFinder( this, request, 1, 0 );
+        finder.getQuery().is("owner", request.getUser().getIdentifier()).is( "type", "comment" );
+        finder.getSort().set( "created", 1 );
+
+        List<MongoDocument> d = finder.findNext();
+
+        if(!d.isEmpty()) {
+            PrintWriter writer = response.getWriter();
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            writer.write( gson.toJson( d.get( 0 ) ) );
+        } else {
+            response.getWriter().write( "{}" );
+        }
+
     }
 
     @Override

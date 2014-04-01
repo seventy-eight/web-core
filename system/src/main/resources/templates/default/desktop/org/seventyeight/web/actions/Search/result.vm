@@ -33,7 +33,7 @@
             $('#bottom').hide();
         } else {
             for( i = 0 ; i < data.length ; i++ ) {
-                $('<tr><td id="node' + (i+offset) + '" style="text-align:center">' + data[i].document.badge + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
+                $('<tr><td id="node' + (i+offset) + '" style="text-align:center">' + data[i].document.avatar + '</td></tr>').hide().insertBefore("#bottom").fadeIn(600);
                 //getNode(data[i].document._id, "node" + (i+offset));
             }
 

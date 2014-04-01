@@ -1,0 +1,15 @@
+<script type="text/javascript">
+    $(document).keydown(function(e) {
+        if(e.which == 39 && $item.hasNext($context)) {
+            window.location.href = "$item.getNextUrl($context)";
+            e.stopPropagation();
+        }
+
+        if(e.which == 37 && $item.hasPrevious($context)) {
+            window.location.href = "$item.getPreviousUrl($context)";
+            e.stopPropagation();
+        }
+    })
+</script>
+
+Something about the collection-thingy!

@@ -64,7 +64,7 @@ public class JsonUtils {
                 JsonArray jarray = configElement.getAsJsonArray();
 
                 for( JsonElement e : jarray ) {
-                    logger.debug( "e is jsonObject" );
+                    logger.debug( "e is jsonObject, {}, {}", e, e.isJsonObject() );
                     if( e.isJsonObject() ) {
                         objects.add( e.getAsJsonObject() );
                     }

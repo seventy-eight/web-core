@@ -40,13 +40,23 @@ public class GravatarPortrait extends UserPortrait {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
+    public void updateNode( CoreRequest request ) {
         String email = request.getValue( "gravatarEmail", null );
         if( email != null ) {
             document.set( "email", email );
         } else {
-            throw new SavingException( "Gravatar email not set" );
+            throw new IllegalArgumentException( "Gravatar email not set" );
         }
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Gravatar";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;  /* Implementation is a no op */
     }
 
     public static class GravatarPortraitDescriptor extends UserPortraitDescriptor {

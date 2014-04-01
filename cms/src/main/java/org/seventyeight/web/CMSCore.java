@@ -3,6 +3,8 @@ package org.seventyeight.web;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.extensions.DefaultMenuContributor;
 import org.seventyeight.web.extensions.GravatarPortrait;
 import org.seventyeight.web.extensions.TabbedPartitionedResource;
 import org.seventyeight.web.extensions.UploadablePortrait;
@@ -42,7 +44,7 @@ public class CMSCore extends Core {
         //children.put( "get", new Get( this ) );
         children.put( "upload", new Upload() );
         children.put( "configuration", new GlobalConfiguration() );
-        children.put( "search2", new org.seventyeight.web.actions.Search() );
+        children.put( "search", new org.seventyeight.web.actions.Search() );
 
         children.put( "resources", new ResourcesAction() );
 
@@ -73,6 +75,7 @@ public class CMSCore extends Core {
         addDescriptor( new UploadablePortrait.UploadablePortraitDescriptor() );
 
         addExtension( new TabbedPartitionedResource() );
+        addExtension( new CollectionExtension() );
 
         addExtension( new ActivityWidget() );
 
@@ -84,16 +87,18 @@ public class CMSCore extends Core {
         addExtension( new WidgetListener() );
 
         addExtension( new ActivityNodeListener() );
+        addExtension( new DefaultMenuContributor() );
 
         //addDescriptor( new  );
 
         //addExtension( ImageFileType.class, new ImageFileType(  ) );
 
-        mainMenu.add( new Menu.MenuItem( "New Content", "/new/" ) );
-        mainMenu.add( new Menu.MenuItem( "Upload", "/upload/" ) );
-        mainMenu.add( new Menu.MenuItem( "Configure", "/configuration/" ) );
-        mainMenu.add( new Menu.MenuItem( "Search", "/search2/" ) );
-
+        /*
+        mainMenu.addItem( "Main", new Menu.MenuItem( "New Content", "/new/", ACL.Permission.READ ) );
+        mainMenu.addItem( "Main", new Menu.MenuItem( "Upload", "/upload/", ACL.Permission.READ ) );
+        mainMenu.addItem( "Main", new Menu.MenuItem( "Configure", "/configuration/", ACL.Permission.ADMIN ) );
+        mainMenu.addItem( "Main", new Menu.MenuItem( "Search", "/search2/", ACL.Permission.ALL ) );
+        */
 
         /*
         MongoDBQuery query = new MongoDBQuery().is( "username", "anonymous" );

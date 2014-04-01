@@ -170,8 +170,6 @@ public class MongoDocument implements Document {
     public List<MongoDocument> getList( String key ) {
         List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
 
-        //System.out.println( "DA LIST: " + list );
-
         if( list != null ) {
             List<MongoDocument> docs = new ArrayList<MongoDocument>( list.size() );
 

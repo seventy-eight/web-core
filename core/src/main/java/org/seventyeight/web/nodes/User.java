@@ -13,6 +13,7 @@ import org.seventyeight.web.extensions.UserPortrait;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.ExtensionUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -55,54 +56,40 @@ public class User extends Resource<User> {
     }
 
     @Override
-    public Saver getSaver( CoreRequest request ) {
-        return new UserSaver( this, request );
-    }
+    public void updateNode(CoreRequest request) {
 
-    public class UserSaver extends Saver {
-
-        protected String username;
-        protected String email;
-
-        public UserSaver( AbstractNode node, CoreRequest request ) {
-            super( node, request );
+        /* Set username */
+        String username = request.getValue( "username", null );
+        if( username == null || username.isEmpty() ) {
+            throw new IllegalArgumentException( "The username must be set" );
         }
 
-        @Override
-        public void save() throws SavingException {
-
-            /* Set username */
-            username = request.getValue( "username", null );
-            if( username == null || username.isEmpty() ) {
-                throw new SavingException( "The username must be set" );
-            }
-            document.set( "username", username );
-
-            /* Set email */
-            email = request.getValue( "email", null );
-            if( email == null || email.isEmpty() ) {
-                throw new SavingException( "The email must be set" );
-            }
-            document.set( "email", email );
-
-            /* Password */
-            String password1 = request.getValue( "password", null );
-            String password2 = request.getValue( "password_again", null );
-            if( ( password1 == null || password1.isEmpty() ) || ( password2 == null || password2.isEmpty() ) ) {
-                throw new SavingException( "The password cannot be empty" );
-            }
-
-            if( !password1.equals( password2 ) ) {
-                throw new SavingException( "Passwords does not match" );
-            }
-            String hashed = "";
-            try {
-                hashed = Utils.md5( password1 );
-            } catch( NoSuchAlgorithmException e ) {
-                throw new SavingException( "Unable to hash password" );
-            }
-            document.set( "password", hashed );
+        /* Set email */
+        String email = request.getValue( "email", null );
+        if( email == null || email.isEmpty() ) {
+            throw new IllegalArgumentException( "The email must be set" );
         }
+
+        /* Password */
+        String password1 = request.getValue( "password", null );
+        String password2 = request.getValue( "password_again", null );
+        if( ( password1 == null || password1.isEmpty() ) || ( password2 == null || password2.isEmpty() ) ) {
+            throw new IllegalArgumentException( "The password cannot be empty" );
+        }
+
+        if( !password1.equals( password2 ) ) {
+            throw new IllegalArgumentException( "Passwords does not match" );
+        }
+        String hashed = "";
+        try {
+            hashed = Utils.md5( password1 );
+        } catch( NoSuchAlgorithmException e ) {
+            throw new IllegalArgumentException( "Unable to hash password" );
+        }
+
+        document.set( "username", username );
+        document.set( "email", email );
+        document.set( "password", hashed );
     }
 
     public List<Group> getGroups() {
@@ -173,9 +160,10 @@ public class User extends Resource<User> {
     public void setPortrait( Request request, JsonObject json ) {
         try {
             UserPortrait.UserPortraitDescriptor descriptor = (UserPortrait.UserPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
-            //UserPortrait userPortrait = descriptor.newInstance( "portrait", this );
-            UserPortrait userPortrait = descriptor.newInstance(request);
-            userPortrait.save( request, json );
+            UserPortrait userPortrait = descriptor.newInstance(request, this, "portrait");
+            userPortrait.update( request );
+            //ExtensionUtils.retrieveExtensions( request, json, userPortrait );
+            //userPortrait.save( request, json );
             document.set( "portrait", userPortrait.getDocument() );
             save();
         } catch( Exception e ) {
@@ -190,9 +178,11 @@ public class User extends Resource<User> {
 
     @Override
     public String getPortrait() {
+        logger.debug( "Getting portrait for {}", this );
+
         MongoDocument portrait = document.getSubDocument( "portrait", null );
 
-        if( portrait != null ) {
+        if( portrait != null && !portrait.isNull() ) {
             try {
                 UserPortrait up = Core.getInstance().getItem( this, portrait );
                 return up.getUrl();

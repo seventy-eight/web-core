@@ -1,12 +1,16 @@
+#foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlatform(), "preResource.vm" ) )
+    #render( $action "preResource" false "" $item true )
+#end
+
+#menu($item.getMenu())
+
 <table style="width:100%;height: 100%;border-collapse: collapse; max-width: inherit">
 
     <tbody style="max-width: inherit">
 
-
-
-    #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlayform(), "top.vm" ) )
+    #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlatform(), "top.vm" ) )
         <tr>
-            <td colspan="2" class="nothing">
+            <td colspan="2" class="nothing" style=";padding: 0px">
                 #render( $action "top" false "" $item true )
             </td>
         </tr>
@@ -24,9 +28,8 @@
 
     <tr style="max-width: inherit;">
         <td style="width:auto;height: 100%;max-width: inherit;padding: 0px; margin: 0px">
-            #set($part = $item.getActivePartition($request))
-            #set($view = "$part.getViewName()" )
-            #render($part.getPartition() $view)
+            #render($item "view")
+
         </td>
         <td style="text-align: center; vertical-align: top">
             #foreach($action in $item.getActions())
@@ -48,22 +51,27 @@
         <td colspan="2" style="width: 100%; text-align: center;">
 
             <form id="commentForm" style="min-width: inherit;">
-                <input type="text" name="commentTitle" style="width: 100%">
+                <input type="text" name="title" style="width: 100%">
                 <textarea style="width: 100%" name="comment"></textarea>
                 <a href="#" id="commentSubmit" class="button">Send</a>
             </form>
 
             <script type="text/javascript">
                 $( "#commentSubmit" ).click(function() {
-                    alert("dawda");
                     $.ajax({
                         type: "POST",
                         url: "addComment",
                         data: $("#commentForm").serialize(),
-                        success: function(data, textStatus, jqxhr){alert("Yalah");$('#commentForm')[0].reset();},
+                        success: function(data, textStatus, jqxhr){$('#commentForm')[0].reset();addPost(data)},
                         error: function(ajax, text, error) {alert(error)}
                     });
                 });
+
+                function addPost(d) {
+                    alert(d);
+                    var json = eval(d);
+                    alert(json);
+                }
             </script>
 
         </td>

@@ -70,15 +70,9 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
             setExtension( ext );
 
             setFile( new File( getRelativePath(), fname ).toString() );
-            try {
-                JsonObject json = JsonUtils.getJsonFromRequest( request );
-                save( request, json );
-                Core.superSave( this );
-            } catch( JsonException e ) {
-                logger.warn( "Json is null: " + e.getMessage() );
-                save( request, null );
-                Core.superSave( this );
-            }
+            update( request );
+            save();
+            //Core.superSave( this );
 
         } else {
             throw new IllegalStateException( "No file uploaded" );

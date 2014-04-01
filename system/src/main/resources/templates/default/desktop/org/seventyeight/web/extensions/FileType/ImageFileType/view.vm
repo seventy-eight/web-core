@@ -1,1 +1,1 @@
-<img src="file" style="max-width: inherit">
+<img src="$item.getUrl()file" style="max-width: inherit">

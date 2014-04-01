@@ -34,25 +34,15 @@ public class Topic extends Resource<Topic> {
         super( parent, document );
     }
 
+
     @Override
-    public Saver getSaver( CoreRequest request ) {
-        return new TopicSaver( this, request );
-    }
-
-    public class TopicSaver extends Saver {
-
-        public TopicSaver( AbstractNode modelObject, CoreRequest request ) {
-            super( modelObject, request );
+    public void updateNode(CoreRequest request) {
+        String text = request.getValue( "text", null );
+        if( text == null || text.isEmpty() ) {
+            throw new IllegalArgumentException( "No text is provided" );
         }
 
-        @Override
-        public void save() throws SavingException {
-            String text = request.getValue( "text", null );
-            if( text == null || text.isEmpty() ) {
-                throw new SavingException( "No text is provided" );
-            }
-            setText( text );
-        }
+        setText( text );
     }
 
     public String getText( TextType type ) {

@@ -54,7 +54,9 @@ public class CoreTest {
         Parameters p = new Parameters();
         p.put( "username", username );
 
-        user.save( p, null );
+        user.updateNode( p );
+
+        user.save();
 
         return user;
     }

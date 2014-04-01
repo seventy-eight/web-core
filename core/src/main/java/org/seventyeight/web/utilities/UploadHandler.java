@@ -12,6 +12,7 @@ import org.seventyeight.structure.Tuple;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.nodes.FileResource;
+import org.seventyeight.web.servlet.Request;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class UploadHandler implements Runnable {
     @Override
     public void run() {
         logger.debug( "STARTING" );
-        HttpServletRequest request = (HttpServletRequest) context.getRequest();
+        Request request = (Request) context.getRequest();
         List<Object> items = null;
         try {
             items = uploader.getItems( request );
@@ -58,10 +59,12 @@ public class UploadHandler implements Runnable {
                     UploadFile uf = filenamer.getUploadDestination( pathPrefix, filename );
 
                     uploader.write( item, uf.file );
+                    FileResource.FileDescriptor descriptor = Core.getInstance().getDescriptor( FileResource.class );
 
                     FileResource fr = null;
                     try {
-                        fr = FileResource.create( filename );
+                        //fr = FileResource.create( filename );
+                        fr = descriptor.newInstance( request, Core.getInstance() );
                         fr.setPath( uf.relativePath );
                         fr.setFilename( filename );
                         fr.setFileExtension( uf.extension );

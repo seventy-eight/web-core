@@ -9,10 +9,10 @@ import org.seventyeight.web.UserAgent;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
+import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.nodes.User;
 
 import javax.servlet.ServletContext;
@@ -36,7 +36,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private Theme theme = null;
     private VelocityContext context;
 
-    private PersistedObject modelObject;
+    //private PersistedNode modelObject;
 
     private String template = "org/seventyeight/web/main.vm";
 
@@ -46,6 +46,8 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private boolean authenticated;
 
     private String[] requestParts;
+
+    private String view;
 
     private Locale locale = new Locale( "da", "DK" );
 
@@ -119,16 +121,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         this.requestParts = parts;
     }
 
-    @Override
-    public void setModelObject( PersistedObject modelObject ) {
-        this.modelObject = modelObject;
-    }
-
-    @Override
-    public PersistedObject getModelObject() {
-        return modelObject;
-    }
-
     public void setTransactional( boolean t ) {
         this.transactional = t;
     }
@@ -168,6 +160,14 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public void setTemplate( String template ) {
         this.template = template;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView( String view ) {
+        this.view = view;
     }
 
     public void setTheme( Theme theme ) {

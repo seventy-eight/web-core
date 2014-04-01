@@ -1,16 +1,18 @@
-#set($partList = $context.getPartitions($request.getLocale()))
-#if(!$parts.isEmpty())
+#set($partList = $context.getContributingViews($request.getLocale()))
+#if(!$partList.isEmpty())
     <ul class="navlist">
-        #foreach( $part in $partList )
-            #set($view = $part.getViewName())
-            #set($title = $part.title)
-            #if( $view.equals( $context.getActivePartition($request).getViewName()) )
-                <li><a href="?part=$view" class="active">$title</a></li>
+    #foreach( $part in $partList )
+        #if($part)
+            #set($view = $part.getView())
+            #set($title = $part.getTitle())
+            #if( $view.equals( $context.getActivePartition($request).getView()) )
+                <li><a href="$context.getUrl()?part=$view" class="active">$title</a></li>
             #else
-                <li><a href="?part=$view">$title</a></li>
+                <li><a href="$context.getUrl()?part=$view">$title</a></li>
             #end
-
+        #else
+            <li><a href="$context.getUrl()?part=view">Main</a></li>
         #end
-
+    #end
     </ul>
 #end

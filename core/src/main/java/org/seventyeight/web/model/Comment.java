@@ -3,13 +3,18 @@ package org.seventyeight.web.model;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.utilities.DocumentFinder;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author cwolfgang
@@ -34,25 +39,9 @@ public class Comment extends AbstractNode<Comment> {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        /* Implementation is a no op */
-    }
-
-    public static Comment create(Resource<?> resource, User user, AbstractNode<?> parent, String title, String text) throws ItemInstantiationException {
-
-        CommentDescriptor cd = Core.getInstance().getDescriptor( Comment.class );
-        Comment instance = cd.newInstance( title, resource );
-
-        instance.getDocument().set( USER_FIELD, user.getIdentifier() );
-        instance.getDocument().set( DATE_FIELD, new Date() );
-        instance.getDocument().set( RESOURCE_FIELD, resource.getIdentifier() );
-        instance.getDocument().set( PARENT_FIELD, parent.getIdentifier() );
-
-        instance.setText( text );
-
-        instance.save();
-
-        return instance;
+    public void updateNode( CoreRequest request ) {
+        String text = request.getValue( "comment", "" );
+        setText( text );
     }
 
     protected void setTextParserVersion( String version ) {
@@ -114,6 +103,23 @@ public class Comment extends AbstractNode<Comment> {
         return this;
     }
 
+    /*
+    public static List<Comment> getCommentsByUser(User user, int offset, int number, Node parent) {
+        MongoDBQuery query = new MongoDBQuery().is( "type", "comment" ).is( "owner", user.getIdentifier() );
+        MongoDocument sort = new MongoDocument().set( "created", 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
+
+        List<Comment> comments = new ArrayList<Comment>( docs.size() );
+
+        for(MongoDocument d : docs) {
+            Comment c = new Comment(parent, d);
+            comments.add( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+        }
+
+        return comments;
+    }
+    */
+
     public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
         @Override
@@ -124,6 +130,18 @@ public class Comment extends AbstractNode<Comment> {
         @Override
         public String getType() {
             return "comment";
+        }
+
+        @Override
+        public Comment newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
+            Comment comment = super.newInstance( request, parent );
+
+            if(parent instanceof PersistedNode) {
+                comment.getDocument().set( RESOURCE_FIELD, ((AbstractNode)parent).getIdentifier() );
+                comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
+            }
+
+            return comment;
         }
     }
 }

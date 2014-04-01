@@ -7,6 +7,8 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.extensions.ResourceExtension;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -21,7 +23,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descriptor<T> implements Getable<T> {
+public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descriptor<T> implements Node, Getable<T> {
 
     private static Logger logger = LogManager.getLogger( NodeDescriptor.class );
 
@@ -37,16 +39,16 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     */
 
     @Override
-    public T newInstance( CoreRequest request ) throws ItemInstantiationException {
+    public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
         String title = request.getValue( "title" );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
-        return newInstance( request, title );
+        return newInstance( request, parent, title );
     }
 
-    public T newInstance( CoreRequest request, String title ) throws ItemInstantiationException {
+    public T newInstance( CoreRequest request, Node parent, String title ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -54,12 +56,15 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             }
         }
 
-        T node = create( title, this );
+        T node = create( title, parent );
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
 
-        node.getDocument().set( "owner", request.getUser().getIdentifier() );
+        // TODO possibly have a system user account
+        if(request.getUser() != null) {
+            node.getDocument().set( "owner", request.getUser().getIdentifier() );
+        }
 
         /* Save */
         MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
@@ -72,7 +77,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         String title = request.getValue( "title", null );
         if( title != null ) {
             logger.debug( "Creating " + title );
-            T instance = newInstance(request);
+            T instance = newInstance(request, this);
             instance.update( request );
             instance.save();
             response.sendRedirect( instance.getUrl() );

@@ -1,0 +1,14 @@
+<script type="text/javascript">
+    $(document).keydown(function(e) {
+        if(e.which == 39 && $item.hasNext()) {
+            window.location.href = "$item.getNextUrl()";
+            e.stopPropagation();
+        }
+
+        if(e.which == 37 && $item.hasPrevious()) {
+            window.location.href = "$item.getPreviousUrl()";
+            e.stopPropagation();
+        }
+    })
+</script>
+#render($item.getNode() "index" true)

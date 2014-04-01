@@ -110,7 +110,7 @@ public class Upload implements Node {
                     FileResource fr = null;
                     try {
                         FileResource.FileDescriptor d = Core.getInstance().getDescriptor( FileResource.class );
-                        fr = d.newInstance( request, filename );
+                        fr = d.newInstance( request, Core.getInstance(), filename );
 
                         fr.setPath( uf.relativePath );
                         fr.setFilename( filename );

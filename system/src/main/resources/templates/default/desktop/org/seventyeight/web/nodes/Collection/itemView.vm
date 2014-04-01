@@ -1,0 +1,13 @@
+
+<div id="dialog" title="Select profile portrait" style="width:500px">
+    Hej med dig
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $( "#dialog" ).dialog({ autoOpen: false, width: 700 });
+        $( "#opener" ).click(function() {
+            $( "#dialog" ).dialog( "open" );
+        });
+    });
+</script>

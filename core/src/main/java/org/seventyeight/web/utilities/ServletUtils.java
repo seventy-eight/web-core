@@ -118,7 +118,7 @@ public class ServletUtils {
         return uploadedFiles;
     }
 
-
+    /*
     public static List<FileResource> upload2( Request request, File destinationPath, String relativePath, boolean useFieldName, int limit ) throws Exception {
         FileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload( factory );
@@ -147,6 +147,7 @@ public class ServletUtils {
 
         return uploadedFiles;
     }
+    */
 
     public static String replace( String filename, String replace ) {
         return filename.replaceAll( "^.*?(\\..*)?$", replace + "$1" );

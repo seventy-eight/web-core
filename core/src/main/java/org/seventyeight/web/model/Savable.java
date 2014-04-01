@@ -1,6 +1,5 @@
 package org.seventyeight.web.model;
 
-import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
 
 /**
@@ -8,5 +7,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
  */
 public interface Savable {
     public MongoDocument getDocument();
+    public void updateNode(CoreRequest request);
     public void save();
 }

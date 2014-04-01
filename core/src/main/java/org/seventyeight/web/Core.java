@@ -283,7 +283,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
      * @return
      * @throws ItemInstantiationException
      */
-    public <T extends PersistedObject> T getItem( Node parent, MongoDocument document ) throws ItemInstantiationException {
+    public <T extends PersistedNode> T getItem( Node parent, MongoDocument document ) throws ItemInstantiationException {
         String clazz = null;
         try {
             clazz = document.get( "class" );
@@ -300,7 +300,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         //logger.debug( "PARENT: " + parent );
 
         try {
-            Class<PersistedObject> eclass = (Class<PersistedObject>) Class.forName(clazz, true, classLoader );
+            Class<PersistedNode> eclass = (Class<PersistedNode>) Class.forName(clazz, true, classLoader );
             Constructor<?> c = eclass.getConstructor( Node.class, MongoDocument.class );
             return (T) c.newInstance( parent, document );
         } catch( Exception e ) {
@@ -314,7 +314,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         MongoDocument d = MongoDBCollection.get( NODES_COLLECTION_NAME ).getDocumentById( id );
 
         if( d != null && !d.isNull() ) {
-            PersistedObject obj = getItem( parent, d );
+            PersistedNode obj = getItem( parent, d );
 
             return (T) obj;
         } else {
@@ -382,6 +382,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
                 try {
                     if( tokens.isEmpty() && exception == null ) {
                         logger.debug( "Executing last node" );
+                        request.setView( "index" );
                         ExecuteUtils.execute( request, response, node, "index" );
                         return;
                     }
@@ -408,12 +409,15 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         switch( tokens.left() ) {
                 /* If the last token on the path is a valid node */
             case 0:
+                request.setView( "index" );
                 ExecuteUtils.execute( request, response, obj, "index" );
                 break;
 
                 /* Typically, this happens if a node has an action, either as a view or doSomething */
             case 1:
-                ExecuteUtils.execute( request, response, obj, tokens.next() );
+                String view = tokens.next();
+                request.setView( view );
+                ExecuteUtils.execute( request, response, obj, view );
                 break;
 
                 /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
@@ -462,9 +466,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
                 logger.debug( "Found descriptor {} for {}", d, token );
                 if( d != null ) {
                     if( d.isApplicable( current ) ) {
-                        if( current instanceof PersistedObject ) {
+                        if( current instanceof PersistedNode ) {
                             //logger.debug( "CURRENT IS " + current );
-                            next = (Node) d.getExtension( (PersistedObject) current );
+                            next = (Node) d.getExtension( (PersistedNode) current );
                             logger.debug( "Found action is {}", next );
                             //logger.debug( "TEMP PARENT: " + next.getParent() );
                         } else if( current instanceof Descriptor ) {
@@ -580,6 +584,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             }
             extensionDescriptors.get( ed.getTypeName() ).put( ed.getExtensionName(), ed );
         }
+
+        addExtension( descriptor );
 
         /**/
         //descriptor.configureIndex( db );

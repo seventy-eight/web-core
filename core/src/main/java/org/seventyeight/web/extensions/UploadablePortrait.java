@@ -22,8 +22,18 @@ public class UploadablePortrait extends UserPortrait {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
+    public void updateNode( CoreRequest request ) {
       /* Implementation is a no op */
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Uploadable portrait";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;  /* Implementation is a no op */
     }
 
     public static class UploadablePortraitDescriptor extends UserPortraitDescriptor {

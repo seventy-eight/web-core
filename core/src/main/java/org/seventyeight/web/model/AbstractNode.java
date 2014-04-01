@@ -12,17 +12,19 @@ import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.Ownable;
+import org.seventyeight.web.extensions.MenuContributor;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.ExtensionUtils;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -30,7 +32,7 @@ import java.util.List;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedObject implements TopLevelNode, Describable<T>, Ownable {
+public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedNode implements TopLevelNode, Describable<T>, Ownable {
 
     private static Logger logger = LogManager.getLogger( AbstractNode.class );
 
@@ -45,94 +47,30 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         this.parent = parent;
     }
 
-    public final void update(Request request) throws JsonException, ClassNotFoundException, ItemInstantiationException {
-        logger.debug( "Updating {}", this );
-
-        JsonObject json = JsonUtils.getJsonFromRequest( request );
-        List<JsonObject> objs = JsonUtils.getJsonObjects( json );
-        if( !objs.isEmpty() ) {
-            updateExtensions( request, objs.get( 0 ) );
-        }
-
-        updateNode( request );
-    }
-
-    /**
-     * Update the {@link AbstractNode}'s extensions given a {@link CoreRequest} and a {@link JsonObject}. <br/>
-     * The method should not save the node, merely update.
-     */
-    public final void updateExtensions(CoreRequest request, JsonObject json) throws ItemInstantiationException, ClassNotFoundException {
-        logger.debug( "Updating extensions for {}", this );
-
-        // Extension from json object
-        if( json != null ) {
-            logger.debug( "Handling json extension" );
-            handleJsonConfigurations( request, json );
-        }
-    }
-
-    /**
-     * Update the {@link AbstractNode}'s fields given a {@link CoreRequest}. <br/>
-     * The method should not save the node, merely update.
-     */
-    public abstract void updateNode(CoreRequest request);
-
     public String getIdentifier() {
         return document.get( "_id" ).toString();
     }
 
     public String getUrl() {
-        //return "/get/" + getIdentifier();
         return "/resource/" + getIdentifier() + "/";
     }
 
-    public void handleJsonConfigurations( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException {
-        logger.debug( "Handling extension class Json data" );
-
-        List<JsonObject> extensionsObjects = JsonUtils.getJsonObjects( jsonData, JsonUtils.JsonType.extensionClass );
-        logger.debug( "I got " + extensionsObjects.size() + " extension types" );
-
-        for( JsonObject obj : extensionsObjects ) {
-            handleJsonExtensionClass( request, obj );
-        }
+    public String getConfigUrl() {
+        return getUrl() + "configure";
     }
 
-    public void handleJsonExtensionClass( CoreRequest request, JsonObject extensionConfiguration ) throws ClassNotFoundException, ItemInstantiationException {
-        String extensionClassName = extensionConfiguration.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
-        logger.debug( "Extension class name is " + extensionClassName );
+    /*
+    public void applyExtension(Class<? extends Extension> extensionClass) {
+        logger.debug( "Layoutable: " + Core.getInstance().getExtensions( extensionClass ) );
 
-        /* Get Json configuration objects */
-        List<JsonObject> configs = JsonUtils.getJsonObjects( extensionConfiguration );
-        logger.debug( "I got " + configs.size() + " configurations" );
-
-        document.setList( EXTENSIONS );
-        for( JsonObject c : configs ) {
-            Describable d = handleJsonConfiguration( request, c );
-            document.addToList( EXTENSIONS, d.getDocument() );
+        for( Extension d : Core.getInstance().getExtensions( extensionClass ) ) {
+            if( d.isApplicable( this ) &&
+                Core.getInstance().getTemplateManager().templateForClassExists( theme, platform, d.getClass(), template ) ) {
+                ds.add( d );
+            }
         }
     }
-
-
-    public Describable handleJsonConfiguration( CoreRequest request, JsonObject jsonData ) throws ItemInstantiationException, ClassNotFoundException {
-        /* Get Json configuration object class name */
-        String cls = jsonData.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
-        logger.debug( "Configuration class is " + cls );
-
-        Class<?> clazz = Class.forName( cls );
-        Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
-        logger.debug( "Descriptor is " + d );
-
-        Describable e = d.newInstance( "", this );
-
-        /* Remove data!? */
-        if( d.doRemoveDataItemOnConfigure() ) {
-            logger.debug( "This should remove the data attached to this modelObject" );
-        }
-
-        return e;
-
-    }
-
+    */
 
     /**
      * Return a {@link List} of {@link org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor}'s that are applicable and have a certain template.
@@ -227,7 +165,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
 
         Date now = new Date();
 
-        if( document.get( "owner", null ) == null ) {
+        // Only set owner if not previously set and argument is not null.
+        if( owner != null && document.get( "owner", null ) == null ) {
             logger.debug( "Owner was set to " + owner );
             setOwner( owner );
         }
@@ -236,6 +175,18 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         if(updateRevision) {
             document.set( "revision", getRevision() + 1 );
         }
+    }
+
+    protected void setUpdatedCall(Date date) {
+        MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
+        MongoUpdate update;
+        if(date == null) {
+            update = new MongoUpdate().set( "updated", new Date() );
+        } else {
+            update = new MongoUpdate().set( "updated", date );
+        }
+
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
     }
 
     public Date getUpdated() {
@@ -299,7 +250,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         logger.debug( "Configuration submit" );
 
         JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
-        save( request, jsonData );
+        update( request );
+        save();
         response.sendRedirect( getUrl() );
     }
 
@@ -498,6 +450,42 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedO
         return doc;
     }
 
+    public void doGetView(Request request, Response response) throws TemplateException, IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        String template = request.getValue( "view", "simpleIndex" );
+
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, template + ".vm" ) );
+    }
+
+
+    /*
+    public Menu getContributingViews( Request request ) {
+        Menu menu = new Menu();
+
+        //partitions.add( new ContributingView( "Main", "view", this ) );
+
+        // Get extensions adding to the list
+        for( MenuContributor pc : Core.getInstance().getExtensions( MenuContributor.class ) ) {
+            pc.addContributingMenu( menu );
+        }
+
+        return menu;
+    }
+    */
+
+    public Menu getMenu() {
+        logger.debug( "Getting menu for {}", this );
+        Menu menu = new Menu();
+
+        for( MenuContributor pc : Core.getInstance().getExtensions( MenuContributor.class ) ) {
+            logger.debug( "Menu contributor {}", pc );
+            pc.addContributingMenu( this, menu );
+            logger.debug( "ENDING::::.:.::::.:" );
+        }
+
+        return menu;
+    }
 
     @Override
     public String getDisplayName() {

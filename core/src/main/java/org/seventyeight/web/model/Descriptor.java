@@ -12,7 +12,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Descriptor<T extends Describable<T>> extends Configurable implements Node {
+public abstract class Descriptor<T extends Describable<T>> extends Configurable {
 	
 	private static Logger logger = LogManager.getLogger( Descriptor.class );
 
@@ -41,14 +41,23 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
     //public abstract T newInstance( String title ) throws ItemInstantiationException;
 
     public T newInstance(CoreRequest request, Node parent) throws ItemInstantiationException {
-        logger.debug( "New instance for " + clazz );
-
         // Mandatory
         String title = request.getValue( "title" );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
+        return newInstance( request, parent, title );
+    }
+
+    public T newInstance(CoreRequest request, Node parent, String title) throws ItemInstantiationException {
+        logger.debug( "New instance for " + clazz );
+
+        return create( title, parent );
+    }
+
+    protected T newInstance(String title, Node parent) throws ItemInstantiationException {
+        logger.debug( "New instance for " + clazz );
         return create( title, parent );
     }
 

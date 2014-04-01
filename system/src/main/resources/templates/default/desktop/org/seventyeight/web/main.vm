@@ -17,7 +17,7 @@
     <script src="/static/javascript/jquery/upload/jquery.fileupload-ui.js"></script>
 
     <!-- <script language="javascript" type="text/javascript" src="/static/javascript/ajaxupload.js"></script> -->
-    <script language="javascript" type="text/javascript" src="/static/javascript/dropzone.js"></script>
+    <!-- <script language="javascript" type="text/javascript" src="/static/javascript/dropzone.js"></script> -->
 
     <script language="javascript" type="text/javascript" src="/static/javascript/utils.js"></script>
 
@@ -49,6 +49,8 @@
             #if($request.isAuthenticated())
                 <a href="$request.getUser().getUrl()" class="button">Profile</a>
                 <a href="/upload/" class="button">Upload file</a>
+                <a href="/topic/new" class="button">Add topic</a>
+                <a href="/collection/new" class="button">Add collection</a>
                 <a href="/search" class="button">Search</a>
             #else
                 <a href="" class="button">Sign up</a>

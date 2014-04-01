@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class AbstractExtension<T extends AbstractExtension<T>> extends PersistedObject implements Describable<T> {
+public abstract class AbstractExtension<T extends AbstractExtension<T>> extends PersistedNode implements Describable<T> {
 
     private static Logger logger = LogManager.getLogger( AbstractExtension.class );
 
@@ -38,6 +38,15 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         }
     }
     */
+
+    @Override
+    public void save() {
+        if(parent instanceof Savable) {
+            ( (Savable) parent ).save();
+        } else {
+            throw new IllegalStateException( "Parent is not savable!!!!" );
+        }
+    }
 
     public List<Action> getActions( AbstractNode<?> node ) {
         return Collections.EMPTY_LIST;

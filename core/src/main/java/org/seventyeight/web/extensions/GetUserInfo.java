@@ -31,7 +31,7 @@ public class GetUserInfo extends Action {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void updateNode( CoreRequest request ) {
+        /* Implementation is a no op */
     }
 }

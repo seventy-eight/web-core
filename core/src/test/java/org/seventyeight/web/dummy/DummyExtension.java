@@ -18,8 +18,18 @@ public class DummyExtension extends NodeExtension {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
+    public void updateNode( CoreRequest request ) {
         String name = request.getValue( "name", "The Name" );
         document.set( "name", name );
+    }
+
+    @Override
+    public String getDisplayName() {
+        return null;  /* Implementation is a no op */
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;  /* Implementation is a no op */
     }
 }

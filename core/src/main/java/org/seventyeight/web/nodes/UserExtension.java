@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class UserExtension extends NodeExtension<UserExtension> {
+public abstract class UserExtension extends NodeExtension<UserExtension> {
     public UserExtension( Node parent, MongoDocument document ) {
         super( parent, document );
     }
@@ -25,7 +25,7 @@ public class UserExtension extends NodeExtension<UserExtension> {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public String getMainTemplate() {
+        return null;  /* Implementation is a no op */
     }
 }

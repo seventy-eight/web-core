@@ -3,9 +3,7 @@ package org.seventyeight.web.authentication;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.model.AbstractNode;
-import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 
 import java.util.Date;
@@ -101,6 +99,11 @@ public class Session extends AbstractNode<Session> {
         return document.get( "created" );
     }
 
+    @Override
+    public void updateNode( CoreRequest request ) {
+      /* Implementation is a no op */
+    }
+
     public static class SessionsDescriptor extends Descriptor<Session> {
 
         @Override
@@ -111,6 +114,10 @@ public class Session extends AbstractNode<Session> {
         @Override
         public String getCollectionName() {
             return SessionManager.SESSIONS_COLLECTION_NAME;
+        }
+
+        public Session newInstance(String title, Node parent) throws ItemInstantiationException {
+            return super.create( title, parent );
         }
     }
 }

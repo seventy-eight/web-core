@@ -3,11 +3,12 @@
 </div>
 
 
-<script type="text/javascript">
+<div id="showDialog" title="SNADE" style="width:500px;min-height: 500px">
+    Hej med dig
+</div>
 
-    $(function(){
-        getMoreResources();
-    });
+
+<script type="text/javascript">
 
     function getMoreResources(offset, number) {
         $.ajax({
@@ -22,7 +23,30 @@
     function addResources(dataList) {
         var json = eval(dataList);
         for(e in json) {
-            $('<div style="float:left;padding: 2px">' + json[e].document.avatar + '</div>').insertBefore($('#resourceList'));
+            $('<div style="float:left;padding: 2px"><a href="get/' + json[e].document.counter + '">' + json[e].document.avatar + '</a></div>').insertBefore($('#resourceList'));
         }
     }
+
+    function show(id) {
+        $( "#showDialog" ).dialog( "open" );
+        getResourceView(id);
+    }
+
+    function getResourceView(id) {
+        $.ajax({
+            url: "/resource/" + id + "/getView",
+            type: "GET",
+            success: function(data, textStatus, jqxhr){$( "#showDialog").html(data)},
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+    $(function() {
+        getMoreResources();
+        $( "#showDialog" ).dialog({ autoOpen: false, width: 700 });
+        $( ".showItem" ).click(function() {
+            alert("YEAH");
+            $( "#showDialog" ).dialog( "open" );
+        });
+    });
 </script>

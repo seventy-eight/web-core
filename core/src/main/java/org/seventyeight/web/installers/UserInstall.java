@@ -32,6 +32,7 @@ public class UserInstall extends NodeInstaller<User> {
 
     @Override
     protected void setParameters( Parameters parameters ) {
+        parameters.put( "title", title );
         parameters.put( "username", title );
         parameters.put( "email", email );
         parameters.put( "password", "pass" );

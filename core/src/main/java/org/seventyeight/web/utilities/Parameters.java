@@ -1,9 +1,8 @@
 package org.seventyeight.web.utilities;
 
+import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.model.PersistedObject;
 import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.servlet.Request;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -14,17 +13,7 @@ import java.util.Locale;
 public class Parameters extends HashMap<String, String> implements CoreRequest {
 
     private User user;
-    private PersistedObject modelObject;
-
-    @Override
-    public PersistedObject getModelObject() {
-        return modelObject;
-    }
-
-    @Override
-    public void setModelObject( PersistedObject modelObject ) {
-        this.modelObject = modelObject;
-    }
+    private PersistedNode modelObject;
 
     @Override
     public User getUser() {

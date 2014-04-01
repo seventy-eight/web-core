@@ -10,6 +10,9 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authentication.NoAuthorizationException;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -21,19 +24,77 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author cwolfgang
  */
-public class Collection extends Resource<Collection> {
+public class Collection extends Resource<Collection> implements Getable<Node> {
 
     private static Logger logger = LogManager.getLogger( Collection.class );
 
     public static final String SORT_FIELD = "sort";
     public static final String ELEMENTS_FIELD = "elements";
 
+    /*
+    public class CollectionItem implements Node {
+
+        private Node node;
+        private int next = -1;
+        private int previous = -1;
+
+        public CollectionItem(Node node, int next, int previous) {
+            this.node = node;
+            this.next = next;
+            this.previous = previous;
+        }
+
+        @Override
+        public Node getParent() {
+            return this;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return node.toString();
+        }
+
+        @Override
+        public String getMainTemplate() {
+            return null;
+        }
+
+        public boolean hasPrevious() {
+            return previous > -1;
+        }
+
+        public String getPreviousUrl() {
+            return Collection.this.getUrl() + "get/" + previous;
+        }
+
+        public boolean hasNext() {
+            return next < Collection.this.size();
+        }
+
+        public String getNextUrl() {
+            return Collection.this.getUrl() + "get/" + next;
+        }
+
+        public Node getNode() {
+            return node;
+        }
+    }
+    */
+
+    private int id = -1;
+
     public Collection( Node parent, MongoDocument document ) {
         super( parent, document );
+    }
+
+    @Override
+    public void updateNode( CoreRequest request ) {
+      /* Implementation is a no op */
     }
 
     public void getResources(int offset, int number) throws NotFoundException, ItemInstantiationException {
@@ -83,6 +144,18 @@ public class Collection extends Resource<Collection> {
         sh.render();
     }
 
+    /*
+    @Override
+    public List<ContributingView> getContributingViews( Locale locale ) {
+        List<ContributingView> parts = super.getContributingViews( locale );
+
+        parts.add( new ContributingView( "viewSkills", Core.getInstance().getMessages().getString( "view.skills", Collection.class, locale ), this ) );
+
+        logger.debug( parts );
+        return parts;
+    }
+    */
+
     public boolean containsId( String id ) {
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() ).is( ELEMENTS_FIELD + "._id", id );
         return MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).count( query ) > 0;
@@ -100,13 +173,17 @@ public class Collection extends Resource<Collection> {
 
         int stop = docs.size() > offset + number ? offset + number : docs.size();
 
+        int counter = offset;
         if( docs.size() > offset ) {
             //for( MongoDocument d : docs ) {
             for( int i = offset ; i < stop ; i++ ) {
                 MongoDocument d = docs.get( i );
                 Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
                 d.set( "avatar", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+                d.set("counter", counter);
                 result.add( d );
+
+                counter++;
             }
         }
 
@@ -115,6 +192,26 @@ public class Collection extends Resource<Collection> {
         Gson gson = builder.create();
         writer.write( gson.toJson( result ) );
     }
+
+    public Node getItem(int itemNumber) throws NotFoundException, ItemInstantiationException {
+        List<MongoDocument> docs = document.getList( ELEMENTS_FIELD );
+
+        if(docs.size() >= itemNumber ) {
+            return Core.getInstance().getNodeById( this, docs.get( itemNumber ).getIdentifier() );
+        } else {
+            throw new IllegalStateException( "Item number " + itemNumber + " not found" );
+        }
+    }
+
+    public int size() {
+        return document.getList( ELEMENTS_FIELD ).size();
+    }
+
+    /*
+    public void doItem(Request request, Response response) {
+
+    }
+    */
 
     public void addCall( Resource<?> resource ) {
         addCall( resource.getIdentifier() );
@@ -191,7 +288,41 @@ public class Collection extends Resource<Collection> {
         MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).remove( query );
     }
 
-    public static class CollectionDescriptor extends NodeDescriptor<Collection> {
+    /*
+    @Override
+    public List<ContributingView> getAdministrativePartitions( Request request ) {
+        List<ContributingView> parts = super.getAdministrativePartitions( request );
+
+        try {
+            request.checkPermissions( this, ACL.Permission.ADMIN );
+            parts.add( new ContributingView( Core.getInstance().getMessages().getString( "List", Collection.class, request.getLocale() ), "listConfig", this ) );
+        } catch( NoAuthorizationException e ) {
+            logger.debug( e.getMessage() );
+        }
+
+        return parts;
+    }
+    */
+
+    public int getIndex() {
+        return id;
+    }
+
+    public String getEditListUrl() {
+        return getUrl() + "listConfig";
+    }
+
+    @Override
+    public Node get( String token ) throws NotFoundException {
+        try {
+            id = Integer.parseInt( token );
+            return getItem( id );
+        } catch( Exception e ) {
+            throw new NotFoundException( "the id " + token + " does not exist, " + e.getMessage() );
+        }
+    }
+
+    public static class CollectionDescriptor extends NodeDescriptor<Collection> implements MenuContributor<AbstractNode<Collection>> {
 
         @Override
         public String getType() {
@@ -201,6 +332,13 @@ public class Collection extends Resource<Collection> {
         @Override
         public String getDisplayName() {
             return "Collection";
+        }
+
+        @Override
+        public void addContributingMenu( AbstractNode<Collection> node, Menu menu ) {
+            if(node instanceof Collection) {
+                menu.addItem( "Collection", new Menu.MenuItem("List edit", ((Collection)node).getEditListUrl(), ACL.Permission.ADMIN) );
+            }
         }
     }
 }

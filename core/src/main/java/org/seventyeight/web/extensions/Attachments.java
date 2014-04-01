@@ -39,8 +39,8 @@ public class Attachments extends Action<Attachments> {
     @PostMethod
     public void doAttachFile( Request request, Response response ) {
         try {
-            FileResource fr = FileResource.upload( request, response );
-            addFile( fr );
+            //FileResource fr = FileResource.upload( request, response );
+            //addFile( fr );
             Core.superSave( this );
 
             response.setStatus( HttpServletResponse.SC_OK );
@@ -54,7 +54,7 @@ public class Attachments extends Action<Attachments> {
     }
 
     @Override
-    public void save( CoreRequest request, JsonObject jsonData ) throws ClassNotFoundException, ItemInstantiationException, SavingException {
+    public void updateNode( CoreRequest request ) {
       /* Implementation is a no op */
     }
 

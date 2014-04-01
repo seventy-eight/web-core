@@ -3,6 +3,5 @@ package org.seventyeight.web.model;
 /**
  * @author cwolfgang
  */
-public interface Layoutable {
-    public boolean isApplicable( Node node );
+public interface Layoutable extends Extension<Node> {
 }

@@ -1,6 +1,14 @@
 
 #set( $descriptor = $item.getDescriptor() )
 
+#foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlatform(), "top.vm" ) )
+<tr>
+    <td colspan="2" class="nothing" style=";padding: 0px">
+        #render( $action "top" false "" $item true )
+    </td>
+</tr>
+#end
+
 <span align="center" style="font-size: 18px;font-weight: bold">Configuring $item.getDisplayName()</span>
 
 <form action="configurationSubmit" method="post" id="configure" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );">

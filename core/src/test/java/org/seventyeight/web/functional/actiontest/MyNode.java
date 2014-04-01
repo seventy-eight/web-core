@@ -38,4 +38,9 @@ public class MyNode extends AbstractNode<MyNode> implements Parent {
     public String getMainTemplate() {
         return null;
     }
+
+    @Override
+    public void updateNode( CoreRequest request ) {
+      /* Implementation is a no op */
+    }
 }
