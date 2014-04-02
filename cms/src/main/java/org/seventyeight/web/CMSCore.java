@@ -60,6 +60,8 @@ public class CMSCore extends Core {
 
         addDescriptor( new User.UserDescriptor() );
 
+        addDescriptor( new Group.GroupDescriptor() );
+
         addDescriptor( new FileResource.FileDescriptor() );
 
         addDescriptor( new Topic.TopicDescriptor() );

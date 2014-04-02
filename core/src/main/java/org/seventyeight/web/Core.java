@@ -13,6 +13,8 @@ import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.actions.Get;
 import org.seventyeight.web.actions.ResourceAction;
 import org.seventyeight.web.authentication.*;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.Group;
@@ -350,7 +352,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         Node node = null;
         Exception exception = null;
         try {
-            node = resolveNode( tokens );
+            node = resolveNode( tokens, request.getUser() );
             logger.debug("Found node {}", node );
             if( !tokens.isEndsWithSlash() && tokens.isEmpty() ) {
                 response.sendRedirect( request.getRequestURI() + "/" );
@@ -437,7 +439,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
      * @param tokens
      * @return The last valid {@link Node} on the path, adding the extra tokens, if any, to the the token list.
      */
-    public Node resolveNode( TokenList tokens ) throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
+    public Node resolveNode( TokenList tokens, User user ) throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException, NoAuthorizationException {
         //logger.debug( "Resolving " + path );
         //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
         //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
@@ -450,6 +452,13 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             String token = tokens.next();
             logger.debug( "Current: {}", current );
             logger.debug( "Token  : {}", token );
+
+            /* TODO Something about authorization? */
+            if(current instanceof AccessControlled) {
+                if( ((AccessControlled)current).getACL().getPermission( user ).ordinal() < ACL.Permission.READ.ordinal() ) {
+                    throw new NoAuthorizationException( user + " was not authorized to " + current );
+                }
+            }
 
             /* Find a child node */
 
@@ -496,8 +505,6 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
                 break;
             }
             */
-
-            /* TODO Something about authorization? */
 
             current = next;
             last = next;

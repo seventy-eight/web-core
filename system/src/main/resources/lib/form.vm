@@ -26,7 +26,7 @@
     #renderDescriptor( $item.getDescriptor() $item )
 #end
 
-#macro( resourcAccessConfiguration $resource $name )
+#macro( resourcAccessConfiguration $node $name )
     <select name="$name" multiple="multiple">
         <option name="g1">GROURUOR</option>
     </select>

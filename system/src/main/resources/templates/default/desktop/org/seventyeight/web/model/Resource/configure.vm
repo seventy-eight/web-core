@@ -29,6 +29,14 @@
         <td style="width: auto; vertical-align: top" name="OUTER">
             <div id="$item.getType()-config" style="display: block" class="configurationDiv rootConfiguration">
                 <table style="width:100%">
+                    <tr>
+                        <td>
+                            Title
+                        </td>
+                        <td>
+                            <input style="width:100%" type="text" name="title" value="$item.getTitle()" class="configurationDiv rootConfiguration">
+                        </td>
+                    </tr>
                     #render( $item "config" )
                 </table>
             </div>

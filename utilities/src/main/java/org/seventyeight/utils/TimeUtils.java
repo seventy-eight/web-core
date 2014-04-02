@@ -48,8 +48,8 @@ public class TimeUtils {
 
     public static String getSmallTimeString( long millis ) {
         if( millis < MINUTES ) {
-            //return "Less than one minute";
-            return "Just now";
+            return "Less than one minute";
+            //return "Just now";
         } else if( millis < HOURS ) {
             long m = millis / MINUTES;
             return m + ( m == 1 ? " minute" : " minutes" );

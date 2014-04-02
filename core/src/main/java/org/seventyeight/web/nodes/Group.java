@@ -35,15 +35,6 @@ public class Group extends Resource<Group> {
       /* Implementation is a no op */
     }
 
-    public String getName() {
-        return document.get( "name" );
-    }
-
-    @Override
-    public String getDisplayName() {
-        return getName();
-    }
-
     protected String getGroupType() {
         return GROUPS;
     }
@@ -113,7 +104,7 @@ public class Group extends Resource<Group> {
 
         @Override
         public String getType() {
-            return GROUPS;
+            return GROUP;
         }
     }
 }
