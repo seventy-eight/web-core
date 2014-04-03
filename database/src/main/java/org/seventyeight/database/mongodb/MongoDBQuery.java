@@ -98,6 +98,14 @@ public class MongoDBQuery {
         return this;
     }
 
+    public <T> MongoDBQuery in( String field, T ... items ) {
+        if( items != null && items.length > 0 ) {
+            query.put( field ).in( items );
+        }
+
+        return this;
+    }
+
     public <T> MongoDBQuery in( String field, List<T> items ) {
         if( items != null && !items.isEmpty() ) {
             query.put( field ).in( items );

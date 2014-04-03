@@ -18,8 +18,6 @@ public abstract class ACL {
 
     public enum Permission {
         NONE("none"),
-        ALL("all"),
-        ANONYMOUS("anonymous"),
         READ("read"),
         WRITE("write"),
         ADMIN("admin");

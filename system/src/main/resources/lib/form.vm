@@ -27,6 +27,7 @@
 #end
 
 #macro( resourcAccessConfiguration $node $name )
+    READ: $node.getAuthorizable("READ")
     <select name="$name" multiple="multiple">
         <option name="g1">GROURUOR</option>
     </select>

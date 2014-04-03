@@ -13,6 +13,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
+import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.extensions.ViewContributor;
 import org.seventyeight.web.extensions.Partitioned;
@@ -282,6 +283,24 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             response.getWriter().write( "{}" );
         }
 
+    }
+
+    public List<Authorizable> getAuthorizable(String p) {
+        ACL.Permission permission = ACL.Permission.valueOf(p);
+        return getACL().getAuthorized( permission );
+    }
+
+    public void doGetAuthorizable(Request request, Response response) throws IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        String term = request.getValue( "term", "" );
+        int limit = request.getValue( "limit", 10 );
+
+        if( term.length() > 2 ) {
+            MongoDBQuery q = new MongoDBQuery().regex( "title", "(?i)" + term + ".*" ).in( "type", "user", "group" );
+
+            response.getWriter().print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q, 0, limit ) );
+        }
     }
 
     @Override

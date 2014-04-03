@@ -59,8 +59,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         return getUrl() + "configure";
     }
 
-    public void doGet
-
     /*
     public void applyExtension(Class<? extends Extension> extensionClass) {
         logger.debug( "Layoutable: " + Core.getInstance().getExtensions( extensionClass ) );
