@@ -43,6 +43,8 @@
 
             <div id="access-config" style="display: none" class="configurationDiv rootConfiguration">
                 #render( $item "accessConfig" true )
+                $item.getUrl()
+                #test("$item.getUrl()getAuthorizable")
             </div>
 
             <div name="extensions">

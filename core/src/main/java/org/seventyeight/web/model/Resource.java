@@ -296,7 +296,9 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         String term = request.getValue( "term", "" );
         int limit = request.getValue( "limit", 10 );
 
-        if( term.length() > 2 ) {
+        logger.debug( "Getting authorizable for {} with term {}", this, term );
+
+        if( term.length() > 1 ) {
             MongoDBQuery q = new MongoDBQuery().regex( "title", "(?i)" + term + ".*" ).in( "type", "user", "group" );
 
             response.getWriter().print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q, 0, limit ) );

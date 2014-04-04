@@ -33,6 +33,42 @@
     </select>
 #end
 
+#macro(test $searchUrl)
+
+    <script type="text/javascript">
+
+        $(function() {
+            $( "#groups" ).autocomplete({
+                source: "$searchUrl",
+                select: function( event, ui ) {
+                    //this.value = ui.item.title;
+                    this.value = "";
+                    $('#stuffItems').append('<p style="border-style: solid" class="item">' + ui.item.title + '</p>');
+                    $(".item").click(function() {
+                        alert("JAJ");
+                        this.hide();
+                    });
+                    return false;
+                }
+            }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+                return $( "<li>" )
+                        .append( "<a>" + item.title + ", " + item.type + "</a>" )
+                        .appendTo( ul );
+            };
+
+
+        });
+    </script>
+
+    <div class="ui-widget">
+        <input id="groups">
+    </div>
+
+    <div id="stuffItems">
+
+    </div>
+#end
+
 #macro( configureExtensions $extensionClass $item )
 
     #set( $descriptors = $core.getExtensionDescriptors( $extensionClass ) )
