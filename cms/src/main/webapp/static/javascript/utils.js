@@ -150,14 +150,19 @@ Utils.getJsonFromForm = function( e, jsonData ) {
 
                     break;
                 case "DIV":
-                    //alert("DIV: " + name + "=" + $(childs[i]).html() );
+                    alert("DIV: " + name + "=" + $(childs[i]).html() );
                     if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
+                        alert("YEAH");
                         if( jsonData[name] == undefined ) {
                             jsonData[name] = [];
                         }
                         var j = jsonData[name].push( {} );
                         Utils.getJsonFromForm( childs[i], jsonData[name][j-1] );
-                        //alert( JSON.stringify( jsonData[name][j-1] ) );
+                        alert( JSON.stringify( jsonData[name][j-1] ) );
+                    }
+
+                    if($(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("targetNode")) {
+                        jsonData[childs[i].name] = childs[i].value;
                     }
                     break;
             }

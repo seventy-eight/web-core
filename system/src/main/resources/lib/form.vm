@@ -43,10 +43,11 @@
                 select: function( event, ui ) {
                     //this.value = ui.item.title;
                     this.value = "";
-                    $('#stuffItems').append('<p style="border-style: solid" class="item">' + ui.item.title + '</p>');
-                    $(".item").click(function() {
-                        alert("JAJ");
-                        this.hide();
+                    $('#stuffItems').append('<div class="targetNode rootConfiguration" id="node' + ui.item._id + '">' + ui.item.title + '</div>');
+                    $('#node' + ui.item._id).click(function() {
+                        //alert("c: " + ui.item._id);
+                        //this.hide();
+                        $('#node' + ui.item._id).hide();
                     });
                     return false;
                 }
@@ -64,7 +65,7 @@
         <input id="groups">
     </div>
 
-    <div id="stuffItems">
+    <div name="snade" id="stuffItems">
 
     </div>
 #end

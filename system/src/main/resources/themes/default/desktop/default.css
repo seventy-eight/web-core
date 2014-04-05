@@ -277,3 +277,11 @@ ul.navlist a.active:visited {
     z-index:102;
     border-bottom:1px solid #992992;
 }
+
+div.targetNode {
+    border-style: solid;
+    border-radius: 5px;
+    float: left;
+    margin: 5px;
+    padding: 2px 20px 2px 20px;
+}
