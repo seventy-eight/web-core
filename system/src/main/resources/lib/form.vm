@@ -43,11 +43,12 @@
                 select: function( event, ui ) {
                     //this.value = ui.item.title;
                     this.value = "";
-                    $('#stuffItems').append('<div class="targetNode rootConfiguration" id="node' + ui.item._id + '">' + ui.item.title + '</div>');
+                    $('#stuffItems').append('<div class="targetNode" id="node' + ui.item._id + '"><div name="value" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
                     $('#node' + ui.item._id).click(function() {
                         //alert("c: " + ui.item._id);
                         //this.hide();
                         $('#node' + ui.item._id).hide();
+                        //jQuery.data($('#node' + ui.item._id), "foo", "bar" );
                     });
                     return false;
                 }
@@ -65,7 +66,7 @@
         <input id="groups">
     </div>
 
-    <div name="snade" id="stuffItems">
+    <div name="snade" id="stuffItems" class="rootConfiguration">
 
     </div>
 #end
@@ -222,7 +223,7 @@
         <tr>
             <td>
 
-                <form action="configurationSubmit" method="post" id="configure" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );">
+                <form action="configurationSubmit" method="post" id="configure" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );return false;">
 
                     <table>
 

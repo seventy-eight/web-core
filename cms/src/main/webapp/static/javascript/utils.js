@@ -152,17 +152,20 @@ Utils.getJsonFromForm = function( e, jsonData ) {
                 case "DIV":
                     alert("DIV: " + name + "=" + $(childs[i]).html() );
                     if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
-                        alert("YEAH");
+                        alert("Root: " + name);
                         if( jsonData[name] == undefined ) {
                             jsonData[name] = [];
                         }
                         var j = jsonData[name].push( {} );
                         Utils.getJsonFromForm( childs[i], jsonData[name][j-1] );
-                        alert( JSON.stringify( jsonData[name][j-1] ) );
+                        //alert( JSON.stringify( jsonData[name][j-1] ) );
                     }
 
-                    if($(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("targetNode")) {
-                        jsonData[childs[i].name] = childs[i].value;
+                    if($(childs[i]).hasClass("targetValue")) {
+                        //jsonData[childs[i].name] = childs[i].value;
+                        alert("TARGET: " + name + ", " + childs[i].innerHTML);
+                        //Utils.getJsonFromForm( childs[i], jsonData );
+                        jsonData[name].push( childs[i].innerHTML );
                     }
                     break;
             }
