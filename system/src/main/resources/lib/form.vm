@@ -33,7 +33,7 @@
     </select>
 #end
 
-#macro(test $searchUrl)
+#macro(test $searchUrl $group $subGroup $containerId)
 
     <script type="text/javascript">
 
@@ -43,7 +43,7 @@
                 select: function( event, ui ) {
                     //this.value = ui.item.title;
                     this.value = "";
-                    $('#stuffItems').append('<div class="targetNode" id="node' + ui.item._id + '"><div name="value" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
+                    $('#$containerId').append('<div class="targetNode" id="node' + ui.item._id + '"><div name="$subGroup" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
                     $('#node' + ui.item._id).click(function() {
                         //alert("c: " + ui.item._id);
                         //this.hide();
@@ -63,11 +63,7 @@
     </script>
 
     <div class="ui-widget">
-        <input id="groups">
-    </div>
-
-    <div name="snade" id="stuffItems" class="rootConfiguration">
-
+        <input id="input$containerId">
     </div>
 #end
 

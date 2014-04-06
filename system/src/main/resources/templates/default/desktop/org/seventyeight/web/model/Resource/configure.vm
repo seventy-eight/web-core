@@ -43,7 +43,12 @@
 
             <div id="access-config" style="display: none" class="configurationDiv rootConfiguration">
                 #render( $item "accessConfig" true )
-                #test("$item.getUrl()getAuthorizable")
+                #test("$item.getUrl()getAuthorizable" "access" "moderate" "moderateContainer")
+
+
+                <div name="$group" id="moderateContainer">
+
+                </div>
             </div>
 
             <div name="extensions">

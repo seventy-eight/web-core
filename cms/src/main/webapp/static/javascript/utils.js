@@ -165,6 +165,10 @@ Utils.getJsonFromForm = function( e, jsonData ) {
                         //jsonData[childs[i].name] = childs[i].value;
                         alert("TARGET: " + name + ", " + childs[i].innerHTML);
                         //Utils.getJsonFromForm( childs[i], jsonData );
+                        //jsonData[name].push( childs[i].innerHTML );
+                        if( jsonData[name] == undefined ) {
+                            jsonData[name] = [];
+                        }
                         jsonData[name].push( childs[i].innerHTML );
                     }
                     break;
@@ -188,6 +192,25 @@ Utils.getJsonFromForm = function( e, jsonData ) {
     }
 
     return jsonData;
+}
+
+Utils.selectElements = function(searchUrl, group, subGroup, containerId, inputId) {
+    $( '#' + inputId ).autocomplete({
+        source: searchUrl,
+        select: function( event, ui ) {
+            //this.value = ui.item.title;
+            this.value = "";
+            $('#' + containerId).append('<div class="targetNode" id="node' + ui.item._id + '"><div name="' + subGroup + '" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
+            $('#node' + ui.item._id).click(function() {
+                $('#node' + ui.item._id).hide();
+            });
+            return false;
+        }
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+            .append( "<a>" + item.title + ", " + item.type + "</a>" )
+            .appendTo( ul );
+    };
 }
 
 Utils.toggleFormElement = function( id ) {
