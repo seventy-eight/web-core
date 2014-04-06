@@ -198,11 +198,10 @@ Utils.selectElements = function(searchUrl, group, subGroup, containerId, inputId
     $( '#' + inputId ).autocomplete({
         source: searchUrl,
         select: function( event, ui ) {
-            //this.value = ui.item.title;
             this.value = "";
-            $('#' + containerId).append('<div class="targetNode" id="node' + ui.item._id + '"><div name="' + subGroup + '" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
-            $('#node' + ui.item._id).click(function() {
-                $('#node' + ui.item._id).hide();
+            $('#' + containerId).append('<div class="targetNode" id="' + containerId + ui.item._id + '"><div name="' + subGroup + '" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
+            $('#' + containerId + ui.item._id).click(function() {
+                $('#' + containerId + ui.item._id).hide();
             });
             return false;
         }

@@ -43,8 +43,15 @@
 
             <div id="access-config" style="display: none" class="configurationDiv rootConfiguration">
                 #render( $item "accessConfig" true )
-                #test("$item.getUrl()getAuthorizable" "access" "moderate" "moderateContainer")
 
+
+                <script type="text/javascript">
+                    Utils.selectElements("$item.getUrl()getAuthorizable", "access", "moderate", "moderateContainer", "moderateInput")
+                </script>
+
+                <div class="ui-widget">
+                    <input id="moderateInput">
+                </div>
 
                 <div name="$group" id="moderateContainer">
 
