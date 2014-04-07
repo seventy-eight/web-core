@@ -47,14 +47,6 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             logger.debug( "No json provided", e.getMessage() );
         }
 
-        // Default fields
-        String title = request.getValue( "title", null );
-        if(title != null) {
-            setField( "title", title );
-        } else {
-            throw new IllegalArgumentException( "Title not provided" );
-        }
-
         // Update fields
         updateNode( request );
 

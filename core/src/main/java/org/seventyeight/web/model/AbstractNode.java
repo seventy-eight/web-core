@@ -1,5 +1,6 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -249,7 +250,29 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
         logger.debug( "Configuration submit" );
 
-        JsonObject jsonData = JsonUtils.getJsonFromRequest( request );
+        // Default fields
+        String title = request.getValue( "title", null );
+        if(title != null) {
+            setField( "title", title );
+        } else {
+            throw new IllegalArgumentException( "Title not provided" );
+        }
+
+        // Access
+        JsonObject json = null;
+        try {
+            // Root json
+            json = JsonUtils.getJsonFromRequest( request );
+
+            // access
+            JsonArray accessArray = json.getAsJsonArray( "access" );
+
+            List<JsonObject> objs = JsonUtils.getJsonObjects( json );
+            logger.debug( "JSON: {}", objs );
+        } catch( JsonException e ) {
+            logger.debug( "No json object provided" );
+        }
+
         update( request );
         save();
         response.sendRedirect( getUrl() );
