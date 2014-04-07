@@ -194,7 +194,7 @@ Utils.getJsonFromForm = function( e, jsonData ) {
     return jsonData;
 }
 
-Utils.selectElements = function(searchUrl, group, subGroup, containerId, inputId) {
+Utils.selectElements = function(searchUrl, subGroup, containerId, inputId) {
     $( '#' + inputId ).autocomplete({
         source: searchUrl,
         select: function( event, ui ) {
@@ -202,6 +202,24 @@ Utils.selectElements = function(searchUrl, group, subGroup, containerId, inputId
             $('#' + containerId).append('<div class="targetNode" id="' + containerId + ui.item._id + '"><div name="' + subGroup + '" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
             $('#' + containerId + ui.item._id).click(function() {
                 $('#' + containerId + ui.item._id).hide();
+            });
+            return false;
+        }
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+            .append( "<a>" + item.title + ", " + item.type + "</a>" )
+            .appendTo( ul );
+    };
+}
+
+Utils.selectElementsTest = function(searchUrl) {
+    $( '#moderateInput' ).autocomplete({
+        source: searchUrl,
+        select: function( event, ui ) {
+            this.value = "";
+            $('#moderateContainer').append('<div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
+            $('#moderateContainer' + ui.item._id).click(function() {
+                $('#moderateContainer' + ui.item._id).hide();
             });
             return false;
         }
