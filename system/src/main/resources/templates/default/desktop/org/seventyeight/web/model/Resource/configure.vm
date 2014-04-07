@@ -53,12 +53,14 @@
                     <input id="moderateInput">
                 </div>
 
-                <div name="access">
+                <div name="access" class="objects">
                     Readers:
                     <div id="readContainer">
 
                     </div>
+                </div>
 
+                <div name="access" class="objects">
                     Moderators:
                     <div id="moderateContainer">
 

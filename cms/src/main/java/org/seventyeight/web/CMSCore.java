@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
 import org.seventyeight.web.extensions.DefaultMenuContributor;
 import org.seventyeight.web.extensions.GravatarPortrait;
 import org.seventyeight.web.extensions.TabbedPartitionedResource;
@@ -90,6 +91,8 @@ public class CMSCore extends Core {
 
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );
+
+        //setACL( new BasicResourceBasedSecurity( this ) );
 
         //addDescriptor( new  );
 

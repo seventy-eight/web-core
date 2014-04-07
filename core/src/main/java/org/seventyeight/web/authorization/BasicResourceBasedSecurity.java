@@ -1,12 +1,19 @@
 package org.seventyeight.web.authorization;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.model.CoreRequest;
+import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.utilities.JsonException;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +28,7 @@ import java.util.List;
  * }
  *
  */
-public class BasicResourceBasedSecurity extends ACL {
+public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> {
 
     private static Logger logger = LogManager.getLogger( BasicResourceBasedSecurity.class );
 
@@ -97,5 +104,31 @@ public class BasicResourceBasedSecurity extends ACL {
     @Override
     public String toString() {
         return "BRBS permission, " + permission;
+    }
+
+    @Override
+    public void updateNode( CoreRequest request ) {
+
+        // Access
+        JsonObject json = null;
+        try {
+            // Root json
+            json = JsonUtils.getJsonFromRequest( request );
+
+            // access
+            JsonObject accessArray = json.getAsJsonObject( "access" );
+            document.set( "read", accessArray.getAsJsonArray( "read" ) );
+
+        } catch( JsonException e ) {
+            logger.log( Level.DEBUG, "Json error", e );
+        }
+    }
+
+    public static class BasicResourceBasedSecurityDescriptor extends Descriptor<BasicResourceBasedSecurity> {
+
+        @Override
+        public String getDisplayName() {
+            return "Basic resource based security";
+        }
     }
 }

@@ -265,7 +265,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
             json = JsonUtils.getJsonFromRequest( request );
 
             // access
-            JsonArray accessArray = json.getAsJsonArray( "access" );
+            //JsonArray accessArray = json.getAsJsonArray( "access" );
 
             List<JsonObject> objs = JsonUtils.getJsonObjects( json );
             logger.debug( "JSON: {}", objs );

@@ -67,6 +67,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     protected ConcurrentHashMap<String, NaturalSearchable> naturalSearchables = new ConcurrentHashMap<String, NaturalSearchable>(  );
 
+    protected ACL acl;
+
     /**
      * The default anonymous {@link User}
      */
@@ -731,6 +733,14 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         }
 
         throw new IllegalStateException( "No top level node" );
+    }
+
+    public ACL getACL() {
+        return acl;
+    }
+
+    public void setACL(ACL acl) {
+        this.acl = acl;
     }
 
     public Theme getDefaultTheme() {

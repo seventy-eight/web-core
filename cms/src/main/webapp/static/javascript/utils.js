@@ -153,11 +153,18 @@ Utils.getJsonFromForm = function( e, jsonData ) {
                     alert("DIV: " + name + "=" + $(childs[i]).html() );
                     if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
                         alert("Root: " + name);
-                        if( jsonData[name] == undefined ) {
-                            jsonData[name] = [];
+                        if($(childs[i]).hasClass("objects")) {
+                            if( jsonData[name] == undefined ) {
+                                jsonData[name] = {};
+                            }
+                            Utils.getJsonFromForm( childs[i], jsonData[name] );
+                        } else {
+                            if( jsonData[name] == undefined ) {
+                                jsonData[name] = [];
+                            }
+                            var j = jsonData[name].push( {} );
+                            Utils.getJsonFromForm( childs[i], jsonData[name][j-1] );
                         }
-                        var j = jsonData[name].push( {} );
-                        Utils.getJsonFromForm( childs[i], jsonData[name][j-1] );
                         //alert( JSON.stringify( jsonData[name][j-1] ) );
                     }
 
