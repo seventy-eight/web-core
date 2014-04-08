@@ -735,12 +735,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         throw new IllegalStateException( "No top level node" );
     }
 
-    public ACL getACL() {
-        return acl;
-    }
-
-    public void setACL(ACL acl) {
-        this.acl = acl;
+    public List<Descriptor<?>> getACL() {
+        //return getExtensions( ACL.class );
+        return getExtensionDescriptors( ACL.class );
     }
 
     public Theme getDefaultTheme() {

@@ -135,7 +135,7 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         if( describable != null ) {
             logger.debug( "Extension is " + describable );
             c.put( "enabled", true );
-            c.put( "configuration", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderObject( describable, "config.vm" ) );
+            c.put( "configuration", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderClass( describable, getClazz(), "config.vm" ) );
         } else {
             logger.debug( "Preparing EMPTY " + getClazz() );
             c.put( "enabled", false );

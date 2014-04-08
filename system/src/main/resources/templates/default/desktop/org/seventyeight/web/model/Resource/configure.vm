@@ -44,36 +44,9 @@
             <div id="access-config" style="display: none" class="configurationDiv rootConfiguration">
                 #render( $item "accessConfig" true )
 
-
-                <div class="ui-widget">
-                    <input id="readInput">
-                </div>
-
-                <div class="ui-widget">
-                    <input id="moderateInput">
-                </div>
-
-                <div name="access" class="objects">
-                    Readers:
-                    <div id="readContainer">
-
-                    </div>
-                </div>
-
-                <div name="access" class="objects">
-                    Moderators:
-                    <div id="moderateContainer">
-
-                    </div>
-
-                </div>
-
-
-                <script type="text/javascript">
-                    Utils.selectElements("$item.getUrl()getAuthorizable", "read", "readContainer", "readInput")
-                    Utils.selectElements("$item.getUrl()getAuthorizable", "moderate", "moderateContainer", "moderateInput")
-                </script>
-            </div>
+                #foreach($acl in $core.getACL())
+                    #renderDescriptor($acl $item)
+                #end
 
             <div name="extensions">
                 #foreach( $extension in $elist )

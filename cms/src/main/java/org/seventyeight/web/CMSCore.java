@@ -92,7 +92,7 @@ public class CMSCore extends Core {
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );
 
-        //setACL( new BasicResourceBasedSecurity( this ) );
+        addDescriptor( new BasicResourceBasedSecurity.BasicResourceBasedSecurityDescriptor() );
 
         //addDescriptor( new  );
 

@@ -1,0 +1,31 @@
+MUMS
+
+<div class="ui-widget">
+    <input id="readInput">
+</div>
+
+<div class="ui-widget">
+    <input id="moderateInput">
+</div>
+
+<div name="access" class="objects" style="border-style: solid; min-height: 100px">
+    Readers:
+    <div id="readContainer">
+
+    </div>
+</div>
+
+<div name="access" class="objects" style="border-style: solid; min-height: 100px">
+    Moderators:
+    <div id="moderateContainer">
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    Utils.selectElements("$item.getUrl()getAuthorizable", "read", "readContainer", "readInput")
+    Utils.selectElements("$item.getUrl()getAuthorizable", "moderate", "moderateContainer", "moderateInput")
+</script>
+</div>
