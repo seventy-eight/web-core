@@ -54,7 +54,7 @@ public class Attachments extends Action<Attachments> {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 

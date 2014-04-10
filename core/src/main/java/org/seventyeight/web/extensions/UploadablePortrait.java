@@ -22,7 +22,7 @@ public class UploadablePortrait extends UserPortrait {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 

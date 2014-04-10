@@ -1,5 +1,6 @@
 package org.seventyeight.web.functional.actiontest;
 
+import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.*;
 
@@ -40,7 +41,7 @@ public class MyNode extends AbstractNode<MyNode> implements Parent {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 }

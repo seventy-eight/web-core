@@ -18,7 +18,7 @@ public class DummyExtension extends NodeExtension {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
         String name = request.getValue( "name", "The Name" );
         document.set( "name", name );
     }

@@ -56,7 +56,7 @@ public class User extends Resource<User> {
     }
 
     @Override
-    public void updateNode(CoreRequest request) {
+    public void updateNode(CoreRequest request, JsonObject jsonData) {
 
         /* Set username */
         String username = request.getValue( "username", null );

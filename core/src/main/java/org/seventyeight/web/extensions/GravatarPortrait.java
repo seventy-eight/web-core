@@ -40,7 +40,7 @@ public class GravatarPortrait extends UserPortrait {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
         String email = request.getValue( "gravatarEmail", null );
         if( email != null ) {
             document.set( "email", email );

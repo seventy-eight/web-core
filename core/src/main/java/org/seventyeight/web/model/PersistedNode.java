@@ -48,7 +48,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
         }
 
         // Update fields
-        updateNode( request );
+        updateNode( request, json );
 
         // Update user + revision
         update( request.getUser() );
@@ -73,7 +73,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
      * Update the {@link AbstractNode}'s fields given a {@link CoreRequest}. <br/>
      * The method should not save the node, merely update.
      */
-    public abstract void updateNode(CoreRequest request);
+    //public abstract void updateNode(CoreRequest request);
 
     public List<AbstractExtension> getExtensions() {
 

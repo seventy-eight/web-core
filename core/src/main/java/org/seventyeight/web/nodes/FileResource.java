@@ -1,5 +1,6 @@
 package org.seventyeight.web.nodes;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -72,7 +73,7 @@ public class FileResource extends UploadableNode<FileResource> {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
     }
 
     /*

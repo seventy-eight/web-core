@@ -1,5 +1,6 @@
 package org.seventyeight.web.authorization;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -106,7 +107,7 @@ public abstract class ACL<T extends ACL<T>> implements Describable<T> {
         }
 
         @Override
-        public void updateNode( CoreRequest request ) {
+        public void updateNode( CoreRequest request, JsonObject jsonData ) {
             /* Implementation is a no op */
         }
     }

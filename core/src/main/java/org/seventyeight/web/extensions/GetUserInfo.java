@@ -31,7 +31,7 @@ public class GetUserInfo extends Action {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
         /* Implementation is a no op */
     }
 }

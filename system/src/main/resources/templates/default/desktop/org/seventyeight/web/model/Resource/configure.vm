@@ -41,12 +41,13 @@
                 </table>
             </div>
 
-            <div id="access-config" style="display: none" class="configurationDiv rootConfiguration">
-                #render( $item "accessConfig" true )
+            <div name="access" id="access-config" style="display: none" class="configurationDiv rootConfiguration">
 
                 #foreach($acl in $core.getACL())
                     #renderDescriptor($acl $item)
                 #end
+
+            </div>
 
             <div name="extensions">
                 #foreach( $extension in $elist )

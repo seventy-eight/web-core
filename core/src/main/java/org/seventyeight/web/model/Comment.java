@@ -39,7 +39,7 @@ public class Comment extends AbstractNode<Comment> {
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
         String text = request.getValue( "comment", "" );
         setText( text );
     }

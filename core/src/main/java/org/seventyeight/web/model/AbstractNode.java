@@ -263,9 +263,16 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         try {
             // Root json
             json = JsonUtils.getJsonFromRequest( request );
+            logger.debug( "I HAVE JSON: {}", json );
 
             // access
-            //JsonArray accessArray = json.getAsJsonArray( "access" );
+            JsonArray accessArray = json.getAsJsonArray( "access" );
+            if(accessArray.size() == 1) {
+                logger.debug( "THE ACCES ARRAY: {}", accessArray.get( 0 ).getAsJsonObject() );
+                Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, accessArray.get( 0 ).getAsJsonObject(), this );
+                logger.debug( "DESCRIBABABBABABA: {}", describable );
+                document.set( "ACL", describable.getDocument() );
+            }
 
             List<JsonObject> objs = JsonUtils.getJsonObjects( json );
             logger.debug( "JSON: {}", objs );

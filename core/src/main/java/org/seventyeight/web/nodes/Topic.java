@@ -1,5 +1,6 @@
 package org.seventyeight.web.nodes;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -36,7 +37,7 @@ public class Topic extends Resource<Topic> {
 
 
     @Override
-    public void updateNode(CoreRequest request) {
+    public void updateNode(CoreRequest request, JsonObject jsonData) {
         String text = request.getValue( "text", null );
         if( text == null || text.isEmpty() ) {
             throw new IllegalArgumentException( "No text is provided" );

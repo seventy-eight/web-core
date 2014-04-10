@@ -107,20 +107,15 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
     }
 
     @Override
-    public void updateNode( CoreRequest request ) {
-
+    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+        logger.debug( "Updating {}, {}", this, jsonData );
         // Access
-        JsonObject json = null;
-        try {
-            // Root json
-            json = JsonUtils.getJsonFromRequest( request );
-
+        if(jsonData != null) {
             // access
-            JsonObject accessArray = json.getAsJsonObject( "access" );
+            JsonObject accessArray = jsonData.getAsJsonObject( "access" );
+            logger.debug( "ACCESS IS {}", accessArray );
             document.set( "read", accessArray.getAsJsonArray( "read" ) );
 
-        } catch( JsonException e ) {
-            logger.log( Level.DEBUG, "Json error", e );
         }
     }
 
