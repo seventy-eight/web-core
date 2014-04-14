@@ -67,7 +67,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         }
 
         /* Save */
-        MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
+        //MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
 
         return node;
     }

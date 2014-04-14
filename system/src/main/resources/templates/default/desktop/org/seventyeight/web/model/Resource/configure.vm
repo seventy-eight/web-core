@@ -43,7 +43,7 @@
 
             <div name="access" id="access-config" style="display: none" class="configurationDiv rootConfiguration">
 
-                #foreach($acl in $core.getACL())
+                #foreach($acl in $core.getACLs())
                     #renderDescriptor($acl $item)
                 #end
 

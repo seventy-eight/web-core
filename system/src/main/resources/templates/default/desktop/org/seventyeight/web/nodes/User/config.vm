@@ -2,12 +2,20 @@
 #set( $username = "" )
 #set( $username = $item.getUsername() )
 
+#set( $email = "" )
+#set( $email = $item.getEmail() )
+
 HEJ=$item.getDescriptor() ---><br>
 ITEM=$item
 
 <tr>
 	<td>Username</td>
-	<td>#inputtext( "username", $username, 32, false, true )</td>
+	<td>#inputtext( "username", $username, 32, false )</td>
+</tr>
+
+<tr>
+    <td>Email</td>
+    <td>#inputtext( "email", $email )</td>
 </tr>
 
 <tr>

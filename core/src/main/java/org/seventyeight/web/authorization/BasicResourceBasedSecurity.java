@@ -38,6 +38,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         super( parent, document );
     }
 
+    /*
     @Override
     public List<Authorizable> getAuthorized( Permission permission ) {
         List<Authorizable> list = new ArrayList<Authorizable>(  );
@@ -52,6 +53,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
 
         return list;
     }
+    */
 
     @Override
     public boolean hasPermission( User user, Permission permission ) {
@@ -114,8 +116,13 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
             // access
             JsonObject accessArray = jsonData.getAsJsonObject( "access" );
             logger.debug( "ACCESS IS {}", accessArray );
-            document.set( "read", accessArray.getAsJsonArray( "read" ) );
 
+            List<String> reads = new ArrayList<String>( accessArray.getAsJsonArray( "read" ).size() );
+            for( JsonElement k : accessArray.getAsJsonArray( "read" )) {
+                reads.add( k.getAsString() );
+            }
+
+            document.set( "read", reads );
         }
     }
 
