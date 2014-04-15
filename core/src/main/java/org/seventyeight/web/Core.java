@@ -99,7 +99,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
      */
     protected Map<Class<?>, Descriptor<?>> descriptors = new HashMap<Class<?>, Descriptor<?>>();
 
-    protected Map<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>> extensionDescriptors = new HashMap<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>>();
+    //protected Map<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>> extensionDescriptors = new HashMap<String, Map<String, AbstractExtension.ExtensionDescriptor<?>>>();
 
     /**
      * A map of interfaces corresponding to specific {@link Descriptor}s<br />
@@ -474,18 +474,23 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             /* If there's no child, try an action */
             if( next == null ) {
 
-                AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
-                logger.debug( "Found descriptor {} for {}", d, token );
-                if( d != null ) {
-                    if( d.isApplicable( current ) ) {
-                        if( current instanceof PersistedNode ) {
-                            //logger.debug( "CURRENT IS " + current );
-                            next = (Node) d.getExtension( (PersistedNode) current );
-                            logger.debug( "Found action is {}", next );
-                            //logger.debug( "TEMP PARENT: " + next.getParent() );
-                        } else if( current instanceof Descriptor ) {
-                            next = (Node) d.getExtension( (Descriptor) current );
+                //AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
+                //List<AbstractExtension.ExtensionDescriptor> ds = getExtensionDescriptors( AbstractExtension.ExtensionDescriptor.class );
+                List<AbstractExtension.ExtensionDescriptor> ds = getExtensionDescriptors( Action.class );
+                logger.debug( "DS: " + ds );
+                for( AbstractExtension.ExtensionDescriptor d : ds) {
+                    logger.debug( "Found descriptor {} for {}", d, token );
+                    if( d != null && d.getExtensionName().equals( token ) ) {
+                        if( d.isApplicable( current ) ) {
+                            if( current instanceof PersistedNode ) {
+                                next = d.getExtension( (PersistedNode) current );
+                                logger.debug( "Found action is {}", next );
+                            } else if( current instanceof Descriptor ) {
+                                next = d.getExtension( (Descriptor) current );
+                            }
                         }
+
+                        break;
                     }
                 }
 
@@ -586,6 +591,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             naturalSearchables.put( ( (NaturalSearchable) descriptor ).getType(), ( NaturalSearchable )descriptor );
         }
 
+        /*
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
             AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
             logger.debug( "Adding extension descriptor {}, {}", ed.getTypeName(), ed.getExtensionName() );
@@ -594,6 +600,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             }
             extensionDescriptors.get( ed.getTypeName() ).put( ed.getExtensionName(), ed );
         }
+        */
 
         addExtension( descriptor );
 
@@ -601,9 +608,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         //descriptor.configureIndex( db );
     }
 
-    public Map<String, Map<String,AbstractExtension.ExtensionDescriptor<?>>> getExtensionDescriptors() {
-        return extensionDescriptors;
-    }
+    //public List<AbstractExtension.>
 
     public NaturalSearchable getNaturalSearchable( String type ) {
         return naturalSearchables.get( type );
