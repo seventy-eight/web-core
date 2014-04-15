@@ -281,5 +281,10 @@ public class User extends Resource<User> {
         public boolean allowIdenticalNaming() {
             return false;
         }
+
+        @Override
+        protected void setOwner( CoreRequest request, User node ) {
+            //super.setOwner( request, node );
+        }
     }
 }

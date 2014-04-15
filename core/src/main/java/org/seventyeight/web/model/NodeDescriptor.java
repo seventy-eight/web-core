@@ -7,15 +7,12 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.authorization.ACL;
-import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.extensions.ResourceExtension;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,14 +59,18 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         node.getDocument().set( "title", title );
 
         // TODO possibly have a system user account
-        if(request.getUser() != null) {
-            node.getDocument().set( "owner", request.getUser().getIdentifier() );
-        }
+        setOwner( request, node );
 
         /* Save */
         //MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
 
         return node;
+    }
+
+    protected void setOwner( CoreRequest request, T node ) {
+        if(request.getUser() != null) {
+            node.getDocument().set( "owner", request.getUser().getIdentifier() );
+        }
     }
 
     @PostMethod

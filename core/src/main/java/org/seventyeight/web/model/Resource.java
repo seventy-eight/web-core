@@ -15,6 +15,7 @@ import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.extensions.NodeExtension;
+import org.seventyeight.web.extensions.ResourceExtension;
 import org.seventyeight.web.extensions.ViewContributor;
 import org.seventyeight.web.extensions.Partitioned;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -56,9 +57,9 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         response.setRenderType( Response.RenderType.NONE );
 
         JsonObject json = JsonUtils.getJsonFromRequest( request );
-        List<JsonObject> objs = JsonUtils.getJsonObjects( json );
-        if( !objs.isEmpty() ) {
-            setPortrait( request, objs.get( 0 ) );
+        //List<JsonObject> objs = JsonUtils.getJsonObjects( json );
+        if( json != null ) {
+            setPortrait( request, json );
         }
 
         /* Redirect */
@@ -72,13 +73,6 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     @Override
     public NodeDescriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
-    }
-
-    @Override
-    public List<AbstractExtension> getExtensions() {
-        List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
-        //es.addAll( Core.getInstance().getExtensions( PermanentExtension.class ) );
-        return es;
     }
 
     @Override
@@ -129,6 +123,15 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         } else {
             return Collections.EMPTY_SET;
         }
+    }
+
+    @Override
+    public List<AbstractExtension> getExtensions() {
+        List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
+
+        Core.getInstance().getExtensionDescriptors( ResourceExtension.class );
+
+        return es;
     }
 
     public List<AbstractExtension> getConfiguredExtensions() throws ItemInstantiationException {
@@ -285,10 +288,12 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     }
 
+    /*
     public List<Authorizable> getAuthorizable(String p) {
         ACL.Permission permission = ACL.Permission.valueOf(p);
         return getACL().getAuthorized( permission );
     }
+    */
 
     public void doGetAuthorizable(Request request, Response response) throws IOException {
         response.setRenderType( Response.RenderType.NONE );

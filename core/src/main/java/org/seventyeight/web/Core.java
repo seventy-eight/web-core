@@ -601,6 +601,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         //descriptor.configureIndex( db );
     }
 
+    public Map<String, Map<String,AbstractExtension.ExtensionDescriptor<?>>> getExtensionDescriptors() {
+        return extensionDescriptors;
+    }
+
     public NaturalSearchable getNaturalSearchable( String type ) {
         return naturalSearchables.get( type );
     }

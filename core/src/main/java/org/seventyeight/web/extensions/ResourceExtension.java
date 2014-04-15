@@ -7,7 +7,7 @@ import org.seventyeight.web.model.Node;
 /**
  * @author cwolfgang
  */
-public abstract class ResourceExtension extends NodeExtension {
+public abstract class ResourceExtension<T extends NodeExtension<T>> extends NodeExtension<T> {
 
     public ResourceExtension( Node parent, MongoDocument document ) {
         super( parent, document );
