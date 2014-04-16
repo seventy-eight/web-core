@@ -5,10 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
-import org.seventyeight.web.extensions.DefaultMenuContributor;
-import org.seventyeight.web.extensions.GravatarPortrait;
-import org.seventyeight.web.extensions.TabbedPartitionedResource;
-import org.seventyeight.web.extensions.UploadablePortrait;
+import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.listernes.ActivityNodeListener;
 import org.seventyeight.web.extensions.search.CollectionFormatter;
@@ -64,6 +61,8 @@ public class CMSCore extends Core {
         addDescriptor( new Group.GroupDescriptor() );
 
         addDescriptor( new FileResource.FileDescriptor() );
+
+        addDescriptor( new Tags.TagsDescriptor() );
 
         addDescriptor( new Topic.TopicDescriptor() );
 

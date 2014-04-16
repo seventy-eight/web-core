@@ -125,13 +125,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
 
-    @Override
-    public List<AbstractExtension> getExtensions() {
-        List<AbstractExtension> es = super.getExtensions( NodeExtension.class );
-
-        Core.getInstance().getExtensionDescriptors( ResourceExtension.class );
-
-        return es;
+    public List<AbstractExtension.ExtensionDescriptor> getExtensionDescriptors() {
+        return Core.getInstance().getExtensionDescriptors( ResourceExtension.class );
     }
 
     public List<AbstractExtension> getConfiguredExtensions() throws ItemInstantiationException {

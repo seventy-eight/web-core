@@ -20,9 +20,9 @@
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('access-config', this)">Access</a>
 
-            #set( $elist = $item.getConfiguredExtensions() )
-            #foreach( $extension in $elist )
-                <a href="#" class="button" onclick="activate('$extension.getDescriptor().getJsonId()-config', this)">$extension.getDescriptor().getDisplayName()</a>
+            #set( $elist = $item.getExtensionDescriptors() )
+            #foreach( $descriptor in $elist )
+                <a href="#" class="button" onclick="activate('$descriptor.getJsonId()-config', this)">$descriptor.getDisplayName()</a>
             #end
         </td>
 
@@ -50,12 +50,10 @@
             </div>
 
             <div name="extensions">
-                #foreach( $extension in $elist )
+                #foreach( $descriptor in $elist )
                     <div id="$extension.getDescriptor().getJsonId()-config" style="display: none" class="configurationDiv rootConfiguration">
-                        <input type="hidden" name="class" value="$extension.getId()" />
-                        <table>
-                            #render( $extension "config" )
-                        </table>
+                        <input type="hidden" name="class" value="$descriptor.getJsonId()" />
+                        #renderDescriptor( $descriptor $item )
                     </div>
                 #end
 
