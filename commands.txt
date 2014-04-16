@@ -1,0 +1,1 @@
+java -Dadditional=project\src\main\resources -Dsystem=system\src\main\resources -Dtheme=system\src\main\resources\themes -jar server\target\server.jar
