@@ -1,5 +1,25 @@
 <tr>
     <td>
-        YEAH
+        <input type="text" id="tagsInput">
+
     </td>
 </tr>
+<tr>
+    <td id="tagsContainer">
+
+    </td>
+</tr>
+
+
+<script type="text/javascript">
+    $('#tagsInput').keypress(function(e) {
+        if(e.which == 13) {
+            $('#tagsContainer').append('<div class="targetNode deletable">' + $(this).val() + '</div>');
+            return false;
+        }
+    });
+
+    $('#tagsContainer').on('click', 'div', function(e) {
+        $(this).remove()
+    })
+</script>

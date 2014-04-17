@@ -51,7 +51,7 @@
 
             <div name="extensions">
                 #foreach( $descriptor in $elist )
-                    <div id="$extension.getDescriptor().getJsonId()-config" style="display: none" class="configurationDiv rootConfiguration">
+                    <div id="$descriptor.getJsonId()-config" style="display: none" class="configurationDiv rootConfiguration">
                         <input type="hidden" name="class" value="$descriptor.getJsonId()" />
                         #renderDescriptor( $descriptor $item )
                     </div>
