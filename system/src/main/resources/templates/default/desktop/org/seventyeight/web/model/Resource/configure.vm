@@ -27,21 +27,21 @@
         </td>
 
         <td style="width: auto; vertical-align: top" name="OUTER">
-            <div id="$item.getType()-config" style="display: block" class="configurationDiv rootConfiguration">
+            <div id="$item.getType()-config" style="display: block" class="configurationDiv">
                 <table style="width:100%">
                     <tr>
                         <td>
                             Title
                         </td>
                         <td>
-                            <input style="width:100%" type="text" name="title" value="$item.getTitle()" class="configurationDiv rootConfiguration">
+                            <input style="width:100%" type="text" name="title" value="$item.getTitle()" class="configurationDiv">
                         </td>
                     </tr>
                     #render( $item "config" )
                 </table>
             </div>
 
-            <div name="access" id="access-config" style="display: none" class="configurationDiv rootConfiguration">
+            <div name="access" id="access-config" style="display: none" class="configurationDiv">
 
                 #foreach($acl in $core.getACLs())
                     #renderDescriptor($acl $item)
@@ -49,9 +49,9 @@
 
             </div>
 
-            <div name="extensions">
+            <div name="extensions" class="arrayConfiguration">
                 #foreach( $descriptor in $elist )
-                    <div id="$descriptor.getJsonId()-config" style="display: none" class="configurationDiv rootConfiguration">
+                    <div id="$descriptor.getJsonId()-config" style="display: none" class="configurationDiv">
                         <input type="hidden" name="class" value="$descriptor.getJsonId()" />
                         #renderDescriptor( $descriptor $item )
                     </div>

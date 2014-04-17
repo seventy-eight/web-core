@@ -266,16 +266,16 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
             logger.debug( "I HAVE JSON: {}", json );
 
             // access
-            JsonArray accessArray = json.getAsJsonArray( "access" );
-            if(accessArray.size() == 1) {
-                logger.debug( "THE ACCES ARRAY: {}", accessArray.get( 0 ).getAsJsonObject() );
-                Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, accessArray.get( 0 ).getAsJsonObject(), this );
+            JsonObject accessObject = json.getAsJsonObject( "access" );
+            if(accessObject != null) {
+                logger.debug( "THE ACCES ARRAY: {}", accessObject );
+                Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, accessObject, this );
                 logger.debug( "DESCRIBABABBABABA: {}", describable );
                 document.set( "ACL", describable.getDocument() );
             }
 
-            List<JsonObject> objs = JsonUtils.getJsonObjects( json );
-            logger.debug( "JSON: {}", objs );
+            //List<JsonObject> objs = JsonUtils.getJsonObjects( json );
+            //logger.debug( "JSON: {}", objs );
         } catch( JsonException e ) {
             logger.debug( "No json object provided" );
         }

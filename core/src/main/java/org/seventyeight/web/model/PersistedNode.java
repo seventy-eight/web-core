@@ -41,7 +41,14 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             json = JsonUtils.getJsonFromRequest( request );
             List<JsonObject> objs = JsonUtils.getJsonObjects( json );
             if( !objs.isEmpty() ) {
-                updateExtensions( request, objs.get( 0 ) );
+                //updateExtensions( request, objs.get( 0 ) );
+                document.setList( "extensions" );
+                for(JsonObject o : objs) {
+                    Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, o, this );
+                    document.addToList( "extensions", describable.getDocument() );
+                }
+
+                logger.fatal( "------> {}", document );
             }
         } catch( JsonException e ) {
             logger.debug( "No json provided", e.getMessage() );

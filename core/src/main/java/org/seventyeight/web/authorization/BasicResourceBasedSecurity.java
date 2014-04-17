@@ -117,12 +117,14 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
             JsonObject accessArray = jsonData.getAsJsonObject( "access" );
             logger.debug( "ACCESS IS {}", accessArray );
 
-            List<String> reads = new ArrayList<String>( accessArray.getAsJsonArray( "read" ).size() );
-            for( JsonElement k : accessArray.getAsJsonArray( "read" )) {
-                reads.add( k.getAsString() );
-            }
+            if(accessArray.getAsJsonArray( "read" ) != null) {
+                List<String> reads = new ArrayList<String>( accessArray.getAsJsonArray( "read" ).size() );
+                for( JsonElement k : accessArray.getAsJsonArray( "read" )) {
+                    reads.add( k.getAsString() );
+                }
 
-            document.set( "read", reads );
+                document.set( "read", reads );
+            }
         }
     }
 

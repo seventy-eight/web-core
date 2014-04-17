@@ -150,9 +150,10 @@ Utils.getJsonFromForm = function( e, jsonData ) {
 
                     break;
                 case "DIV":
-                    alert("DIV: " + name + "=" + $(childs[i]).html() );
-                    if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
-                        alert("Root: " + name);
+                    //alert("DIV: " + name + "=" + $(childs[i]).html() );
+                    //if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
+                    if($(childs[i]).hasClass("arrayConfiguration") ) {
+                        //alert("Root: " + name);
                         if($(childs[i]).hasClass("objects")) {
                             if( jsonData[name] == undefined ) {
                                 jsonData[name] = {};
@@ -168,16 +169,28 @@ Utils.getJsonFromForm = function( e, jsonData ) {
                         //alert( JSON.stringify( jsonData[name][j-1] ) );
                     }
 
+                    //if($(childs[i]).hasClass("targetValue")) {
                     if($(childs[i]).hasClass("targetValue")) {
                         //jsonData[childs[i].name] = childs[i].value;
-                        alert("TARGET: " + name + ", " + childs[i].innerHTML);
+                        //alert("TARGET: " + name + ", " + childs[i].innerHTML);
                         //Utils.getJsonFromForm( childs[i], jsonData );
                         //jsonData[name].push( childs[i].innerHTML );
                         if( jsonData[name] == undefined ) {
                             jsonData[name] = [];
                         }
                         jsonData[name].push( childs[i].innerHTML );
+                    } else {
+                    //if( $(childs[i]).is( ':visible' ) && !$(childs[i]).hasClass("targetValue") ) {
+                        //jsonData[childs[i].name] = childs[i].value;
+                       // alert("DEFAULT: " + name + ", " + childs[i].innerHTML);
+                        //Utils.getJsonFromForm( childs[i], jsonData );
+                        //jsonData[name].push( childs[i].innerHTML );
+                        if( jsonData[name] == undefined ) {
+                            jsonData[name] = {};
+                        }
+                        Utils.getJsonFromForm( childs[i], jsonData[name] );
                     }
+
                     break;
             }
         }
@@ -189,12 +202,12 @@ Utils.getJsonFromForm = function( e, jsonData ) {
         }
 
         if( childs[i].tagName == 'DIV') {
-            if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
+            //if( $(childs[i]).is( ':visible' ) || $(childs[i]).hasClass("rootConfiguration") ) {
                 //alert("Div parent: " + e.name + ", " + e.tagName);
                 if( name.length == 0 ) {
                     Utils.getJsonFromForm( childs[i], jsonData );
                 }
-            }
+            //}
         }
     }
 

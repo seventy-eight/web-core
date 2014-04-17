@@ -44,15 +44,15 @@ public class JsonUtils {
     }
 
     public static List<JsonObject> getJsonObjects( JsonObject obj ) {
-        return getJsonObjects( obj, JsonType.config );
+        return getJsonObjects( obj, "extensions" );
     }
 
-    public static List<JsonObject> getJsonObjects( JsonObject obj, JsonType type ) {
+    public static List<JsonObject> getJsonObjects( JsonObject obj, String type ) {
         logger.debug( "Getting " + type + " Json objects" );
 
         List<JsonObject> objects = new ArrayList<JsonObject>();
 
-        JsonElement configElement = obj.get( type.toString() );
+        JsonElement configElement = obj.get( type );
 
         /**/
         if( configElement != null ) {

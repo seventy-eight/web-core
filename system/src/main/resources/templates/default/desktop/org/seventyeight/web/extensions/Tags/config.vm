@@ -14,7 +14,7 @@
 <script type="text/javascript">
     $('#tagsInput').keypress(function(e) {
         if(e.which == 13) {
-            $('#tagsContainer').append('<div class="targetNode deletable">' + $(this).val() + '</div>');
+            $('#tagsContainer').append('<div name="tags" class="targetNode deletable targetValue">' + $(this).val() + '</div>');
             return false;
         }
     });
