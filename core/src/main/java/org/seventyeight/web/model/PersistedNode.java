@@ -11,7 +11,9 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cwolfgang
@@ -24,12 +26,21 @@ public abstract class PersistedNode implements Node, Savable, Documented {
 
     protected MongoDocument document;
 
+    Map<Class<? extends AbstractExtension<?>>, Extension<? extends PersistedNode>> extensions = new HashMap<Class<? extends AbstractExtension<?>>, Extension<? extends PersistedNode>>(  );
+
+    /*
     public PersistedNode() {
 
     }
+    */
 
     public PersistedNode( MongoDocument document ) {
         this.document = document;
+    }
+
+    public void resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
+        MongoDocument doc = document.getr(EXTENSIONS, descriptor.getJsonId());
+        logger.debug( "DOC: {}", doc );
     }
 
     public final void update(CoreRequest request) throws ClassNotFoundException, ItemInstantiationException {
@@ -42,10 +53,11 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             List<JsonObject> objs = JsonUtils.getJsonObjects( json );
             if( !objs.isEmpty() ) {
                 //updateExtensions( request, objs.get( 0 ) );
-                document.setList( "extensions" );
+                //document.setList( "extensions" );
                 for(JsonObject o : objs) {
                     Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, o, this );
-                    document.addToList( "extensions", describable.getDocument() );
+                    //document.addToList( "extensions", describable.getDocument() );
+                    document.set( EXTENSIONS, new MongoDocument().set( describable.getDescriptor().getJsonId(), describable.getDocument() ) );
                 }
 
                 logger.fatal( "------> {}", document );
