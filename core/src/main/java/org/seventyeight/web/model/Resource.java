@@ -10,14 +10,9 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
-import org.seventyeight.web.authorization.Authorizable;
-import org.seventyeight.web.extensions.NodeExtension;
-import org.seventyeight.web.extensions.ResourceExtension;
-import org.seventyeight.web.extensions.ViewContributor;
-import org.seventyeight.web.extensions.Partitioned;
+import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -41,6 +36,14 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     public Resource( Node parent, MongoDocument document ) {
         super( parent, document );
+    }
+
+    @Override
+    public List<String> getApplicableExtensionGroups() {
+        List<String> groups = new ArrayList<String>(  );
+        groups.add( "Tags" );
+
+        return groups;
     }
 
     /**

@@ -3,6 +3,7 @@ package org.seventyeight.web;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.seventyeight.TokenList;
+import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.Parameters;
@@ -26,10 +27,10 @@ public class CoreTest {
     public static DummyCoreEnvironment env = new DummyCoreEnvironment( "coreTest" );
 
     @Test
-    public void test01() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
+    public void test01() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException, NoAuthorizationException {
 
         TokenList tokens = new TokenList( "/user/wolle" );
-        Node nodeItem = Core.getInstance().resolveNode( tokens );
+        Node nodeItem = Core.getInstance().resolveNode( tokens, null );
 
         System.out.println( tokens );
 
@@ -38,12 +39,12 @@ public class CoreTest {
     }
 
     @Test
-    public void test02() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException {
+    public void test02() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException, NoAuthorizationException {
 
         Core.getInstance().addNode( "user", new DummyNode( Core.getInstance() ) );
 
         TokenList tokens = new TokenList( "/user/wolle" );
-        Node nodeItem = Core.getInstance().resolveNode( tokens );
+        Node nodeItem = Core.getInstance().resolveNode( tokens, null );
 
         System.out.println( tokens );
     }
@@ -54,7 +55,7 @@ public class CoreTest {
         Parameters p = new Parameters();
         p.put( "username", username );
 
-        user.updateNode( p );
+        user.updateNode( p, null );
 
         user.save();
 

@@ -15,6 +15,7 @@ import org.seventyeight.web.actions.ResourceAction;
 import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
+import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.Group;
@@ -93,6 +94,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
     protected MongoDatabase db;
 
     protected Menu mainMenu = new Menu();
+
+    /** A map of all the extenion groups */
+    protected Map<String, ExtensionGroup> extensionGroups = new HashMap<String, ExtensionGroup>(  );
 
     /**
      * A map of descriptors keyed by their supers class
@@ -591,6 +595,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             naturalSearchables.put( ( (NaturalSearchable) descriptor ).getType(), ( NaturalSearchable )descriptor );
         }
 
+        if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
+            addExtensionsGroup( (AbstractExtension.ExtensionDescriptor) descriptor );
+        }
+
         /*
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
             AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
@@ -608,7 +616,17 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         //descriptor.configureIndex( db );
     }
 
-    //public List<AbstractExtension.>
+    public void addExtensionsGroup(AbstractExtension.ExtensionDescriptor<?> descriptor) {
+        ExtensionGroup extensionGroup = descriptor.getExtensionGroup();
+        logger.debug( "Adding extension group, {}", extensionGroup );
+
+        if(!extensionGroups.containsKey( extensionGroup.getName() )) {
+            extensionGroups.put( extensionGroup.getName(), extensionGroup );
+        }
+
+        ExtensionGroup group = extensionGroups.get( extensionGroup.getName() );
+        group.addDescriptor( descriptor );
+    }
 
     public NaturalSearchable getNaturalSearchable( String type ) {
         return naturalSearchables.get( type );

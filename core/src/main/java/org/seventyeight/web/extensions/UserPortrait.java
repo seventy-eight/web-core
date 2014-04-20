@@ -51,5 +51,10 @@ public abstract class UserPortrait extends AbstractExtension<UserPortrait> {
         public String getTypeName() {
             return "portrait";
         }
+
+        @Override
+        public ExtensionGroup getExtensionGroup() {
+            return new ExtensionGroup( "User portrait" );
+        }
     }
 }

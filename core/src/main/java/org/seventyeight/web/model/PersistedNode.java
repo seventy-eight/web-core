@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.ExtensionUtils;
 import org.seventyeight.web.utilities.JsonException;
@@ -28,15 +29,11 @@ public abstract class PersistedNode implements Node, Savable, Documented {
 
     Map<Class<? extends AbstractExtension<?>>, Extension<? extends PersistedNode>> extensions = new HashMap<Class<? extends AbstractExtension<?>>, Extension<? extends PersistedNode>>(  );
 
-    /*
-    public PersistedNode() {
-
-    }
-    */
-
     public PersistedNode( MongoDocument document ) {
         this.document = document;
     }
+
+    public abstract List<String> getApplicableExtensionGroups();
 
     public void resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
         MongoDocument doc = document.getr(EXTENSIONS, descriptor.getJsonId());

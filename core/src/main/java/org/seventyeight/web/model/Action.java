@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.extensions.ExtensionGroup;
 
 /**
  * @author cwolfgang
@@ -28,6 +29,9 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
             return "action";
         }
 
-        //public abstract String getUrlName();
+        @Override
+        public ExtensionGroup getExtensionGroup() {
+            return new ExtensionGroup( "Action", true );
+        }
     }
 }

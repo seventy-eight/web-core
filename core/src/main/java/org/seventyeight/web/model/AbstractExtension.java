@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ExtensionGroup;
 
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +71,8 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public abstract String getExtensionName();
 
         public abstract String getTypeName();
+
+        public abstract ExtensionGroup getExtensionGroup();
 
         /**
          * Yes yes, I know....

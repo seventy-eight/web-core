@@ -24,7 +24,7 @@ public class ExtensionUtils {
     public static void retrieveExtensions(CoreRequest request, JsonObject json, PersistedNode node) throws ItemInstantiationException, ClassNotFoundException {
         logger.debug( "Retrieving extensions for {} from {}", node, json );
 
-        List<JsonObject> extensionsObjects = JsonUtils.getJsonObjects( json, JsonUtils.JsonType.config );
+        List<JsonObject> extensionsObjects = JsonUtils.getJsonObjects( json, "extensions" );
         logger.debug( "I got " + extensionsObjects.size() + " extension types" );
 
         for( JsonObject obj : extensionsObjects ) {

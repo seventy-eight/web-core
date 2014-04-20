@@ -69,5 +69,10 @@ public class Tags extends ResourceExtension<Tags> {
         public String getTypeName() {
             return "tags";
         }
+
+        @Override
+        public ExtensionGroup getExtensionGroup() {
+            return new ExtensionGroup( "Tags" );
+        }
     }
 }
