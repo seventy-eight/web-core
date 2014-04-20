@@ -163,15 +163,12 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         }
     }
 
-    /*
+
     @Override
-    public Node getChild( String name ) throws NotFoundException {
-        Node node = AbstractNode.getNodeByTitle( this, name, getType() );
-        if( node != null ) {
-            return node;
-        } else {
-            throw new NotFoundException( "The child " + name + " was not found" );
-        }
+    public List<String> getApplicableExtensionGroups() {
+        List<String> groups = new ArrayList<String>(  );
+        groups.add( "Tags" );
+
+        return groups;
     }
-    */
 }

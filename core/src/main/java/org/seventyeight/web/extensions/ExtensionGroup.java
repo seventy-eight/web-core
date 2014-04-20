@@ -12,21 +12,36 @@ public class ExtensionGroup {
 
     private String name;
 
-    private boolean multiple = false;
+    enum Type {
+        one,
+        single,
+        multiple
+    }
+
+    private Type type;
 
     private List<AbstractExtension.ExtensionDescriptor<?>> descriptors = new ArrayList<AbstractExtension.ExtensionDescriptor<?>>();
 
     public ExtensionGroup( String name ) {
         this.name = name;
+        type = Type.one;
     }
 
     public ExtensionGroup( String name, boolean multiple ) {
         this.name = name;
-        this.multiple = multiple;
+        if(multiple) {
+            this.type = Type.multiple;
+        } else {
+            this.type = Type.single;
+        }
     }
 
     public String getName() {
         return name;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public void addDescriptor(AbstractExtension.ExtensionDescriptor<?> descriptor) {

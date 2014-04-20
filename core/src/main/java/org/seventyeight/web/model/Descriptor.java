@@ -166,5 +166,5 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return true;
     }
 
-
+    public abstract List<String> getApplicableExtensionGroups();
 }

@@ -38,14 +38,6 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         super( parent, document );
     }
 
-    @Override
-    public List<String> getApplicableExtensionGroups() {
-        List<String> groups = new ArrayList<String>(  );
-        groups.add( "Tags" );
-
-        return groups;
-    }
-
     /**
      * Determines whether a {@link Resource} exists or not
      */

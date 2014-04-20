@@ -33,8 +33,6 @@ public abstract class PersistedNode implements Node, Savable, Documented {
         this.document = document;
     }
 
-    public abstract List<String> getApplicableExtensionGroups();
-
     public void resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
         MongoDocument doc = document.getr(EXTENSIONS, descriptor.getJsonId());
         logger.debug( "DOC: {}", doc );

@@ -628,6 +628,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         group.addDescriptor( descriptor );
     }
 
+    public ExtensionGroup getExtensionGroupByName(String name) {
+        return extensionGroups.get( name );
+    }
+
     public NaturalSearchable getNaturalSearchable( String type ) {
         return naturalSearchables.get( type );
     }

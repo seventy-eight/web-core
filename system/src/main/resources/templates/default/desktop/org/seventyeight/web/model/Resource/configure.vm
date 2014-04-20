@@ -20,9 +20,8 @@
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('access-config', this)">Access</a>
 
-            #set( $elist = $item.getExtensionDescriptors() )
-            #foreach( $descriptor in $elist )
-                <a href="#" class="button" onclick="activate('$descriptor.getJsonId()-config', this)">$descriptor.getDisplayName()</a>
+            #foreach( $groupName in $item.getDescriptor().getApplicableExtensionGroups() )
+                <a href="#" class="button" onclick="activate('${groupName}config', this)">$groupName</a>
             #end
         </td>
 
@@ -50,10 +49,18 @@
             </div>
 
             <div name="extensions" class="arrayConfiguration">
-                #foreach( $descriptor in $elist )
-                    <div id="$descriptor.getJsonId()-config" style="display: none" class="configurationDiv">
-                        <input type="hidden" name="class" value="$descriptor.getJsonId()" />
-                        #renderDescriptor( $descriptor $item )
+                #foreach( $groupName in $item.getDescriptor().getApplicableExtensionGroups() )
+                    #set($group = $core.getExtensionGroupByName($groupName))
+                    GROUP=$group ... ${groupName}config
+                    <div id="${groupName}config" style="display: none" class="configurationDiv">
+                        #foreach($descriptor in $group.getDescriptors())
+                            #if($group.getType().name() == "one")
+                                #renderDescriptor( $descriptor $item )
+                            #else
+                                SNADE
+                            #end
+                        #end
+
                     </div>
                 #end
 
