@@ -165,7 +165,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
 
     @Override
-    public List<String> getApplicableExtensionGroups() {
+    public List<String> getApplicableExtensions() {
         List<String> groups = new ArrayList<String>(  );
         groups.add( "Tags" );
 

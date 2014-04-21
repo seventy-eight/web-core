@@ -30,8 +30,13 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
         }
 
         @Override
+        public Class<ActionDescriptor> getExtensionClass() {
+            return ActionDescriptor.class;
+        }
+
+        @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( "Action", true );
+            return new ExtensionGroup( getClazz(), "Action", true );
         }
     }
 }

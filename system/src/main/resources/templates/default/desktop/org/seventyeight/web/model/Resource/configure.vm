@@ -20,7 +20,7 @@
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('access-config', this)">Access</a>
 
-            #foreach( $groupName in $item.getDescriptor().getApplicableExtensionGroups() )
+            #foreach( $groupName in $item.getDescriptor().getApplicableExtensions() )
                 <a href="#" class="button" onclick="activate('${groupName}config', this)">$groupName</a>
             #end
         </td>
@@ -49,10 +49,10 @@
             </div>
 
             <div name="extensions" class="arrayConfiguration">
-                #foreach( $groupName in $item.getDescriptor().getApplicableExtensionGroups() )
+                #foreach( $groupName in $item.getDescriptor().getApplicableExtensions() )
                     #set($group = $core.getExtensionGroupByName($groupName))
                     GROUP=$group ... ${groupName}config
-                    <div id="${groupName}config" style="display: none" class="configurationDiv">
+                    <div name="$group.getClazz()" id="${groupName}config" style="display: none" class="configurationDiv">
                         #foreach($descriptor in $group.getDescriptors())
                             #if($group.getType().name() == "one")
                                 #renderDescriptor( $descriptor $item )

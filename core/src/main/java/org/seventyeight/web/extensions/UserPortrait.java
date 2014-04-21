@@ -53,8 +53,13 @@ public abstract class UserPortrait extends AbstractExtension<UserPortrait> {
         }
 
         @Override
+        public Class<UserPortraitDescriptor> getExtensionClass() {
+            return UserPortraitDescriptor.class;
+        }
+
+        @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( "User portrait" );
+            return new ExtensionGroup( getClass(), "User portrait" );
         }
     }
 }

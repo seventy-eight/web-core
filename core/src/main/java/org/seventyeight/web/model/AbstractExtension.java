@@ -74,6 +74,13 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         public abstract ExtensionGroup getExtensionGroup();
 
+        @Override
+        public List<String> getApplicableExtensions() {
+            return Collections.emptyList();
+        }
+
+        public abstract <T extends ExtensionDescriptor> Class<T> getExtensionClass();
+
         /**
          * Yes yes, I know....
          */

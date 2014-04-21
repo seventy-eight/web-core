@@ -16,6 +16,7 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,6 +134,11 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         @Override
         public String getDisplayName() {
             return "Basic resource based security";
+        }
+
+        @Override
+        public List<String> getApplicableExtensions() {
+            return Collections.emptyList();
         }
     }
 }

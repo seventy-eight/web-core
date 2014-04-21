@@ -7,7 +7,9 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 
 public class Session extends AbstractNode<Session> {
@@ -115,6 +117,11 @@ public class Session extends AbstractNode<Session> {
         @Override
         public String getCollectionName() {
             return SessionManager.SESSIONS_COLLECTION_NAME;
+        }
+
+        @Override
+        public List<String> getApplicableExtensions() {
+            return Collections.emptyList();
         }
 
         public Session newInstance(String title, Node parent) throws ItemInstantiationException {

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.model.AbstractExtension;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 
@@ -72,7 +73,12 @@ public class Tags extends ResourceExtension<Tags> {
 
         @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( "Tags" );
+            return new ExtensionGroup( getClass(), "Tags" );
+        }
+
+        @Override
+        public Class<TagsDescriptor> getExtensionClass() {
+            return TagsDescriptor.class;
         }
     }
 }

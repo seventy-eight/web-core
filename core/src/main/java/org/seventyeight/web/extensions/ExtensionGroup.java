@@ -12,6 +12,8 @@ public class ExtensionGroup {
 
     private String name;
 
+    private Class<? extends AbstractExtension.ExtensionDescriptor> clazz;
+
     enum Type {
         one,
         single,
@@ -20,15 +22,17 @@ public class ExtensionGroup {
 
     private Type type;
 
-    private List<AbstractExtension.ExtensionDescriptor<?>> descriptors = new ArrayList<AbstractExtension.ExtensionDescriptor<?>>();
+    private List<AbstractExtension.ExtensionDescriptor> descriptors = new ArrayList<AbstractExtension.ExtensionDescriptor>();
 
-    public ExtensionGroup( String name ) {
+    public ExtensionGroup( Class<? extends AbstractExtension.ExtensionDescriptor> clazz, String name ) {
         this.name = name;
+        this.clazz = clazz;
         type = Type.one;
     }
 
-    public ExtensionGroup( String name, boolean multiple ) {
+    public ExtensionGroup( Class<? extends AbstractExtension.ExtensionDescriptor> clazz, String name, boolean multiple ) {
         this.name = name;
+        this.clazz = clazz;
         if(multiple) {
             this.type = Type.multiple;
         } else {
@@ -48,8 +52,12 @@ public class ExtensionGroup {
         descriptors.add( descriptor );
     }
 
-    public List<AbstractExtension.ExtensionDescriptor<?>> getDescriptors() {
+    public List<AbstractExtension.ExtensionDescriptor> getDescriptors() {
         return descriptors;
+    }
+
+    public Class<? extends AbstractExtension.ExtensionDescriptor> getClazz() {
+        return clazz;
     }
 
     @Override
