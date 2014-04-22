@@ -12,7 +12,7 @@ public class ExtensionGroup {
 
     private String name;
 
-    private Class<? extends AbstractExtension.ExtensionDescriptor> clazz;
+    private Class<? extends AbstractExtension> clazz;
 
     enum Type {
         one,
@@ -24,13 +24,13 @@ public class ExtensionGroup {
 
     private List<AbstractExtension.ExtensionDescriptor> descriptors = new ArrayList<AbstractExtension.ExtensionDescriptor>();
 
-    public ExtensionGroup( Class<? extends AbstractExtension.ExtensionDescriptor> clazz, String name ) {
+    public ExtensionGroup( Class<? extends AbstractExtension> clazz, String name ) {
         this.name = name;
         this.clazz = clazz;
         type = Type.one;
     }
 
-    public ExtensionGroup( Class<? extends AbstractExtension.ExtensionDescriptor> clazz, String name, boolean multiple ) {
+    public ExtensionGroup( Class<? extends AbstractExtension> clazz, String name, boolean multiple ) {
         this.name = name;
         this.clazz = clazz;
         if(multiple) {
@@ -56,7 +56,7 @@ public class ExtensionGroup {
         return descriptors;
     }
 
-    public Class<? extends AbstractExtension.ExtensionDescriptor> getClazz() {
+    public Class<? extends AbstractExtension> getClazz() {
         return clazz;
     }
 

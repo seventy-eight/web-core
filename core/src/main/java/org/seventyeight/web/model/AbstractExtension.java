@@ -75,11 +75,16 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public abstract ExtensionGroup getExtensionGroup();
 
         @Override
-        public List<String> getApplicableExtensions() {
+        public List<ExtensionGroup> getApplicableExtensions() {
             return Collections.emptyList();
         }
 
         public abstract <T extends ExtensionDescriptor> Class<T> getExtensionClass();
+
+        @Override
+        public Class<? extends AbstractExtension> getClazz() {
+            return (Class<? extends AbstractExtension>) super.getClazz();
+        }
 
         /**
          * Yes yes, I know....

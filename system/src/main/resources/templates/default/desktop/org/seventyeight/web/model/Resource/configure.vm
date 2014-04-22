@@ -20,8 +20,8 @@
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('access-config', this)">Access</a>
 
-            #foreach( $groupName in $item.getDescriptor().getApplicableExtensions() )
-                <a href="#" class="button" onclick="activate('${groupName}config', this)">$groupName</a>
+            #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+                <a href="#" class="button" onclick="activate('${extensionGroup.getName()}config', this)">$extensionGroup.getName()</a>
             #end
         </td>
 
@@ -43,23 +43,30 @@
             <div name="access" id="access-config" style="display: none" class="configurationDiv">
 
                 #foreach($acl in $core.getACLs())
-                    #renderDescriptor($acl $item)
+                    <input type="hidden" name="extension" value="$acl.getClass()" />
+                    <div name="config">
+                        #renderDescriptor($acl $item)
+                    </div>
                 #end
 
             </div>
 
             <div name="extensions" class="arrayConfiguration">
-                #foreach( $groupName in $item.getDescriptor().getApplicableExtensions() )
-                    #set($group = $core.getExtensionGroupByName($groupName))
-                    GROUP=$group ... ${groupName}config
-                    <div name="$group.getClazz()" id="${groupName}config" style="display: none" class="configurationDiv">
-                        #foreach($descriptor in $group.getDescriptors())
-                            #if($group.getType().name() == "one")
-                                #renderDescriptor( $descriptor $item )
-                            #else
-                                SNADE
+                #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+                    GROUP=$extensionGroup<br>$extensionGroup.getDescriptors()<br>$extensionGroup.getType().name()
+                    <div id="${extensionGroup.getName()}config" style="display: none" class="configurationDiv">
+                        <input type="hidden" name="extension" value="$extensionGroup.getClazz()" />
+                        <div name="config">
+                            #foreach($descriptor in $extensionGroup.getDescriptors())
+                                $descriptor
+                                #if($extensionGroup.getType().name() == "one")
+                                    HEJ
+                                    #renderDescriptor( $descriptor $item )
+                                #else
+                                    SNADE
+                                #end
                             #end
-                        #end
+                        </div>
 
                     </div>
                 #end

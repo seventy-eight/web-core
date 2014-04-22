@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ExtensionGroup;
+import org.seventyeight.web.model.AbstractExtension;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.model.Node;
@@ -137,7 +139,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         }
 
         @Override
-        public List<String> getApplicableExtensions() {
+        public List<ExtensionGroup> getApplicableExtensions() {
             return Collections.emptyList();
         }
     }

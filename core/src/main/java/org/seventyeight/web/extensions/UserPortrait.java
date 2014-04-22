@@ -59,7 +59,7 @@ public abstract class UserPortrait extends AbstractExtension<UserPortrait> {
 
         @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( getClass(), "User portrait" );
+            return new ExtensionGroup( getClazz(), "User portrait" );
         }
     }
 }

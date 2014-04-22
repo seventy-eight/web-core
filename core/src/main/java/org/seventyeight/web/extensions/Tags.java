@@ -73,7 +73,7 @@ public class Tags extends ResourceExtension<Tags> {
 
         @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( getClass(), "Tags" );
+            return new ExtensionGroup( getClazz(), "Tags" );
         }
 
         @Override

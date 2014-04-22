@@ -53,23 +53,31 @@ public class ExtensionUtils {
 
     /**
      * Get a describable given a json object
+     * On the form:
+     *
+     * {
+     *  extension: <extension class>,
+     *  config: { class: <class>, configuration ... }
+     * }
      */
     public static Describable handleExtensionConfiguration( CoreRequest request, JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
         /* Get Json configuration object class name */
-        String cls = jsonData.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
+        JsonObject jsonConfiguration = jsonData.getAsJsonObject( JsonUtils.__JSON_CONFIGURATION_NAME );
+
+        String cls = jsonConfiguration.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
         logger.debug( "Configuration class is " + cls );
-        logger.debug( "Json Data for extension configuration: {}", jsonData );
+        logger.debug( "Json Data for extension configuration: {}", jsonConfiguration );
 
         Class<?> clazz = Class.forName( cls );
         Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
         Describable e = d.newInstance( request, node );
-        e.updateNode( request, jsonData );
+        e.updateNode( request, jsonConfiguration );
 
         /* Remove data!? */
         if( d.doRemoveDataItemOnConfigure() ) {
-            logger.debug( "This should remove the data attached to this modelObject" );
+            logger.debug( "This should remove the data attached to this extension" );
         }
 
         return e;

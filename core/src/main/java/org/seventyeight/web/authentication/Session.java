@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 
@@ -120,7 +121,7 @@ public class Session extends AbstractNode<Session> {
         }
 
         @Override
-        public List<String> getApplicableExtensions() {
+        public List<ExtensionGroup> getApplicableExtensions() {
             return Collections.emptyList();
         }
 

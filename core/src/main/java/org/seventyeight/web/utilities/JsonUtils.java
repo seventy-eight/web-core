@@ -37,6 +37,7 @@ public class JsonUtils {
     public static final String __JSON_CONFIGURATION_NAME = "config";
     //public static final String __JSON_EXTENSION_NAME = "extensions";
     public static final String __JSON_CLASS_NAME = "class";
+    public static final String __JSON_EXTENSION_NAME = "extension";
 
     public enum JsonType {
         config,

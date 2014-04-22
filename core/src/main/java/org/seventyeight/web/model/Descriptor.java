@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
 
@@ -166,5 +167,5 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return true;
     }
 
-    public abstract List<String> getApplicableExtensions();
+    public abstract List<ExtensionGroup> getApplicableExtensions();
 }
