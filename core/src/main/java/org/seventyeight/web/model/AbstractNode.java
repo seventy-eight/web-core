@@ -1,6 +1,5 @@
 package org.seventyeight.web.model;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +12,6 @@ import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.Ownable;
 import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -329,7 +327,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         if( docs != null ) {
             try {
-                return (N) Core.getInstance().getItem( parent, docs );
+                return (N) Core.getInstance().getNode( parent, docs );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
                 return null;
@@ -353,7 +351,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         if( docs != null ) {
             for( MongoDocument doc : docs ) {
                 try {
-                    nodes.add( (N)Core.getInstance().getItem( parent, doc ) );
+                    nodes.add( (N)Core.getInstance().getNode( parent, doc ) );
                 } catch( ItemInstantiationException e ) {
                     /* TODO should this fail the entire method???? */
                     logger.error( e.getMessage() );
@@ -370,7 +368,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).getDocumentById( id );
         if( doc != null ) {
             try {
-                return (N) Core.getInstance().getItem( parent, doc );
+                return (N) Core.getInstance().getNode( parent, doc );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
                 return null;

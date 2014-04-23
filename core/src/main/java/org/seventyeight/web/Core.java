@@ -292,14 +292,13 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
      * @return
      * @throws ItemInstantiationException
      */
-    public <T extends PersistedNode> T getItem( Node parent, MongoDocument document ) throws ItemInstantiationException {
+    public <T extends PersistedNode> T getNode( Node parent, MongoDocument document ) throws ItemInstantiationException {
         String clazz = null;
         try {
             clazz = document.get( "class" );
         } catch( Exception e ) {
             throw new ItemInstantiationException( "Field \"class\" not found.", e );
         }
-
 
         if( clazz == null ) {
             logger.warn( "Class property not found" );
@@ -323,7 +322,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         MongoDocument d = MongoDBCollection.get( NODES_COLLECTION_NAME ).getDocumentById( id );
 
         if( d != null && !d.isNull() ) {
-            PersistedNode obj = getItem( parent, d );
+            PersistedNode obj = getNode( parent, d );
 
             return (T) obj;
         } else {

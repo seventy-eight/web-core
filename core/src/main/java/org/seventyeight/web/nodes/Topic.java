@@ -11,8 +11,6 @@ import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
-import java.util.Locale;
-
 /**
  * Basic {@link Resource} for texts.
  *
@@ -144,7 +142,7 @@ public class Topic extends Resource<Topic> {
 
         if( docs != null ) {
             try {
-                return Core.getInstance().getItem( parent, docs );
+                return Core.getInstance().getNode( parent, docs );
             } catch( ItemInstantiationException e ) {
                 logger.error( e );
                 return null;

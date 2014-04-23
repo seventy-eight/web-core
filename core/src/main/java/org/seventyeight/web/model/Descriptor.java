@@ -124,14 +124,20 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return Collections.EMPTY_LIST;
     }
 
-    public String getConfigurationPage( Request request ) throws TemplateException, NotFoundException {
+    public String getConfigurationPage( Request request ) throws TemplateException, NotFoundException, ItemInstantiationException {
         return getConfigurationPage( request, null );
     }
 
-    public String getConfigurationPage( Request request, Describable<?> describable ) throws TemplateException, NotFoundException {
+    public String getConfigurationPage( Request request, Describable<?> describable ) throws TemplateException, NotFoundException, ItemInstantiationException {
         VelocityContext c = new VelocityContext();
         c.put( "class", getClazz().getName() );
         c.put( "descriptor", this );
+
+        // Check describable
+        if(!getClazz().isInstance( describable )) {
+            logger.debug( "{} is not instance of {}", describable, getClazz() );
+            describable = getDescribable( describable.getParent(), describable.getDocument() );
+        }
 
         if( describable != null ) {
             logger.debug( "Extension is " + describable );
@@ -144,6 +150,10 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         }
 
         return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
+    }
+
+    public Describable<T> getDescribable(Node parent, MongoDocument document) throws ItemInstantiationException {
+        return (Describable<T>) Core.getInstance().getNode( parent, document );
     }
 
     public String getRelationType() {

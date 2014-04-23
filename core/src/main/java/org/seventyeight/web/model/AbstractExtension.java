@@ -82,6 +82,11 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public abstract <T extends ExtensionDescriptor> Class<T> getExtensionClass();
 
         @Override
+        public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
+            return super.getDescribable( parent, document );
+        }
+
+        @Override
         public Class<? extends AbstractExtension> getClazz() {
             return (Class<? extends AbstractExtension>) super.getClazz();
         }
@@ -104,14 +109,14 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             }
 
             logger.debug( "EXTENSION SUBDOC " + d );
-            return Core.getInstance().getItem( (Node) parent, d );
+            return Core.getInstance().getNode( (Node) parent, d );
         }
 
         public T getExtension( Descriptor parent ) throws ItemInstantiationException {
             MongoDocument d = new MongoDocument().set( "class", getId() );
 
             logger.debug( "EXTENSION SUBDOC " + d );
-            return Core.getInstance().getItem( (Node) parent, d );
+            return Core.getInstance().getNode( (Node) parent, d );
         }
 
         public boolean isApplicable( Node node ) {

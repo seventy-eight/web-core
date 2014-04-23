@@ -137,7 +137,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
                 MongoDocument ext = doc.getSubDocument( e, null );
                 if( ext != null && !ext.isNull() ) {
-                    AbstractExtension instance = Core.getInstance().getItem( this, ext );
+                    AbstractExtension instance = Core.getInstance().getNode( this, ext );
                     extensions.add( instance );
                 }
             }

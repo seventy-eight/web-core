@@ -13,7 +13,6 @@ import org.seventyeight.web.extensions.UserPortrait;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.ExtensionUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -184,7 +183,7 @@ public class User extends Resource<User> {
 
         if( portrait != null && !portrait.isNull() ) {
             try {
-                UserPortrait up = Core.getInstance().getItem( this, portrait );
+                UserPortrait up = Core.getInstance().getNode( this, portrait );
                 return up.getUrl();
             } catch( ItemInstantiationException e ) {
                 logger.warn( "Unable to get the portrait from " + portrait );
@@ -209,7 +208,7 @@ public class User extends Resource<User> {
         MongoDocument portrait = document.getSubDocument( "portrait", null );
 
         if( portrait != null ) {
-            UserPortrait up = Core.getInstance().getItem( this, portrait );
+            UserPortrait up = Core.getInstance().getNode( this, portrait );
             return up;
         } else {
             return null;
@@ -228,7 +227,7 @@ public class User extends Resource<User> {
         logger.debug( "USER DOOOOOOOOOOOOC: {}", userDoc );
         if( userDoc != null && !userDoc.isNull() ) {
             try {
-                return Core.getInstance().getItem( parent, userDoc );
+                return Core.getInstance().getNode( parent, userDoc );
             } catch( ItemInstantiationException e ) {
                 logger.error( e );
                 return null;

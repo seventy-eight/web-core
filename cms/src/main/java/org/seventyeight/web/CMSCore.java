@@ -107,7 +107,7 @@ public class CMSCore extends Core {
         /*
         MongoDBQuery query = new MongoDBQuery().is( "username", "anonymous" );
         MongoDocument d = MongoDBCollection.get( Core.RESOURCES_COLLECTION_NAME ).findOne( query );
-        Profile a = getItem( this, d );
+        Profile a = getNode( this, d );
         setAnonymous( a );
         */
     }

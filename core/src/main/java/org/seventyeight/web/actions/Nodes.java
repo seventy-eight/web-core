@@ -26,7 +26,7 @@ public class Nodes implements Node {
 
         for( MongoDocument doc : docs ) {
             try {
-                nodes.add( (Node) Core.getInstance().getItem( this, doc ) );
+                nodes.add( (Node) Core.getInstance().getNode( this, doc ) );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
             }
