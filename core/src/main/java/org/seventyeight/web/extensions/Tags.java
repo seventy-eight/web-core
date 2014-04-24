@@ -54,6 +54,10 @@ public class Tags extends ResourceExtension<Tags> {
         }
     }
 
+    public List<String> getTags() {
+        return document.getStringList( "tags" );
+    }
+
     public static class TagsDescriptor extends ExtensionDescriptor<Tags> {
 
         @Override
@@ -77,8 +81,8 @@ public class Tags extends ResourceExtension<Tags> {
         }
 
         @Override
-        public Class<TagsDescriptor> getExtensionClass() {
-            return TagsDescriptor.class;
+        public Class<Tags> getExtensionClass() {
+            return Tags.class;
         }
     }
 }

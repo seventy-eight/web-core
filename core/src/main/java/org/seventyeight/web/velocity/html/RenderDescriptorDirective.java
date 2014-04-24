@@ -33,7 +33,7 @@ public class RenderDescriptorDirective extends Directive {
 	public boolean render( InternalContextAdapter context, Writer writer, Node node ) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
         logger.debug( "Rendering descriptor" );
 		Descriptor d = null;
-        Describable item = null;
+        Describable describable = null;
         Boolean expanded = false;
 		
 		try {
@@ -44,7 +44,7 @@ public class RenderDescriptorDirective extends Directive {
 			}
 
             if( node.jjtGetChild( 1 ) != null ) {
-                item = (Describable) node.jjtGetChild( 1 ).value( context );
+                describable = (Describable) node.jjtGetChild( 1 ).value( context );
             } else {
                 throw new IOException( "Argument not an item" );
             }
@@ -61,13 +61,20 @@ public class RenderDescriptorDirective extends Directive {
 
         Request request = (Request) context.get( "request" );
 
-        logger.fatal( "ITEM IS " + item );
+        logger.fatal( "ITEM IS " + describable );
 
         try {
-            if( item == null ) {
+            if( describable == null ) {
                 writer.write( d.getConfigurationPage( request, null ) );
             } else {
-                writer.write( d.getConfigurationPage( request, item ) );
+                // Check describable
+                if(!d.getClazz().isInstance( describable )) {
+                    logger.debug( "{} is not instance of {}", d, d.getClazz() );
+                    describable = d.getDescribable( describable.getParent(), describable.getDocument() );
+                    logger.debug( "Returned describabale: {}", describable );
+                }
+
+                writer.write( d.getConfigurationPage( request, describable ) );
             }
         } catch( Exception e ) {
             throw new IOException( e );

@@ -29,10 +29,12 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
             return "action";
         }
 
+        /*
         @Override
-        public Class<ActionDescriptor> getExtensionClass() {
-            return ActionDescriptor.class;
+        public Class<T> getExtensionClass() {
+            return Action.class;
         }
+        */
 
         @Override
         public ExtensionGroup getExtensionGroup() {

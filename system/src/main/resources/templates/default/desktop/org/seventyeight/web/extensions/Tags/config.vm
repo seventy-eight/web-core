@@ -6,7 +6,9 @@
 </tr>
 <tr>
     <td id="tagsContainer">
-
+#foreach($t in $item.getTags())
+$t<br>
+#end
     </td>
 </tr>
 

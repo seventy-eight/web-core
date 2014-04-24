@@ -183,6 +183,21 @@ public class MongoDocument implements Document {
         }
     }
 
+    public List<String> getStringList( String key ) {
+        List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
+
+        if( list != null ) {
+            List<String> docs = new ArrayList<String>( list.size() );
+            for( BasicDBObject o : list ) {
+           //     docs.add( o.toString() );
+            }
+
+            return docs;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
     public List<MongoDocument> getList( String key, int offset, int number ) {
         List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
 

@@ -109,6 +109,10 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return getId().replace( '.', '-' );
     }
 
+    public static String getJsonId(String id) {
+        return id.replace( '.', '-' );
+    }
+
     /**
      * When instantiated the descriptor can configure an index
      */
@@ -132,12 +136,6 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         VelocityContext c = new VelocityContext();
         c.put( "class", getClazz().getName() );
         c.put( "descriptor", this );
-
-        // Check describable
-        if(!getClazz().isInstance( describable )) {
-            logger.debug( "{} is not instance of {}", describable, getClazz() );
-            describable = getDescribable( describable.getParent(), describable.getDocument() );
-        }
 
         if( describable != null ) {
             logger.debug( "Extension is " + describable );

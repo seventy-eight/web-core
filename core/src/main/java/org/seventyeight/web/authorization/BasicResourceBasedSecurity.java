@@ -131,6 +131,16 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         }
     }
 
+    @Override
+    public String getDisplayName() {
+        return "Basic resource based security";
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;
+    }
+
     public static class BasicResourceBasedSecurityDescriptor extends Descriptor<BasicResourceBasedSecurity> {
 
         @Override

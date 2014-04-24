@@ -46,6 +46,11 @@ public class GetAction extends Action<GetAction> implements Parent {
         }
 
         @Override
+        public Class<GetAction> getExtensionClass() {
+            return GetAction.class;
+        }
+
+        @Override
         public boolean isApplicable( Node node ) {
             return ( node instanceof Getable );
         }

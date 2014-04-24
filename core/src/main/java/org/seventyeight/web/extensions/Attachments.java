@@ -71,6 +71,11 @@ public class Attachments extends Action<Attachments> {
         }
 
         @Override
+        public Class<Attachments> getExtensionClass() {
+            return Attachments.class;
+        }
+
+        @Override
         public boolean isApplicable( Node node ) {
             logger.debug( "Is" + node + " applicable" );
 

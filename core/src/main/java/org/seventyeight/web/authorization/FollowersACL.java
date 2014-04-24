@@ -34,4 +34,14 @@ public class FollowersACL extends ACL<FollowersACL> {
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
         /* Implementation is a no op */
     }
+
+    @Override
+    public String getDisplayName() {
+        return null;  /* Implementation is a no op */
+    }
+
+    @Override
+    public String getMainTemplate() {
+        return null;  /* Implementation is a no op */
+    }
 }

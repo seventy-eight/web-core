@@ -112,5 +112,15 @@ public abstract class ACL<T extends ACL<T>> implements Describable<T> {
         public void updateNode( CoreRequest request, JsonObject jsonData ) {
             /* Implementation is a no op */
         }
+
+        @Override
+        public String getDisplayName() {
+            return "All access";
+        }
+
+        @Override
+        public String getMainTemplate() {
+            return null;
+        }
     }
 }
