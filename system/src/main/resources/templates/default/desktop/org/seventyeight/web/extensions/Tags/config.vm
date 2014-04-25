@@ -7,7 +7,7 @@
 <tr>
     <td id="tagsContainer">
 #foreach($t in $item.getTags())
-$t<br>
+    <div name="tags" class="targetNode deletable targetValue">$t</div>
 #end
     </td>
 </tr>

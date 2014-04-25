@@ -41,7 +41,6 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         super( parent, document );
     }
 
-    /*
     @Override
     public List<Authorizable> getAuthorized( Permission permission ) {
         List<Authorizable> list = new ArrayList<Authorizable>(  );
@@ -56,7 +55,6 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
 
         return list;
     }
-    */
 
     @Override
     public boolean hasPermission( User user, Permission permission ) {

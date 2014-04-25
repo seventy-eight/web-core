@@ -54,8 +54,8 @@ public class Tags extends ResourceExtension<Tags> {
         }
     }
 
-    public List<String> getTags() {
-        return document.getStringList( "tags" );
+    public List<Object> getTags() {
+        return document.getObjectList( "tags" );
     }
 
     public static class TagsDescriptor extends ExtensionDescriptor<Tags> {

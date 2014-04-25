@@ -64,7 +64,7 @@ public abstract class ACL<T extends ACL<T>> implements Describable<T> {
         return getPermission( user ).ordinal() >= Permission.ADMIN.ordinal();
     }
 
-    //public abstract List<Authorizable> getAuthorized( Permission permission );
+    public abstract List<Authorizable> getAuthorized( Permission permission );
 
     public abstract Permission getPermission( User user );
 
@@ -94,6 +94,11 @@ public abstract class ACL<T extends ACL<T>> implements Describable<T> {
         @Override
         public boolean hasPermission( User user, Permission permission ) {
             return true;
+        }
+
+        @Override
+        public List<Authorizable> getAuthorized( Permission permission ) {
+            return Collections.emptyList();
         }
 
         /*

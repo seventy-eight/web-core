@@ -7,7 +7,7 @@ MUMS
 <div name="access" class="objects" style="border-style: solid; min-height: 100px">
     Readers:
     <div id="readContainer">
-
+        <div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>
     </div>
 </div>
 

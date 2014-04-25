@@ -53,14 +53,11 @@
 
             <div name="extensions" class="arrayConfiguration">
                 #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
-                    GROUP=$extensionGroup<br>$extensionGroup.getDescriptors()<br>$extensionGroup.getType().name()
                     <div id="${extensionGroup.getName()}config" style="display: none" class="configurationDiv">
                         <input type="hidden" name="extension" value="$extensionGroup.getClazz()" />
                         <div name="config">
                             #foreach($descriptor in $extensionGroup.getDescriptors())
-                                $descriptor
                                 #if($extensionGroup.getType().name() == "one")
-                                    HEJ
                                     #renderDescriptor( $descriptor $item )
                                 #else
                                     SNADE
