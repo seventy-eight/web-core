@@ -4,19 +4,21 @@
     <input id="readInput">
 </div>
 
-<div name="access" class="objects" style="border-style: solid; min-height: 100px">
+<div name="access" class="objects">
     Readers:
-    $item<br>
-    $item.getAuthorized('READ')
     <div id="readContainer">
         #foreach($i in $item.getAuthorized('READ'))
-            <div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">$i.getIdentifier()</div>$i</div>
+            <div class="targetNode" id="readContainer"><div name="read" class="targetValue" style="display: none">$i.getIdentifier()</div>$i</div>
         #end
     </div>
 </div>
 
 <script type="text/javascript">
     Utils.selectElements("getAuthorizable", "read", "readContainer", "readInput")
+
+    $('#readContainer').on('click', 'div', function(e) {
+        $(this).remove()
+    })
 </script>
 </div>
     </td>

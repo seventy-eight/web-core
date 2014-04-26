@@ -1,5 +1,6 @@
 package org.seventyeight.web.velocity.html;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.context.InternalContextAdapter;
@@ -10,6 +11,7 @@ import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.seventyeight.web.model.Describable;
 import org.seventyeight.web.model.Descriptor;
+import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.servlet.Request;
 
 import java.io.IOException;
@@ -71,7 +73,12 @@ public class RenderDescriptorDirective extends Directive {
                 // Check describable
                 if(!d.getClazz().isInstance( describable )) {
                     logger.debug( "{} is not instance of {}", d, d.getClazz() );
-                    describable = d.getDescribable( describable.getParent(), describable.getDocument() );
+                    try {
+                        describable = d.getDescribable( describable.getParent(), describable.getDocument() );
+                    } catch( ItemInstantiationException e ) {
+                        logger.log( Level.WARN, "Unable to get describable for " + d.getClazz(), e );
+                        describable = null;
+                    }
                     logger.debug( "Returned describabale: {}", describable );
                 }
 

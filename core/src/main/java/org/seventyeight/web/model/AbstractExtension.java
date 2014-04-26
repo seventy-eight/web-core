@@ -90,7 +90,11 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             logger.warn( "EXTENSION JSON ID {}", getJsonId( getExtensionClass().getName() ) );
             MongoDocument d = document.getr( EXTENSIONS, getJsonId( getExtensionClass().getName() ) );
             logger.warn( "THE DESCRIBABABALE DOC IS {}", d );
-            return (Describable<T>) Core.getInstance().getNode( parent, d );
+            if(d != null && !d.isNull()) {
+                return (Describable<T>) Core.getInstance().getNode( parent, d );
+            } else {
+                return null;
+            }
         }
 
         @Override

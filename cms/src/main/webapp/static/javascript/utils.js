@@ -220,9 +220,9 @@ Utils.selectElements = function(searchUrl, subGroup, containerId, inputId) {
         select: function( event, ui ) {
             this.value = "";
             $('#' + containerId).append('<div class="targetNode" id="' + containerId + ui.item._id + '"><div name="' + subGroup + '" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
-            $('#' + containerId + ui.item._id).click(function() {
-                $('#' + containerId + ui.item._id).hide();
-            });
+            //$('#' + containerId + ui.item._id).click(function() {
+            //    $('#' + containerId + ui.item._id).hide();
+            //});
             return false;
         }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
@@ -238,9 +238,9 @@ Utils.selectElementsTest = function(searchUrl) {
         select: function( event, ui ) {
             this.value = "";
             $('#moderateContainer').append('<div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>');
-            $('#moderateContainer' + ui.item._id).click(function() {
-                $('#moderateContainer' + ui.item._id).hide();
-            });
+            //$('#moderateContainer' + ui.item._id).click(function() {
+            //    $('#moderateContainer' + ui.item._id).hide();
+            //});
             return false;
         }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
