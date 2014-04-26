@@ -46,7 +46,7 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
         return parent;
     }
 
-    public abstract boolean hasPermission( User user, Permission permission );
+    //public abstract boolean hasPermission( User user, Permission permission );
 
     public boolean canRead( User user ) {
         return getPermission( user ).ordinal() >= Permission.READ.ordinal();
@@ -99,11 +99,6 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
 
         public AllAccess( Node parent, MongoDocument document ) {
             super( parent, document );
-        }
-
-        @Override
-        public boolean hasPermission( User user, Permission permission ) {
-            return true;
         }
 
         @Override

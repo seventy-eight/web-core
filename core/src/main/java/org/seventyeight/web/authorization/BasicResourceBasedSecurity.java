@@ -60,9 +60,8 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         return list;
     }
 
-    @Override
-    public boolean hasPermission( User user, Permission permission ) {
-        List<String> admins = document.get( permission.getDbname() );
+    public boolean hasAccess( User user ) {
+        List<String> admins = document.get( "read" );
         for( String admin : admins ) {
             if( user.getIdentifier().equals( admin ) ) {
                 return true;
@@ -80,28 +79,26 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         return permission;
     }
 
-    private Permission _getPermission( User user ) {
-        /* Owner? */
+    private boolean isOwner(User user) {
         if( getParent() instanceof Ownable ) {
             logger.debug( "Parent is ownable." );
             if( ( (Ownable) getParent() ).isOwner( user ) ) {
-                return Permission.ADMIN;
+                return true;
             }
         }
 
-        /* Admin rights first */
-        if( hasPermission( user, Permission.ADMIN ) ) {
+        return false;
+    }
+
+    private Permission _getPermission( User user ) {
+        /* Owner? */
+        if( isOwner( user ) ) {
             return Permission.ADMIN;
         }
 
         /* Write access */
-        if( hasPermission( user, Permission.WRITE ) ) {
+        if( hasAccess( user ) ) {
             return Permission.WRITE;
-        }
-
-        /* Read access */
-        if( hasPermission( user, Permission.READ ) ) {
-            return Permission.READ;
         }
 
         logger.debug( user + " has no permissions at all" );

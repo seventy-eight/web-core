@@ -302,14 +302,17 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     @Override
     public ACL getACL() {
-        MongoDocument doc = document.get( "acl" );
+        MongoDocument doc = document.get( "ACL" );
 
         //
         if( doc == null || doc.isNull() ) {
             return ACL.ALL_ACCESS;
         } else {
-            // TODO
-            return ACL.ALL_ACCESS;
+            try {
+                return Core.getInstance().getNode( this, doc );
+            } catch( ItemInstantiationException e ) {
+                throw new IllegalStateException( "Unable to instantiate ACL for " + this, e );
+            }
         }
     }
 }
