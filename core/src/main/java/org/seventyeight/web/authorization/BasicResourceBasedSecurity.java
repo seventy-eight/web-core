@@ -143,7 +143,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         return null;
     }
 
-    public static class BasicResourceBasedSecurityDescriptor extends Descriptor<BasicResourceBasedSecurity> {
+    public static class BasicResourceBasedSecurityDescriptor extends ACLDescriptor<BasicResourceBasedSecurity> {
 
         @Override
         public String getDisplayName() {

@@ -35,29 +35,30 @@ public class RenderDescriptorDirective extends Directive {
 		Descriptor d = null;
         Describable describable = null;
         Boolean expanded = false;
-		
-		try {
-			if( node.jjtGetChild( 0 ) != null ) {
-				d = (Descriptor) node.jjtGetChild( 0 ).value( context );
-			} else {
-				throw new IOException( "Argument not a descriptor" );
-			}
 
-            if( node.jjtGetChild( 1 ) != null ) {
-                describable = (Describable) node.jjtGetChild( 1 ).value( context );
-            } else {
-                throw new IOException( "Argument not an item" );
-            }
+        if( node.jjtGetNumChildren() < 2 ) {
+            throw new IOException( "Describable and descriptor must be set" );
+        }
 
+        if( node.jjtGetChild( 0 ) != null ) {
+            d = (Descriptor) node.jjtGetChild( 0 ).value( context );
+        } else {
+            throw new IOException( "Argument not a descriptor" );
+        }
+
+        if( node.jjtGetChild( 1 ) != null ) {
+            describable = (Describable) node.jjtGetChild( 1 ).value( context );
+        } else {
+            throw new IOException( "Argument not an item" );
+        }
+
+        if( node.jjtGetNumChildren() > 2 ) {
             if( node.jjtGetChild( 2 ) != null ) {
                 expanded = (Boolean)node.jjtGetChild( 2 ).value( context );
             } else {
                 throw new IOException( "Argument not boolean" );
             }
-
-		} catch( Exception e ) {
-            logger.debug( e );
-		}
+        }
 
         Request request = (Request) context.get( "request" );
 

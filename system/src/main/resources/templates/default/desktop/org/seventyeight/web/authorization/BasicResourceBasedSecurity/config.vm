@@ -6,15 +6,17 @@
 
 <div name="access" class="objects" style="border-style: solid; min-height: 100px">
     Readers:
+    $item<br>
+    $item.getAuthorized('READ')
     <div id="readContainer">
-        #foreach($i in $item.getAuthorized('read'))
+        #foreach($i in $item.getAuthorized('READ'))
             <div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">$i.getIdentifier()</div>$i</div>
         #end
     </div>
 </div>
 
 <script type="text/javascript">
-    Utils.selectElements("$item.getUrl()getAuthorizable", "read", "readContainer", "readInput")
+    Utils.selectElements("getAuthorizable", "read", "readContainer", "readInput")
 </script>
 </div>
     </td>

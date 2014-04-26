@@ -5,10 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.model.Describable;
-import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 
 import java.util.Collections;
@@ -17,7 +14,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class ACL<T extends ACL<T>> implements Describable<T> {
+public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Describable<T> {
 
     private static Logger logger = LogManager.getLogger( ACL.class );
 
@@ -39,11 +36,10 @@ public abstract class ACL<T extends ACL<T>> implements Describable<T> {
     }
 
     protected Node parent;
-    protected MongoDocument document;
 
     public ACL( Node parent, MongoDocument document ) {
+        super(document);
         this.parent = parent;
-        this.document = document;
     }
 
     public Node getParent() {
@@ -83,6 +79,20 @@ public abstract class ACL<T extends ACL<T>> implements Describable<T> {
     @Override
     public Descriptor<T> getDescriptor() {
         return Core.getInstance().getDescriptor( getClass() );
+    }
+
+    public static abstract class ACLDescriptor<T extends ACL<T>> extends Descriptor<T> {
+
+        @Override
+        public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
+            MongoDocument d = document.get( "ACL" );
+            logger.debug( "ACL DOC: {}", d );
+            if(d != null && !d.isNull()) {
+                return (Describable<T>) Core.getInstance().getNode( parent, d );
+            } else {
+                return null;
+            }
+        }
     }
 
     private static class AllAccess extends ACL {
