@@ -1,5 +1,5 @@
-MUMS
-
+<tr>
+    <td>
 <div class="ui-widget">
     <input id="readInput">
 </div>
@@ -7,7 +7,9 @@ MUMS
 <div name="access" class="objects" style="border-style: solid; min-height: 100px">
     Readers:
     <div id="readContainer">
-        <div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">' + ui.item._id + '</div>' + ui.item.title + '</div>
+        #foreach($i in $item.getAuthorized('read'))
+            <div class="targetNode" id="moderateContainer' + ui.item._id + '"><div name="moderate" class="targetValue" style="display: none">$i.getIdentifier()</div>$i</div>
+        #end
     </div>
 </div>
 
@@ -15,3 +17,5 @@ MUMS
     Utils.selectElements("$item.getUrl()getAuthorizable", "read", "readContainer", "readInput")
 </script>
 </div>
+    </td>
+</tr>
