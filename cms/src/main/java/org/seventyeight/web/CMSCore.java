@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
+import org.seventyeight.web.authorization.PublicACL;
 import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.listernes.ActivityNodeListener;
@@ -92,6 +93,7 @@ public class CMSCore extends Core {
         addExtension( new DefaultMenuContributor() );
 
         addDescriptor( new BasicResourceBasedSecurity.BasicResourceBasedSecurityDescriptor() );
+        addDescriptor( new PublicACL.PublicACLDescriptor() );
 
         //addDescriptor( new  );
 

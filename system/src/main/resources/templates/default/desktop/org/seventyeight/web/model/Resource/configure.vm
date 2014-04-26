@@ -41,13 +41,9 @@
             </div>
 
             <div name="access" id="access-config" style="display: none" class="configurationDiv">
-
-                #foreach($acl in $core.getACLs())
-                    <input type="hidden" name="extension" value="$acl.getClass()" />
-                    <div name="config">
-                        #renderDescriptor($acl $item)
-                    </div>
-                #end
+                <table>
+                    #heteroRadio($item $core.getACLs() "ACCESS" true)
+                </table>
 
             </div>
 
