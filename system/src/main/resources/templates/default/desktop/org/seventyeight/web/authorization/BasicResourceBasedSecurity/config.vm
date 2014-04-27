@@ -20,6 +20,5 @@
         $(this).remove()
     })
 </script>
-</div>
     </td>
 </tr>

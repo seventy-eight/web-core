@@ -183,33 +183,48 @@
 #end
 
 #macro( heteroRadio $item $descriptors $name $doRender )
-    ITEM= $item<br>
     $descriptors
 
     #set( $size = $descriptors.size() + 1 )
 
     <tr>
-        <td style="width: 100%">
+        <td style="width: 100% ">
             #foreach( $descriptor in $descriptors )
                 <table style="border-style: solid; width: 100%;" colspan="2">
                     <tr>
-                        <td rowspan="$size" valign="top">
-                            <input type="radio" name="$name" value="$descriptor.getId()" onchange="Utils.toggleFormElement( '$descriptor.getClazz().getName()' );">
+                        <td valign="top" style="width: 25px">
+                            <input type="radio" name="$name" value="$descriptor.getId()" onchange="toggleDescriptors('$descriptor.getClazz().getName()');">
                         </td>
-                        <td>
+                        <td style="width: auto; text-align: left">
                             $descriptor.getDisplayName()
                         </td>
                     </tr>
                     #if( $doRender )
-                        #renderDescriptor( $descriptor $item false );
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div name="config">
+                                    #renderDescriptor( $descriptor $item false )
+                                </div>
+                            </td>
+                        </tr>
                     #else
 
                     #end
 
                 </table>
+                <br>
             #end
         </td>
     </tr>
+
+    <script type="text/javascript">
+        function toggleDescriptors(d) {
+            var id = "#" + d.replace(/\./g,'\\.');
+            $('.descriptorPage').not($(id)).hide();
+            $(id).show();
+        }
+    </script>
 #end
 
 

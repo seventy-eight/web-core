@@ -40,9 +40,10 @@
                 </table>
             </div>
 
-            <div name="access" id="access-config" style="display: none" class="configurationDiv">
-                <table>
-                    #heteroRadio($item $core.getACLs() "ACCESS" true)
+            <div name="access" id="access-config" style="display: none; width: 100%" class="configurationDiv">
+                <input type="hidden" name="extension" value="ACL" />
+                <table style="width: 100%">
+                    #heteroRadio($item $core.getACLs() "accessRadio" true)
                 </table>
 
             </div>
