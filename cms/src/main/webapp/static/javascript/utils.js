@@ -106,8 +106,15 @@ Utils.getJsonFromForm = function( e, jsonData ) {
         //alert( "Child: " + childs[i] + ", TAG:" + childs[i].tagName + ", nodename:" + childs[i].name );
         var name = Utils.getAttribute(childs[i], "name");
         var tag = childs[i].tagName;
+        var id = childs[i].id;
 
         if( childs[i].tagName != undefined && name.length > 0 ) {
+
+            // Check class disabled
+            if($(childs[i]).hasClass("disabledTarget")) {
+                continue;
+            }
+
             //alert( "NAME=" + name + ", " + childs[i].tagName );
             switch( childs[i].tagName ) {
                 case "INPUT":

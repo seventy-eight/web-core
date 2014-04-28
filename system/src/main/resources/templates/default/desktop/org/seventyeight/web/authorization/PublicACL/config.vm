@@ -1,5 +1,5 @@
 <tr>
     <td>
-        YEAH
+        <input type="text" name="test">
     </td>
 </tr>

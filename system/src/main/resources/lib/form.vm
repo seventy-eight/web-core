@@ -182,7 +182,7 @@
     </tr>
 #end
 
-#macro( heteroRadio $item $descriptors $name $doRender )
+#macro( heteroRadio $item $descriptors $name $divGroupId $doRender )
     $descriptors
 
     #set( $size = $descriptors.size() + 1 )
@@ -193,7 +193,7 @@
                 <table style="border-style: solid; width: 100%;" colspan="2">
                     <tr>
                         <td valign="top" style="width: 25px">
-                            <input type="radio" name="$name" value="$descriptor.getId()" onchange="toggleDescriptors('$descriptor.getClazz().getName()');">
+                            <input type="radio" name="$name" value="$descriptor.getId()" onchange="toggleDescriptors$divGroupId('$descriptor.getClazz().getName()');">
                         </td>
                         <td style="width: auto; text-align: left">
                             $descriptor.getDisplayName()
@@ -203,7 +203,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <div name="config">
+                                <div name="config" id="$descriptor.getClazz().getName()$divGroupId">
                                     #renderDescriptor( $descriptor $item false )
                                 </div>
                             </td>
@@ -219,10 +219,13 @@
     </tr>
 
     <script type="text/javascript">
-        function toggleDescriptors(d) {
+        function toggleDescriptors$divGroupId(d) {
             var id = "#" + d.replace(/\./g,'\\.');
-            $('.descriptorPage').not($(id)).hide();
+            //$('#.descriptorPage').not($(id)).hide();
+            $('#${divGroupId} .descriptorPage').not($(id)).hide();
+            $('#${divGroupId} .descriptorPage').not($(id)).addClass("disabledTarget");
             $(id).show();
+            $(id).removeClass("disabledTarget");
         }
     </script>
 #end

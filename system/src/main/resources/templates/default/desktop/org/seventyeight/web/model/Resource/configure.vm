@@ -18,7 +18,7 @@
         <!-- Menus -->
         <td style="width: 200px; text-align: center; vertical-align: top">
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
-            <a href="#" class="button" onclick="activate('access-config', this)">Access</a>
+            <a href="#" class="button" onclick="activate('accessConfig', this)">Access</a>
 
             #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
                 <a href="#" class="button" onclick="activate('${extensionGroup.getName()}config', this)">$extensionGroup.getName()</a>
@@ -40,10 +40,10 @@
                 </table>
             </div>
 
-            <div name="access" id="access-config" style="display: none; width: 100%" class="configurationDiv">
+            <div name="access" id="accessConfig" style="display: none; width: 100%" class="configurationDiv">
                 <input type="hidden" name="extension" value="ACL" />
                 <table style="width: 100%">
-                    #heteroRadio($item $core.getACLs() "accessRadio" true)
+                    #heteroRadio($item $core.getACLs() "accessRadio" "accessConfig" true)
                 </table>
 
             </div>
