@@ -73,7 +73,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
 
     @Override
     public Permission getPermission( User user ) {
-        if( permission != null ) {
+        if( permission == null ) {
             permission = _getPermission( user );
         }
         return permission;

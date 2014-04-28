@@ -461,6 +461,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
             /* TODO Something about authorization? */
             if(current instanceof AccessControlled) {
+                logger.debug("ACL: {}", ((AccessControlled)current).getACL());
+                logger.debug("ACL: {}", ((AccessControlled)current).getACL().getPermission( user ));
                 if( ((AccessControlled)current).getACL().getPermission( user ).ordinal() < ACL.Permission.READ.ordinal() ) {
                     throw new NoAuthorizationException( user + " was not authorized to " + current );
                 }
