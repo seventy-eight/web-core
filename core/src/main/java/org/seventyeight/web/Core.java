@@ -459,15 +459,6 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             logger.debug( "Current: {}", current );
             logger.debug( "Token  : {}", token );
 
-            /* TODO Something about authorization? */
-            if(current instanceof AccessControlled) {
-                logger.debug("ACL: {}", ((AccessControlled)current).getACL());
-                logger.debug("ACL: {}", ((AccessControlled)current).getACL().getPermission( user ));
-                if( ((AccessControlled)current).getACL().getPermission( user ).ordinal() < ACL.Permission.READ.ordinal() ) {
-                    throw new NoAuthorizationException( user + " was not authorized to " + current );
-                }
-            }
-
             /* Find a child node */
 
             next = null;
@@ -509,6 +500,15 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             if( next instanceof Autonomous ) {
                 logger.debug( "{} is autonomous", current );
                 return next;
+            }
+
+            /* TODO Something about authorization? */
+            if(next instanceof AccessControlled) {
+                logger.debug("ACL: {}", ((AccessControlled)next).getACL());
+                logger.debug("ACL: {}", ((AccessControlled)next).getACL().getPermission( user ));
+                if( ((AccessControlled)next).getACL().getPermission( user ).ordinal() < ACL.Permission.READ.ordinal() ) {
+                    throw new NoAuthorizationException( user + " was not authorized to " + next );
+                }
             }
 
             /*
