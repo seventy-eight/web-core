@@ -12,6 +12,7 @@ import org.seventyeight.web.servlet.Request;
 import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Descriptor<T extends Describable<T>> extends Configurable {
 	
@@ -75,10 +76,14 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
             throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
         }
 
-        document.set( "title", title );
+        //document.set( "title", title );
         document.set( "class", clazz.getName() );
 
         return instance;
+    }
+
+    public Map<String, String> getSearchKeyMap() {
+        return Collections.EMPTY_MAP;
     }
 
     public String getCollectionName() {

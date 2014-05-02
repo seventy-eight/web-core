@@ -5,6 +5,7 @@ import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -188,6 +189,18 @@ public class MongoDBQuery {
         for( int i = 0 ; i < ors.length ; i++ ) {
             if( ors[i].getDocument().keySet().size() > 0 ) {
                 objs.add( ors[i].getDocument() );
+            }
+        }
+        query.or( objs.toArray(new DBObject[objs.size()]) );
+
+        return this;
+    }
+
+    public <T> MongoDBQuery or( boolean removeEmpty, Collection<MongoDBQuery> ors ) {
+        List<DBObject> objs = new ArrayList<DBObject>( ors.size() );
+        for(MongoDBQuery q : ors) {
+            if( q.getDocument().keySet().size() > 0 ) {
+                objs.add( q.getDocument() );
             }
         }
         query.or( objs.toArray(new DBObject[objs.size()]) );

@@ -2,6 +2,9 @@ package org.seventyeight.web.model;
 
 import org.seventyeight.database.mongodb.MongoDBQuery;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * @author cwolfgang
  *

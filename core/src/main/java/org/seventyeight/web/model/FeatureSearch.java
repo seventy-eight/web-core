@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.web.Core;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +42,12 @@ public class FeatureSearch {
 
         MongoDBQuery titles = new MongoDBQuery();
         MongoDBQuery tags = new MongoDBQuery();
+
+        Map<String, MongoDBQuery> searchKeys = new HashMap<String, MongoDBQuery>(  );
+        for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
+            searchKeys.put( sk, new MongoDBQuery() );
+        }
+
         MongoDBQuery features = new MongoDBQuery();
 
         while( m.find() ) {
@@ -72,12 +80,18 @@ public class FeatureSearch {
                 //dbqueryResources.addIn( "title", m.group( 3 ) );
             /* Just a term with quotes */
             } else if( m.group( 4 ) != null ) {
-                titles.addIn( "title", m.group( 4 ) );
-                tags.addIn( "tags", m.group( 4 ) );
+                //titles.addIn( "title", m.group( 4 ) );
+                //tags.addIn( "tags", m.group( 4 ) );
+                for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
+                    searchKeys.get( sk ).addIn( Core.getInstance().getSearchKeyMap().get( sk ), m.group( 4 ) );
+                }
             /* Just a term without quotes */
             } else if( m.group( 5 ) != null ) {
-                titles.addIn( "title", m.group( 5 ) );
-                tags.addIn( "tags", m.group( 5 ) );
+                //titles.addIn( "title", m.group( 5 ) );
+                //tags.addIn( "tags", m.group( 5 ) );
+                for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
+                    searchKeys.get( sk ).addIn( Core.getInstance().getSearchKeyMap().get( sk ), m.group( 5 ) );
+                }
             }
         }
 
@@ -86,14 +100,15 @@ public class FeatureSearch {
         //finalQuery.or( true, features, titles, tags );
 
         if( tags.length() > 0 || titles.length() > 0 ) {
-            MongoDBQuery tq = new MongoDBQuery().or( true, titles, tags );
+            //MongoDBQuery tq = new MongoDBQuery().or( true, titles, tags );
+            MongoDBQuery tq = new MongoDBQuery().or( true, searchKeys.values() );
             finalQuery.and( true, features, tq );
         } else {
             finalQuery = features;
         }
 
         //finalQuery.or( true, titles, tags );
-        //logger.debug( "FINAL: " + finalQuery );
+        logger.debug( "FINAL: " + finalQuery );
 
         return finalQuery;
     }

@@ -75,12 +75,14 @@ public class Rest extends HttpServlet {
 
         logger.debug( "THE USER: {}", request.getUser() );
 
-        try {
-            logger.debug( "AUTHENTICATING" );
-            Core.getInstance().getAuthentication().authenticate( request, response );
-        } catch( AuthenticationException e ) {
-            logger.warn( "Unable to authenticate", e );
-        }
+        //if() {
+            try {
+                logger.debug( "AUTHENTICATING" );
+                Core.getInstance().getAuthentication().authenticate( request, response );
+            } catch( AuthenticationException e ) {
+                logger.warn( "Unable to authenticate", e );
+            }
+        //}
 
         logger.debug( "THE USER: {}", request.getUser() );
         request.getStopWatch().stop( "Getting user" );

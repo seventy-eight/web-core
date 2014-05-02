@@ -7,11 +7,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.AbstractExtension;
+import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cwolfgang
@@ -49,6 +52,8 @@ public class Tags extends ResourceExtension<Tags> {
 
                 logger.debug( "TAG LIST: {}", tagList );
                 document.set("tags", tagList);
+
+                ((AbstractNode<?>)parent).getDocument().set( "tags", tagList );
                 //document.setList( ( )
             }
         }
@@ -58,7 +63,7 @@ public class Tags extends ResourceExtension<Tags> {
         return document.getObjectList( "tags" );
     }
 
-    public static class TagsDescriptor extends ExtensionDescriptor<Tags> {
+    public static final class TagsDescriptor extends ExtensionDescriptor<Tags> {
 
         @Override
         public String getDisplayName() {
@@ -83,6 +88,13 @@ public class Tags extends ResourceExtension<Tags> {
         @Override
         public Class<Tags> getExtensionClass() {
             return Tags.class;
+        }
+
+        @Override
+        public Map<String, String> getSearchKeyMap() {
+            Map<String, String> m = new HashMap<String, String>( 1 );
+            m.put( "tags", "" );
+            return m;
         }
     }
 }

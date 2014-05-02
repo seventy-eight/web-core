@@ -66,6 +66,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     protected Map<String, Searchable> searchables = new ConcurrentHashMap<String, Searchable>(  );
 
+    protected Map<String, String> searchKeyMap = new ConcurrentHashMap<String, String>(  );
+
     protected ConcurrentHashMap<String, NaturalSearchable> naturalSearchables = new ConcurrentHashMap<String, NaturalSearchable>(  );
 
     /** ACL implementation, that serves as a backup if no ACL is defined */
@@ -591,6 +593,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
             searchables.put( s.getMethodName(), s );
         }
 
+        // Search key maps
+        searchKeyMap.putAll( descriptor.getSearchKeyMap() );
+
         /**/
         if( descriptor instanceof NaturalSearchable ) {
             naturalSearchables.put( ( (NaturalSearchable) descriptor ).getType(), ( NaturalSearchable )descriptor );
@@ -612,6 +617,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
         */
 
         addExtension( descriptor );
+
+
 
         /**/
         //descriptor.configureIndex( db );
@@ -643,6 +650,10 @@ public abstract class Core implements TopLevelNode, RootNode, Parent {
 
     public void addSearchable( Searchable s ) {
         searchables.put( s.getMethodName(), s );
+    }
+
+    public Map<String, String> getSearchKeyMap() {
+        return searchKeyMap;
     }
 
     public Map<String, Searchable> getSearchables() {
