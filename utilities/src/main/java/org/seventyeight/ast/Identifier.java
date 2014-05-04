@@ -4,7 +4,7 @@ package org.seventyeight.ast;
  * @author cwolfgang
  */
 public class Identifier extends Expression {
-    String name;
+    protected String name;
 
     public Identifier(String name) {
         this.name = name;
@@ -16,6 +16,11 @@ public class Identifier extends Expression {
     }
 
     public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
         return name;
     }
 }

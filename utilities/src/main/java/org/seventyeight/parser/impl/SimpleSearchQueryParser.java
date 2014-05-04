@@ -1,45 +1,19 @@
 package org.seventyeight.parser.impl;
 
-import org.seventyeight.ast.Assignment;
-import org.seventyeight.ast.Identifier;
-import org.seventyeight.ast.StatementBlock;
-import org.seventyeight.ast.Value;
+import org.seventyeight.ast.*;
 import org.seventyeight.parser.Parser;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 /**
  * @author cwolfgang
  */
 public class SimpleSearchQueryParser extends Parser {
-    @Override
-    protected Parser.TokenType identify( char c ) {
-        switch( c ) {
-            case ' ':
-            case '\t':
-            case '\n':
-                return TokenType.SPLIT;
-
-            case '\'':
-            case '"':
-                return TokenType.QUOTED;
-
-            case ':':
-            case '(':
-            case ')':
-            case '=':
-                return TokenType.SPLIT_AND_KEEP;
-
-            default:
-                return TokenType.CONTINUE;
-        }
-    }
 
     @Override
-    public StatementBlock getAST( Queue<String> tokens ) {
-        StatementBlock block = new StatementBlock();
+    public Root getAST( Queue<String> tokens ) {
+        //StatementBlock block = new StatementBlock();
+        Root root = new Root();
 
         String last = null;
         boolean group = false;
@@ -50,17 +24,17 @@ public class SimpleSearchQueryParser extends Parser {
                 String next = tokens.poll();
                 if(next != null) {
                     Assignment assignment = new Assignment( new Identifier( last ), new Value( next ) );
-                    block.add( assignment );
+                    root.getBlock().add( assignment );
                     last = null;
                 } else {
                     throw new IllegalStateException( "No value in assignment, " + last );
                 }
             } else if(last != null) {
-                block.add( new Value( last ) );
+                root.getBlock().add( new Value( last ) );
             }
         }
 
-        return block;
+        return root;
     }
 
     /*

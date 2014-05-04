@@ -1,5 +1,6 @@
 package org.seventyeight.parser;
 
+import org.seventyeight.ast.Root;
 import org.seventyeight.ast.StatementBlock;
 
 import java.util.LinkedList;
@@ -18,8 +19,8 @@ public abstract class Parser {
         CONTINUE
     }
 
-    public List<String> parse(String string) {
-        List<String> tokens = new LinkedList<String>();
+    public LinkedList<String> parse(String string) {
+        LinkedList<String> tokens = new LinkedList<String>();
 
         String current = "";
         boolean quoted = false;
@@ -68,7 +69,28 @@ public abstract class Parser {
         return tokens;
     }
 
-    protected abstract TokenType identify( char c );
+    protected Parser.TokenType identify( char c ) {
+        switch( c ) {
+            case ' ':
+            case '\t':
+            case '\n':
+                return TokenType.SPLIT;
 
-    public abstract StatementBlock getAST(Queue<String> tokens);
+            case '\'':
+            case '"':
+                return TokenType.QUOTED;
+
+            case ':':
+            case '(':
+            case ')':
+            case '=':
+                return TokenType.SPLIT_AND_KEEP;
+
+            default:
+                return TokenType.CONTINUE;
+        }
+    }
+
+
+    public abstract Root getAST( Queue<String> tokens );
 }

@@ -4,6 +4,11 @@ package org.seventyeight.ast;
  * @author cwolfgang
  */
 public class Visitor {
+
+    public void visit(Root root) {
+        root.getBlock().accept( this );
+    }
+
     public void visit(StatementBlock statements) {
         for(Statement statement : statements) {
             statement.accept( this );
@@ -22,11 +27,9 @@ public class Visitor {
         System.out.println( "Id." + identifier.getName() );
     }
 
-    /*
     public void visit(Assignment assignment) {
-        System.out.println("HEY!");
+        visit( (BinaryOperator)assignment );
     }
-    */
 
     public void visit(BinaryOperator operator) {
         operator.getLeftSide().accept( this );
