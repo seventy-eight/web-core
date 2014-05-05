@@ -10,7 +10,7 @@ public class Visitor {
     }
 
     public void visit(StatementBlock statements) {
-        for(Statement statement : statements) {
+        for(Statement statement : statements.getStatements()) {
             statement.accept( this );
         }
     }

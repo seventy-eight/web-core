@@ -18,6 +18,7 @@ import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.CoreSystem;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -39,7 +40,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author cwolfgang
  */
-public abstract class Core implements TopLevelNode, RootNode, Parent {
+public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem {
 
     private static Logger logger = LogManager.getLogger( Core.class );
 

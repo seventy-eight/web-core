@@ -6,22 +6,23 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class StatementBlock extends ArrayList<Statement> implements Statement {
+public class StatementBlock extends AbstractStatement {
 
     protected Statement parent;
 
-    @Override
-    public Statement getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent( Statement parent ) {
-        this.parent = parent;
-    }
+    protected List<Statement> statements = new ArrayList<Statement>(  );
 
     @Override
     public void accept( Visitor visitor ) {
       /* Implementation is a no op */
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public void addStatement(Statement statement) {
+        statement.setParent( this );
+        statements.add( statement );
     }
 }

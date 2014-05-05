@@ -24,13 +24,13 @@ public class SimpleSearchQueryParser extends Parser {
                 String next = tokens.poll();
                 if(next != null) {
                     Assignment assignment = new Assignment( new Identifier( last ), new Value( next ) );
-                    root.getBlock().add( assignment );
+                    root.getBlock().addStatement( assignment );
                     last = null;
                 } else {
                     throw new IllegalStateException( "No value in assignment, " + last );
                 }
             } else if(last != null) {
-                root.getBlock().add( new Value( last ) );
+                root.getBlock().addStatement( new Value( last ) );
             }
         }
 

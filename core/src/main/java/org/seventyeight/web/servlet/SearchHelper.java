@@ -69,7 +69,7 @@ public class SearchHelper {
         if( query != null && !query.isEmpty() ) {
             LinkedList<String> tokens = parser.parse( query );
             Root root = parser.getAST( tokens );
-            QueryVisitor visitor = new QueryVisitor();
+            QueryVisitor visitor = new QueryVisitor( Core.getInstance() );
             visitor.visit( root );
 
             logger.debug( "I GOT {}", visitor.getQuery() );

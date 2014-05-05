@@ -2,14 +2,17 @@ package org.seventyeight.web.utilities;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.seventyeight.ast.Assignment;
+import org.seventyeight.ast.Identifier;
+import org.seventyeight.ast.Value;
 import org.seventyeight.database.mongodb.MongoDBQuery;
-import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
-import org.seventyeight.web.DummyCore;
+import org.seventyeight.web.model.CoreSystem;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.Searchable;
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author cwolfgang
@@ -18,10 +21,20 @@ public class QueryVisitorTest {
 
     @Test
     public void test01() throws CoreException {
-        Core core = new DummyCore( new File( "" ), "" );
-        Core spy = Mockito.spy(core);
-        Mockito.doReturn( new TestSearchable() ).when( spy ).gets
-        QueryVisitor visitor = new QueryVisitor();
+        //Core core = new DummyCore( new File( "" ), "" );
+        CoreSystem system = Mockito.mock( CoreSystem.class );
+        Map<String, Searchable> searchables = new HashMap<String, Searchable>(  );
+        searchables.put( "test", new TestSearchable() );
+        Mockito.doReturn( searchables ).when( system ).getSearchables();
+        QueryVisitor visitor = new QueryVisitor( system );
+
+        //Root root = new Root();
+        Assignment a1 = new Assignment( new Identifier( "test" ), new Value( "snade" ) );
+        //root.getBlock().addStatement( a1 );
+
+        visitor.visit( a1 );
+
+        System.out.println( visitor.getQuery() );
     }
 
     class TestSearchable extends Searchable {
@@ -43,7 +56,7 @@ public class QueryVisitorTest {
 
         @Override
         public MongoDBQuery search( String term ) {
-            return new MongoDBQuery();
+            return new MongoDBQuery().is( "term", term ).exists( "hej" );
         }
     }
 }
