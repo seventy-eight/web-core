@@ -8,6 +8,7 @@ import org.seventyeight.ast.Root;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.parser.Tokenizer;
 import org.seventyeight.parser.impl.SimpleSearchQueryParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -50,6 +51,7 @@ public class SearchHelper {
 
     private List<MongoDocument> documents;
 
+    private static Tokenizer tokenizer = new Tokenizer();
     private static SimpleSearchQueryParser parser = new SimpleSearchQueryParser();
 
     public SearchHelper( Node parent, Request request, Response response ) {
@@ -67,7 +69,7 @@ public class SearchHelper {
         logger.debug( query + ", OFFSET: " + offset + ", NUMBER: " + number );
 
         if( query != null && !query.isEmpty() ) {
-            LinkedList<String> tokens = parser.parse( query );
+            LinkedList<String> tokens = tokenizer.tokenize( query );
             Root root = parser.getAST( tokens );
             QueryVisitor visitor = new QueryVisitor( Core.getInstance() );
             visitor.visit( root );

@@ -10,6 +10,9 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Searchable;
 import org.seventyeight.web.model.CoreSystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author cwolfgang
  */
@@ -21,12 +24,18 @@ public class QueryVisitor extends Visitor {
 
     private CoreSystem system;
 
+    private List<String> singleTerms = new ArrayList<String>(  );
+
     public QueryVisitor( CoreSystem system ) {
         this.system = system;
     }
 
     public MongoDBQuery getQuery() {
         //return query;
+
+        for(String singleTerm : singleTerms) {
+
+        }
 
         return new MongoDBQuery().and( true, features );
     }
