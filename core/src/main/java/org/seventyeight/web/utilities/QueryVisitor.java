@@ -11,7 +11,9 @@ import org.seventyeight.web.model.Searchable;
 import org.seventyeight.web.model.CoreSystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cwolfgang
@@ -24,18 +26,18 @@ public class QueryVisitor extends Visitor {
 
     private CoreSystem system;
 
-    private List<String> singleTerms = new ArrayList<String>(  );
+    Map<String, MongoDBQuery> searchKeys = new HashMap<String, MongoDBQuery>(  );
 
     public QueryVisitor( CoreSystem system ) {
         this.system = system;
+
+        for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
+            searchKeys.put( sk, new MongoDBQuery() );
+        }
     }
 
     public MongoDBQuery getQuery() {
         //return query;
-
-        for(String singleTerm : singleTerms) {
-
-        }
 
         return new MongoDBQuery().and( true, features );
     }
@@ -55,6 +57,9 @@ public class QueryVisitor extends Visitor {
     }
 
     public void visit(Value value) {
-        logger.debug( "YEAH, value {}", value );
+        for(String sk : system.getSearchKeyMap().keySet() ) {
+            searchKeys.get( sk ).addIn( Core.getInstance().getSearchKeyMap().get( sk ), value.getValue() );
+        }
+
     }
 }

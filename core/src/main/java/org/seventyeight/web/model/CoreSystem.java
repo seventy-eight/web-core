@@ -7,4 +7,5 @@ import java.util.Map;
  */
 public interface CoreSystem {
     public Map<String, Searchable> getSearchables();
+    public Map<String, String> getSearchKeyMap();
 }

@@ -37,6 +37,25 @@ public class QueryVisitorTest {
         System.out.println( visitor.getQuery() );
     }
 
+    @Test
+    public void test02() {
+        CoreSystem system = Mockito.mock( CoreSystem.class );
+        Map<String, String> searchables = new HashMap<String, String>(  );
+        searchables.put( "test", "title" );
+        Mockito.doReturn( searchables ).when( system ).getSearchKeyMap();
+
+        QueryVisitor visitor = new QueryVisitor( system );
+
+        //Root root = new Root();
+        //Assignment a1 = new Assignment( new Identifier( "test" ), new Value( "snade" ) );
+        Value v1 = new Value( "test" );
+        //root.getBlock().addStatement( a1 );
+
+        visitor.visit( v1 );
+
+        System.out.println( visitor.getQuery() );
+    }
+
     class TestSearchable extends Searchable {
 
         @Override
