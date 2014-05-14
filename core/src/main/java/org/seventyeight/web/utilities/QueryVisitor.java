@@ -31,7 +31,7 @@ public class QueryVisitor extends Visitor {
     public QueryVisitor( CoreSystem system ) {
         this.system = system;
 
-        for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
+        for(String sk : system.getSearchKeyMap().keySet()) {
             searchKeys.put( sk, new MongoDBQuery() );
         }
     }
@@ -39,7 +39,9 @@ public class QueryVisitor extends Visitor {
     public MongoDBQuery getQuery() {
         //return query;
 
-        return new MongoDBQuery().and( true, features );
+        MongoDBQuery tq = new MongoDBQuery().or( true, searchKeys.values() );
+
+        return new MongoDBQuery().and( true, features, tq );
     }
 
     @Override
@@ -58,7 +60,7 @@ public class QueryVisitor extends Visitor {
 
     public void visit(Value value) {
         for(String sk : system.getSearchKeyMap().keySet() ) {
-            searchKeys.get( sk ).addIn( Core.getInstance().getSearchKeyMap().get( sk ), value.getValue() );
+            searchKeys.get( sk ).addIn( system.getSearchKeyMap().get( sk ), value.getValue() );
         }
 
     }

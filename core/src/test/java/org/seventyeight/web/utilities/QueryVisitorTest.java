@@ -38,7 +38,7 @@ public class QueryVisitorTest {
     }
 
     @Test
-    public void test02() {
+    public void testSingleKey() {
         CoreSystem system = Mockito.mock( CoreSystem.class );
         Map<String, String> searchables = new HashMap<String, String>(  );
         searchables.put( "test", "title" );
@@ -46,10 +46,41 @@ public class QueryVisitorTest {
 
         QueryVisitor visitor = new QueryVisitor( system );
 
-        //Root root = new Root();
-        //Assignment a1 = new Assignment( new Identifier( "test" ), new Value( "snade" ) );
         Value v1 = new Value( "test" );
-        //root.getBlock().addStatement( a1 );
+
+        visitor.visit( v1 );
+
+        System.out.println( visitor.getQuery() );
+    }
+
+    @Test
+    public void testMultipleKeys() {
+        CoreSystem system = Mockito.mock( CoreSystem.class );
+        Map<String, String> searchables = new HashMap<String, String>(  );
+        searchables.put( "test", "title" );
+        searchables.put( "test2", "tag" );
+        searchables.put( "test3", "extensions.test.plugin1.test" );
+        Mockito.doReturn( searchables ).when( system ).getSearchKeyMap();
+
+        QueryVisitor visitor = new QueryVisitor( system );
+
+        Value v1 = new Value( "test" );
+
+        visitor.visit( v1 );
+
+        System.out.println( visitor.getQuery() );
+    }
+
+
+    @Test
+    public void testEmptySearchMap() {
+        CoreSystem system = Mockito.mock( CoreSystem.class );
+        Map<String, String> searchables = new HashMap<String, String>(  );
+        Mockito.doReturn( searchables ).when( system ).getSearchKeyMap();
+
+        QueryVisitor visitor = new QueryVisitor( system );
+
+        Value v1 = new Value( "test" );
 
         visitor.visit( v1 );
 
