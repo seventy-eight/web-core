@@ -14,7 +14,7 @@ public class StatementBlock extends AbstractStatement {
 
     @Override
     public void accept( Visitor visitor ) {
-      /* Implementation is a no op */
+        visitor.visit( this );
     }
 
     public List<Statement> getStatements() {
@@ -24,5 +24,9 @@ public class StatementBlock extends AbstractStatement {
     public void addStatement(Statement statement) {
         statement.setParent( this );
         statements.add( statement );
+    }
+
+    public int size() {
+        return statements.size();
     }
 }

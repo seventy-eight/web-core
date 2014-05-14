@@ -9,4 +9,9 @@ public class Root {
     public StatementBlock getBlock() {
         return block;
     }
+
+    @Override
+    public String toString() {
+        return "Root, size: " + block.size();
+    }
 }

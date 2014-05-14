@@ -10,7 +10,6 @@ public class Assignment extends BinaryOperator {
 
     @Override
     public void accept( Visitor visitor ) {
-        //visitor.visit( this );
-        super.accept( visitor );
+        visitor.visit( this );
     }
 }
