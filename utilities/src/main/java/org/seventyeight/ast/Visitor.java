@@ -27,8 +27,8 @@ public class Visitor {
         System.out.println( "Id." + identifier.getName() );
     }
 
-    public void visit(Assignment assignment) {
-        visit( (BinaryOperator)assignment );
+    public void visit(Comparison comparison ) {
+        visit( (BinaryOperator) comparison );
     }
 
     public void visit(BinaryOperator operator) {

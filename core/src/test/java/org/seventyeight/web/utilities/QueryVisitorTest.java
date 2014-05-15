@@ -2,7 +2,7 @@ package org.seventyeight.web.utilities;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.seventyeight.ast.Assignment;
+import org.seventyeight.ast.Comparison;
 import org.seventyeight.ast.Identifier;
 import org.seventyeight.ast.Value;
 import org.seventyeight.database.mongodb.MongoDBQuery;
@@ -29,7 +29,7 @@ public class QueryVisitorTest {
         QueryVisitor visitor = new QueryVisitor( system );
 
         //Root root = new Root();
-        Assignment a1 = new Assignment( new Identifier( "test" ), new Value( "snade" ) );
+        Comparison a1 = new Comparison( new Identifier( "test" ), new Value( "snade" ) );
         //root.getBlock().addStatement( a1 );
 
         visitor.visit( a1 );

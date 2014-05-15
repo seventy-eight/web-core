@@ -41,9 +41,13 @@ public class QueryParserTest {
     @Test
     public void test03() {
         CoreSystem system = Mockito.mock( CoreSystem.class );
-        Map<String, String> searchables = new HashMap<String, String>(  );
-        searchables.put( "test", "title" );
-        Mockito.doReturn( searchables ).when( system ).getSearchKeyMap();
+        Map<String, String> searchKeyMap = new HashMap<String, String>(  );
+        searchKeyMap.put( "test", "title" );
+        Mockito.doReturn( searchKeyMap ).when( system ).getSearchKeyMap();
+
+        Map<String, Searchable> searchables = new HashMap<String, Searchable>(  );
+        searchables.put( "type", new TestSearchable() );
+        Mockito.doReturn( searchables ).when( system ).getSearchables();
 
         QueryParser parser = new QueryParser();
         Root root = parser.parse( "type:user wolle" );

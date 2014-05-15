@@ -2,17 +2,14 @@ package org.seventyeight.web.utilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.seventyeight.ast.Assignment;
+import org.seventyeight.ast.Comparison;
 import org.seventyeight.ast.Value;
 import org.seventyeight.ast.Visitor;
 import org.seventyeight.database.mongodb.MongoDBQuery;
-import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Searchable;
 import org.seventyeight.web.model.CoreSystem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,9 +42,9 @@ public class QueryVisitor extends Visitor {
     }
 
     @Override
-    public void visit( Assignment assignment ) {
-        String key = assignment.getLeftSide().toString();
-        String term = assignment.getRightSide().toString();
+    public void visit( Comparison comparison ) {
+        String key = comparison.getLeftSide().toString();
+        String term = comparison.getRightSide().toString();
         Searchable s = system.getSearchables().get(key);
 
         if( s != null ) {

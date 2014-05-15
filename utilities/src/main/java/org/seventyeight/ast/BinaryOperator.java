@@ -6,9 +6,13 @@ package org.seventyeight.ast;
 public abstract class BinaryOperator extends Expression {
     protected Expression leftSide;
     protected Expression rightSide;
-    protected String operator;
+    protected Operator operator;
 
-    public BinaryOperator(String operator, Expression leftSide, Expression rightSide) {
+    public interface Operator {
+        public String getValue();
+    }
+
+    public BinaryOperator(Operator operator, Expression leftSide, Expression rightSide) {
         this.operator = operator;
         this.leftSide = leftSide;
         this.rightSide = rightSide;
@@ -25,7 +29,7 @@ public abstract class BinaryOperator extends Expression {
         return rightSide;
     }
 
-    public String getOperator() {
+    public Operator getOperator() {
         return operator;
     }
 

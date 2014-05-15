@@ -2,7 +2,7 @@ package org.seventyeight.web.utilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.seventyeight.ast.Assignment;
+import org.seventyeight.ast.Comparison;
 import org.seventyeight.ast.Identifier;
 import org.seventyeight.ast.Root;
 import org.seventyeight.ast.Value;
@@ -34,7 +34,7 @@ public class QueryParser extends Parser {
                     }
 
                     logger.debug( "Adding assignment" );
-                    root.getBlock().addStatement( new Assignment( new Identifier( previous ), new Value( next ) ) );
+                    root.getBlock().addStatement( new Comparison( new Identifier( previous ), new Value( next ) ) );
                 } else {
                     logger.debug( "Adding block" );
                     root.getBlock().addStatement( new Value( previous ) );
