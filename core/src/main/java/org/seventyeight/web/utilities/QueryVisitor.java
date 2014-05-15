@@ -42,8 +42,6 @@ public class QueryVisitor extends Visitor {
         } else {
             return new MongoDBQuery().and( true, features );
         }
-
-
     }
 
     @Override
