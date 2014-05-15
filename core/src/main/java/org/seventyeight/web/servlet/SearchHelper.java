@@ -16,6 +16,7 @@ import org.seventyeight.web.model.FeatureSearch;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.utilities.QueryParser;
 import org.seventyeight.web.utilities.QueryVisitor;
 
 import java.io.IOException;
@@ -51,8 +52,8 @@ public class SearchHelper {
 
     private List<MongoDocument> documents;
 
-    private static Tokenizer tokenizer = new Tokenizer();
-    private static SimpleSearchQueryParser parser = new SimpleSearchQueryParser();
+    private static QueryParser queryParser = new QueryParser();
+    //private static SimpleSearchQueryParser parser = new SimpleSearchQueryParser();
 
     public SearchHelper( Node parent, Request request, Response response ) {
         this.request = request;
@@ -69,12 +70,16 @@ public class SearchHelper {
         logger.debug( query + ", OFFSET: " + offset + ", NUMBER: " + number );
 
         if( query != null && !query.isEmpty() ) {
-            LinkedList<String> tokens = tokenizer.tokenize( query );
-            Root root = parser.getAST( tokens );
+            //LinkedList<String> tokens = tokenizer.tokenize( query );
+            Root root = queryParser.parse( query );
             QueryVisitor visitor = new QueryVisitor( Core.getInstance() );
             visitor.visit( root );
 
             logger.debug( "I GOT {}", visitor.getQuery() );
+
+            documents = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( visitor.getQuery(), offset, number );
+
+            logger.debug( "DOCS: " + documents );
         } else {
             documents = new ArrayList<MongoDocument>( 0 );
         }

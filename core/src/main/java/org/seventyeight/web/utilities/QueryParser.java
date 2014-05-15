@@ -20,7 +20,7 @@ public class QueryParser extends Parser {
         String previous = null;
         Root root = new Root();
 
-        logger.debug( "TOKENs: {}", tokens );
+        logger.fatal( "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTOKENs: {}", tokens );
 
         while(!tokens.isEmpty()) {
             String token = tokens.poll();
@@ -33,19 +33,21 @@ public class QueryParser extends Parser {
                         throw new IllegalStateException( "Not a valid query" );
                     }
 
-                    logger.debug( "Adding assignment" );
+                    logger.debug( "Adding comparison, {} = {}", previous, next );
                     root.getBlock().addStatement( new Comparison( new Identifier( previous ), new Value( next ) ) );
                 } else {
-                    logger.debug( "Adding block" );
+                    logger.debug( "Adding block, {}", previous );
                     root.getBlock().addStatement( new Value( previous ) );
                 }
-            }
 
-            previous = token;
+                previous = null;
+            } else {
+                previous = token;
+            }
         }
 
         if(previous != null) {
-            logger.debug( "Adding block" );
+            logger.debug( "Adding block, {}", previous );
             root.getBlock().addStatement( new Value( previous ) );
         }
 

@@ -1,5 +1,7 @@
 package org.seventyeight.parser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.ast.Root;
 
 import java.util.LinkedList;
@@ -10,6 +12,8 @@ import java.util.Queue;
  */
 public class Tokenizer {
 
+    private static Logger logger = LogManager.getLogger( Tokenizer.class );
+
     protected enum TokenAction {
         SPLIT,
         SPLIT_AND_KEEP,
@@ -19,6 +23,8 @@ public class Tokenizer {
 
     public LinkedList<String> tokenize(String string) {
         LinkedList<String> tokens = new LinkedList<String>();
+
+        logger.debug( "Tokenizing {}", string );
 
         String current = "";
         boolean quoted = false;
@@ -63,6 +69,8 @@ public class Tokenizer {
         if(current.length() > 0) {
             tokens.add( current );
         }
+
+        logger.debug( "Tokens are {}", tokens );
 
         return tokens;
     }

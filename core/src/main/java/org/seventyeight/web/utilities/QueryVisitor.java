@@ -11,6 +11,7 @@ import org.seventyeight.web.model.CoreSystem;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author cwolfgang
@@ -20,6 +21,7 @@ public class QueryVisitor extends Visitor {
 
     private MongoDBQuery query = new MongoDBQuery();
     private MongoDBQuery features = new MongoDBQuery();
+    private boolean singleUsed = false;
 
     private CoreSystem system;
 
@@ -34,11 +36,14 @@ public class QueryVisitor extends Visitor {
     }
 
     public MongoDBQuery getQuery() {
-        //return query;
+        if(singleUsed && system.getSearchKeyMap().size() > 0) {
+            MongoDBQuery tq = new MongoDBQuery().or( true, searchKeys.values() );
+            return new MongoDBQuery().and( true, features, tq );
+        } else {
+            return new MongoDBQuery().and( true, features );
+        }
 
-        MongoDBQuery tq = new MongoDBQuery().or( true, searchKeys.values() );
 
-        return new MongoDBQuery().and( true, features, tq );
     }
 
     @Override
@@ -56,9 +61,10 @@ public class QueryVisitor extends Visitor {
     }
 
     public void visit(Value value) {
-        for(String sk : system.getSearchKeyMap().keySet() ) {
-            searchKeys.get( sk ).addIn( system.getSearchKeyMap().get( sk ), value.getValue() );
-        }
+        singleUsed = true;
 
+        for(String sk : system.getSearchKeyMap().keySet() ) {
+            searchKeys.get( sk ).regex( system.getSearchKeyMap().get( sk ), "^.*" + value.getValue() + ".*$", Pattern.CASE_INSENSITIVE );
+        }
     }
 }

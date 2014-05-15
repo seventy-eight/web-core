@@ -193,6 +193,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         children.put( "get", new Get( this ) );  // This
         children.put( "resource", new ResourceAction() ); // Or that?
 
+        searchKeyMap.put( "title", "title" );
+
         instance = this;
     }
 
