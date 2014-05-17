@@ -64,6 +64,7 @@ public class CMSCore extends Core {
         addDescriptor( new FileResource.FileDescriptor() );
 
         addDescriptor( new Tags.TagsDescriptor() );
+        addDescriptor( new Event.EventDescriptor()   );
 
         addDescriptor( new Topic.TopicDescriptor() );
 

@@ -131,10 +131,10 @@ public class TemplateManager {
 		velocityProperties.setProperty( "resource.loader", "file" );
 		velocityProperties.setProperty( "file.resource.loader.path", this.templatePathsStr );
         velocityProperties.setProperty( "file.resource.loader.cache", "true" );
-        velocityProperties.setProperty( "velocimacro.library.autoreload", "false" );
+        velocityProperties.setProperty( "velocimacro.library.autoreload", "true" );
         velocityProperties.setProperty( "parser.pool.size", "50" );
 				
-		velocityProperties.setProperty( "file.resource.loader.modificationCheckInterval", "-1" );
+		velocityProperties.setProperty( "file.resource.loader.modificationCheckInterval", "2" );
         velocityProperties.setProperty( "eventhandler.include.class", "org.apache.velocity.app.event.implement.IncludeRelativePath" );
 		
 		/* Custom directives */

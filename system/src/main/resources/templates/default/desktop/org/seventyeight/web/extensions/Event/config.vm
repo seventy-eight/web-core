@@ -1,0 +1,38 @@
+
+<tr>
+    <td>
+        Date
+    </td>
+    <td>
+        <div id="datepicker" ></div>
+        <input type="text" id="dateResult" name="eventDate">
+    </td>
+</tr>
+
+<tr>
+    <td>
+        Duration
+    </td>
+
+    <td>
+        
+    </td>
+
+</tr>
+
+
+<script type="text/javascript">
+    $(function(){
+        $.datepicker.setDefaults(
+                $.extend($.datepicker.regional[''])
+        );
+        $('#datepicker').datepicker({
+            showButtonPanel: true,
+            changeMonth: true,
+            altField: "#dateResult",
+            altFormat: "yy-mm-dd"
+        });
+    });
+</script>
+
+
