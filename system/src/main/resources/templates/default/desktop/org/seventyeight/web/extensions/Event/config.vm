@@ -4,8 +4,13 @@
         Date
     </td>
     <td>
-        <div id="datepicker" ></div>
-        <input type="text" id="dateResult" name="eventDate">
+        <input type="text" id="datepickerFrom" name="eventFromDate" class="targetValue">
+        #timePicker("timeFrom")
+        to
+        <input type="text" id="datepickerTo" name="eventToDate" class="targetValue">
+        #timePicker("timeTo")
+        <br>
+        All day event <input type="checkbox" name="allDay">
     </td>
 </tr>
 
@@ -15,7 +20,7 @@
     </td>
 
     <td>
-        
+
     </td>
 
 </tr>
@@ -26,11 +31,11 @@
         $.datepicker.setDefaults(
                 $.extend($.datepicker.regional[''])
         );
-        $('#datepicker').datepicker({
-            showButtonPanel: true,
-            changeMonth: true,
-            altField: "#dateResult",
-            altFormat: "yy-mm-dd"
+        $('#datepickerFrom').datepicker({
+            dateFormat: "yy-mm-dd"
+        });
+        $('#datepickerTo').datepicker({
+            dateFormat: "yy-mm-dd"
         });
     });
 </script>
