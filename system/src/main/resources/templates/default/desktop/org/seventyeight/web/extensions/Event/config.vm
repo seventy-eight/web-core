@@ -5,12 +5,12 @@
     </td>
     <td>
         <input type="text" id="datepickerFrom" name="eventFromDate" class="targetValue">
-        #timePicker("timeFrom")
+        #timePicker("eventFromTime")
         to
         <input type="text" id="datepickerTo" name="eventToDate" class="targetValue">
-        #timePicker("timeTo")
+        #timePicker("eventToTime")
         <br>
-        All day event <input type="checkbox" name="allDay">
+        All day event <input type="checkbox" name="eventAllDay">
     </td>
 </tr>
 
