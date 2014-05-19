@@ -38,7 +38,7 @@ public class RenderDescriptorDirective extends Directive {
         Describable describable = null;
         Boolean expanded = false;
 
-        if( node.jjtGetNumChildren() < 2 ) {
+        if( node.jjtGetNumChildren() < 1 ) {
             throw new IOException( "Describable and descriptor must be set" );
         }
 
@@ -48,10 +48,12 @@ public class RenderDescriptorDirective extends Directive {
             throw new IOException( "Argument not a descriptor" );
         }
 
-        if( node.jjtGetChild( 1 ) != null ) {
-            describable = (Describable) node.jjtGetChild( 1 ).value( context );
-        } else {
-            throw new IOException( "Argument not an item" );
+        if( node.jjtGetNumChildren() > 1 ) {
+            if( node.jjtGetChild( 1 ) != null ) {
+                describable = (Describable) node.jjtGetChild( 1 ).value( context );
+            } else {
+                throw new IOException( "Argument not an item" );
+            }
         }
 
         if( node.jjtGetNumChildren() > 2 ) {
