@@ -125,6 +125,8 @@ public class TemplateManager {
             logger.info( "[Template directory] {}", f.getAbsoluteFile() );
 			this.templatePathsStr += f.toString() + ", ";
 		}
+
+        logger.debug( "Template path string: {}", templatePathsStr );
 		
 		this.templatePathsStr = templatePathsStr.substring( 0, ( templatePathsStr.length() - 2 ) );
 		
