@@ -7,10 +7,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.extensions.Event;
-import org.seventyeight.web.extensions.ExtensionGroup;
-import org.seventyeight.web.extensions.ResourceExtension;
-import org.seventyeight.web.extensions.Tags;
+import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
@@ -172,6 +169,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         ArrayList<ExtensionGroup> groups = new ArrayList<ExtensionGroup>(  );
         groups.add( Core.getInstance().getExtensionGroup( Tags.class ) );
         groups.add( Core.getInstance().getExtensionGroup( Event.class ) );
+        groups.add( Core.getInstance().getExtensionGroup( AbstractPortrait.class ) );
 
         return groups;
     }

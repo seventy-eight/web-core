@@ -628,14 +628,14 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     }
 
     public void addExtensionsGroup(AbstractExtension.ExtensionDescriptor<?> descriptor) {
-        if(!extensionGroups.containsKey( descriptor.getClazz() )) {
+        if(!extensionGroups.containsKey( descriptor.getExtensionClass() )) {
             ExtensionGroup extensionGroup = descriptor.getExtensionGroup();
             logger.debug( "Adding extension group, {}", extensionGroup );
             extensionGroups.put( extensionGroup.getClazz(), extensionGroup );
         }
 
         logger.debug( "Adding {} to extensions groups", descriptor.getClazz() );
-        ExtensionGroup group = extensionGroups.get( descriptor.getClazz() );
+        ExtensionGroup group = extensionGroups.get( descriptor.getExtensionClass() );
         group.addDescriptor( descriptor );
     }
 

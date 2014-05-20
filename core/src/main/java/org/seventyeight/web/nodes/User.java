@@ -9,7 +9,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.extensions.UserPortrait;
+import org.seventyeight.web.extensions.AbstractPortrait;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -158,12 +158,12 @@ public class User extends Resource<User> {
     @Override
     public void setPortrait( Request request, JsonObject json ) {
         try {
-            UserPortrait.UserPortraitDescriptor descriptor = (UserPortrait.UserPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
-            UserPortrait userPortrait = descriptor.newInstance(request, this, "portrait");
-            userPortrait.update( request );
-            //ExtensionUtils.retrieveExtensions( request, json, userPortrait );
-            //userPortrait.save( request, json );
-            document.set( "portrait", userPortrait.getDocument() );
+            AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
+            AbstractPortrait abstractPortrait = descriptor.newInstance(request, this, "portrait");
+            abstractPortrait.update( request );
+            //ExtensionUtils.retrieveExtensions( request, json, abstractPortrait );
+            //abstractPortrait.save( request, json );
+            document.set( "portrait", abstractPortrait.getDocument() );
             save();
         } catch( Exception e ) {
             logger.warn( "failed", e );
@@ -183,7 +183,7 @@ public class User extends Resource<User> {
 
         if( portrait != null && !portrait.isNull() ) {
             try {
-                UserPortrait up = Core.getInstance().getNode( this, portrait );
+                AbstractPortrait up = Core.getInstance().getNode( this, portrait );
                 return up.getUrl();
             } catch( ItemInstantiationException e ) {
                 logger.warn( "Unable to get the portrait from " + portrait );
@@ -198,17 +198,17 @@ public class User extends Resource<User> {
      * Get a list of the registered portrait descriptors
      * @return
      */
-    public List<? extends UserPortrait.UserPortraitDescriptor> getUserPortraitDescriptors() {
-        List<UserPortrait.UserPortraitDescriptor> descriptors = Core.getInstance().getExtensionDescriptors( UserPortrait.class );
+    public List<? extends AbstractPortrait.AbstractPortraitDescriptor> getUserPortraitDescriptors() {
+        List<AbstractPortrait.AbstractPortraitDescriptor> descriptors = Core.getInstance().getExtensionDescriptors( AbstractPortrait.class );
 
         return descriptors;
     }
 
-    public UserPortrait getPortraitExtension() throws ItemInstantiationException {
+    public AbstractPortrait getPortraitExtension() throws ItemInstantiationException {
         MongoDocument portrait = document.getSubDocument( "portrait", null );
 
         if( portrait != null ) {
-            UserPortrait up = Core.getInstance().getNode( this, portrait );
+            AbstractPortrait up = Core.getInstance().getNode( this, portrait );
             return up;
         } else {
             return null;

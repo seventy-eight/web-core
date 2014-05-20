@@ -7,7 +7,7 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class UploadablePortrait extends UserPortrait {
+public class UploadablePortrait extends AbstractPortrait {
 
     public UploadablePortrait( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -33,7 +33,7 @@ public class UploadablePortrait extends UserPortrait {
         return null;  /* Implementation is a no op */
     }
 
-    public static class UploadablePortraitDescriptor extends UserPortraitDescriptor {
+    public static class UploadablePortraitDescriptor extends AbstractPortraitDescriptor {
 
         @Override
         public String getDisplayName() {

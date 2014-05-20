@@ -15,14 +15,14 @@ import java.io.IOException;
 /**
  * @author cwolfgang
  */
-public abstract class UserPortrait extends AbstractExtension<UserPortrait> {
+public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrait> {
 
-    private static Logger logger = LogManager.getLogger( UserPortrait.class );
+    private static Logger logger = LogManager.getLogger( AbstractPortrait.class );
 
     public static final int SMALL_SIZE = 80;
     public static final int LARGE_SIZE = 150;
 
-    public UserPortrait( Node parent, MongoDocument document ) {
+    public AbstractPortrait( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
@@ -46,20 +46,25 @@ public abstract class UserPortrait extends AbstractExtension<UserPortrait> {
 
     public abstract String getUrl();
 
-    public static abstract class UserPortraitDescriptor extends ExtensionDescriptor<UserPortrait> {
+    public static abstract class AbstractPortraitDescriptor extends ExtensionDescriptor<AbstractPortrait> {
         @Override
         public String getTypeName() {
             return "portrait";
         }
 
         @Override
-        public Class<UserPortrait> getExtensionClass() {
-            return UserPortrait.class;
+        public Class<AbstractPortrait> getExtensionClass() {
+            return AbstractPortrait.class;
+        }
+
+        @Override
+        public String getExtensionName() {
+            return "portrait";
         }
 
         @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( getClazz(), "User portrait" );
+            return new ExtensionGroup( AbstractPortrait.class, "Portrait" );
         }
     }
 }

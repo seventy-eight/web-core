@@ -53,12 +53,14 @@
                     <div id="${extensionGroup.getName()}config" style="display: none" class="configurationDiv">
                         <input type="hidden" name="extension" value="$extensionGroup.getClazz()" />
                         <div name="config">
-                            #foreach($descriptor in $extensionGroup.getDescriptors())
-                                #if($extensionGroup.getType().name() == "one")
-                                    #renderDescriptor( $descriptor $item )
-                                #else
-                                    SNADE
-                                #end
+                            #if($extensionGroup.getType().name() == "one")
+                                #set($radio = $extensionGroup.getName() + "Radio")
+                                #set($config = $extensionGroup.getName() + "Config")
+                                <table style="width: 100%">
+                                    #heteroRadio($item $extensionGroup.getDescriptors() $radio $config true)
+                                </table>
+                            #else
+                                WHOOP!
                             #end
                         </div>
 
