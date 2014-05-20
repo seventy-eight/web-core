@@ -17,7 +17,7 @@ public class Artist extends Resource<Artist> {
 
     @Override
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
-      /* Implementation is a no op */
+
     }
 
     public static final class ArtistDescriptor extends NodeDescriptor<Artist> {
