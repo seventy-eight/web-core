@@ -1,4 +1,4 @@
-<div style="width:100%" id="$class" class="descriptorPage">
+<div style="width:100%" id="$class" class="descriptorPage $groupName">
     <span style="font-weight: bold; text-align: center; width: 90%" class="button">CLASS= $class</span>
     <input type="hidden" name="class" value="$class" />
     <input type="hidden" name="locked" value="$locked" />

@@ -25,11 +25,13 @@ public class JsonUtils {
             throw new JsonException( "Json was null" );
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println( gson.toJson( json ) );
 
         JsonParser parser = new JsonParser();
         JsonObject jo = (JsonObject) parser.parse( json );
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println( gson.toJson( jo ) );
+
         return jo;
     }
 

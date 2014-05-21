@@ -204,7 +204,7 @@
                             <td></td>
                             <td>
                                 <div name="config" id="$descriptor.getClazz().getName()$divGroupId">
-                                    #renderDescriptor( $descriptor $item false )
+                                    #renderDescriptor( $descriptor $item $divGroupId )
                                 </div>
                             </td>
                         </tr>
@@ -222,8 +222,8 @@
         function toggleDescriptors$divGroupId(d) {
             var id = "#" + d.replace(/\./g,'\\.');
             //$('#.descriptorPage').not($(id)).hide();
-            $('#${divGroupId} .descriptorPage').not($(id)).hide();
-            $('#${divGroupId} .descriptorPage').not($(id)).addClass("disabledTarget");
+            $(".descriptorPage.${divGroupId}").not($(id)).hide();
+            $(".descriptorPage.${divGroupId}").not($(id)).addClass("disabledTarget");
             $(id).show();
             $(id).removeClass("disabledTarget");
         }

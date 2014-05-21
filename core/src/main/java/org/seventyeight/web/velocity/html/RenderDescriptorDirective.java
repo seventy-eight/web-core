@@ -36,6 +36,7 @@ public class RenderDescriptorDirective extends Directive {
         logger.debug( "Rendering descriptor" );
 		Descriptor d = null;
         Describable describable = null;
+        String groupName = null;
         Boolean expanded = false;
 
         if( node.jjtGetNumChildren() < 1 ) {
@@ -58,7 +59,15 @@ public class RenderDescriptorDirective extends Directive {
 
         if( node.jjtGetNumChildren() > 2 ) {
             if( node.jjtGetChild( 2 ) != null ) {
-                expanded = (Boolean)node.jjtGetChild( 2 ).value( context );
+                groupName = (String) node.jjtGetChild( 2 ).value( context );
+            } else {
+                throw new IOException( "Argument not string" );
+            }
+        }
+
+        if( node.jjtGetNumChildren() > 3 ) {
+            if( node.jjtGetChild( 3 ) != null ) {
+                expanded = (Boolean)node.jjtGetChild( 3 ).value( context );
             } else {
                 throw new IOException( "Argument not boolean" );
             }
@@ -70,7 +79,7 @@ public class RenderDescriptorDirective extends Directive {
 
         try {
             if( describable == null ) {
-                writer.write( d.getConfigurationPage( request, null ) );
+                writer.write( d.getConfigurationPage( request, null, groupName ) );
             } else {
                 // Check describable
                 if(!d.getClazz().isInstance( describable )) {
@@ -84,7 +93,7 @@ public class RenderDescriptorDirective extends Directive {
                     logger.debug( "Returned describabale: {}", describable );
                 }
 
-                writer.write( d.getConfigurationPage( request, describable ) );
+                writer.write( d.getConfigurationPage( request, describable, groupName ) );
             }
         } catch( Exception e ) {
             throw new IOException( e );
