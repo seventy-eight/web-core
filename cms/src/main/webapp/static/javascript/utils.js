@@ -75,8 +75,10 @@ Utils.popupselect = function( myurl, height ) {
 
 Utils.addJsonElement = function( form ) {
 	
-	var j = {};
-	var jsonData  = Utils.getJsonFromForm( form, j );
+	var jsonData = {};
+	//var jsonData  = Utils.getJsonFromForm( form, j );
+    var d = new Dispatch();
+    d.dispatch(form, jsonData);
 	alert( "JSON: " + JSON.stringify( jsonData ) );
 	var element   = document.createElement( 'input' );
 	element.name  = "json";
