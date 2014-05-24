@@ -87,7 +87,7 @@ public class RenderDescriptorDirective extends Directive {
                     try {
                         describable = d.getDescribable( describable.getParent(), describable.getDocument() );
                     } catch( ItemInstantiationException e ) {
-                        logger.log( Level.WARN, "Unable to get describable for " + d.getClazz(), e );
+                        logger.log( Level.WARN, "Unable to get describable for " + d.getClazz() );
                         describable = null;
                     }
                     logger.debug( "Returned describabale: {}", describable );

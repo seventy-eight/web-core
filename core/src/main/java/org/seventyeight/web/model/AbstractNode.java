@@ -283,6 +283,12 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         response.sendRedirect( getUrl() );
     }
 
+    public boolean hasExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
+        logger.debug( "HAS EXTENSION {}", descriptor );
+        MongoDocument doc = resolveExtension( descriptor );
+        return !(doc == null || doc.isNull() || doc.get( "class", null ) == null);
+    }
+
     @Override
     public boolean equals( Object obj ) {
         if( obj == this ) {

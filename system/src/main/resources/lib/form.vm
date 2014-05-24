@@ -186,6 +186,7 @@
     $descriptors
 
     #set( $size = $descriptors.size() + 1 )
+    #set( $enabledExtension = $null)
 
     <tr>
         <td style="width: 100% ">
@@ -208,9 +209,14 @@
                                 </div>
                             </td>
                         </tr>
+                        #if($item.hasExtension($descriptor))
+                            hejhej $item.resolveExtension($descriptor)
+                            #set($enabledExtension = $descriptor.getClazz().getName())
+                        #end
                     #else
 
                     #end
+
 
                 </table>
                 <br>
@@ -219,6 +225,14 @@
     </tr>
 
     <script type="text/javascript">
+        #if($enabledExtension)
+            toggleDescriptors$divGroupId('$enabledExtension');
+            jQuery(".$enabledExtension").attr('checked', 'checked');
+        #else
+        toggleDescriptors$divGroupId('');
+        #end
+
+
         function toggleDescriptors$divGroupId(d) {
             var id = "#" + d.replace(/\./g,'\\.');
             //$('#.descriptorPage').not($(id)).hide();

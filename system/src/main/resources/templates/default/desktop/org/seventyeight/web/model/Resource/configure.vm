@@ -48,8 +48,9 @@
 
             </div>
 
-            <div name="extensions" class="arrayConfiguration">
+
                 #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+                <div name="extensions">
                     <div id="${extensionGroup.getName()}config" style="display: none" class="configurationDiv">
                         <input type="hidden" name="extension" value="$extensionGroup.getClazz().getName()" />
                             #if($extensionGroup.getType().name() == "one")
@@ -62,9 +63,10 @@
                                 WHOOP!
                             #end
                     </div>
+                </div>
                 #end
 
-            </div>
+
         </td>
     </tr>
 
