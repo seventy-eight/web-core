@@ -1,1 +1,8 @@
-UP config
+<tr>
+    <td>
+        File
+    </td>
+    <td>
+        <input type="text" name="test">
+    </td>
+</tr>
