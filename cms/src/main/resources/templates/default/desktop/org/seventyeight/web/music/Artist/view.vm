@@ -1,1 +1,1 @@
-$item.getPortrait()
+<img src="$item.getPortrait()" alt="Portrait for $item">
