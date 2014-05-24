@@ -58,10 +58,10 @@ Dispatch.prototype.dispatch = function(element, data) {
 }
 
 Dispatch.prototype.visitSelect = function(element, data) {
-    var name = this.getAttribute(element, "name");
+    var name = $(element).attr('name')
     console.log("Visiting select, " + name);
 
-    if(name.length > 0) {
+    if(name && name.length > 0) {
         if( element.type == "select-one" ) {
             data[element.name] = element.value;
         } else {
@@ -121,6 +121,11 @@ Dispatch.prototype.visitDiv = function(element, data) {
                 data[name] = [];
             }
             data[name].push( element.innerHTML );
+        } else if($(element).hasClass("targetObject")) {
+            if( data[name] == undefined ) {
+                data[name] = {};
+            }
+            this.dispatchChilds(element, data[name]);
         } else {
             if( data[name] == undefined ) {
                 data[name] = [];

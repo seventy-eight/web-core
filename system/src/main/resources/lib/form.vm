@@ -203,7 +203,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <div name="config" id="$descriptor.getClazz().getName()$divGroupId">
+                                <div name="config" class="targetObject" id="$descriptor.getClazz().getName()$divGroupId">
                                     #renderDescriptor( $descriptor $item $divGroupId )
                                 </div>
                             </td>

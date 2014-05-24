@@ -4,7 +4,7 @@
     <input id="readInput">
 </div>
 
-<div name="access" class="objects">
+<div name="access" class="targetObject">
     Readers:
     <div id="readContainer">
         #foreach($i in $item.getAuthorized('READ'))
