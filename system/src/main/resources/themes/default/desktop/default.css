@@ -285,3 +285,11 @@ div.targetNode {
     margin: 5px;
     padding: 2px 20px 2px 20px;
 }
+
+.activeConfigurationHeader {
+    background-color: #8900ff;
+}
+
+.inactiveConfigurationHeader {
+    background-color: #dddbda;
+}

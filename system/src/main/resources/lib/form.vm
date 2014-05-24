@@ -191,18 +191,14 @@
     <tr>
         <td style="width: 100% ">
             #foreach( $descriptor in $descriptors )
-                <table style="border-style: solid; width: 100%;" colspan="2">
+                <table style="border-style: solid; width: 100%;">
                     <tr>
-                        <td valign="top" style="width: 25px">
-                            <input type="radio" name="$name" value="$descriptor.getId()" onchange="toggleDescriptors$divGroupId('$descriptor.getClazz().getName()');">
-                        </td>
-                        <td style="width: auto; text-align: left">
+                        <td valign="top" class="${divGroupId}Header" id="$descriptor.getClazz().getName()Header" style="display: block; cursor:pointer" onclick="toggleDescriptors$divGroupId('$descriptor.getClazz().getName()');">
                             $descriptor.getDisplayName()
                         </td>
-                    </tr>
+                        </tr>
                     #if( $doRender )
                         <tr>
-                            <td></td>
                             <td>
                                 <div name="config" class="targetObject" id="$descriptor.getClazz().getName()$divGroupId">
                                     #renderDescriptor( $descriptor $item $divGroupId )
@@ -210,7 +206,6 @@
                             </td>
                         </tr>
                         #if($item.hasExtension($descriptor))
-                            hejhej $item.resolveExtension($descriptor)
                             #set($enabledExtension = $descriptor.getClazz().getName())
                         #end
                     #else
@@ -227,7 +222,7 @@
     <script type="text/javascript">
         #if($enabledExtension)
             toggleDescriptors$divGroupId('$enabledExtension');
-            jQuery(".$enabledExtension").attr('checked', 'checked');
+            //jQuery(".$enabledExtension").attr('checked', 'checked');
         #else
         toggleDescriptors$divGroupId('');
         #end
@@ -240,6 +235,11 @@
             $(".descriptorPage.${divGroupId}").not($(id)).addClass("disabledTarget");
             $(id).show();
             $(id).removeClass("disabledTarget");
+
+            $(".${divGroupId}Header").not($(id + "Header")).removeClass("activeConfigurationHeader");
+            $(".${divGroupId}Header").not($(id + "Header")).addClass("inactiveConfigurationHeader");
+            $(id+"Header").addClass("activeConfigurationHeader");
+            $(id+"Header").removeClass("inactiveConfigurationHeader");
         }
     </script>
 #end
