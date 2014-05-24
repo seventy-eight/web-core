@@ -155,6 +155,7 @@ public class User extends Resource<User> {
         return "User[" + getUsername() + "]" ;
     }
 
+    /*
     @Override
     public void setPortrait( Request request, JsonObject json ) {
         try {
@@ -169,12 +170,14 @@ public class User extends Resource<User> {
             logger.warn( "failed", e );
         }
     }
+    */
 
     @Override
     public String getMainTemplate() {
         return "org/seventyeight/web/main.vm";
     }
 
+    /*
     @Override
     public String getPortrait() {
         logger.debug( "Getting portrait for {}", this );
@@ -193,17 +196,21 @@ public class User extends Resource<User> {
             return "/theme/unknown-person.png";
         }
     }
+    */
 
     /**
      * Get a list of the registered portrait descriptors
      * @return
      */
+    /*
     public List<? extends AbstractPortrait.AbstractPortraitDescriptor> getUserPortraitDescriptors() {
         List<AbstractPortrait.AbstractPortraitDescriptor> descriptors = Core.getInstance().getExtensionDescriptors( AbstractPortrait.class );
 
         return descriptors;
     }
+    */
 
+    /*
     public AbstractPortrait getPortraitExtension() throws ItemInstantiationException {
         MongoDocument portrait = document.getSubDocument( "portrait", null );
 
@@ -214,6 +221,7 @@ public class User extends Resource<User> {
             return null;
         }
     }
+    */
 
     /**
      * Get a {@link User} by Username. Returns null if not found.
