@@ -62,7 +62,17 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     public void setPortrait( Request request, JsonObject json ) {
-        /* No op */
+        try {
+            AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
+            AbstractPortrait abstractPortrait = descriptor.newInstance(request, this, "portrait");
+            abstractPortrait.update( request );
+            //ExtensionUtils.retrieveExtensions( request, json, abstractPortrait );
+            //abstractPortrait.save( request, json );
+            document.set( "portrait", abstractPortrait.getDocument() );
+            save();
+        } catch( Exception e ) {
+            logger.warn( "failed", e );
+        }
     }
 
     @Override
@@ -82,10 +92,20 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     @Override
     public String getPortrait() {
-        if( false ) {
-            return "/theme/framed-question-mark-small.png";
+        logger.debug( "Getting portrait for {}", this );
+
+        MongoDocument portrait = getExtension( AbstractPortrait.class );
+
+        if( portrait != null && !portrait.isNull() ) {
+            try {
+                AbstractPortrait up = Core.getInstance().getNode( this, portrait );
+                return up.getUrl();
+            } catch( ItemInstantiationException e ) {
+                logger.warn( "Unable to get the portrait from " + portrait );
+                return "/theme/unknown-person.png";
+            }
         } else {
-            return "/theme/framed-question-mark-small.png";
+            return "/theme/unknown-person.png";
         }
     }
 

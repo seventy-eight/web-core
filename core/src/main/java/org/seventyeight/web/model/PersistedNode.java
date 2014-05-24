@@ -47,6 +47,19 @@ public abstract class PersistedNode implements Node, Savable, Documented {
         return null;
     }
 
+    public MongoDocument getExtension(Class<? extends AbstractExtension<?>> extensionClass) {
+        logger.debug( "Resolving extension for {}", extensionClass );
+
+        MongoDocument doc = document.getr(EXTENSIONS, Descriptor.getJsonId( extensionClass.getName() ));
+        logger.debug( "DOC: {}", doc );
+
+        if(doc != null && !doc.isNull()) {
+            return doc;
+        } else {
+           return null;
+        }
+    }
+
     public final void update(CoreRequest request) throws ClassNotFoundException, ItemInstantiationException {
         logger.debug( "Updating {}", this );
 
