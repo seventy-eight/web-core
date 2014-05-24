@@ -84,6 +84,14 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
          */
         public abstract Class<T> getExtensionClass();
 
+        public String getExtensionClassId() {
+            return getExtensionClass().getName();
+        }
+
+        public String getExtensionClassJsonId() {
+            return getJsonId( getExtensionClassId() );
+        }
+
         @Override
         public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
             logger.warn( "THE DESCRIBABABALE DOC IS {}", document );

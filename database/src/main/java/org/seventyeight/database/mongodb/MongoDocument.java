@@ -115,6 +115,16 @@ public class MongoDocument implements Document {
     public <T, R extends Document> R set( String key, T value ) {
         if( value instanceof MongoDocument ) {
             document.put( key, ((MongoDocument)value).getDBObject() );
+        } else if(value instanceof Map) {
+            Map<Object, Object> t = new HashMap<Object, Object>(  );
+            for(Object o : ( (Map) value ).keySet()) {
+                if(( (Map) value ).get( o ) instanceof MongoDocument) {
+                    t.put( o, ( (MongoDocument) ( (Map) value ).get( o ) ).getDBObject() );
+                } else {
+                    t.put( o, t.get( o ) );
+                }
+            }
+            document.put( key, t );
         } else {
             document.put( key, value );
         }

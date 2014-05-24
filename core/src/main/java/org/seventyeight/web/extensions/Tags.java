@@ -53,7 +53,8 @@ public class Tags extends ResourceExtension<Tags> {
                 logger.debug( "TAG LIST: {}", tagList );
                 document.set("tags", tagList);
 
-                ((AbstractNode<?>)parent).getDocument().set( "tags", tagList );
+                //((AbstractNode<?>)parent).getDocument().set( "tags", tagList );
+                document.set( "tags", tagList );
                 //document.setList( ( )
             }
         }

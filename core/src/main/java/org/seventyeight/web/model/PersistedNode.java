@@ -36,13 +36,15 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     public MongoDocument resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
         logger.debug( "Resolving extension for {}", descriptor );
         if(descriptor != null) {
-            MongoDocument doc = document.getr(EXTENSIONS, descriptor.getJsonId());
+            MongoDocument doc = document.getr(EXTENSIONS, descriptor.getExtensionClassJsonId());
             logger.debug( "DOC: {}", doc );
 
-            return doc;
-        } else {
-            return null;
+            if(doc.get( "class", "" ).equals( descriptor.getId() )) {
+                return doc;
+            }
         }
+
+        return null;
     }
 
     public final void update(CoreRequest request) throws ClassNotFoundException, ItemInstantiationException {
@@ -56,11 +58,17 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             if( !objs.isEmpty() ) {
                 //updateExtensions( request, objs.get( 0 ) );
                 //document.setList( "extensions" );
+                Map<String, MongoDocument> extensions = new HashMap<String, MongoDocument>(  );
                 for(JsonObject o : objs) {
                     Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, o, this );
                     //document.addToList( "extensions", describable.getDocument() );
-                    document.set( EXTENSIONS, new MongoDocument().set( describable.getDescriptor().getJsonId(), describable.getDocument() ) );
+                    if(describable != null && describable.getDescriptor() instanceof AbstractExtension.ExtensionDescriptor) {
+                        //document.set( EXTENSIONS, new MongoDocument().set( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() ) );
+                        extensions.put( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() );
+                    }
                 }
+
+                document.set( EXTENSIONS, extensions );
 
                 logger.fatal( "------> {}", document );
             }

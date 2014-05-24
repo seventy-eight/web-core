@@ -61,8 +61,18 @@ public class ExtensionUtils {
      * }
      */
     public static Describable handleExtensionConfiguration( CoreRequest request, JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
-        /* Get Json configuration object class name */
+        // Validate input
+        if(jsonData.getAsJsonObject(JsonUtils.__JSON_CONFIGURATION_NAME) == null) {
+            throw new IllegalArgumentException( JsonUtils.__JSON_CONFIGURATION_NAME + " was not found" );
+        }
+
+        // Get Json configuration object class name
         JsonObject jsonConfiguration = jsonData.getAsJsonObject( JsonUtils.__JSON_CONFIGURATION_NAME );
+
+        if(jsonConfiguration.get(JsonUtils.__JSON_CLASS_NAME) == null) {
+            logger.debug( "The field \"class\" was not found" );
+            return null;
+        }
 
         String cls = jsonConfiguration.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
         logger.debug( "Configuration class is " + cls );
