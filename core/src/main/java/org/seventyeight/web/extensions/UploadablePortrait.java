@@ -2,6 +2,7 @@ package org.seventyeight.web.extensions;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
 /**
@@ -20,7 +21,7 @@ public class UploadablePortrait extends AbstractPortrait {
 
     @Override
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
-      /* Implementation is a no op */
+        /* Implementation is a no op */
     }
 
     @Override
@@ -43,6 +44,11 @@ public class UploadablePortrait extends AbstractPortrait {
         @Override
         public String getExtensionName() {
             return "uploadable-portrait";
+        }
+
+        @Override
+        public String getPostConfigurationPage() {
+            return "postConfig";
         }
     }
 }

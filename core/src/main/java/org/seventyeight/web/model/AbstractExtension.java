@@ -141,6 +141,11 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public boolean isApplicable( Node node ) {
             return true;
         }
+
+        public String getPostConfigurationPage() {
+            // Default implementation is a no op
+            return null;
+        }
     }
 
 

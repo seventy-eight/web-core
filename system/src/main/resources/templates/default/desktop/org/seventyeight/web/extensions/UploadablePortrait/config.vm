@@ -1,8 +1,6 @@
 <tr>
     <td>
-        File
-    </td>
-    <td>
-        <input type="text" name="test">
+        <a href="#" id="uploadPage">UPLOAD</a>
+
     </td>
 </tr>

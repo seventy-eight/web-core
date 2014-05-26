@@ -14,6 +14,7 @@ import org.seventyeight.structure.Tuple;
 import org.seventyeight.utils.Date;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.nodes.FileResource;
@@ -147,6 +148,11 @@ public class Upload implements Node {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         writer.write( gson.toJson( r ) );
+    }
+
+    public void doUploadForm(Request request, Response response) throws IOException, TemplateException, NotFoundException {
+        response.setRenderType( Response.RenderType.NONE );
+        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );
     }
 
     private static class UploadResponse {

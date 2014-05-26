@@ -16,6 +16,8 @@
 
     <script src="/static/javascript/jquery/upload/jquery.fileupload-ui.js"></script>
 
+    <script src="/static/javascript/jquery.simplemodal.1.4.4.min.js"></script>
+
     <!-- <script language="javascript" type="text/javascript" src="/static/javascript/ajaxupload.js"></script> -->
     <!-- <script language="javascript" type="text/javascript" src="/static/javascript/dropzone.js"></script> -->
 

@@ -35,22 +35,21 @@ public class RenderStatic extends Directive {
         Class<?> clazz = null;
         String template = null;
 
-		try {
-			if( node.jjtGetChild( 0 ) != null ) {
-				clazz = (Class) node.jjtGetChild( 0 ).value( context );
-			} else {
-				throw new IOException( "First argument is not a class" );
-			}
+        if( node.jjtGetNumChildren() < 2 ) {
+            throw new IOException( "Class and template must be set" );
+        }
 
-            if( node.jjtGetChild( 1 ) != null ) {
-                template = (String) node.jjtGetChild( 1 ).value( context );
-            } else {
-                throw new IOException( "Second argument is not a string" );
-            }
+        if( node.jjtGetChild( 0 ) != null ) {
+            clazz = (Class) node.jjtGetChild( 0 ).value( context );
+        } else {
+            throw new IOException( "First argument is not a class" );
+        }
 
-		} catch( Exception e ) {
-            logger.debug( e );
-		}
+        if( node.jjtGetChild( 1 ) != null ) {
+            template = (String) node.jjtGetChild( 1 ).value( context );
+        } else {
+            throw new IOException( "Second argument is not a string" );
+        }
 
         Request request = (Request) context.get( "request" );
 

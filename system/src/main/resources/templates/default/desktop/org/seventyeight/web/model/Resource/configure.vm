@@ -77,6 +77,15 @@
 
 </form>
 
+#foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+    #foreach($extension in $extensionGroup.getDescriptors())
+        #if($extension.getPostConfigurationPage())
+            $extension.getClazz() - $extension.getPostConfigurationPage()<br>
+            #renderStatic($extension.getClazz() $extension.getPostConfigurationPage())
+        #end
+    #end
+#end
+
 
 <script type="text/javascript">
 
