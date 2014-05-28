@@ -1,4 +1,4 @@
-<div id="uploadDiv" style="display: none; border-style: solid; background-color: #bcadea; width: 150px; height: 150px">
+<div id="uploadDiv" style="display: none; border-style: solid; background-color: #bcadea; width: 400px; height: 350px">
     <div id="fileupload">
         <form method="post" enctype="multipart/form-data" action="/upload/upload">
             <div class="fileupload-buttonbar">
@@ -23,14 +23,29 @@
         $('#fileupload').fileupload({
             dataType: 'json',
             started: function() {
-                alert("YEAH");
-            },
+                //alert("YEAH");
+            },/*
             added: function() {
                 alert("ADDEDYEAH");
+            },*/
+            add: function(e, data) {
+                data.files.forEach(function(e) {
+                    data.context = $('<p style="margin: 0"/>').text('Uploading ' + e.name).appendTo('#uploaded');
+                });
+                data.submit();
             },
             autoUpload: true,
             done: function (e, data) {
-                $("#uploaded").append(data.result.files);
+                //$("#uploaded").append(data.files[0].name);
+                data.context.text('Upload finished.');
+                //data.result.forEach(function(e) {
+                    //data.context.text('Finished uploading ' + data.result.name);
+                    data.context.click(function(event){
+                        $('#portraitUploadID').val(data.result.rid);
+                        $.modal.close();
+                    });
+                //});
+                //$.modal.close();
                 //alert(data);
                 //$.each(data.result.files, function (index, file) {
                 //$('<p/>').text(file.name).appendTo("#uploaded");
@@ -43,6 +58,13 @@
 
 <script type="text/javascript">
     $('#uploadPage').click(function (e) {
-        $('#uploadDiv').modal({overlayClose:true});
+        $('#uploadDiv').modal({
+            overlayClose:true,
+            escClose: true/*,
+            onClose: function(dialog) {
+                alert("CLOSED!");
+                $.modal.close();
+            }*/
+        });
     });
 </script>

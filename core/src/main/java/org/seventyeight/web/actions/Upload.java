@@ -100,6 +100,14 @@ public class Upload implements Node {
             return;
         }
 
+        UploadResponse r = new UploadResponse();
+        r.name = "NAME";
+        r.rid = "";
+        r.size = 1000;
+        r.length = 2000;
+        r.deleteUrl = "http://jajdjawd";
+        r.thumbnailUrl = "/images/none";
+
         for( FileItem item : items ) {
             try {
                 if( UploadHandler.commonsUploader.isValid( item ) ) {
@@ -119,6 +127,9 @@ public class Upload implements Node {
                         fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
                         fr.save();
 
+                        r.rid = fr.getIdentifier();
+                        r.name = fr.getDisplayName();
+
                         logger.debug( "THE OWNER IS {}", fr.getOwner() );
 
                         // Fire on created node, TODO: Perhaps an onCreatedResource?
@@ -137,13 +148,6 @@ public class Upload implements Node {
 
         logger.debug( "Executed!" );
 
-        UploadResponse r = new UploadResponse();
-        r.name = "NAME";
-        r.size = 1000;
-        r.length = 2000;
-        r.deleteUrl = "http://jajdjawd";
-        r.thumbnailUrl = "/images/none";
-
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -157,6 +161,7 @@ public class Upload implements Node {
 
     private static class UploadResponse {
         public String name;
+        public String rid;
         public long size;
         public long length;
         public String url;
