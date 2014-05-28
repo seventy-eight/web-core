@@ -14,12 +14,16 @@
     </div>
 
     <div id="uploaded">
-
     </div>
 </div>
 
-<script>
-    $(function () {
+
+
+
+
+<script type="text/javascript">
+    $('#uploadPage').click(function (e) {
+
         $('#fileupload').fileupload({
             dataType: 'json',
             started: function() {
@@ -32,18 +36,19 @@
                 data.files.forEach(function(e) {
                     data.context = $('<p style="margin: 0"/>').text('Uploading ' + e.name).appendTo('#uploaded');
                 });
-                data.submit();
+                var r = data.submit();
             },
             autoUpload: true,
             done: function (e, data) {
                 //$("#uploaded").append(data.files[0].name);
-                data.context.text('Upload finished.');
+
+                //data.context.text('Upload finished.');
                 //data.result.forEach(function(e) {
-                    //data.context.text('Finished uploading ' + data.result.name);
-                    data.context.click(function(event){
-                        $('#portraitUploadID').val(data.result.rid);
-                        $.modal.close();
-                    });
+                data.context.text('Finished uploading ' + data.result.name);
+                data.context.click(function(event){
+                    $('#portraitUploadID').val(data.result.rid);
+                    $.modal.close();
+                });
                 //});
                 //$.modal.close();
                 //alert(data);
@@ -52,12 +57,7 @@
                 //});
             }
         });
-    });
-</script>
 
-
-<script type="text/javascript">
-    $('#uploadPage').click(function (e) {
         $('#uploadDiv').modal({
             overlayClose:true,
             escClose: true/*,
@@ -66,5 +66,7 @@
                 $.modal.close();
             }*/
         });
+
+
     });
 </script>
