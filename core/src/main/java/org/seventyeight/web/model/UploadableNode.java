@@ -49,6 +49,10 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
         return this.document.get( EXTENSION );
     }
 
+    public void addAssociatedResource(String id) {
+        document.addToList( "associated", id );
+    }
+
     public void setSize( long size ) {
         this.document.set( "size", size );
     }

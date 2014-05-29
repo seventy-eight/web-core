@@ -24,43 +24,47 @@
 <script type="text/javascript">
     $('#uploadPage').click(function (e) {
 
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            started: function() {
-                //alert("YEAH");
-            },/*
-            added: function() {
-                alert("ADDEDYEAH");
-            },*/
-            add: function(e, data) {
-                data.files.forEach(function(e) {
-                    data.context = $('<p style="margin: 0"/>').text('Uploading ' + e.name).appendTo('#uploaded');
-                });
-                var r = data.submit();
-            },
-            autoUpload: true,
-            done: function (e, data) {
-                //$("#uploaded").append(data.files[0].name);
-
-                //data.context.text('Upload finished.');
-                //data.result.forEach(function(e) {
-                data.context.text('Finished uploading ' + data.result.name);
-                data.context.click(function(event){
-                    $('#portraitUploadID').val(data.result.rid);
-                    $.modal.close();
-                });
-                //});
-                //$.modal.close();
-                //alert(data);
-                //$.each(data.result.files, function (index, file) {
-                //$('<p/>').text(file.name).appendTo("#uploaded");
-                //});
-            }
-        });
 
         $('#uploadDiv').modal({
             overlayClose:true,
-            escClose: true/*,
+            escClose: true,
+            onShow: function() {
+                $('#fileupload').fileupload({
+                    dataType: 'json',
+                    started: function() {
+                        //alert("YEAH");
+                    },/*
+            added: function() {
+                alert("ADDEDYEAH");
+            },*/
+                    add: function(e, data) {
+                        data.files.forEach(function(e) {
+                            data.context = $('<p style="margin: 0"/>').text('Uploading ' + e.name).appendTo('#uploaded');
+                        });
+                        data.formData = {'test': 'snade'};
+                        var r = data.submit();
+                    },
+                    autoUpload: true,
+                    done: function (e, data) {
+                        //$("#uploaded").append(data.files[0].name);
+
+                        //data.context.text('Upload finished.');
+                        //data.result.forEach(function(e) {
+                        data.context.text('Finished uploading ' + data.result.name);
+                        data.context.click(function(event){
+                            $('#portraitUploadID').val(data.result.rid);
+                            $.modal.close();
+                        });
+                        //});
+                        //$.modal.close();
+                        //alert(data);
+                        //$.each(data.result.files, function (index, file) {
+                        //$('<p/>').text(file.name).appendTo("#uploaded");
+                        //});
+                    }
+                });
+
+            }/*
             onClose: function(dialog) {
                 alert("CLOSED!");
                 $.modal.close();

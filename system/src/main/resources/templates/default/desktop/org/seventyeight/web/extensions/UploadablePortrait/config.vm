@@ -1,6 +1,6 @@
 <tr>
     <td>
         <a href="#" id="uploadPage">UPLOAD</a>
-        <input type="text" id="portraitUploadID" readonly>
+        <input name="uploadedPortraitId" type="text" id="portraitUploadID" readonly>
     </td>
 </tr>

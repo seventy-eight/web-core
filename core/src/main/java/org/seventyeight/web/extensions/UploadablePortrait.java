@@ -21,7 +21,10 @@ public class UploadablePortrait extends AbstractPortrait {
 
     @Override
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
-        /* Implementation is a no op */
+        if(jsonData != null) {
+            String id = jsonData.get( "uploadedPortraitId" ).getAsString();
+            document.set( "file", id );
+        }
     }
 
     @Override
