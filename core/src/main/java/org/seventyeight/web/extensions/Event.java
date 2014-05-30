@@ -20,6 +20,7 @@ public class Event extends ResourceExtension<Event> {
     private static Logger logger = LogManager.getLogger( Event.class );
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
+    private static final SimpleDateFormat sdfDate = new SimpleDateFormat( "yyyy-MM-dd" );
 
     public Event( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -67,11 +68,40 @@ public class Event extends ResourceExtension<Event> {
             try {
                 fromDate = sdf.parse( fromDateString );
                 toDate = sdf.parse( toDateString );
+
+                document.set( "fromDate", fromDate );
+                document.set( "toDate", toDate );
             } catch( ParseException e ) {
                 throw new IllegalArgumentException( e );
             }
 
             logger.debug( "FROM: {}", fromDate );
+        }
+    }
+
+    public Date getFromDate() {
+        return document.get("fromDate");
+    }
+
+    public String getFromDateString() {
+        Date d = getFromDate();
+        if(d != null) {
+            return sdfDate.format( d );
+        } else {
+            return "";
+        }
+    }
+
+    public Date getToDate() {
+        return document.get("toDate");
+    }
+
+    public String getToDateString() {
+        Date d = getToDate();
+        if(d != null) {
+            return sdfDate.format( d );
+        } else {
+            return "";
         }
     }
 

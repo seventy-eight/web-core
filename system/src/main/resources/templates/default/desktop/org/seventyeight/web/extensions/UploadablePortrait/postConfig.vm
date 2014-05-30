@@ -1,6 +1,6 @@
 <div id="uploadDiv" style="display: none; border-style: solid; background-color: #bcadea; width: 400px; height: 350px">
     <div id="fileupload">
-        <form method="post" enctype="multipart/form-data" action="/upload/upload">
+        <form method="post" enctype="multipart/form-data" action="/upload/upload?rid=$item.getIdentifier()">
             <div class="fileupload-buttonbar">
                 <label class="fileinput-button">
                     <span>Upload</span>
@@ -41,7 +41,7 @@
                         data.files.forEach(function(e) {
                             data.context = $('<p style="margin: 0"/>').text('Uploading ' + e.name).appendTo('#uploaded');
                         });
-                        data.formData = {'test': 'snade'};
+
                         var r = data.submit();
                     },
                     autoUpload: true,

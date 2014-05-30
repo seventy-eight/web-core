@@ -1,13 +1,15 @@
+#set($fromDate = $item.getFromDateString())
+#set($toDate = $item.getToDateString())
 
 <tr>
     <td>
         Date
     </td>
     <td>
-        <input type="text" id="datepickerFrom" name="eventFromDate" class="targetValue">
+        <input type="text" id="datepickerFrom" name="eventFromDate" class="targetValue" value="$fromDate">
         #timePicker("eventFromTime")
         to
-        <input type="text" id="datepickerTo" name="eventToDate" class="targetValue">
+        <input type="text" id="datepickerTo" name="eventToDate" class="targetValue" value="$toDate">
         #timePicker("eventToTime")
         <br>
         All day event <input type="checkbox" name="eventAllDay">

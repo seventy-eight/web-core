@@ -1,6 +1,8 @@
+#set($fileId = $item.getFile())
+
 <tr>
     <td>
         <a href="#" id="uploadPage">UPLOAD</a>
-        <input name="uploadedPortraitId" type="text" id="portraitUploadID" readonly>
+        <input name="uploadedPortraitId" value="$!fileId" type="text" id="portraitUploadID" readonly>
     </td>
 </tr>

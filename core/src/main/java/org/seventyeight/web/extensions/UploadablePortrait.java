@@ -27,6 +27,10 @@ public class UploadablePortrait extends AbstractPortrait {
         }
     }
 
+    public String getFile() {
+        return document.get("file", "");
+    }
+
     @Override
     public String getDisplayName() {
         return "Uploadable portrait";

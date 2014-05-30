@@ -122,9 +122,15 @@ public class Upload implements Node {
                         fr = d.newInstance( request, Core.getInstance(), filename );
 
                         fr.setPath( uf.relativePath );
-                        fr.setFilename( filename );
+                        fr.setFilename( uf.file.getName() );
                         fr.setFileExtension( uf.extension );
                         fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
+
+                        String rid = request.getValue( "rid", null );
+                        if(rid != null) {
+                            fr.addAssociatedResource( rid );
+                        }
+
                         fr.save();
 
                         r.rid = fr.getIdentifier();
