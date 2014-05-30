@@ -1,4 +1,4 @@
-#set($fileId = $item.getFile())
+#set($fileId = $item.getFileId())
 
 <tr>
     <td>

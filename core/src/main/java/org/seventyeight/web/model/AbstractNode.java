@@ -54,6 +54,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         return "/resource/" + getIdentifier() + "/";
     }
 
+    public String getFileUrl() {
+        return getUrl() + "file";
+    }
+
     public String getConfigUrl() {
         return getUrl() + "configure";
     }

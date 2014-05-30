@@ -1,14 +1,24 @@
 package org.seventyeight.web.extensions;
 
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.nodes.FileResource;
+
+import java.util.List;
 
 /**
  * @author cwolfgang
  */
 public class UploadablePortrait extends AbstractPortrait {
+
+    private static Logger logger = LogManager.getLogger( UploadablePortrait.class );
 
     public UploadablePortrait( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -16,7 +26,12 @@ public class UploadablePortrait extends AbstractPortrait {
 
     @Override
     public String getUrl() {
-        return "test";
+        try {
+            return getFile().getFileUrl();
+        } catch( Exception e ) {
+            logger.log( Level.WARN, "Unable to deliver url for " + this, e );
+            return "";
+        }
     }
 
     @Override
@@ -27,7 +42,20 @@ public class UploadablePortrait extends AbstractPortrait {
         }
     }
 
-    public String getFile() {
+    public List<String> getAssociatedFiles() {
+        MongoDBQuery query = new MongoDBQuery().is( "type", "file" ).is( "associated", getFileId() );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 );
+
+        logger.debug( "DOCUMENTS: {}", docs );
+
+        return null;
+    }
+
+    public FileResource getFile() throws NotFoundException, ItemInstantiationException {
+        return Core.getInstance().getNodeById( this, getFileId() );
+    }
+
+    public String getFileId() {
         return document.get("file", "");
     }
 

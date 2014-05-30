@@ -18,7 +18,7 @@
 </div>
 
 
-
+ITEM: $item.getAssociatedFiles(), $item
 
 
 <script type="text/javascript">

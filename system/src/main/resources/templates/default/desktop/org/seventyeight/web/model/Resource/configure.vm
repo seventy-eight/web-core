@@ -81,7 +81,7 @@
     #foreach($extension in $extensionGroup.getDescriptors())
         #if($extension.getPostConfigurationPage())
             $extension.getClazz() - $extension.getPostConfigurationPage()<br>
-            #renderStatic($extension.getClazz() $extension.getPostConfigurationPage())
+            #render($extension.getDescribable($item) $extension.getPostConfigurationPage())
         #end
     #end
 #end

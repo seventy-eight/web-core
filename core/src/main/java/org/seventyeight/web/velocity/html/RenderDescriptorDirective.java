@@ -83,9 +83,9 @@ public class RenderDescriptorDirective extends Directive {
             } else {
                 // Check describable
                 if(!d.getClazz().isInstance( describable )) {
-                    logger.debug( "{} is not instance of {}", d, d.getClazz() );
+                    logger.debug( "{} is not instance of {}", describable, d.getClazz() );
                     try {
-                        describable = d.getDescribable( describable.getParent(), describable.getDocument() );
+                        describable = d.getDescribable( describable, describable.getDocument() );
                     } catch( ItemInstantiationException e ) {
                         logger.log( Level.WARN, "Unable to get describable for " + d.getClazz() );
                         describable = null;

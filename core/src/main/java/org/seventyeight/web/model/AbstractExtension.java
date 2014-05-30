@@ -92,6 +92,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             return getJsonId( getExtensionClassId() );
         }
 
+        public Describable<T> getDescribable( PersistedNode node ) throws ItemInstantiationException {
+            return getDescribable( node, node.getDocument() );
+        }
+
         @Override
         public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
             logger.warn( "THE DESCRIBABABALE DOC IS {}", document );
