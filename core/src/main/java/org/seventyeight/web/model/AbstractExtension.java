@@ -24,8 +24,21 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         this.parent = parent;
     }
 
-    public Node getParent() {
-        return parent;
+    public PersistedNode getParent() {
+        return (PersistedNode) parent;
+    }
+
+    public String getThisIdentifier() {
+        Node p = parent;
+        while(p != null) {
+            if(p instanceof AbstractNode) {
+                return ( (AbstractNode) p ).getIdentifier();
+            }
+
+            p = p.getParent();
+        }
+
+        throw new IllegalStateException( this + " does not have a parent with an identifier" );
     }
 
     /*

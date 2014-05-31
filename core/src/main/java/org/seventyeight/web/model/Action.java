@@ -12,11 +12,6 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
         super( parent, document );
     }
 
-    @Override
-    public Node getParent() {
-        return parent;
-    }
-
     public abstract String getDisplayName();
 
     /**

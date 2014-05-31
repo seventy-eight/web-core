@@ -11,6 +11,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.FileResource;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,12 +44,13 @@ public class UploadablePortrait extends AbstractPortrait {
     }
 
     public List<String> getAssociatedFiles() {
-        MongoDBQuery query = new MongoDBQuery().is( "type", "file" ).is( "associated", getFileId() );
+        MongoDBQuery query = new MongoDBQuery().is( "type", "file" ).is( "associated", getThisIdentifier() );
+        logger.debug( "QUERY IS {}", query );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 );
 
-        logger.debug( "DOCUMENTS: {}", docs );
+        logger.debug( "------------------------------->DOCUMENTS: {}", docs );
 
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     public FileResource getFile() throws NotFoundException, ItemInstantiationException {
