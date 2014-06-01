@@ -43,14 +43,15 @@ public class UploadablePortrait extends AbstractPortrait {
         }
     }
 
-    public List<String> getAssociatedFiles() {
+    public List<MongoDocument> getAssociatedFiles() {
         MongoDBQuery query = new MongoDBQuery().is( "type", "file" ).is( "associated", getThisIdentifier() );
         logger.debug( "QUERY IS {}", query );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 );
 
         logger.debug( "------------------------------->DOCUMENTS: {}", docs );
 
-        return Collections.EMPTY_LIST;
+        //return Collections.EMPTY_LIST;
+        return docs;
     }
 
     public FileResource getFile() throws NotFoundException, ItemInstantiationException {

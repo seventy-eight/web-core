@@ -14,16 +14,33 @@
     </div>
 
     <div id="uploaded">
+        #foreach($f in $item.getAssociatedFiles())
+            <span class="selectPortrait" data-rid="$f.get("_id")">[$f.get("title")]</span>
+        #end
     </div>
 </div>
 
 
-ITEM: $item.getAssociatedFiles(), $item
+ITEM: $item
 
 
 <script type="text/javascript">
-    $('#uploadPage').click(function (e) {
+    $(function() {
+        $('.selectPortrait').click(function(event){
+            $('#portraitUploadID').val($(this).attr("data-rid"));
+            $.modal.close();
+        });
+    })
 
+    function addUploadedPortrait(title, rid) {
+        var e = $('<span style="margin: 0"/>').text('[' + title + ']').appendTo('#uploaded');
+        e.click(function(event){
+            $('#portraitUploadID').val(rid);
+            $.modal.close();
+        });
+    }
+
+    $('#uploadPage').click(function (e) {
 
         $('#uploadDiv').modal({
             overlayClose:true,
