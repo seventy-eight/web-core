@@ -203,6 +203,20 @@ public class MongoDocument implements Document {
         }
     }
 
+    public <T extends Object> List<T> getObjectList2( String key ) {
+        BasicDBList list = (BasicDBList) document.get( key );
+
+        if( list != null ) {
+            List<T> r = new ArrayList<T>( list.size() );
+            for(Object o : list) {
+                r.add( (T) o );
+            }
+            return r;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
     public List<MongoDocument> getList( String key, int offset, int number ) {
         List<BasicDBObject> list = (List<BasicDBObject>) document.get( key );
 

@@ -15,6 +15,7 @@ import org.seventyeight.web.extensions.searchers.TypeSearch;
 import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.music.Artist;
+import org.seventyeight.web.music.Venue;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.nodes.listeners.FileTypeListener;
 import org.seventyeight.web.nodes.listeners.SearchFormatListener;
@@ -98,6 +99,7 @@ public class CMSCore extends Core {
         addDescriptor( new PublicACL.PublicACLDescriptor() );
 
         addDescriptor( new Artist.ArtistDescriptor() );
+        addDescriptor( new Venue.VenueDescriptor() );
 
         //addDescriptor( new  );
 
