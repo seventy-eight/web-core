@@ -31,7 +31,7 @@ public class RenderStatic extends Directive {
 
 	@Override
 	public boolean render( InternalContextAdapter context, Writer writer, Node node ) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-        logger.debug( "Rendering class" );
+
         Class<?> clazz = null;
         String template = null;
 
@@ -50,6 +50,8 @@ public class RenderStatic extends Directive {
         } else {
             throw new IOException( "Second argument is not a string" );
         }
+
+        logger.debug( "Rendering " + clazz + " for " + template );
 
         Request request = (Request) context.get( "request" );
 

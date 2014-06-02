@@ -1,1 +1,56 @@
-YEAH
+#set($multiStaged = $item.isMultiStaged())
+
+<tr>
+    <td>
+        Multi staged
+    </td>
+    <td>
+        <input id="multiStagedCheckbox" type="checkbox" name="multiStaged" #if($multiStaged) checked #end>
+    </td>
+</tr>
+
+
+<tr>
+    <td colspan="2">
+        <div style="" id="multiStagedInput">
+            <textarea name="stages" style="width: 80%"></textarea>
+        </div>
+    </td>
+</tr>
+
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#multiStagedCheckbox').click(function() {
+            $('#multiStagedInput').toggle(this.checked);
+        });
+    })
+</script>
+
+<!--
+<tr>
+    <td>
+        <div class="ui-widget">
+            <input id="stageInput">
+        </div>
+
+        <div name="access" class="targetObject">
+            Readers:
+            <div id="stageContainer">
+                #foreach($i in $item.getAuthorized('READ'))
+                    <div class="targetNode" id="readContainer"><div name="read" class="targetValue" style="display: none">$i.getIdentifier()</div>$i</div>
+                #end
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            Utils.selectElements("getStage", "stage", "stageContainer", "stageInput")
+
+            $('#readContainer').on('click', 'div', function(e) {
+                $(this).remove()
+            })
+        </script>
+    </td>
+</tr>
+-->

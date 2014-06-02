@@ -2,7 +2,10 @@ package org.seventyeight.web.music;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.CoreRequest;
@@ -22,13 +25,31 @@ import java.util.List;
  */
 public class Venue extends Resource<Venue> {
 
+    private static Logger logger = LogManager.getLogger( Venue.class );
+
     public Venue( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 
     @Override
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
-       /* Implementation is a no op */
+        if(jsonData != null) {
+            boolean multiStaged = false;
+            JsonElement e = jsonData.get( "multiStaged" );
+            if(!e.isJsonNull()) {
+                multiStaged = e.getAsString().equals( "on" );
+            }
+
+            document.set( "multiStaged", multiStaged );
+            if(multiStaged) {
+                JsonElement s = jsonData.get( "stages" );
+                if(!s.isJsonNull()) {
+                    logger.debug( "JSON ELEMENT: {}", s );
+                    String[] stages = s.getAsString().split( "\\s+|," );
+                    document.set( "stages", stages );
+                }
+            }
+        }
     }
 
     public boolean isMultiStaged() {
