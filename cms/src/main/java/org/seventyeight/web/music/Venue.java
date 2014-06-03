@@ -45,7 +45,7 @@ public class Venue extends Resource<Venue> {
                 JsonElement s = jsonData.get( "stages" );
                 if(!s.isJsonNull()) {
                     logger.debug( "JSON ELEMENT: {}", s );
-                    String[] stages = s.getAsString().split( "\\s+|," );
+                    String[] stages = s.getAsString().split( "\\s*,\\s*|\\s+" );
                     document.set( "stages", stages );
                 }
             }
