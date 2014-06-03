@@ -1,0 +1,31 @@
+<tr>
+    <td>
+        Venue
+    </td>
+    <td>
+        <input type="text" name="venue">
+    </td>
+</tr>
+
+<tr>
+    <td>
+        <div class="ui-widget">
+            <input id="artistsInput">
+        </div>
+
+
+            <div id="artistsContainer">
+                #foreach($i in $item.getAuthorized('READ'))
+                    <div class="targetNode" id="readContainer"><div name="artist" class="targetValue" style="display: none">$i.getIdentifier()</div>$i</div>
+                #end
+            </div>
+
+        <script type="text/javascript">
+            Utils.selectElements("/artist/getArtists", "artists", "artistsContainer", "artistsInput")
+
+            $('#artistsContainer').on('click', 'div', function(e) {
+                $(this).remove()
+            })
+        </script>
+    </td>
+</tr>
