@@ -6,10 +6,8 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NodeDescriptor;
-import org.seventyeight.web.model.Resource;
+import org.seventyeight.web.Core;
+import org.seventyeight.web.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +15,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Concert extends Resource<Concert> {
+public class Concert extends Resource<Concert> implements Event {
 
     private static Logger logger = LogManager.getLogger( Concert.class );
 
@@ -48,6 +46,22 @@ public class Concert extends Resource<Concert> {
                 document.set( "artists", artists );
             }
         }
+    }
+
+    public void setVenue(Venue venue) {
+        document.set( "venue", venue.getIdentifier() );
+    }
+
+    public String getVenueId() {
+        return document.get( "venue", null );
+    }
+
+    public Venue getVenue() throws NotFoundException, ItemInstantiationException {
+        return Core.getInstance().getNodeById( this, getVenueId() );
+    }
+
+    public void setAsPartOf(Resource<?> resource) {
+        document.set( "partOf", resource.getIdentifier() );
     }
 
     public static class ConcertDescriptor extends NodeDescriptor<Concert> {

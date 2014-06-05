@@ -2,12 +2,34 @@
     <td>
         Venue
     </td>
-    <td>
-        <input type="text" name="venue">
+    <td style="text-align: left">
+        <div class="ui-widget">
+            <input id="venueInput">
+        </div>
+
+
+        <div id="venueContainer" style="text-align: center">
+            #set($venue = $item.getVenue())
+            #if($venue)
+                <div class="targetNode" id="readContainer"><div name="venue" class="targetValue" style="display: none">$venue.getIdentifier()</div>$venue.getDisplayName()</div>
+            #end
+        </div>
+
+        <script type="text/javascript">
+            Utils.selectElement("/venue/getVenues", "venue", "venueContainer", "venueInput")
+
+            $('#venueContainer').on('click', 'div', function(e) {
+                $(this).remove()
+            })
+        </script>
     </td>
 </tr>
 
 <tr>
+    <td>
+        Artists
+    </td>
+
     <td>
         <div class="ui-widget">
             <input id="artistsInput">
