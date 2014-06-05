@@ -6,12 +6,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NodeDescriptor;
-import org.seventyeight.web.model.Resource;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.extensions.MenuContributor;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -96,7 +97,41 @@ public class Venue extends Resource<Venue> {
         return r;
     }
 
-    public static class VenueDescriptor extends NodeDescriptor<Venue> {
+    public void doAddConcert(Request request, Response response) throws ItemInstantiationException, IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        Concert.ConcertDescriptor descriptor = Core.getInstance().getDescriptor( Concert.class );
+        Concert instance = descriptor.newInstance( request, this, "" );
+        instance.setVenue( this );
+        instance.save();
+
+        response.sendRedirect( instance.getConfigUrl() );
+    }
+
+    public static class VenueDescriptor extends NodeDescriptor<Venue> implements MenuContributor<AbstractNode<Venue>> {
+
+        @Override
+        public void addContributingMenu( AbstractNode<Venue> node, Menu menu ) {
+            if(node instanceof Venue) {
+                menu.addItem( "Venue", new Menu.MenuItem("Add concert", "addConcert", ACL.Permission.ADMIN) );
+            }
+        }
+
+        public void doGetVenues(Request request, Response response) throws IOException {
+            response.setRenderType( Response.RenderType.NONE );
+
+            String term = request.getValue( "term", "" );
+
+            if( term.length() > 1 ) {
+                MongoDBQuery query = new MongoDBQuery().is( "type", "venue" ).regex( "title", "(?i)" + term + ".*" );
+
+                PrintWriter writer = response.getWriter();
+                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+            } else {
+                response.getWriter().write( "{}" );
+            }
+        }
+
 
         @Override
         public String getType() {
