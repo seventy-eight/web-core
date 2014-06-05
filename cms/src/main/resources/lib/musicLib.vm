@@ -1,0 +1,29 @@
+#macro(singleDynamicInput $title $nameSpace $url $selected)
+<tr>
+    <td>
+        $title
+    </td>
+    <td style="text-align: left">
+        <div class="ui-widget">
+            <input id="${nameSpace}Input">
+        </div>
+
+
+        <div id="${nameSpace}Container" style="text-align: center">
+            #if($selected)
+                <div class="targetNode" id="readContainer"><div name="${nameSpace}" class="targetValue" style="display: none">$selected.getIdentifier()</div>$selected.getDisplayName()</div>
+            #end
+        </div>
+
+        <script type="text/javascript">
+            Utils.selectElement("$url", "${nameSpace}", "${nameSpace}Container", "${nameSpace}Input")
+
+            #set($containerId = ${nameSpace} + "Container")
+            $('#${containerId}').on('click', 'div', function(e) {
+                $(this).remove()
+            })
+        </script>
+    </td>
+</tr>
+
+#end
