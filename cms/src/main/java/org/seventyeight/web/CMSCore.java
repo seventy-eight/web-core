@@ -16,6 +16,7 @@ import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.Menu;
 import org.seventyeight.web.music.Artist;
 import org.seventyeight.web.music.Concert;
+import org.seventyeight.web.music.Festival;
 import org.seventyeight.web.music.Venue;
 import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.nodes.listeners.FileTypeListener;
@@ -102,6 +103,7 @@ public class CMSCore extends Core {
         addDescriptor( new Artist.ArtistDescriptor() );
         addDescriptor( new Venue.VenueDescriptor() );
         addDescriptor( new Concert.ConcertDescriptor() );
+        addDescriptor( new Festival.FestivalDescriptor() );
 
         //addDescriptor( new  );
 

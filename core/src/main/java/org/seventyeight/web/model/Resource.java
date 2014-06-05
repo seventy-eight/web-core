@@ -96,16 +96,16 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
         MongoDocument portrait = getExtension( AbstractPortrait.class );
 
-        if( portrait != null && !portrait.isNull() ) {
+        if( portrait != null && !portrait.isNull() && portrait.get( "class", null ) != null ) {
             try {
                 AbstractPortrait up = Core.getInstance().getNode( this, portrait );
                 return up.getUrl();
             } catch( ItemInstantiationException e ) {
                 logger.warn( "Unable to get the portrait from " + portrait );
-                return "/theme/unknown-person.png";
+                return "/theme/type/" + getType() + ".png";
             }
         } else {
-            return "/theme/unknown-person.png";
+            return "/theme/type/" + getType() + ".png";
         }
     }
 

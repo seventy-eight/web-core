@@ -17,7 +17,7 @@ import java.io.File;
  */
 public class GravatarPortrait extends AbstractPortrait {
 
-    public GravatarPortrait( PersistedNode parent, MongoDocument document ) {
+    public GravatarPortrait( Node parent, MongoDocument document ) {
         super( parent, document );
     }
 

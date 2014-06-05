@@ -8,7 +8,7 @@
 
     <tr>
         <td style="; text-align: center">
-            <a href="$item.getUrl()"><img src="$item.getPortrait()"></a>
+            <a href="$item.getUrl()"><img src="$item.getPortrait()" style="width: 150px"></a>
         </td>
     </tr>
 

@@ -6,7 +6,12 @@
             <td><input type="text" name="title" class="configure"></td>
         </tr>
 
-        #renderDescriptor( $item )
+        <tr>
+            <td>HEJA NORGE</td>
+            <td>
+            #renderDescriptor( $item )
+            </td>
+        </tr>
 
         <tr>
             <td colspan="2" align="center"><input type="submit" value="Save"></td>

@@ -72,23 +72,27 @@ public class User extends Resource<User> {
         /* Password */
         String password1 = request.getValue( "password", null );
         String password2 = request.getValue( "password_again", null );
-        if( ( password1 == null || password1.isEmpty() ) || ( password2 == null || password2.isEmpty() ) ) {
-            throw new IllegalArgumentException( "The password cannot be empty" );
-        }
+        if( password2 != null && !password2.isEmpty() ) {
+            if( ( password1 == null || password1.isEmpty() ) || ( password2 == null || password2.isEmpty() ) ) {
+                throw new IllegalArgumentException( "The password cannot be empty" );
+            }
 
-        if( !password1.equals( password2 ) ) {
-            throw new IllegalArgumentException( "Passwords does not match" );
-        }
-        String hashed = "";
-        try {
-            hashed = Utils.md5( password1 );
-        } catch( NoSuchAlgorithmException e ) {
-            throw new IllegalArgumentException( "Unable to hash password" );
+            if( !password1.equals( password2 ) ) {
+                throw new IllegalArgumentException( "Passwords does not match" );
+            }
+            String hashed = "";
+            try {
+                hashed = Utils.md5( password1 );
+            } catch( NoSuchAlgorithmException e ) {
+                throw new IllegalArgumentException( "Unable to hash password" );
+            }
+
+            document.set( "password", hashed );
         }
 
         document.set( "username", username );
         document.set( "email", email );
-        document.set( "password", hashed );
+
     }
 
     public List<Group> getGroups() {

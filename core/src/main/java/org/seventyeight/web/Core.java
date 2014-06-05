@@ -324,6 +324,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
 
     public <T extends Node> T getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Getting node by id: " + id );
+        if(id == null) {
+            throw new IllegalArgumentException( "Id not provided" );
+        }
         MongoDocument d = MongoDBCollection.get( NODES_COLLECTION_NAME ).getDocumentById( id );
 
         if( d != null && !d.isNull() ) {
