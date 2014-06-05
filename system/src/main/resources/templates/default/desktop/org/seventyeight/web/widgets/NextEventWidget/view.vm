@@ -1,0 +1,17 @@
+#foreach($r in $item.getNextEvents($request))
+<table style="width: 100%; min-width: inherit; margin-top: 15px" class="widget">
+    <tr>
+        <td style="width: 100%;text-align: center; padding-left: 10px">
+            $message.get("Updated", $dateUtils.getDateString($r.getUpdated()))
+        </td>
+    </tr>
+
+
+    <tr>
+        <td style="text-align: center;" colspan="">
+            #render($r "wide" true "" "" true)
+        </td>
+
+    </tr>
+</table>
+#end

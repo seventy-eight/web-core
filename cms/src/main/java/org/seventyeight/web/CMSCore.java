@@ -23,6 +23,7 @@ import org.seventyeight.web.nodes.listeners.FileTypeListener;
 import org.seventyeight.web.nodes.listeners.SearchFormatListener;
 import org.seventyeight.web.nodes.listeners.WidgetListener;
 import org.seventyeight.web.widgets.ActivityWidget;
+import org.seventyeight.web.widgets.NextEventWidget;
 
 import java.io.File;
 
@@ -93,6 +94,7 @@ public class CMSCore extends Core {
         addExtension( new SearchFormatListener() );
         //addExtension( new CollectionFormatter() );
         addExtension( new WidgetListener() );
+        addExtension( new NextEventWidget() );
 
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );

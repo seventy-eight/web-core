@@ -1,9 +1,9 @@
 <table style="min-width: inherit; width: 100%">
     <tr>
-        <td style="width: 40%">
-            widget("Activity widget" "Last users" "widget1")
+        <td style="width: 40%; vertical-align: top">
+            #widget("Next event widget" "Next events" "widget1")
         </td>
-        <td style="width: 60%">
+        <td style="width: 60%;  vertical-align: top">
             #widget("Activity widget" "Activities" "widget2")
         </td>
     </tr>

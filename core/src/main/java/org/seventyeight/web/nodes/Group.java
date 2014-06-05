@@ -32,11 +32,6 @@ public class Group extends Resource<Group> implements Authorizable {
     }
 
     @Override
-    public String getPortrait() {
-        return "/theme/framed-group-small.png";
-    }
-
-    @Override
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
         JsonElement usersElement = jsonData.get( "users" );
         if(usersElement.isJsonNull()) {

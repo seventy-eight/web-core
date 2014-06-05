@@ -54,8 +54,8 @@ public class Event extends ResourceExtension<Event> {
 
             logger.debug( "FROM TIME SREINR: '{}'", fromTimeString );
 
-            fromDateString += !fromTimeString.isEmpty() ? fromTimeString : " 00:00";
-            toDateString += !toTimeString.isEmpty() ? toTimeString : " 00:00";
+        fromDateString += !fromTimeString.isEmpty() ? " " + fromTimeString : " 00:00";
+            toDateString += !toTimeString.isEmpty() ? " " + toTimeString : " 00:00";
 
             if(fromTimeString.isEmpty() || toTimeString.isEmpty()) {
                 allDay = true;
