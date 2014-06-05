@@ -9,11 +9,14 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.extensions.AbstractPortrait;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class User extends Resource<User> {
+public class User extends Resource<User> implements Authorizable {
 
     private static Logger logger = LogManager.getLogger( User.class );
 
@@ -227,6 +230,13 @@ public class User extends Resource<User> {
     }
     */
 
+
+    @Override
+    public boolean isMember( User user ) {
+        return user.equals( this );
+    }
+
+
     /**
      * Get a {@link User} by Username. Returns null if not found.
      */
@@ -250,6 +260,7 @@ public class User extends Resource<User> {
         }
     }
 
+
     @Override
     public User getOwner() throws ItemInstantiationException {
         logger.debug( "Return myself, {}", this );
@@ -268,6 +279,21 @@ public class User extends Resource<User> {
         @Override
         public String getType() {
             return "user";
+        }
+
+        public void doGetUsers(Request request, Response response) throws IOException {
+            response.setRenderType( Response.RenderType.NONE );
+
+            String term = request.getValue( "term", "" );
+
+            if( term.length() > 1 ) {
+                MongoDBQuery query = new MongoDBQuery().is( "type", "user" ).regex( "title", "(?i)" + term + ".*" );
+
+                PrintWriter writer = response.getWriter();
+                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+            } else {
+                response.getWriter().write( "{}" );
+            }
         }
 
         /*

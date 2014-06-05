@@ -36,10 +36,14 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
     }
 
     protected Node parent;
+    protected Resource<?> resourceParent;
 
     public ACL( Node parent, MongoDocument document ) {
         super(document);
         this.parent = parent;
+        if(parent instanceof Resource) {
+            resourceParent = (Resource<?>) parent;
+        }
     }
 
     public Node getParent() {

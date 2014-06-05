@@ -9,10 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
-import org.seventyeight.web.model.AbstractExtension;
-import org.seventyeight.web.model.CoreRequest;
-import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.Node;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
@@ -61,10 +58,15 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
     }
 
     public boolean hasAccess( User user ) {
-        List<String> admins = document.get( "read" );
-        for( String admin : admins ) {
-            if( user.getIdentifier().equals( admin ) ) {
-                return true;
+        List<Authorizable> authorized = getAuthorized( Permission.READ );
+        logger.debug( "Authorized: {}", authorized );
+        for( Authorizable auth : authorized ) {
+            try {
+                if( auth.isMember( user ) ) {
+                    return true;
+                }
+            } catch( Exception e ) {
+                logger.log( Level.WARN, "Unable to get authorized", e );
             }
         }
 
@@ -81,7 +83,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
 
     private boolean isOwner(User user) {
         if( getParent() instanceof Ownable ) {
-            logger.debug( "Parent is ownable." );
+            logger.debug( "Parent, " + getParent() + ", is ownable." );
             if( ( (Ownable) getParent() ).isOwner( user ) ) {
                 return true;
             }

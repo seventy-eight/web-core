@@ -1,13 +1,18 @@
 package org.seventyeight.web.nodes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +20,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Group extends Resource<Group> {
+public class Group extends Resource<Group> implements Authorizable {
 
     private static Logger logger = LogManager.getLogger( Group.class );
 
@@ -33,11 +38,48 @@ public class Group extends Resource<Group> {
 
     @Override
     public void updateNode( CoreRequest request, JsonObject jsonData ) {
-      /* Implementation is a no op */
+        JsonElement usersElement = jsonData.get( "users" );
+        if(usersElement.isJsonNull()) {
+
+        } else {
+            JsonArray usersArray = usersElement.getAsJsonArray();
+            //List<String> artists = new ArrayList<String>( artistsArray.size() );
+            for( JsonElement k : usersArray) {
+                try {
+                    User user = Core.getInstance().getNodeById( this, k.getAsString() );
+                    addMember( user );
+                } catch( Exception e ) {
+                    logger.log( Level.WARN, "Unable to add " + k, e );
+                }
+            }
+
+            //document.set( "members", artists );
+        }
     }
 
     protected String getGroupType() {
         return GROUPS;
+    }
+
+    public List<AbstractNode<?>> getActivities(Request request) throws NotFoundException, ItemInstantiationException {
+        logger.debug( "Getting activities for {}", this );
+        MongoDocument sort = new MongoDocument().set( "updated", -1 );
+        MongoDBQuery query = new MongoDBQuery().notExists( "parent" ).is( "ACL.read", getIdentifier() );
+
+        logger.debug( "Query is {}", query );
+
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
+        List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
+
+        for( MongoDocument d : docs ) {
+            AbstractNode<?> n = Core.getInstance().getNodeById( this, d.getIdentifier() );
+            //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+            nodes.add( n );
+
+            //nodes.add( new Activity( d ) );
+        }
+
+        return nodes;
     }
 
     /**
@@ -59,6 +101,7 @@ public class Group extends Resource<Group> {
      */
     public boolean isMember( User user ) {
         List<Group> groups = user.getGroups();
+        logger.debug( "User is in {}", groups );
 
         for( Group g : groups ) {
             if( this.equals( g ) ) {
