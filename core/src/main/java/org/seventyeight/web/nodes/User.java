@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -110,6 +111,12 @@ public class User extends Resource<User> implements Authorizable {
         }
 
         return groups;
+    }
+
+    public void setSeen() {
+        MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
+        MongoUpdate update = new MongoUpdate().set( "seen", new Date() );
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
     }
 
     @Override

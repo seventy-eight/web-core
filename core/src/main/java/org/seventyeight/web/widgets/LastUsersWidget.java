@@ -22,7 +22,7 @@ public class LastUsersWidget extends Widget {
 
     @Override
     public String getDisplayName() {
-        return "Next event";
+        return "Last users";
     }
 
     @Override
@@ -32,12 +32,12 @@ public class LastUsersWidget extends Widget {
 
     @Override
     public String getName() {
-        return "Next event widget";
+        return "Last users widget";
     }
 
-    public List<AbstractNode<?>> getNextEvents(Request request) throws NotFoundException, ItemInstantiationException {
-        MongoDocument sort = new MongoDocument().set( "updated", -1 );
-        MongoDBQuery query = new MongoDBQuery().notExists( "parent" ).greaterThan( "extensions.org-seventyeight-web-extensions-Event.fromDate", new Date() );
+    public List<AbstractNode<?>> getLastUsers(Request request) throws NotFoundException, ItemInstantiationException {
+        MongoDocument sort = new MongoDocument().set( "seen", -1 );
+        MongoDBQuery query = new MongoDBQuery().is( "type", "user");
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 

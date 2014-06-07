@@ -7,4 +7,5 @@ import org.seventyeight.database.mongodb.MongoDocument;
  */
 public interface Documented {
     public MongoDocument getDocument();
+    public String getIdentifier();
 }

@@ -93,6 +93,7 @@ public class Rest extends HttpServlet {
         try {
             // Render the page
             Core.getInstance().render( request, response );
+            request.getUser().setSeen();
         } catch( CoreException e ) {
             e.printStackTrace();
             if( response.isRenderingMain() ) {

@@ -46,6 +46,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         this.parent = parent;
     }
 
+    @Override
     public String getIdentifier() {
         return document.get( "_id" ).toString();
     }
@@ -178,6 +179,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         if(updateRevision) {
             document.set( "revision", getRevision() + 1 );
         }
+    }
+
+    public void setUpdated() {
+        setUpdatedCall( null );
     }
 
     protected void setUpdatedCall(Date date) {
