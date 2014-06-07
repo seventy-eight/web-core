@@ -16,6 +16,7 @@ import org.seventyeight.web.servlet.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,6 +53,10 @@ public class Concert extends Resource<Concert> implements Event {
                 document.set( "artists", artists );
             }
         }
+    }
+
+    public List<String> getArtistIds() {
+        return document.get( "artists", Collections.EMPTY_LIST );
     }
 
     public void setVenue(Venue venue) {

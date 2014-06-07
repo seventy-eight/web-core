@@ -1,0 +1,24 @@
+
+#foreach($id in $item.getArtistIds())
+    <div id="$id" class="artist" style="float: left">
+    Loading
+    </div>
+#end
+
+<script type="text/javascript">
+    $(function() {
+        $('.artist').each(function(index) {
+            getArtistView(this.id);
+        });
+    });
+    function getArtistView(id) {
+        $.ajax({
+            type: "GET",
+            url: "/resource/" + id + "/getView?view=wide",
+            success: function(data, textStatus, jqxhr){
+                $('#' + id).html(data);
+            },
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+</script>
