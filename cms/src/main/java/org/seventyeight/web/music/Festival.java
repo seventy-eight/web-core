@@ -7,8 +7,12 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +45,30 @@ public class Festival extends Resource<Festival> {
         return document.get( "venue", null );
     }
 
+    @PostMethod
+    public void doAddEvent(Request request, Response response) throws NotFoundException, ItemInstantiationException {
+        logger.debug( "Adding event for {}", this );
+        response.setRenderType( Response.RenderType.NONE );
+
+        String eventId = request.getValue( "event", null );
+
+        if(eventId != null) {
+            Event event = Core.getInstance().getNodeById( this, eventId );
+            logger.debug( "Adding {} to {}", event, this );
+            addEvent( event );
+        } else {
+            throw new IllegalArgumentException( "No event provided" );
+        }
+    }
+
     public void addEvent(Event event) {
-        event.setAsPartOf( this );
+        //event.setAsPartOf( this );
+        MongoDBQuery query = new MongoDBQuery().getId( event.getIdentifier() );
+        MongoUpdate update = new MongoUpdate().set( "partOf", getIdentifier() );
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
+
+        // This is updated
+        setUpdated();
     }
 
     public Venue getVenue() throws NotFoundException, ItemInstantiationException {
