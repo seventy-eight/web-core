@@ -5,10 +5,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +71,36 @@ public class Concert extends Resource<Concert> implements Event {
     }
 
     public static class ConcertDescriptor extends NodeDescriptor<Concert> {
+
+        public void doGetConcerts(Request request, Response response) throws IOException {
+            response.setRenderType( Response.RenderType.NONE );
+
+            String term = request.getValue( "term", "" );
+            String venueTerm = request.getValue( "venue", null );
+
+            if( term.length() > 1 ) {
+                // First fetch artists
+                MongoDBQuery artistQuery = new MongoDBQuery().is( "type", "artist" ).regex( "title", "(?i)" + term + ".*" );
+                List<MongoDocument> artistDocs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( artistQuery, 0, 10 );
+
+                MongoDBQuery query = new MongoDBQuery();
+                List<MongoDBQuery> queries = new ArrayList<MongoDBQuery>( 3 );
+                queries.add( new MongoDBQuery().is( "type", "concert" ).regex( "title", "(?i)" + term + ".*" ) );
+                List<String> ids = new ArrayList<String>( artistDocs.size() );
+                for(MongoDocument d : artistDocs) {
+                    ids.add( d.get( "_id", "" ) );
+                }
+                queries.add( new MongoDBQuery().in( "artists", ids ) );
+
+                query.or( true, queries );
+                logger.debug( "QUERY IS {}", query );
+
+                PrintWriter writer = response.getWriter();
+                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+            } else {
+                response.getWriter().write( "{}" );
+            }
+        }
 
         @Override
         public String getType() {
