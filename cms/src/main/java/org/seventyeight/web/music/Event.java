@@ -9,4 +9,5 @@ import org.seventyeight.web.model.Resource;
  */
 public interface Event extends Node, Documented {
     public void setAsPartOf(Resource<?> resource);
+    public String getIdentifier();
 }
