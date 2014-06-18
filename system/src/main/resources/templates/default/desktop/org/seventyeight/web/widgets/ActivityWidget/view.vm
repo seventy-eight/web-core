@@ -2,8 +2,8 @@
 #foreach($r in $item.getActivities($request))
 <table style="width: 100%; min-width: inherit; margin-top: 15px" class="widget">
     <tr>
-        <td style="width: 100%;text-align: center; padding-left: 10px">
-            $message.get("Updated", $dateUtils.getDateString($r.getUpdated()))
+        <td style="width: 100%;text-align: center; padding-left: 10px; background-color: #706693">
+            $message.get($r.getStatus().name(), $dateUtils.getDateString($r.getUpdated()))
         </td>
     </tr>
 
