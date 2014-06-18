@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class ActivityWidget extends Widget {
+public class    ActivityWidget extends Widget {
 
     @Override
     public Node getParent() {
