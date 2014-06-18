@@ -22,6 +22,7 @@ import org.seventyeight.web.nodes.*;
 import org.seventyeight.web.nodes.listeners.FileTypeListener;
 import org.seventyeight.web.nodes.listeners.SearchFormatListener;
 import org.seventyeight.web.nodes.listeners.WidgetListener;
+import org.seventyeight.web.social.Follow;
 import org.seventyeight.web.widgets.ActivityWidget;
 import org.seventyeight.web.widgets.LastUsersWidget;
 import org.seventyeight.web.widgets.NextEventWidget;
@@ -108,6 +109,8 @@ public class CMSCore extends Core {
         addDescriptor( new Venue.VenueDescriptor() );
         addDescriptor( new Concert.ConcertDescriptor() );
         addDescriptor( new Festival.FestivalDescriptor() );
+
+        addDescriptor( new Follow.FollowDescriptor() );
 
         //addDescriptor( new  );
 
