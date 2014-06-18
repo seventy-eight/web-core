@@ -46,7 +46,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         this.parent = parent;
     }
 
-    @Override
     public String getIdentifier() {
         return document.get( "_id" ).toString();
     }
@@ -292,16 +291,18 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         }
 
         update( request );
+        postUpdate();
         save();
         response.sendRedirect( getUrl() );
     }
 
-    public boolean hasExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
-        logger.debug( "HAS EXTENSION {}", descriptor );
-        MongoDocument doc = resolveExtension( descriptor );
-        return !(doc == null || doc.isNull() || doc.get( "class", null ) == null);
+    public void postUpdate() {
+        document.set( "status", NodeDescriptor.Status.UPDATED.name() );
     }
 
+    public NodeDescriptor.Status getStatus() {
+        return NodeDescriptor.Status.valueOf( document.get( "status", "UPDATED" ) );
+    }
     @Override
     public boolean equals( Object obj ) {
         if( obj == this ) {

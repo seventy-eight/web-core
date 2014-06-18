@@ -59,6 +59,13 @@
                                 <table style="width: 100%">
                                     #heteroRadio($item $extensionGroup.getDescriptors() $radio $config true)
                                 </table>
+                            #elseif($extensionGroup.getType().name() == "multiple")
+                                #set($config = $extensionGroup.getName() + "Config")
+                                <div name="configurations">
+                                    <table style="width: 100%">
+                                        #heteroCheckbox($item $extensionGroup.getDescriptors() "" $config true)
+                                    </table>
+                                </div>
                             #else
                                 WHOOP!
                             #end

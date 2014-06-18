@@ -1,4 +1,10 @@
-<div style="width:100%" id="$class" class="descriptorPage $groupName">
+#set($enabledClass = "disabledTarget")
+#set($visible = "display:none;")
+#if($enabled)
+    #set($enabledClass = "")
+    #set($visible = "")
+#end
+<div style="width:100%;$visible" id="$class" class="descriptorPage $groupName $enabledClass">
     <span style="font-weight: bold; text-align: center; width: 98%" class="button">CLASS= $class</span>
     <input type="hidden" name="class" value="$class" />
     <input type="hidden" name="locked" value="$locked" />

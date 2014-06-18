@@ -1,9 +1,11 @@
 package org.seventyeight.web.utilities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public class ExtensionUtils {
      * Given a Json Object, find the
      */
     private static void handleExtensionForClass( CoreRequest request, JsonObject extensionConfiguration, PersistedNode node ) throws ClassNotFoundException, ItemInstantiationException {
-        String extensionClassName = extensionConfiguration.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
+        String extensionClassName = extensionConfiguration.get( JsonUtils.CLASS_NAME ).getAsString();
         logger.debug( "Extension class name is " + extensionClassName );
 
         /* Get Json configuration objects */
@@ -51,6 +53,64 @@ public class ExtensionUtils {
         }
     }
 
+    public static ExtensionGroup getExtensionGroup(JsonObject jsonData) {
+        if(jsonData.getAsJsonPrimitive( JsonUtils.EXTENSION ) == null) {
+            throw new IllegalArgumentException( "The json data does not have the extension field" );
+        }
+
+        String extension = jsonData.get( JsonUtils.EXTENSION ).getAsString();
+        return Core.getInstance().getExtensionGroup( extension );
+    }
+
+    public static JsonArray getConfigurations(JsonObject jsonData) {
+        // Validate input
+        if(jsonData.getAsJsonArray( JsonUtils.CONFIGURATIONS ) == null) {
+            throw new IllegalArgumentException( JsonUtils.CONFIGURATIONS + " was not found" );
+        }
+
+        // Get Json configuration object class name
+        return jsonData.getAsJsonArray( JsonUtils.CONFIGURATIONS );
+    }
+
+    public static JsonObject getJsonConfiguration(JsonObject jsonData) {
+        // Validate input
+        if(jsonData.getAsJsonObject(JsonUtils.CONFIGURATION ) == null) {
+            throw new IllegalArgumentException( JsonUtils.CONFIGURATION + " was not found" );
+        }
+
+        // Get Json configuration object class name
+        return jsonData.getAsJsonObject( JsonUtils.CONFIGURATION );
+    }
+
+    public static Descriptor<?> getDescriptor(JsonObject jsonConfiguration) throws ClassNotFoundException {
+        if(jsonConfiguration.get(JsonUtils.CLASS_NAME) == null) {
+            logger.debug( "The field \"class\" was not found" );
+            return null;
+        }
+
+        String cls = jsonConfiguration.get( JsonUtils.CLASS_NAME ).getAsString();
+        logger.debug( "Configuration class is " + cls );
+        logger.debug( "Json Data for extension configuration: {}", jsonConfiguration );
+
+        Class<?> clazz = Class.forName( cls );
+        Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
+        logger.debug( "Descriptor is " + d );
+
+        return d;
+    }
+
+    public static Describable<?> getDescribable(AbstractExtension.ExtensionDescriptor descriptor, CoreRequest request, PersistedNode node, JsonObject jsonConfiguration) throws ItemInstantiationException {
+        Describable e = descriptor.newInstance( request, node );
+        e.updateNode( request, jsonConfiguration );
+
+        /* Remove data!? */
+        if( descriptor.doRemoveDataItemOnConfigure() ) {
+            logger.debug( "This should remove the data attached to this extension" );
+        }
+
+        return e;
+    }
+
     /**
      * Get a describable given a json object
      * On the form:
@@ -62,19 +122,19 @@ public class ExtensionUtils {
      */
     public static Describable handleExtensionConfiguration( CoreRequest request, JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
         // Validate input
-        if(jsonData.getAsJsonObject(JsonUtils.__JSON_CONFIGURATION_NAME) == null) {
-            throw new IllegalArgumentException( JsonUtils.__JSON_CONFIGURATION_NAME + " was not found" );
+        if(jsonData.getAsJsonObject(JsonUtils.CONFIGURATION ) == null) {
+            throw new IllegalArgumentException( JsonUtils.CONFIGURATION + " was not found" );
         }
 
         // Get Json configuration object class name
-        JsonObject jsonConfiguration = jsonData.getAsJsonObject( JsonUtils.__JSON_CONFIGURATION_NAME );
+        JsonObject jsonConfiguration = jsonData.getAsJsonObject( JsonUtils.CONFIGURATION );
 
-        if(jsonConfiguration.get(JsonUtils.__JSON_CLASS_NAME) == null) {
+        if(jsonConfiguration.get(JsonUtils.CLASS_NAME ) == null) {
             logger.debug( "The field \"class\" was not found" );
             return null;
         }
 
-        String cls = jsonConfiguration.get( JsonUtils.__JSON_CLASS_NAME ).getAsString();
+        String cls = jsonConfiguration.get( JsonUtils.CLASS_NAME ).getAsString();
         logger.debug( "Configuration class is " + cls );
         logger.debug( "Json Data for extension configuration: {}", jsonConfiguration );
 

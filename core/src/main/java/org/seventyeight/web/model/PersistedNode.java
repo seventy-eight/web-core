@@ -1,5 +1,7 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +49,12 @@ public abstract class PersistedNode implements Node, Savable, Documented {
         return null;
     }
 
+    public boolean hasExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
+        logger.debug( "HAS EXTENSION {}", descriptor );
+        MongoDocument doc = resolveExtension( descriptor );
+        return !(doc == null || doc.isNull() || doc.get( "class", null ) == null);
+    }
+
     public MongoDocument getExtension(Class<? extends AbstractExtension<?>> extensionClass) {
         logger.debug( "Resolving extension for {}", extensionClass );
 
@@ -73,12 +81,59 @@ public abstract class PersistedNode implements Node, Savable, Documented {
                 //document.setList( "extensions" );
                 Map<String, MongoDocument> extensions = new HashMap<String, MongoDocument>(  );
                 for(JsonObject o : objs) {
+                    logger.debug( "JSON OBJECT: {}", o );
+                    ExtensionGroup extensionGroup = ExtensionUtils.getExtensionGroup( o );
+                    if(extensionGroup.getType() == ExtensionGroup.Type.one) {
+                        logger.debug( "Single configurations" );
+
+                        JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
+                        Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
+                        if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
+                            Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, request, this, jsonConfiguration );
+                            if(describable != null) {
+                                extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
+                            }
+                        }
+
+                    } else {
+                        logger.debug( "Multiple configurations" );
+
+                        JsonArray jsonElements = ExtensionUtils.getConfigurations( o );
+                        for(JsonElement e : jsonElements) {
+                            JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( e.getAsJsonObject() );
+                            Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
+                            if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
+                                Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, request, this, jsonConfiguration );
+                                if(describable != null) {
+                                    extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
+                                }
+                            }
+
+                        }
+                    }
+
+                    /*
+                    JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
+                    Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
+                    if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
+                        if(( (AbstractExtension.ExtensionDescriptor) descriptor ).canHaveMultiple()) {
+
+                        } else {
+                            Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, request, this, jsonConfiguration );
+                            //document.addToList( "extensions", describable.getDocument() );
+                            if(describable != null) {
+                                //document.set( EXTENSIONS, new MongoDocument().set( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() ) );
+                                extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
+                            }
+                        }
+                    }
                     Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, o, this );
                     //document.addToList( "extensions", describable.getDocument() );
                     if(describable != null && describable.getDescriptor() instanceof AbstractExtension.ExtensionDescriptor) {
                         //document.set( EXTENSIONS, new MongoDocument().set( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() ) );
                         extensions.put( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() );
                     }
+                    */
                 }
 
                 document.set( EXTENSIONS, extensions );

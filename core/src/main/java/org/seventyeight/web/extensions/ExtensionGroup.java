@@ -14,7 +14,7 @@ public class ExtensionGroup {
 
     private Class<? extends AbstractExtension> clazz;
 
-    enum Type {
+    public enum Type {
         one,
         single,
         multiple

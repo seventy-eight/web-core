@@ -10,4 +10,6 @@ public interface Portraitable {
      * @return
      */
     public String getPortrait();
+
+    public boolean hasPortrait();
 }

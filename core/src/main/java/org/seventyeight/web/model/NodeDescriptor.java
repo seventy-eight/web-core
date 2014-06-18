@@ -24,6 +24,11 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     private static Logger logger = LogManager.getLogger( NodeDescriptor.class );
 
+    public enum Status {
+        CREATED,
+        UPDATED
+    }
+
     @Override
     public Node getParent() {
         return Core.getInstance();
@@ -57,6 +62,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
+        //node.getDocument().set( "status", Status.CREATED );
 
         // TODO possibly have a system user account
         setOwner( request, node );
@@ -111,6 +117,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         instance.getDocument().set( "updated", now );
         //document.set( "updated", now );
         instance.getDocument().set( "revision", 0 );
+        instance.getDocument().set( "status", Status.CREATED.name() );
 
         return instance;
     }
@@ -167,9 +174,10 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     @Override
     public List<ExtensionGroup> getApplicableExtensions() {
         ArrayList<ExtensionGroup> groups = new ArrayList<ExtensionGroup>(  );
-        groups.add( Core.getInstance().getExtensionGroup( Tags.class ) );
-        groups.add( Core.getInstance().getExtensionGroup( Event.class ) );
-        groups.add( Core.getInstance().getExtensionGroup( AbstractPortrait.class ) );
+        groups.add( Core.getInstance().getExtensionGroup( Tags.class.getName() ) );
+        groups.add( Core.getInstance().getExtensionGroup( Event.class.getName() ) );
+        groups.add( Core.getInstance().getExtensionGroup( AbstractPortrait.class.getName() ) );
+        groups.add( Core.getInstance().getExtensionGroup( NodeExtension.class.getName() ) );
 
         return groups;
     }

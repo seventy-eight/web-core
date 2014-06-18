@@ -36,10 +36,11 @@ public class JsonUtils {
     }
 
 
-    public static final String __JSON_CONFIGURATION_NAME = "config";
+    public static final String CONFIGURATION = "config";
     //public static final String __JSON_EXTENSION_NAME = "extensions";
-    public static final String __JSON_CLASS_NAME = "class";
-    public static final String __JSON_EXTENSION_NAME = "extension";
+    public static final String CLASS_NAME = "class";
+    public static final String EXTENSION = "extension";
+    public static final String CONFIGURATIONS = "configurations";
 
     public enum JsonType {
         config,

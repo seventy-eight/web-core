@@ -245,6 +245,81 @@
 #end
 
 
+#macro( heteroCheckbox $item $descriptors $name $divGroupId $doRender )
+    $descriptors
+
+    #set( $size = $descriptors.size() + 1 )
+    #set($extensions = [])
+
+<tr>
+    <td style="width: 100% ">
+        #foreach( $descriptor in $descriptors )
+            <table style="border-style: solid; width: 100%;">
+                <tr>
+                    <td valign="top" class="${divGroupId}Header" id="$descriptor.getClazz().getName()Header" style="display: block; cursor:pointer" onclick="toggleDescriptors$divGroupId('$descriptor.getClazz().getName()');">
+                        $descriptor.getDisplayName()
+                    </td>
+                </tr>
+                #if( $doRender )
+                    <tr>
+                        <td>
+                            <div name="config" class="targetObject" id="$descriptor.getClazz().getName()$divGroupId">
+                                #renderDescriptor( $descriptor $item $divGroupId )
+                            </div>
+                        </td>
+                    </tr>
+
+                    #if($item.hasExtension($descriptor))
+                        $extensions.add($descriptor.getClazz().getName())
+                    #end
+                #else
+
+                #end
+
+
+            </table>
+            <br>
+        #end
+        ---->$extensions
+    </td>
+</tr>
+
+
+
+<script type="text/javascript">
+
+    #foreach($e in $extensions)
+         toggleDescriptors$divGroupId($e, enable);
+    #end
+    function toggleDescriptors$divGroupId(d, enable) {
+
+        var id = "#" + d.replace(/\./g,'\\.');
+        var enabled = enable === undefined ? $(id).is(":visible") : !enable;
+        //$('#.descriptorPage').not($(id)).hide();
+        if(enabled) {
+            $($(id)).hide();
+            $(id).addClass("disabledTarget");
+
+            //$(".${divGroupId}Header").not($(id + "Header")).removeClass("activeConfigurationHeader");
+            $(id+"Header").removeClass("activeConfigurationHeader");
+            $(id+"Header").addClass("inactiveConfigurationHeader");
+        } else {
+            $(id).show();
+            $(id).removeClass("disabledTarget");
+            $(id+"Header").removeClass("inactiveConfigurationHeader");
+            $(id+"Header").addClass("activeConfigurationHeader");
+        }
+
+        /*
+        $(".${divGroupId}Header").not($(id + "Header")).removeClass("activeConfigurationHeader");
+        $(".${divGroupId}Header").not($(id + "Header")).addClass("inactiveConfigurationHeader");
+        */
+
+    }
+</script>
+#end
+
+
 #macro( descriptorConfiguration $descriptor )
     <table>
 

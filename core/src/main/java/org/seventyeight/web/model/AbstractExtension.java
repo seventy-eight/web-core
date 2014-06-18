@@ -95,7 +95,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         /**
          * Get the class of the extensions base.
          */
-        public abstract Class<T> getExtensionClass();
+        public abstract Class<?> getExtensionClass();
 
         public String getExtensionClassId() {
             return getExtensionClass().getName();
@@ -157,6 +157,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         public boolean isApplicable( Node node ) {
             return true;
+        }
+
+        public boolean canHaveMultiple() {
+            return false;
         }
 
         public String getPostConfigurationPage() {

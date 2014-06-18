@@ -99,7 +99,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     protected Menu mainMenu = new Menu();
 
     /** A map of all the extenion groups */
-    protected Map<Class<? extends AbstractExtension>, ExtensionGroup> extensionGroups = new HashMap<Class<? extends AbstractExtension>, ExtensionGroup>(  );
+    protected Map<String, ExtensionGroup> extensionGroups = new HashMap<String, ExtensionGroup>(  );
 
     /**
      * A map of descriptors keyed by their supers class
@@ -631,18 +631,19 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     }
 
     public void addExtensionsGroup(AbstractExtension.ExtensionDescriptor<?> descriptor) {
-        if(!extensionGroups.containsKey( descriptor.getExtensionClass() )) {
+        if(!extensionGroups.containsKey( descriptor.getExtensionClass().getName() )) {
             ExtensionGroup extensionGroup = descriptor.getExtensionGroup();
             logger.debug( "Adding extension group, {}", extensionGroup );
-            extensionGroups.put( extensionGroup.getClazz(), extensionGroup );
+            extensionGroups.put( extensionGroup.getClazz().getName(), extensionGroup );
         }
 
         logger.debug( "Adding {} to extensions groups", descriptor.getClazz() );
-        ExtensionGroup group = extensionGroups.get( descriptor.getExtensionClass() );
+        ExtensionGroup group = extensionGroups.get( descriptor.getExtensionClass().getName() );
+        logger.debug( "GROUT: {}", group );
         group.addDescriptor( descriptor );
     }
 
-    public ExtensionGroup getExtensionGroup(Class<? extends AbstractExtension> clazz) {
+    public ExtensionGroup getExtensionGroup(String clazz) {
         return extensionGroups.get( clazz );
     }
 

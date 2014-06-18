@@ -109,6 +109,17 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
 
+    @Override
+    public boolean hasPortrait() {
+        /*
+        MongoDocument portrait = getExtension( AbstractPortrait.class );
+
+        return ( portrait != null && !portrait.isNull() && portrait.get( "class", null ) != null );
+        */
+
+        return true;
+    }
+
     public List<Action.ActionDescriptor<?>> getActions() {
 
         List<Action.ActionDescriptor<?>> ds = new ArrayList<Action.ActionDescriptor<?>>(  );
