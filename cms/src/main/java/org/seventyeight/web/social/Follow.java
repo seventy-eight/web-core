@@ -1,6 +1,8 @@
 package org.seventyeight.web.social;
 
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.extensions.NodeExtension;
@@ -13,6 +15,8 @@ import org.seventyeight.web.nodes.User;
  * @author cwolfgang
  */
 public class Follow extends NodeExtension<Follow> {
+
+    private static Logger logger = LogManager.getLogger( Follow.class );
 
     public Follow( Node parent, MongoDocument document ) {
         super( parent, document );
@@ -37,6 +41,7 @@ public class Follow extends NodeExtension<Follow> {
 
         @Override
         public boolean isApplicable( Node node ) {
+            logger.fatal( "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIS APPLICABLE: {}", node );
             return node instanceof User;
         }
 

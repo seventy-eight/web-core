@@ -254,33 +254,34 @@
 <tr>
     <td style="width: 100% ">
         #foreach( $descriptor in $descriptors )
-            <table style="border-style: solid; width: 100%;">
-                <tr>
-                    <td valign="top" class="${divGroupId}Header" id="$descriptor.getClazz().getName()Header" style="display: block; cursor:pointer" onclick="toggleDescriptors$divGroupId('$descriptor.getClazz().getName()');">
-                        $descriptor.getDisplayName()
-                    </td>
-                </tr>
-                #if( $doRender )
+            #if($descriptor.isApplicable($item))
+                <table style="border-style: solid; width: 100%;">
                     <tr>
-                        <td>
-                            <div name="config" class="targetObject" id="$descriptor.getClazz().getName()$divGroupId">
-                                #renderDescriptor( $descriptor $item $divGroupId )
-                            </div>
+                        <td valign="top" class="${divGroupId}Header" id="$descriptor.getClazz().getName()Header" style="display: block; cursor:pointer" onclick="toggleDescriptors$divGroupId('$descriptor.getClazz().getName()');">
+                            $descriptor.getDisplayName()
                         </td>
                     </tr>
+                    #if( $doRender )
+                        <tr>
+                            <td>
+                                <div name="config" class="targetObject" id="$descriptor.getClazz().getName()$divGroupId">
+                                    #renderDescriptor( $descriptor $item $divGroupId )
+                                </div>
+                            </td>
+                        </tr>
 
-                    #if($item.hasExtension($descriptor))
-                        $extensions.add($descriptor.getClazz().getName())
+                        #if($item.hasExtension($descriptor))
+                            $extensions.add($descriptor.getClazz().getName())
+                        #end
+                    #else
+
                     #end
-                #else
-
-                #end
 
 
-            </table>
-            <br>
+                </table>
+                <br>
+            #end
         #end
-        ---->$extensions
     </td>
 </tr>
 
@@ -289,8 +290,9 @@
 <script type="text/javascript">
 
     #foreach($e in $extensions)
-         toggleDescriptors$divGroupId($e, enable);
+    toggleDescriptors$divGroupId('$e', true);
     #end
+
     function toggleDescriptors$divGroupId(d, enable) {
 
         var id = "#" + d.replace(/\./g,'\\.');

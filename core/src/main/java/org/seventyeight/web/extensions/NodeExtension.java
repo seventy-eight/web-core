@@ -21,8 +21,13 @@ public abstract class NodeExtension<T extends NodeExtension<T>> extends Abstract
         }
 
         @Override
+        public boolean canHaveMultiple() {
+            return true;
+        }
+
+        @Override
         public ExtensionGroup getExtensionGroup() {
-            return new ExtensionGroup( NodeExtension.class, "NodeExtensions", true );
+            return new ExtensionGroup( NodeExtension.class, "NodeExtensions", canHaveMultiple() );
         }
 
     }
