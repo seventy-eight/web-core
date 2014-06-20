@@ -77,8 +77,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
      */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
 
-        //protected String mongoPath = EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
-
         public abstract String getDisplayName();
 
         public abstract String getExtensionName();
@@ -128,19 +126,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         }
 
         /**
-         * Yes yes, I know....
-         */
-        public String getMongoPath() {
-            return EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
-        }
-
-        /*
-        public MongoDocument getExtensionSubDocument( Documented parent ) {
-            return parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
-        }
-        */
-
-        /**
          * Get the extension {@link MongoDocument} given a {@link Documented} parent.
          * @param parent A {@link Documented} parent. Typically a {@link Node}.
          * @return
@@ -155,17 +140,9 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
                 return null;
             }
 
-            //logger.debug( "CHECKING JSON CLASS" );
             if(!d.get( "class" ).equals( getId() )) {
                 return null;
             }
-
-            /*
-            if(d.get( "class", null ) == null) {
-                logger.debug( "GET ID = {}", getId() );
-                d.set( "class", getId() );
-            }
-            */
 
             return d;
         }
