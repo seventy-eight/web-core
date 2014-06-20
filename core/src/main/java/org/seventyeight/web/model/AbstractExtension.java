@@ -71,11 +71,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         public abstract ExtensionGroup getExtensionGroup();
 
-        @Override
-        public List<ExtensionGroup> getApplicableExtensions() {
-            return Collections.emptyList();
-        }
-
         /**
          * Get the class of the extensions base.
          */
