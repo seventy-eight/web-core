@@ -65,11 +65,14 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
      */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
 
-        public abstract String getDisplayName();
-
         public abstract String getExtensionName();
 
         public abstract ExtensionGroup getExtensionGroup();
+
+        @Override
+        public List<ExtensionGroup> getApplicableExtensions() {
+            return Collections.emptyList();
+        }
 
         /**
          * Get the class of the extensions base.

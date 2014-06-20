@@ -80,7 +80,7 @@ public class Attachments extends Action<Attachments> {
             logger.debug( "Is" + node + " applicable" );
 
             if( node instanceof Resource ) {
-                MongoDocument sd = getExtensionSubDocument( (Resource)node );
+                MongoDocument sd = getExtensionDocument( (Resource)node );
                 return sd.get( "enabled", true );
             } else {
                 return false;
