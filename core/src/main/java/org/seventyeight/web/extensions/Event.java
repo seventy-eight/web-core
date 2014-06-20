@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.model.AbstractExtension;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 
@@ -114,11 +113,6 @@ public class Event extends ResourceExtension<Event> {
 
         @Override
         public String getExtensionName() {
-            return "event";
-        }
-
-        @Override
-        public String getTypeName() {
             return "event";
         }
 

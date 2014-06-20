@@ -19,10 +19,6 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
      * @param <T>
      */
     public static abstract class ActionDescriptor<T extends Action<T>> extends ExtensionDescriptor<T> {
-        @Override
-        public final String getTypeName() {
-            return "action";
-        }
 
         /*
         @Override

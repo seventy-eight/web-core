@@ -41,18 +41,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         throw new IllegalStateException( this + " does not have a parent with an identifier" );
     }
 
-    /*
-    public AbstractExtension( Node node ) {
-        super();
-        if( node instanceof Documented ) {
-            MongoDocument d = ((Documented)node).getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
-            this.setDocument( d );
-        } else {
-            this.setDocument( new MongoDocument(  ) );
-        }
-    }
-    */
-
     @Override
     public void save() {
         if(parent instanceof Savable) {
@@ -80,8 +68,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public abstract String getDisplayName();
 
         public abstract String getExtensionName();
-
-        public abstract String getTypeName();
 
         public abstract ExtensionGroup getExtensionGroup();
 

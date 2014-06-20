@@ -8,7 +8,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractExtension;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.Resource;
-import org.seventyeight.web.nodes.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,10 +47,6 @@ public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrai
     public abstract String getUrl();
 
     public static abstract class AbstractPortraitDescriptor extends ExtensionDescriptor<AbstractPortrait> {
-        @Override
-        public String getTypeName() {
-            return "portrait";
-        }
 
         @Override
         public Class<AbstractPortrait> getExtensionClass() {

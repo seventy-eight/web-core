@@ -611,17 +611,6 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
             addExtensionsGroup( (AbstractExtension.ExtensionDescriptor) descriptor );
         }
 
-        /*
-        if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
-            AbstractExtension.ExtensionDescriptor ed = (AbstractExtension.ExtensionDescriptor) descriptor;
-            logger.debug( "Adding extension descriptor {}, {}", ed.getTypeName(), ed.getExtensionName() );
-            if( !extensionDescriptors.containsKey( ed.getTypeName() ) ) {
-                extensionDescriptors.put( ed.getTypeName(), new HashMap<String, AbstractExtension.ExtensionDescriptor<?>>() );
-            }
-            extensionDescriptors.get( ed.getTypeName() ).put( ed.getExtensionName(), ed );
-        }
-        */
-
         addExtension( descriptor );
 
 
