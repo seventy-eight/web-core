@@ -185,5 +185,8 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return true;
     }
 
+    /**
+     * @return A {@link List} of {@link ExtensionGroup}'s defining the applicable extensions.
+     */
     public abstract List<ExtensionGroup> getApplicableExtensions();
 }
