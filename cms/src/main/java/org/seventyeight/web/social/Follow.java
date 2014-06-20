@@ -41,7 +41,6 @@ public class Follow extends NodeExtension<Follow> {
 
         @Override
         public boolean isApplicable( Node node ) {
-            logger.fatal( "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIS APPLICABLE: {}", node );
             return node instanceof User;
         }
 

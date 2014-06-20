@@ -38,16 +38,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     public MongoDocument resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
         logger.debug( "Resolving extension for {}", descriptor );
         if(descriptor != null) {
-            MongoDocument doc = document.getr(EXTENSIONS, descriptor.getExtensionClassJsonId());
-            if(descriptor.canHaveMultiple()) {
-                logger.debug( "Getting sub extension, {}", doc );
-                doc = doc.get( descriptor.getJsonId() );
-            }
-            logger.debug( "DOC: {}", doc );
-
-            if(doc != null && !doc.isNull() && doc.get( "class", "" ).equals( descriptor.getId() )) {
-                return doc;
-            }
+            return descriptor.getExtensionDocument( this );
         }
 
         return null;
@@ -56,6 +47,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     public boolean hasExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
         logger.debug( "HAS EXTENSION {}", descriptor );
         MongoDocument doc = resolveExtension( descriptor );
+        logger.debug( "EXTENSION DOC = {}", doc );
         return !(doc == null || doc.isNull() || doc.get( "class", null ) == null);
     }
 
@@ -108,13 +100,15 @@ public abstract class PersistedNode implements Node, Savable, Documented {
                         MongoDocument describables = new MongoDocument();
                         for(JsonElement e : jsonElements) {
                             JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( e.getAsJsonObject() );
-                            Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
-                            if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
-                                Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, request, this, jsonConfiguration );
-                                jsonId = ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId();
-                                if(describable != null) {
-                                    //describableDocuments.add( describable.getDocument() );
-                                    describables.set( descriptor.getJsonId(), describable.getDocument() );
+                            if(jsonConfiguration != null) {
+                                Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
+                                if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
+                                    Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, request, this, jsonConfiguration );
+                                    jsonId = ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId();
+                                    if(describable != null) {
+                                        //describableDocuments.add( describable.getDocument() );
+                                        describables.set( descriptor.getJsonId(), describable.getDocument() );
+                                    }
                                 }
                             }
 

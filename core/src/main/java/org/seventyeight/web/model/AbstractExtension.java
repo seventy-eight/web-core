@@ -77,7 +77,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
      */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
 
-        protected String mongoPath = EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
+        //protected String mongoPath = EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
 
         public abstract String getDisplayName();
 
@@ -134,20 +134,60 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             return EXTENSIONS + "." + getTypeName() + "." + getExtensionName() + ".";
         }
 
+        /*
         public MongoDocument getExtensionSubDocument( Documented parent ) {
             return parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
         }
+        */
 
-        public T getExtension( Documented parent ) throws ItemInstantiationException {
-            MongoDocument d = parent.getDocument().getr( EXTENSIONS, getTypeName(), getExtensionName() );
-            if( d.get( "class", null ) == null ) {
-                d.set( "class", getId() );
+        /**
+         * Get the extension {@link MongoDocument} given a {@link Documented} parent.
+         * @param parent A {@link Documented} parent. Typically a {@link Node}.
+         * @return
+         */
+        public MongoDocument getExtensionDocument( Documented parent ) {
+            MongoDocument d = parent.getDocument().getr( EXTENSIONS, getExtensionClassJsonId() );
+            if(canHaveMultiple()) {
+                d = d.get( getJsonId() );
             }
 
+            if(d == null || d.isNull() || d.get( "class", null ) == null) {
+                return null;
+            }
+
+            //logger.debug( "CHECKING JSON CLASS" );
+            if(!d.get( "class" ).equals( getId() )) {
+                return null;
+            }
+
+            /*
+            if(d.get( "class", null ) == null) {
+                logger.debug( "GET ID = {}", getId() );
+                d.set( "class", getId() );
+            }
+            */
+
+            return d;
+        }
+
+        /**
+         * Get instantiated extension given a {@link Documented} parent.
+         * @param parent
+         * @return
+         * @throws ItemInstantiationException
+         */
+        public T getExtension( Documented parent ) throws ItemInstantiationException {
+            MongoDocument d = getExtensionDocument( parent );
             logger.debug( "EXTENSION SUBDOC " + d );
             return Core.getInstance().getNode( (Node) parent, d );
         }
 
+        /**
+         * Return a new bare boned instantiation of T.
+         * @param parent
+         * @return
+         * @throws ItemInstantiationException
+         */
         public T getExtension( Descriptor parent ) throws ItemInstantiationException {
             MongoDocument d = new MongoDocument().set( "class", getId() );
 

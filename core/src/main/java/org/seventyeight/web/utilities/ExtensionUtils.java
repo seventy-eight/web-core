@@ -72,10 +72,16 @@ public class ExtensionUtils {
         return jsonData.getAsJsonArray( JsonUtils.CONFIGURATIONS );
     }
 
+    /**
+     * Given a json object get the configuration element.
+     * @param jsonData
+     * @return - the json configuration or null if not found
+     */
     public static JsonObject getJsonConfiguration(JsonObject jsonData) {
         // Validate input
         if(jsonData.getAsJsonObject(JsonUtils.CONFIGURATION ) == null) {
-            throw new IllegalArgumentException( JsonUtils.CONFIGURATION + " was not found" );
+            logger.debug( JsonUtils.CONFIGURATION + " was not found" );
+            return null;
         }
 
         // Get Json configuration object class name
