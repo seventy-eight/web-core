@@ -91,14 +91,6 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
     }
 
     /**
-     * Get the descriptors for
-     * @return
-     */
-    public List<Class> getExtensionClasses() {
-        return Collections.emptyList();
-    }
-
-    /**
      * Get the class of the {@link Descriptor}s {@link Describable}.
      * @return
      */
@@ -134,7 +126,7 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
     }
 
     public String getConfigurationPage( Request request ) throws TemplateException, NotFoundException, ItemInstantiationException {
-        return getConfigurationPage( request, null );
+        return getConfigurationPage( request, null, null );
     }
 
     public String getConfigurationPage( Request request, Describable<?> describable ) throws TemplateException, NotFoundException, ItemInstantiationException {

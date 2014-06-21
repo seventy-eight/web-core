@@ -93,12 +93,14 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         }
     }
 
+    /*
     @Override
     public List<Class> getExtensionClasses() {
         List<Class> extensions = new ArrayList<Class>( 1 );
         extensions.add( ResourceExtension.class );
         return extensions;
     }
+    */
 
     private boolean titleExists( String title, String type ) {
         MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ).is( "type", type ) );
