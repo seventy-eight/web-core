@@ -7,4 +7,5 @@ package org.seventyeight.web.model;
  */
 public interface TopLevelNode extends Node {
     public void save();
+    public String getIdentifier();
 }

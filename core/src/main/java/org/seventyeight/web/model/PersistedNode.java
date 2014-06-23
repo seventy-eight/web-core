@@ -118,29 +118,6 @@ public abstract class PersistedNode implements Node, Savable, Documented {
                             extensions.put( jsonId, describables );
                         }
                     }
-
-                    /*
-                    JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
-                    Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
-                    if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
-                        if(( (AbstractExtension.ExtensionDescriptor) descriptor ).canHaveMultiple()) {
-
-                        } else {
-                            Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, request, this, jsonConfiguration );
-                            //document.addToList( "extensions", describable.getDocument() );
-                            if(describable != null) {
-                                //document.set( EXTENSIONS, new MongoDocument().set( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() ) );
-                                extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
-                            }
-                        }
-                    }
-                    Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, o, this );
-                    //document.addToList( "extensions", describable.getDocument() );
-                    if(describable != null && describable.getDescriptor() instanceof AbstractExtension.ExtensionDescriptor) {
-                        //document.set( EXTENSIONS, new MongoDocument().set( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() ) );
-                        extensions.put( ( (AbstractExtension.ExtensionDescriptor) describable.getDescriptor() ).getExtensionClassJsonId(), describable.getDocument() );
-                    }
-                    */
                 }
 
                 document.set( EXTENSIONS, extensions );
@@ -172,12 +149,6 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             ExtensionUtils.retrieveExtensions( request, json, this );
         }
     }
-
-    /**
-     * Update the {@link AbstractNode}'s fields given a {@link CoreRequest}. <br/>
-     * The method should not save the node, merely update.
-     */
-    //public abstract void updateNode(CoreRequest request);
 
     public List<AbstractExtension> getExtensions() {
 

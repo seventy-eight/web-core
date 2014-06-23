@@ -62,6 +62,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         return getUrl() + "configure";
     }
 
+    public void addRelation(TopLevelNode node, Relation relation) {
+        document.addToList( "relations." + relation.getName(), node.getIdentifier() );
+    }
+
+
     /*
     public void applyExtension(Class<? extends Extension> extensionClass) {
         logger.debug( "Layoutable: " + Core.getInstance().getExtensions( extensionClass ) );
