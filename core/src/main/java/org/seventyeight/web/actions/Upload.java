@@ -129,6 +129,7 @@ public class Upload implements Node {
                         String rid = request.getValue( "rid", null );
                         if(rid != null) {
                             fr.addAssociatedResource( rid );
+                            fr.addRelation( Relation.BasicRelation.CREATED_FOR, rid );
                         }
 
                         fr.save();

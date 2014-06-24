@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class    ActivityWidget extends Widget {
+public class ActivityWidget extends Widget {
 
     @Override
     public Node getParent() {
@@ -38,6 +38,7 @@ public class    ActivityWidget extends Widget {
     public List<AbstractNode<?>> getActivities(Request request) throws NotFoundException, ItemInstantiationException {
         MongoDocument sort = new MongoDocument().set( "updated", -1 );
         MongoDBQuery query = new MongoDBQuery().notExists( "parent" );
+        query.notExists( "relations." + Relation.BasicRelation.CREATED_FOR.getName() );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 

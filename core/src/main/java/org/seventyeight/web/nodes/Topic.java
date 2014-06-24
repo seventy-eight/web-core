@@ -88,10 +88,12 @@ public class Topic extends Resource<Topic> {
         return Core.MAIN_TEMPLATE;
     }
 
+    /*
     @Override
     public String getPortrait() {
         return "/theme/topic.png";
     }
+    */
 
     /*
     public static Topic create( String title, Locale language, String text, User owner ) throws ItemInstantiationException {
