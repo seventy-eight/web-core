@@ -62,8 +62,17 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         return getUrl() + "configure";
     }
 
-    public void addRelation(TopLevelNode node, Relation relation) {
-        document.addToList( "relations." + relation.getName(), node.getIdentifier() );
+    public void addRelation(Relation relation, TopLevelNode node) {
+        addRelation( relation, node.getIdentifier() );
+    }
+
+    public void addRelation(Relation relation, String id) {
+        MongoDocument d = document.get( "relations" );
+        if(d == null || d.isNull()) {
+            d = new MongoDocument();
+            document.set( "relations", d );
+        }
+        d.addToList( relation.getName(), id );
     }
 
 

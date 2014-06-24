@@ -45,6 +45,23 @@ public class MongoDocument implements Document {
         }
     }
 
+    /*
+    public <T> T getOrCreate(String key) {
+        Object data = (T) document.get( key );
+        if(data != null) {
+            if( data instanceof BasicDBList ) {
+                return (T) getList( (BasicDBList) data );
+            } else if( data instanceof DBObject ) {
+                return (T) new MongoDocument( (DBObject) data );
+            } else {
+                return (T) data;
+            }
+        } else {
+
+        }
+    }
+    */
+
     private List<Object> getList( BasicDBList list ) {
         if( list != null ) {
             List<Object> docs = new ArrayList<Object>( list.size() );
