@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.extensions.NodeExtension;
-import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 
@@ -31,7 +30,7 @@ public class Follow extends NodeExtension<Follow> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         /* Implementation is a no op */
     }
 

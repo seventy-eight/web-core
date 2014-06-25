@@ -9,9 +9,6 @@ import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.Parameters;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
@@ -55,7 +52,7 @@ public class CoreTest {
         Parameters p = new Parameters();
         p.put( "username", username );
 
-        user.updateNode( p, null );
+        user.updateNode( null );
 
         user.save();
 

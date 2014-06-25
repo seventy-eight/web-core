@@ -145,6 +145,11 @@ public class CMSCore extends Core {
     }
 
     @Override
+    public String getIdentifier() {
+        return "cms";
+    }
+
+    @Override
     public String getDefaultTemplate() {
         return "org/seventyeight/web/main.vm";
     }

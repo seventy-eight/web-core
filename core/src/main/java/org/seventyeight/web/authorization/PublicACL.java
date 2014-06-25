@@ -3,7 +3,6 @@ package org.seventyeight.web.authorization;
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.extensions.ExtensionGroup;
-import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 
@@ -39,7 +38,7 @@ public class PublicACL extends ACL<PublicACL> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 

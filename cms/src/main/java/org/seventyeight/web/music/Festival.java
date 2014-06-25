@@ -29,7 +29,7 @@ public class Festival extends Resource<Festival> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         if(jsonData != null) {
             JsonElement venueElement = jsonData.get( "venue" );
             if(venueElement.isJsonNull()) {

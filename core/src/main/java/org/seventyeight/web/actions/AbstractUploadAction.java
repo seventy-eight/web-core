@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.List;
 
 /**
+ * @deprecated ????
  * @author cwolfgang
  */
 public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> extends Action<T> {
@@ -70,7 +71,7 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
             setExtension( ext );
 
             setFile( new File( getRelativePath(), fname ).toString() );
-            update( request );
+            //update( request );
             save();
             //Core.superSave( this );
 

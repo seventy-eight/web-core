@@ -1,5 +1,6 @@
 package org.seventyeight.web.installers;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DBInstallable;
@@ -8,7 +9,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.utilities.Parameters;
 
 /**
@@ -22,7 +22,7 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
 
     protected T node;
 
-    protected abstract void setParameters( Parameters parameters );
+    protected abstract void setJson( JsonObject json );
 
     protected abstract Descriptor<T> getDescriptor();
 
@@ -38,11 +38,11 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
         if( node == null ) {
             logger.info( "Installing {}", title );
 
-            Parameters p = new Parameters();
-            setParameters( p );
+            JsonObject json = new JsonObject();
+            setJson( json );
             try {
-                T instance = getDescriptor().newInstance( p, Core.getInstance() );
-                instance.update( p );
+                T instance = getDescriptor().newInstance( json, Core.getInstance() );
+                instance.updateConfiguration( json );
                 instance.save();
                 node = instance;
             } catch( CoreException e ) {

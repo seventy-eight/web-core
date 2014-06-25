@@ -23,6 +23,7 @@ public class ExtensionUtils {
 
     }
 
+    /*
     public static void retrieveExtensions(CoreRequest request, JsonObject json, PersistedNode node) throws ItemInstantiationException, ClassNotFoundException {
         logger.debug( "Retrieving extensions for {} from {}", node, json );
 
@@ -33,15 +34,17 @@ public class ExtensionUtils {
             handleExtensionForClass( request, obj, node );
         }
     }
+    */
 
     /**
      * Given a Json Object, find the
      */
+    /*
     private static void handleExtensionForClass( CoreRequest request, JsonObject extensionConfiguration, PersistedNode node ) throws ClassNotFoundException, ItemInstantiationException {
         String extensionClassName = extensionConfiguration.get( JsonUtils.CLASS_NAME ).getAsString();
         logger.debug( "Extension class name is " + extensionClassName );
 
-        /* Get Json configuration objects */
+        // Get Json configuration objects
         List<JsonObject> configs = JsonUtils.getJsonObjects( extensionConfiguration );
         logger.debug( "I got " + configs.size() + " configurations" );
 
@@ -52,6 +55,7 @@ public class ExtensionUtils {
             node.getDocument().addToList( EXTENSIONS, d.getDocument() );
         }
     }
+    */
 
     public static ExtensionGroup getExtensionGroup(JsonObject jsonData) {
         if(jsonData.getAsJsonPrimitive( JsonUtils.EXTENSION ) == null) {
@@ -105,9 +109,9 @@ public class ExtensionUtils {
         return d;
     }
 
-    public static Describable<?> getDescribable(AbstractExtension.ExtensionDescriptor descriptor, CoreRequest request, PersistedNode node, JsonObject jsonConfiguration) throws ItemInstantiationException {
-        Describable e = descriptor.newInstance( request, node );
-        e.updateNode( request, jsonConfiguration );
+    public static Describable<?> getDescribable(AbstractExtension.ExtensionDescriptor descriptor, PersistedNode node, JsonObject jsonConfiguration) throws ItemInstantiationException {
+        Describable e = descriptor.newInstance( jsonConfiguration, node );
+        e.updateNode( jsonConfiguration );
 
         /* Remove data!? */
         if( descriptor.doRemoveDataItemOnConfigure() ) {
@@ -126,7 +130,7 @@ public class ExtensionUtils {
      *  config: { class: <class>, configuration ... }
      * }
      */
-    public static Describable handleExtensionConfiguration( CoreRequest request, JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
+    public static Describable handleExtensionConfiguration( JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
         // Validate input
         if(jsonData.getAsJsonObject(JsonUtils.CONFIGURATION ) == null) {
             throw new IllegalArgumentException( JsonUtils.CONFIGURATION + " was not found" );
@@ -148,8 +152,8 @@ public class ExtensionUtils {
         Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
-        Describable e = d.newInstance( request, node );
-        e.updateNode( request, jsonConfiguration );
+        Describable e = d.newInstance( jsonConfiguration, node );
+        e.updateNode( jsonConfiguration );
 
         /* Remove data!? */
         if( d.doRemoveDataItemOnConfigure() ) {

@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class Tags extends ResourceExtension<Tags> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         logger.debug( "Updating tags, {}", jsonData );
 
         if(jsonData != null) {

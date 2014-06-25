@@ -14,7 +14,7 @@ public class Location extends Resource<Location> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         /* Implementation is a no op */
     }
 

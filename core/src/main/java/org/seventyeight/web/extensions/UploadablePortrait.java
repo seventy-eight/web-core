@@ -11,7 +11,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.FileResource;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class UploadablePortrait extends AbstractPortrait {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         if(jsonData != null) {
             String id = jsonData.get( "uploadedPortraitId" ).getAsString();
             document.set( "file", id );

@@ -54,18 +54,18 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         JsonObject json = JsonUtils.getJsonFromRequest( request );
         //List<JsonObject> objs = JsonUtils.getJsonObjects( json );
         if( json != null ) {
-            setPortrait( request, json );
+            setPortrait( json );
         }
 
         /* Redirect */
         response.sendRedirect( "" );
     }
 
-    public void setPortrait( Request request, JsonObject json ) {
+    public void setPortrait(JsonObject json) {
         try {
             AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
-            AbstractPortrait abstractPortrait = descriptor.newInstance(request, this, "portrait");
-            abstractPortrait.update( request );
+            AbstractPortrait abstractPortrait = descriptor.newInstance(json, this, "portrait");
+            abstractPortrait.updateExtensions( json );
             //ExtensionUtils.retrieveExtensions( request, json, abstractPortrait );
             //abstractPortrait.save( request, json );
             document.set( "portrait", abstractPortrait.getDocument() );
@@ -231,7 +231,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             Comment.CommentDescriptor descriptor = Core.getInstance().getDescriptor( Comment.class );
             Comment comment = descriptor.newInstance( request, this );
             if(comment != null) {
-                comment.update( request );
+                JsonObject json = JsonUtils.getJsonFromRequest( request );
+                comment.updateConfiguration(json);
                 comment.save();
 
                 /*

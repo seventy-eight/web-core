@@ -33,7 +33,7 @@ public class Venue extends Resource<Venue> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         if(jsonData != null) {
             boolean multiStaged = false;
             JsonElement e = jsonData.get( "multiStaged" );

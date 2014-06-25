@@ -3,18 +3,9 @@ package org.seventyeight.web.model;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
-import org.seventyeight.web.Core;
-import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.utilities.DocumentFinder;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author cwolfgang
@@ -39,8 +30,9 @@ public class Comment extends AbstractNode<Comment> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
-        String text = request.getValue( "comment", "" );
+    public void updateNode( JsonObject jsonData ) {
+        //String text = request.getValue( "comment", "" );
+        String text = jsonData.getAsJsonPrimitive( "comment" ).getAsString();
         setText( text );
     }
 

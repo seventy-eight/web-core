@@ -35,8 +35,9 @@ public class Topic extends Resource<Topic> {
 
 
     @Override
-    public void updateNode(CoreRequest request, JsonObject jsonData) {
-        String text = request.getValue( "text", null );
+    public void updateNode( JsonObject jsonData ) {
+        //String text = request.getValue( "text", null );
+        String text = jsonData.getAsJsonPrimitive( "text" ).getAsString();
         if( text == null || text.isEmpty() ) {
             throw new IllegalArgumentException( "No text is provided" );
         }

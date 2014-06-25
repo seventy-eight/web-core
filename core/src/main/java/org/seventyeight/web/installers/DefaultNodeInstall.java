@@ -19,9 +19,10 @@ public abstract class DefaultNodeInstall<T extends AbstractNode<T>> extends Node
         this.owner = owner;
     }
 
+
     @Override
-    protected void setParameters( Parameters parameters ) {
-        parameters.setUser( owner );
+    public void after() {
+        node.setOwner( owner );
     }
 
     @Override

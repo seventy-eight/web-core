@@ -11,7 +11,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author cwolfgang
@@ -94,7 +92,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 

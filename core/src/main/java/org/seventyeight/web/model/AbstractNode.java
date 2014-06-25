@@ -270,44 +270,62 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
         logger.debug( "Configuration submit" );
 
+        // Retrieve the root json object
+        JsonObject json = null;
+        try {
+            json = JsonUtils.getJsonFromRequest( request );
+            logger.debug( "I HAVE JSON: {}", json );
+        } catch( JsonException e ) {
+            throw new IllegalArgumentException( "No json provided" );
+        }
+
+        updateConfiguration( json );
+
+        // Update user + revision
+        update( request.getUser() );
+
+        response.sendRedirect( getUrl() );
+    }
+
+    public void updateConfiguration(JsonObject json) throws ClassNotFoundException, ItemInstantiationException {
+
         // Default fields
-        String title = request.getValue( "title", null );
+        String title = JsonUtils.get( json, "title", null );
         if(title != null) {
             setField( "title", title );
         } else {
             throw new IllegalArgumentException( "Title not provided" );
         }
 
-        // Access
-        JsonObject json = null;
-        try {
-            // Root json
-            json = JsonUtils.getJsonFromRequest( request );
-            logger.debug( "I HAVE JSON: {}", json );
-
-            // access
-            JsonObject accessObject = json.getAsJsonObject( "access" );
-            if(accessObject != null) {
-                logger.debug( "THE ACCESS ARRAY: {}", accessObject );
-                Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( request, accessObject, this );
-                logger.debug( "DESCRIBABABBABABA: {}", describable );
-                if(describable != null) {
-                    document.set( "ACL", describable.getDocument() );
-                } else {
-                    logger.debug( "ACL describable not set" );
+        // Access configuration
+        if(json != null) {
+            try {
+                // access
+                JsonObject accessObject = json.getAsJsonObject( "access" );
+                if(accessObject != null) {
+                    logger.debug( "THE ACCESS ARRAY: {}", accessObject );
+                    Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( accessObject, this );
+                    logger.debug( "DESCRIBABABBABABA: {}", describable );
+                    if(describable != null) {
+                        document.set( "ACL", describable.getDocument() );
+                    } else {
+                        logger.debug( "ACL describable not set" );
+                    }
                 }
+            } catch( NullPointerException e ) {
+                logger.debug( "No json object provided" );
             }
-
-            //List<JsonObject> objs = JsonUtils.getJsonObjects( json );
-            //logger.debug( "JSON: {}", objs );
-        } catch( JsonException e ) {
-            logger.debug( "No json object provided" );
         }
 
-        update( request );
+        // Update the node's extensions
+        updateExtensions(json);
+
+        // Update this nodes fields
+        updateNode( json );
+
         postUpdate();
         save();
-        response.sendRedirect( getUrl() );
+
     }
 
     public void postUpdate() {

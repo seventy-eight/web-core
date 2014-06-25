@@ -8,6 +8,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
  */
 public interface Savable {
     public MongoDocument getDocument();
-    public void updateNode(CoreRequest request, JsonObject jsonData);
+    public void updateNode( JsonObject jsonData );
     public void save();
 }

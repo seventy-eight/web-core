@@ -54,7 +54,7 @@ public class Attachments extends Action<Attachments> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 
@@ -80,7 +80,7 @@ public class Attachments extends Action<Attachments> {
             logger.debug( "Is" + node + " applicable" );
 
             if( node instanceof Resource ) {
-                MongoDocument sd = getExtensionDocument( (Resource)node );
+                MongoDocument sd = getExtensionDocument( (Resource) node );
                 return sd.get( "enabled", true );
             } else {
                 return false;

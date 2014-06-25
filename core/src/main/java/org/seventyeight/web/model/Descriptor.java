@@ -1,5 +1,6 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -8,6 +9,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.Collections;
@@ -42,17 +44,17 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
     //public abstract T newInstance( String title ) throws ItemInstantiationException;
 
-    public T newInstance(CoreRequest request, Node parent) throws ItemInstantiationException {
+    public T newInstance(JsonObject json, Node parent) throws ItemInstantiationException {
         // Mandatory
-        String title = request.getValue( "title" );
+        String title = JsonUtils.get( json, "title", null );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
-        return newInstance( request, parent, title );
+        return newInstance( json, parent, title );
     }
 
-    public T newInstance(CoreRequest request, Node parent, String title) throws ItemInstantiationException {
+    public T newInstance(JsonObject json, Node parent, String title) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
 
         return create( title, parent );

@@ -5,9 +5,7 @@ import com.timgroup.jgravatar.Gravatar;
 import com.timgroup.jgravatar.GravatarDefaultImage;
 import com.timgroup.jgravatar.GravatarRating;
 import org.seventyeight.database.mongodb.MongoDocument;
-import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.nodes.User;
 
 import java.io.File;
@@ -39,8 +37,9 @@ public class GravatarPortrait extends AbstractPortrait {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
-        String email = request.getValue( "gravatarEmail", null );
+    public void updateNode( JsonObject jsonData ) {
+        //String email = request.getValue( "gravatarEmail", null );
+        String email = jsonData.getAsJsonPrimitive( "gravatarEmail" ).getAsString();
         if( email != null ) {
             document.set( "email", email );
         } else {

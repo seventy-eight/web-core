@@ -21,4 +21,9 @@ public class DummyCore extends Core {
     public void save() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public String getIdentifier() {
+        return "Root";
+    }
 }

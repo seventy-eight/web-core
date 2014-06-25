@@ -13,7 +13,6 @@ import org.seventyeight.web.extensions.filetype.FileType;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.ServletUtils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -73,7 +72,7 @@ public class FileResource extends UploadableNode<FileResource> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
     }
 
     /*

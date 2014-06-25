@@ -42,6 +42,22 @@ public class JsonUtils {
     public static final String EXTENSION = "extension";
     public static final String CONFIGURATIONS = "configurations";
 
+    public static String get(JsonObject json, String key, String defaultValue) {
+        if(json.has( key )) {
+            return json.get( key ).getAsString();
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public static int get(JsonObject json, String key, int defaultValue) {
+        if(json.has( key )) {
+            return json.get( key ).getAsInt();
+        } else {
+            return defaultValue;
+        }
+    }
+
     public enum JsonType {
         config,
         extensionClass

@@ -4,9 +4,6 @@ import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.model.*;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author cwolfgang
  */
@@ -41,7 +38,7 @@ public class MyNode extends AbstractNode<MyNode> implements Parent {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
       /* Implementation is a no op */
     }
 }

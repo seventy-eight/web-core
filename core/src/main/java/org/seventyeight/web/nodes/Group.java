@@ -32,7 +32,7 @@ public class Group extends Resource<Group> implements Authorizable {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         JsonElement usersElement = jsonData.get( "users" );
         if(usersElement.isJsonNull()) {
 

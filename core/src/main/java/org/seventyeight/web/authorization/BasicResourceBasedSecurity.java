@@ -1,6 +1,5 @@
 package org.seventyeight.web.authorization;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Level;
@@ -11,8 +10,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.utilities.JsonException;
-import org.seventyeight.web.utilities.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,7 +110,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         logger.debug( "Updating {}, {}", this, jsonData );
         // Access
         if(jsonData != null) {

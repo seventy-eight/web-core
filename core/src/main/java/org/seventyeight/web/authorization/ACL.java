@@ -123,7 +123,7 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
         }
 
         @Override
-        public void updateNode( CoreRequest request, JsonObject jsonData ) {
+        public void updateNode( JsonObject jsonData ) {
             /* Implementation is a no op */
         }
 

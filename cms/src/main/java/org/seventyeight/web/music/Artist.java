@@ -1,13 +1,10 @@
 package org.seventyeight.web.music;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
-import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
 import org.seventyeight.web.model.Resource;
@@ -26,7 +23,7 @@ public class Artist extends Resource<Artist> {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
 
     }
 

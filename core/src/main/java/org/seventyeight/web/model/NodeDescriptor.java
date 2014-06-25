@@ -1,5 +1,6 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -11,6 +12,7 @@ import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,14 +42,25 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
     */
 
-    @Override
+    //@Override
     public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
-        String title = request.getValue( "title" );
+        JsonObject json = null;
+        try {
+            json = JsonUtils.getJsonFromRequest( request );
+        } catch( JsonException e ) {
+            throw new ItemInstantiationException( "Unable to instantiate node, no json object provided" );
+        }
+        return newInstance( json, parent );
+    }
+
+    @Override
+    public T newInstance( JsonObject json, Node parent ) throws ItemInstantiationException {
+        String title = JsonUtils.get( json, "title", null );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
-        return newInstance( request, parent, title );
+        return newInstance( json, parent, title );
     }
 
     public T newInstance( CoreRequest request, Node parent, String title ) throws ItemInstantiationException {
@@ -81,11 +94,12 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     @PostMethod
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
-        String title = request.getValue( "title", null );
+        JsonObject json = JsonUtils.getJsonFromRequest( request );
+        String title = JsonUtils.get( json, "title", null );
         if( title != null ) {
             logger.debug( "Creating " + title );
-            T instance = newInstance(request, this);
-            instance.update( request );
+            T instance = newInstance(json, this);
+            instance.updateConfiguration( json );
             instance.save();
             response.sendRedirect( instance.getUrl() );
         } else {

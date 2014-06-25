@@ -10,7 +10,6 @@ import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Authorizable;
-import org.seventyeight.web.extensions.AbstractPortrait;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -59,23 +58,31 @@ public class User extends Resource<User> implements Authorizable {
     }
 
     @Override
-    public void updateNode(CoreRequest request, JsonObject jsonData) {
+    public void updateNode( JsonObject jsonData ) {
+
+        if(jsonData != null) {
+            throw new IllegalArgumentException( "Json object was null" );
+        }
 
         /* Set username */
-        String username = request.getValue( "username", null );
+        String username = jsonData.getAsJsonPrimitive( "username" ).getAsString();
+        //String username = request.getValue( "username", null );
         if( username == null || username.isEmpty() ) {
             throw new IllegalArgumentException( "The username must be set" );
         }
 
         /* Set email */
-        String email = request.getValue( "email", null );
+        //String email = request.getValue( "email", null );
+        String email = jsonData.getAsJsonPrimitive( "email" ).getAsString();
         if( email == null || email.isEmpty() ) {
             throw new IllegalArgumentException( "The email must be set" );
         }
 
         /* Password */
-        String password1 = request.getValue( "password", null );
-        String password2 = request.getValue( "password_again", null );
+        //String password1 = request.getValue( "password", null );
+        //String password2 = request.getValue( "password_again", null );
+        String password1 = jsonData.getAsJsonPrimitive( "password" ).getAsString();
+        String password2 = jsonData.getAsJsonPrimitive( "password_again" ).getAsString();
         if( password2 != null && !password2.isEmpty() ) {
             if( ( password1 == null || password1.isEmpty() ) || ( password2 == null || password2.isEmpty() ) ) {
                 throw new IllegalArgumentException( "The password cannot be empty" );

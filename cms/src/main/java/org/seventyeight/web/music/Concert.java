@@ -31,7 +31,7 @@ public class Concert extends Resource<Concert> implements Event {
     }
 
     @Override
-    public void updateNode( CoreRequest request, JsonObject jsonData ) {
+    public void updateNode( JsonObject jsonData ) {
         if(jsonData != null) {
             JsonElement venueElement = jsonData.get( "venue" );
             logger.debug( "VENUE ELEMENT: {}", venueElement );

@@ -1,5 +1,6 @@
 package org.seventyeight.web.installers;
 
+import com.google.gson.JsonObject;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.nodes.Group;
@@ -31,12 +32,12 @@ public class UserInstall extends NodeInstaller<User> {
     }
 
     @Override
-    protected void setParameters( Parameters parameters ) {
-        parameters.put( "title", title );
-        parameters.put( "username", title );
-        parameters.put( "email", email );
-        parameters.put( "password", "pass" );
-        parameters.put( "password_again", "pass" );
+    protected void setJson( JsonObject json ) {
+        json.addProperty( "title", title );
+        json.addProperty( "username", title );
+        json.addProperty( "email", email );
+        json.addProperty( "password", "pass" );
+        json.addProperty( "password_again", "pass" );
     }
 
     @Override
