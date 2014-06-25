@@ -84,6 +84,12 @@ public class MongoDocument implements Document {
         }
     }
 
+    /**
+     * Returns the {@link MongoDocument} recursively given the keys.
+     * The sub documents will be created if needed.
+     * @param keys
+     * @return
+     */
     public MongoDocument getr( String ... keys ) {
 
         DBObject current = document;
@@ -106,6 +112,26 @@ public class MongoDocument implements Document {
             DBObject o = new BasicDBObject(  );
             current.put( key, o );
             current = o;
+        }
+
+        return new MongoDocument( current );
+    }
+
+    public MongoDocument getr2( String ... keys ) {
+
+        DBObject current = document;
+        int i = 0;
+        for( ; i < keys.length ; i++ ) {
+            String key = keys[i];
+            Object o = current.get( key );
+
+            if( o == null ) {
+                return null;
+            } else {
+                if( o instanceof DBObject ) {
+                    current = (DBObject) o;
+                }
+            }
         }
 
         return new MongoDocument( current );

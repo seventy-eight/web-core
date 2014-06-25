@@ -64,7 +64,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     public void setPortrait(JsonObject json) {
         try {
             AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
-            AbstractPortrait abstractPortrait = descriptor.newInstance(json, this, "portrait");
+            json.addProperty( "title", "portrait" );
+            AbstractPortrait abstractPortrait = descriptor.newInstance(json, this);
             abstractPortrait.updateExtensions( json );
             //ExtensionUtils.retrieveExtensions( request, json, abstractPortrait );
             //abstractPortrait.save( request, json );
@@ -155,6 +156,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         return Core.getInstance().getExtensionDescriptors( ResourceExtension.class );
     }
 
+    /*
     public List<AbstractExtension> getConfiguredExtensions() throws ItemInstantiationException {
         logger.debug( "Getting configured extensions for " + this );
         List<AbstractExtension> extensions = new ArrayList<AbstractExtension>(  );
@@ -176,6 +178,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
         return extensions;
     }
+    */
 
     /*
     @Override
@@ -231,7 +234,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             Comment.CommentDescriptor descriptor = Core.getInstance().getDescriptor( Comment.class );
             Comment comment = descriptor.newInstance( request, this );
             if(comment != null) {
-                JsonObject json = JsonUtils.getJsonFromRequest( request );
+                JsonObject json = request.getJson();
                 comment.updateConfiguration(json);
                 comment.save();
 

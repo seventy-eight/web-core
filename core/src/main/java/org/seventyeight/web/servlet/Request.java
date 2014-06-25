@@ -1,5 +1,6 @@
 package org.seventyeight.web.servlet;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -14,6 +15,8 @@ import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.utilities.JsonException;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -52,6 +55,8 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     private Locale locale = new Locale( "da", "DK" );
 
     private StopWatch stopWatch = null;
+
+    private JsonObject json = null;
 
     public enum RequestMethod {
         GET,
@@ -160,6 +165,25 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     public void setTemplate( String template ) {
         this.template = template;
+    }
+
+    public JsonObject getJson() {
+        if(json == null) {
+            try {
+                logger.fatal( "THE CURRENT SESSION USER IS {}", user );
+                json = JsonUtils.getJsonFromRequest( this );
+            } catch( JsonException e ) {
+                logger.debug( "No json field associated with this request, {}", e.getMessage());
+                json = new JsonObject();
+            }
+        }
+
+        // It should not be possible to have json == null
+        if(user != null) {
+            json.addProperty( SESSION_USER, user.getIdentifier() );
+        }
+
+        return json;
     }
 
     public String getView() {

@@ -334,7 +334,7 @@ public class User extends Resource<User> implements Authorizable {
         }
 
         @Override
-        protected void setOwner( CoreRequest request, User node ) {
+        protected void setOwner( User node, JsonObject json ) {
             //super.setOwner( request, node );
         }
     }

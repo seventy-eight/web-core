@@ -1,5 +1,6 @@
 package org.seventyeight.web.utilities;
 
+import com.google.gson.JsonObject;
 import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.CoreRequest;
@@ -14,6 +15,7 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
 
     private User user;
     private PersistedNode modelObject;
+    private JsonObject json = null;
 
     @Override
     public User getUser() {
@@ -66,5 +68,21 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     @Override
     public Locale getLocale() {
         return new Locale( "da", "DK" );
+    }
+
+    @Override
+    public JsonObject getJson() {
+        if(json == null) {
+            try {
+                json = JsonUtils.getJsonFromRequest( this );
+                if(user != null) {
+                    json.addProperty( SESSION_USER, user.getIdentifier() );
+                }
+            } catch( JsonException e ) {
+                json = new JsonObject();
+            }
+        }
+
+        return json;
     }
 }

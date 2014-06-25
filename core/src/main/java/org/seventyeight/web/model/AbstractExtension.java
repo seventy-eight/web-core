@@ -1,5 +1,7 @@
 package org.seventyeight.web.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -95,7 +97,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
             logger.warn( "THE DESCRIBABABALE DOC IS {}", document );
             logger.warn( "EXTENSION JSON ID {}", getJsonId( getExtensionClass().getName() ) );
-            MongoDocument d = document.getr( EXTENSIONS, getJsonId( getExtensionClass().getName() ) );
+            MongoDocument d = document.getr2( EXTENSIONS, getJsonId( getExtensionClass().getName() ) );
             logger.warn( "THE DESCRIBABABALE DOC IS {}", d );
             if(d != null && !d.isNull() && d.get( "class", null ) != null ) {
                 return (Describable<T>) Core.getInstance().getNode( parent, d );
@@ -115,17 +117,24 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
          * @return
          */
         public MongoDocument getExtensionDocument( Documented parent ) {
-            MongoDocument d = parent.getDocument().getr( EXTENSIONS, getExtensionClassJsonId() );
+            MongoDocument d = parent.getDocument().getr2( EXTENSIONS, getExtensionClassJsonId() );
+            logger.info( "RETRIEVED EXTENSION DOCUMENT for {} IS:", getId() );
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            System.out.println( gson.toJson( d ) );
             if(canHaveMultiple()) {
                 d = d.get( getJsonId() );
             }
 
-            if(d == null || d.isNull() || d.get( "class", null ) == null) {
-                return null;
+            if(d == null || d.isNull()) {
+                return new MongoDocument().set( "class", getId() ).set( "XYZ", "1" );
+            }
+
+            if(d.get( "class", null ) == null) {
+               d.set( "class", getId() ).set( "XYZ", "2" );
             }
 
             if(!d.get( "class" ).equals( getId() )) {
-                return null;
+                throw new IllegalStateException( d.get( "class" ) + " is not equal to " + getId() );
             }
 
             return d;

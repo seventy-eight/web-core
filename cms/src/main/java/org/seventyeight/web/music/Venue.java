@@ -101,7 +101,7 @@ public class Venue extends Resource<Venue> {
         response.setRenderType( Response.RenderType.NONE );
 
         Concert.ConcertDescriptor descriptor = Core.getInstance().getDescriptor( Concert.class );
-        Concert instance = descriptor.newInstance( request, this, "" );
+        Concert instance = descriptor.newInstance( request, this );
         instance.setVenue( this );
         instance.save();
 

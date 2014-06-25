@@ -2,6 +2,7 @@ package org.seventyeight.web.actions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.logging.log4j.Level;
@@ -20,6 +21,7 @@ import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonUtils;
 import org.seventyeight.web.utilities.UploadHandler;
 
 import java.io.File;
@@ -108,6 +110,8 @@ public class Upload implements Node {
         r.deleteUrl = "http://jajdjawd";
         r.thumbnailUrl = "/images/none";
 
+        JsonObject json = request.getJson();
+
         for( FileItem item : items ) {
             try {
                 if( UploadHandler.commonsUploader.isValid( item ) ) {
@@ -118,8 +122,11 @@ public class Upload implements Node {
 
                     FileResource fr = null;
                     try {
+
+                        json.addProperty( "title", filename );
+
                         FileResource.FileDescriptor d = Core.getInstance().getDescriptor( FileResource.class );
-                        fr = d.newInstance( request, Core.getInstance(), filename );
+                        fr = d.newInstance( json, Core.getInstance() );
 
                         fr.setPath( uf.relativePath );
                         fr.setFilename( uf.file.getName() );

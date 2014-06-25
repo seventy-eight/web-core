@@ -46,26 +46,21 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
     public T newInstance(JsonObject json, Node parent) throws ItemInstantiationException {
         // Mandatory
+        /*
         String title = JsonUtils.get( json, "title", null );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
-
-        return newInstance( json, parent, title );
+        */
+        return create( parent );
     }
 
-    public T newInstance(JsonObject json, Node parent, String title) throws ItemInstantiationException {
+    protected T newInstance(Node parent) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-
-        return create( title, parent );
+        return create( parent );
     }
 
-    protected T newInstance(String title, Node parent) throws ItemInstantiationException {
-        logger.debug( "New instance for " + clazz );
-        return create( title, parent );
-    }
-
-    protected T create( String title, Node parent ) throws ItemInstantiationException {
+    protected T create( Node parent ) throws ItemInstantiationException {
         logger.debug( "Creating document " + clazz.getName() );
 
         MongoDocument document = new MongoDocument();

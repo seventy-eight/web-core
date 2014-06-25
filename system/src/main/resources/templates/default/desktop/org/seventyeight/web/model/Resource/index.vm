@@ -59,6 +59,7 @@
             <script type="text/javascript">
                 $( "#commentSubmit" ).click(function(event) {
                     event.preventDefault();
+                    Utils.addJsonElement( document.getElementById('commentForm') );
                     $.ajax({
                         type: "POST",
                         url: "addComment",

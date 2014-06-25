@@ -206,6 +206,7 @@
                             </td>
                         </tr>
                         #if($item.hasExtension($descriptor))
+                            HEJ $descriptor
                             #set($enabledExtension = $descriptor.getClazz().getName())
                         #end
                     #else

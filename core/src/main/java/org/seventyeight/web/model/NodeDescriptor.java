@@ -44,13 +44,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     //@Override
     public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
-        JsonObject json = null;
-        try {
-            json = JsonUtils.getJsonFromRequest( request );
-        } catch( JsonException e ) {
-            throw new ItemInstantiationException( "Unable to instantiate node, no json object provided" );
-        }
-        return newInstance( json, parent );
+        return newInstance( request.getJson(), parent );
     }
 
     @Override
@@ -63,7 +57,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return newInstance( json, parent, title );
     }
 
-    public T newInstance( CoreRequest request, Node parent, String title ) throws ItemInstantiationException {
+    public T newInstance( JsonObject json, Node parent, String title ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -71,14 +65,14 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             }
         }
 
-        T node = create( title, parent );
+        T node = create( parent );
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
         //node.getDocument().set( "status", Status.CREATED );
 
         // TODO possibly have a system user account
-        setOwner( request, node );
+        setOwner( node, json );
 
         /* Save */
         //MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
@@ -86,15 +80,16 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return node;
     }
 
-    protected void setOwner( CoreRequest request, T node ) {
-        if(request.getUser() != null) {
-            node.getDocument().set( "owner", request.getUser().getIdentifier() );
+    protected void setOwner( T node, JsonObject json ) {
+        logger.debug( "OWNER JSON::::::::::::::::::::::::::::: {}", json );
+        if(json.has( Request.SESSION_USER )) {
+            node.getDocument().set( "owner", json.get( CoreRequest.SESSION_USER ).getAsString() );
         }
     }
 
     @PostMethod
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
-        JsonObject json = JsonUtils.getJsonFromRequest( request );
+        JsonObject json = request.getJson();
         String title = JsonUtils.get( json, "title", null );
         if( title != null ) {
             logger.debug( "Creating " + title );
@@ -122,8 +117,8 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     @Override
-    protected T create( String title, Node parent ) throws ItemInstantiationException {
-        T instance = super.create( title, parent );
+    protected T create( Node parent ) throws ItemInstantiationException {
+        T instance = super.create( parent );
 
         String id = Core.getInstance().getUniqueName( this );
         instance.getDocument().set( "_id", id );

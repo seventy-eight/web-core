@@ -270,14 +270,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
         logger.debug( "Configuration submit" );
 
-        // Retrieve the root json object
-        JsonObject json = null;
-        try {
-            json = JsonUtils.getJsonFromRequest( request );
-            logger.debug( "I HAVE JSON: {}", json );
-        } catch( JsonException e ) {
-            throw new IllegalArgumentException( "No json provided" );
-        }
+        JsonObject json = request.getJson();
 
         updateConfiguration( json );
 

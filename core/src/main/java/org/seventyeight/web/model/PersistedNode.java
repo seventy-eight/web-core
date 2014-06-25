@@ -37,6 +37,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
 
     public MongoDocument resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
         logger.debug( "Resolving extension for {}", descriptor );
+        logger.info( "DOCUMENT IS {}", document );
         if(descriptor != null) {
             return descriptor.getExtensionDocument( this );
         }
@@ -54,7 +55,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     public MongoDocument getExtension(Class<? extends AbstractExtension<?>> extensionClass) {
         logger.debug( "Resolving extension for {}", extensionClass );
 
-        MongoDocument doc = document.getr(EXTENSIONS, Descriptor.getJsonId( extensionClass.getName() ));
+        MongoDocument doc = document.getr2(EXTENSIONS, Descriptor.getJsonId( extensionClass.getName() ));
         logger.debug( "DOC: {}", doc );
 
         if(doc != null && !doc.isNull()) {
@@ -149,6 +150,9 @@ public abstract class PersistedNode implements Node, Savable, Documented {
         this.document = document;
     }
 
+    /**
+     * @deprecated
+     */
     public static MongoDocument getSubDocument( MongoDocument document, String type, Class<?> clazz ) {
         MongoDocument extensionClassDocument = document.getr( EXTENSIONS, type, clazz.getCanonicalName() );
 
