@@ -76,6 +76,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             return Collections.emptyList();
         }
 
+        public boolean isOmnipresent() {
+            return false;
+        }
+
         /**
          * Get the class of the extensions base.
          */
@@ -114,7 +118,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         /**
          * Get the extension {@link MongoDocument} given a {@link Documented} parent.
          * @param parent A {@link Documented} parent. Typically a {@link Node}.
-         * @return
+         * @return A {@link MongoDocument}, can be null.
          */
         public MongoDocument getExtensionDocument( Documented parent ) {
             MongoDocument d = parent.getDocument().getr2( EXTENSIONS, getExtensionClassJsonId() );
@@ -123,18 +127,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             System.out.println( gson.toJson( d ) );
             if(canHaveMultiple()) {
                 d = d.get( getJsonId() );
-            }
-
-            if(d == null || d.isNull()) {
-                return new MongoDocument().set( "class", getId() ).set( "XYZ", "1" );
-            }
-
-            if(d.get( "class", null ) == null) {
-               d.set( "class", getId() ).set( "XYZ", "2" );
-            }
-
-            if(!d.get( "class" ).equals( getId() )) {
-                throw new IllegalStateException( d.get( "class" ) + " is not equal to " + getId() );
             }
 
             return d;
@@ -149,6 +141,22 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public T getExtension( Documented parent ) throws ItemInstantiationException {
             MongoDocument d = getExtensionDocument( parent );
             logger.debug( "EXTENSION SUBDOC " + d );
+
+            //
+            if(isOmnipresent()) {
+                if(d == null || d.isNull()) {
+                    d = new MongoDocument().set( "class", getId() );
+                }
+
+                if(d.get( "class", null ) == null) {
+                    d.set( "class", getId() );
+                }
+            }
+
+            if(!d.get( "class" ).equals( getId() )) {
+                throw new IllegalStateException( d.get( "class" ) + " is not equal to " + getId() );
+            }
+
             return Core.getInstance().getNode( (Node) parent, d );
         }
 

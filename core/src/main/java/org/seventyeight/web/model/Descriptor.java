@@ -55,7 +55,7 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return create( parent );
     }
 
-    protected T newInstance(Node parent) throws ItemInstantiationException {
+    public T newInstance(Node parent) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
         return create( parent );
     }

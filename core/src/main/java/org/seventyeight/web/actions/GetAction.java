@@ -54,5 +54,10 @@ public class GetAction extends Action<GetAction> implements Parent {
         public boolean isApplicable( Node node ) {
             return ( node instanceof Getable );
         }
+
+        @Override
+        public boolean isOmnipresent() {
+            return true;
+        }
     }
 }

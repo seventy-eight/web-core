@@ -125,8 +125,10 @@ public class Session extends AbstractNode<Session> {
             return Collections.emptyList();
         }
 
+        /*
         public Session newInstance(String title, Node parent) throws ItemInstantiationException {
-            return super.create( title, parent );
+            return super.create( parent );
         }
+        */
     }
 }

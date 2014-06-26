@@ -48,7 +48,8 @@ public class SessionManager implements Node {
 		//Session session = createSessionNode( hash, calendar.getTime() );
 
         Session.SessionsDescriptor descriptor = Core.getInstance().getDescriptor( Session.class );
-        Session session = descriptor.newInstance( "Session for " + user.getDisplayName(), this );
+        Session session = descriptor.newInstance( this );
+        session.setTitle( "Session for " + user.getDisplayName() );
         session.getDocument().set( "created", new Date() );
         session.setEndDate( calendar.getTime() );
         //session.setCreated();
