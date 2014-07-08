@@ -31,6 +31,11 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         UPDATED
     }
 
+    public enum Mode {
+        NORMAL,
+        INVISIBLE
+    }
+
     @Override
     public Node getParent() {
         return Core.getInstance();
@@ -122,13 +127,14 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
         String id = Core.getInstance().getUniqueName( this );
         instance.getDocument().set( "_id", id );
-        instance.getDocument().set( "class", clazz.getName() );
+        //instance.getDocument().set( "class", clazz.getName() );
         Date now = new Date();
         instance.getDocument().set( "created", now );
         instance.getDocument().set( "updated", now );
         //document.set( "updated", now );
         instance.getDocument().set( "revision", 0 );
         instance.getDocument().set( "status", Status.CREATED.name() );
+        instance.getDocument().set( "mode", Mode.NORMAL.name() );
 
         return instance;
     }

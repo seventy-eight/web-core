@@ -29,6 +29,16 @@ public class MongoDBQuery {
         return this;
     }
 
+    public MongoDBQuery notEquals( String field, Object value ) {
+        if( value instanceof MongoDocument ) {
+            query.put( field ).notEquals( ((MongoDocument)value).getDBObject() );
+        } else {
+            query.put( field ).notEquals( value );
+        }
+
+        return this;
+    }
+
     public MongoDBQuery getId( String id ) {
         query.put( "_id" ).is( id );
 

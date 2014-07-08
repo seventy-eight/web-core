@@ -77,6 +77,8 @@ public class CMSCore extends Core {
 
         addDescriptor( new Collection.CollectionDescriptor() );
 
+        addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor() );
+
         addDescriptor( new GetAction.GetDescriptor() );
 
         addSearchable( new TitleSearch() );

@@ -19,6 +19,7 @@ import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.model.extensions.NodeListener;
 import org.seventyeight.web.nodes.FileResource;
+import org.seventyeight.web.nodes.ImageUploadsWrapper;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonUtils;
@@ -139,12 +140,23 @@ public class Upload implements Node {
                             fr.addRelation( Relation.BasicRelation.CREATED_FOR, rid );
                         }
 
-                        fr.save();
-
                         r.rid = fr.getIdentifier();
                         r.name = fr.getDisplayName();
 
                         logger.debug( "THE OWNER IS {}", fr.getOwner() );
+
+                        // Image uploads wrapper
+                        if(ImageUploadsWrapper.isImage( filename )) {
+                            ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = Core.getInstance().getDescriptor( ImageUploadsWrapper.class );
+                            ImageUploadsWrapper wrapper = descriptor.getWrapper( request.getUser() );
+                            wrapper.save();
+
+                            fr.getDocument().set( "mode", NodeDescriptor.Mode.INVISIBLE.name() );
+
+                            //fr
+                        }
+
+                        fr.save();
 
                         // Fire on created node, TODO: Perhaps an onCreatedResource?
                         NodeListener.fireOnNodeCreated( fr );
