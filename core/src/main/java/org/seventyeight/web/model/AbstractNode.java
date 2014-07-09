@@ -38,6 +38,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public static final String MODERATORS = "moderators";
     public static final String VIEWERS = "viewers";
 
+    public enum Visibility {
+        VISIBLE,
+        INVISIBLE
+    }
+
     protected Node parent;
 
     public AbstractNode( Node parent, MongoDocument document ) {
@@ -212,6 +217,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
     public Date getUpdated() {
         return getField( "updated", null );
+    }
+
+    public void setVisibility(Visibility visibility) {
+        this.document.set("visibility", visibility.name());
     }
 
     public void setTitle( String title ) {

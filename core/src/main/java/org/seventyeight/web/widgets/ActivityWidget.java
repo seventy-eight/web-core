@@ -39,7 +39,7 @@ public class ActivityWidget extends Widget {
         MongoDocument sort = new MongoDocument().set( "updated", -1 );
         MongoDBQuery query = new MongoDBQuery().notExists( "parent" );
         query.notExists( "relations." + Relation.BasicRelation.CREATED_FOR.getName() );
-        query.notEquals( "mode", NodeDescriptor.Mode.INVISIBLE.name() );
+        query.notEquals( "visibility", AbstractNode.Visibility.INVISIBLE.name() );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 

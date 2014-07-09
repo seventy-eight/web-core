@@ -151,7 +151,7 @@ public class Upload implements Node {
                             ImageUploadsWrapper wrapper = descriptor.getWrapper( request.getUser() );
                             wrapper.save();
 
-                            fr.getDocument().set( "mode", NodeDescriptor.Mode.INVISIBLE.name() );
+                            fr.setVisibility( AbstractNode.Visibility.INVISIBLE );
 
                             //fr
                         }

@@ -1,6 +1,8 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -16,6 +18,8 @@ import java.util.regex.Pattern;
  * @author cwolfgang
  */
 public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
+
+    private static Logger logger = LogManager.getLogger( ImageUploadsWrapper.class );
 
     public static final String TITLE = "imageuploadswrapper";
 
@@ -55,8 +59,11 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
         public ImageUploadsWrapper getWrapper(User user) throws ItemInstantiationException {
             MongoDBQuery query = new MongoDBQuery().is( "type", TITLE ).is( "owner", user.getIdentifier() );
             MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( query );
+            logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
             if(doc == null || doc.isNull()) {
-                return newInstance( this );
+                ImageUploadsWrapper instance = newInstance( this );
+                instance.setOwner( user );
+                return instance;
             } else {
                 return Core.getInstance().getNode( this, doc );
             }

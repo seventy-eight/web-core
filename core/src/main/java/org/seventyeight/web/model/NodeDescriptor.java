@@ -31,11 +31,6 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         UPDATED
     }
 
-    public enum Mode {
-        NORMAL,
-        INVISIBLE
-    }
-
     @Override
     public Node getParent() {
         return Core.getInstance();
@@ -134,7 +129,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         //document.set( "updated", now );
         instance.getDocument().set( "revision", 0 );
         instance.getDocument().set( "status", Status.CREATED.name() );
-        instance.getDocument().set( "mode", Mode.NORMAL.name() );
+        instance.getDocument().set( "visibility", AbstractNode.Visibility.VISIBLE.name() );
 
         return instance;
     }
