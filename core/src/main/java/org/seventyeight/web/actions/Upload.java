@@ -22,7 +22,6 @@ import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.nodes.ImageUploadsWrapper;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.utilities.JsonUtils;
 import org.seventyeight.web.utilities.UploadHandler;
 
 import java.io.File;
@@ -149,6 +148,8 @@ public class Upload implements Node {
                         if(ImageUploadsWrapper.isImage( filename )) {
                             ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = Core.getInstance().getDescriptor( ImageUploadsWrapper.class );
                             ImageUploadsWrapper wrapper = descriptor.getWrapper( request.getUser() );
+                            wrapper.addImage( fr );
+                            wrapper.setUpdated(null);
                             wrapper.save();
 
                             fr.setVisibility( AbstractNode.Visibility.INVISIBLE );

@@ -68,7 +68,7 @@ public class Festival extends Resource<Festival> {
         MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
 
         // This is updated
-        setUpdated();
+        setUpdatedCall();
     }
 
     public Venue getVenue() throws NotFoundException, ItemInstantiationException {

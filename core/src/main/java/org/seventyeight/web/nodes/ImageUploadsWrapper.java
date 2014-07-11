@@ -61,7 +61,7 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
             MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( query );
             logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
             if(doc == null || doc.isNull()) {
-                ImageUploadsWrapper instance = newInstance( this );
+                ImageUploadsWrapper instance = newInstance( user.getIdentifier(), this, "Wrapper for " + user.getDisplayName() );
                 instance.setOwner( user );
                 return instance;
             } else {

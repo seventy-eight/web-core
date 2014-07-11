@@ -9,6 +9,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.*;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
@@ -58,6 +59,16 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     public T newInstance( JsonObject json, Node parent, String title ) throws ItemInstantiationException {
+        logger.debug( "OWNER JSON::::::::::::::::::::::::::::: {}", json );
+        String ownerId = null;
+        if(json.has( Request.SESSION_USER )) {
+            ownerId = json.get( CoreRequest.SESSION_USER ).getAsString();
+        }
+
+        return newInstance( ownerId, parent, title );
+    }
+
+    public T newInstance(String ownerId, Node parent, String title) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -72,7 +83,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         //node.getDocument().set( "status", Status.CREATED );
 
         // TODO possibly have a system user account
-        setOwner( node, json );
+        setOwner( node, ownerId );
 
         /* Save */
         //MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
@@ -80,12 +91,18 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return node;
     }
 
+    protected void setOwner( T node, String ownerId ) {
+        node.getDocument().set( "owner", ownerId != null ? ownerId : "" );
+    }
+
+    /*
     protected void setOwner( T node, JsonObject json ) {
         logger.debug( "OWNER JSON::::::::::::::::::::::::::::: {}", json );
         if(json.has( Request.SESSION_USER )) {
             node.getDocument().set( "owner", json.get( CoreRequest.SESSION_USER ).getAsString() );
         }
     }
+    */
 
     @PostMethod
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
