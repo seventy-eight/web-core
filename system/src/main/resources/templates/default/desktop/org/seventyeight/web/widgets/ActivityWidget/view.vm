@@ -1,15 +1,19 @@
 
 #foreach($r in $item.getActivities($request))
 <table style="width: 100%; min-width: inherit; margin-top: 15px" class="widget">
-    <tr>
-        <td style="width: 100%;text-align: center; padding-left: 10px; background-color: #706693">
-            $message.get($r.getStatus().name(), $dateUtils.getDateString($r.getUpdated()))
+    <tr style="">
+        <td style="width: 20%;text-align: center; padding-left: 10px; background-color: #564e74;">
+            #render($r.getOwner() "small" true "" "" true)
+        </td>
+        <td style="width: auto;text-align: left; padding-left: 10px; background-color: #706693;">
+            $dateUtils.getDateString($r.getUpdated())<br>
+            $message.get("CREATED", $dateUtils.getDateString($r.getCreated()))
         </td>
     </tr>
 
 
     <tr>
-        <td style="text-align: center;" colspan="">
+        <td style="text-align: center;" colspan="2">
             #render($r "wide" true "" "" true)
         </td>
 

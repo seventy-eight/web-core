@@ -228,6 +228,8 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         MongoUpdate update = new MongoUpdate().push( "elements", field );
 
         MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
+
+        setUpdatedCall();
     }
 
     public void add( Resource<?> resource ) {

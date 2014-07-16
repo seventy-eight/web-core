@@ -292,14 +292,21 @@ Utils.jqEscape = function( str ) {
     return str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 }
 
+Utils.fetchResourceViewAppend = function(id, container, view) {
+    Utils.fetchResourceView(id, view, function(e) {
+        $(container).append(e);
+        //alert(e);
+    });
+}
 
-Utils.fetchImage = function(id, container) {
+Utils.fetchResourceView = function(id, view, f) {
     $.ajax({
         type: "GET",
-        url: "/resource/" + id + "/file",
+        url: "/resource/" + id + "/getView" + (view !== undefined ? '?view=' + view : ''),
         success: function(data, textStatus, jqxhr){
             //$('#imageWrapperimageuploadswrapper-9').append('#imageWrapperimageuploadswrapper-9');
-            $(container).append("ID");
+            //$(container).append("ID");
+            f(data);
             //alert($(container));
             //alert(container);
         },

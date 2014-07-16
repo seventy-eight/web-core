@@ -1,8 +1,4 @@
-BOOM!
-
-IDS: $item.getImageIds()
-
-<div style="width: 100%; border-style: solid; overflow: hidden" id="imageWrapper$item.getIdentifier()">
+<div style="overflow-x: scroll; border-style: none; overflow: hidden" id="imageWrapper$item.getIdentifier()">
 
 </div>
 
@@ -12,7 +8,8 @@ IDS: $item.getImageIds()
     $(function(){
         #foreach($id in $item.getImageIds())
             //Utils.fetchImage('$id', '#imageWrapper$item.getIdentifier()');
-            $('#imageWrapper$item.getIdentifier()').append('<img src="/resource/$id/file" style="width:100px"></img>');
+            Utils.fetchResourceViewAppend('$id', '#imageWrapper$item.getIdentifier()', 'avatar');
+            //$('#imageWrapper$item.getIdentifier()').append('<img src="/resource/$id/file" style="width:100px"></img>');
         #end
     });
 </script>

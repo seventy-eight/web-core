@@ -18,6 +18,16 @@ import org.seventyeight.web.servlet.Request;
 import java.io.IOException;
 import java.io.Writer;
 
+/**
+ * Render object
+ *
+ * 0: The object
+ * 1: The template, without .vm
+ * 2: Boolean, use super class
+ * 3: Use this class, if not null and not empty string
+ * 4: Inject this object as $context
+ * 5: Use new context, default false.
+ */
 public class RenderObject extends Directive {
 
 	private static Logger logger = LogManager.getLogger( RenderObject.class );
