@@ -291,3 +291,18 @@ Utils.toggleFormElement = function( id ) {
 Utils.jqEscape = function( str ) {
     return str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 }
+
+
+Utils.fetchImage = function(id, container) {
+    $.ajax({
+        type: "GET",
+        url: "/resource/" + id + "/file",
+        success: function(data, textStatus, jqxhr){
+            //$('#imageWrapperimageuploadswrapper-9').append('#imageWrapperimageuploadswrapper-9');
+            $(container).append("ID");
+            //alert($(container));
+            //alert(container);
+        },
+        error: function(ajax, text, error) {alert(error)}
+    });
+}

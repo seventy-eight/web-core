@@ -334,8 +334,8 @@ public class User extends Resource<User> implements Authorizable {
         }
 
         @Override
-        protected void setOwner( User node, JsonObject json ) {
-            //super.setOwner( request, node );
+        protected void setOwner( User node, String ownerId ) {
+            //super.setOwner( node, ownerId );
         }
     }
 }

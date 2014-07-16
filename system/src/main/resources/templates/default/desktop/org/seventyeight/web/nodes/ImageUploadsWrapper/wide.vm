@@ -1,0 +1,18 @@
+BOOM!
+
+IDS: $item.getImageIds()
+
+<div style="width: 100%; border-style: solid; overflow: hidden" id="imageWrapper$item.getIdentifier()">
+
+</div>
+
+<script type="text/javascript">
+
+
+    $(function(){
+        #foreach($id in $item.getImageIds())
+            //Utils.fetchImage('$id', '#imageWrapper$item.getIdentifier()');
+            $('#imageWrapper$item.getIdentifier()').append('<img src="/resource/$id/file" style="width:100px"></img>');
+        #end
+    });
+</script>

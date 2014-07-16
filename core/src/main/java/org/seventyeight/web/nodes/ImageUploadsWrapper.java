@@ -12,6 +12,7 @@ import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -33,6 +34,10 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
         if(isImage( file.getFilename() )) {
             document.addToList( "images", file.getIdentifier() );
         }
+    }
+
+    public List<String> getImageIds() {
+        return document.getObjectList2( "images" );
     }
 
     @Override
