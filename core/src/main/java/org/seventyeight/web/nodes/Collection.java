@@ -121,7 +121,9 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         String id = request.getValue( "id", null );
         if( id != null ) {
             if( Resource.exists( id ) ) {
-                addCall( id );
+                //addCall( id );
+                add(id);
+                save();
                 response.setStatus( HttpServletResponse.SC_OK );
             } else {
                 response.setStatus( HttpServletResponse.SC_NOT_FOUND );
@@ -216,6 +218,10 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         addCall( resource.getIdentifier() );
     }
 
+    /**
+     *
+     * @deprecated
+     */
     public void addCall( String id ) {
         logger.debug( "Adding " + id + " to " + this );
         //document.addToList( "elements", new MongoDocument().set( "id", resource.getIdentifier() ).set( "sort", sortValue ) );
@@ -234,7 +240,12 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
 
     public void add( Resource<?> resource ) {
         int next = length();
-        document.addToList( ELEMENTS_FIELD, new MongoDocument().set( "id", resource.getIdentifier() ).set( SORT_FIELD, next ) );
+        document.addToList( ELEMENTS_FIELD, new MongoDocument().set( "_id", resource.getIdentifier() ).set( SORT_FIELD, next ) );
+    }
+
+    public void add(String id) {
+        int next = length();
+        document.addToList( ELEMENTS_FIELD, new MongoDocument().set( "_id", id ).set( SORT_FIELD, next ) );
     }
 
     public void add( List<Resource<?>> resources ) {
@@ -242,7 +253,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
 
         int c = length();
         for( Resource<?> r : resources ) {
-            document.addToList( ELEMENTS_FIELD, new MongoDocument().set( "id", r.getIdentifier() ).set( SORT_FIELD, c ) );
+            document.addToList( ELEMENTS_FIELD, new MongoDocument().set( "_id", r.getIdentifier() ).set( SORT_FIELD, c ) );
 
             c++;
         }

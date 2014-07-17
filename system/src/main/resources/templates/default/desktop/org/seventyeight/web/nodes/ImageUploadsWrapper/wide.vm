@@ -8,7 +8,7 @@
     $(function(){
         #foreach($id in $item.getImageIds())
             //Utils.fetchImage('$id', '#imageWrapper$item.getIdentifier()');
-            Utils.fetchResourceViewAppend('$id', '#imageWrapper$item.getIdentifier()', 'avatar');
+            Utils.fetchResourceViewAppend('$id', '#imageWrapper$item.getIdentifier()', 'avatar'); 
             //$('#imageWrapper$item.getIdentifier()').append('<img src="/resource/$id/file" style="width:100px"></img>');
         #end
     });

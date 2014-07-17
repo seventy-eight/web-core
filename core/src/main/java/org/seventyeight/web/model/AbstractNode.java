@@ -154,6 +154,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     @Override
     public void save() {
         logger.debug( "Saving {}: {}", this, document );
+        setUpdated( null );
         MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
     }
 

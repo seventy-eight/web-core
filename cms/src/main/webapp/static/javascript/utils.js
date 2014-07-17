@@ -294,7 +294,7 @@ Utils.jqEscape = function( str ) {
 
 Utils.fetchResourceViewAppend = function(id, container, view) {
     Utils.fetchResourceView(id, view, function(e) {
-        $(container).append(e);
+        $(container).append('<span style="padding-right:5px">' + e + '</span>');
         //alert(e);
     });
 }

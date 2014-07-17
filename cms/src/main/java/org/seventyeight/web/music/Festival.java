@@ -62,13 +62,15 @@ public class Festival extends Resource<Festival> {
     }
 
     public void addEvent(Event event) {
-        //event.setAsPartOf( this );
-        MongoDBQuery query = new MongoDBQuery().getId( event.getIdentifier() );
-        MongoUpdate update = new MongoUpdate().set( "partOf", getIdentifier() );
-        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
+        event.setAsPartOf( this );
+        event.save();
+        //
+        //MongoDBQuery query = new MongoDBQuery().getId( event.getIdentifier() );
+        //MongoUpdate update = new MongoUpdate().set( "partOf", getIdentifier() );
+        //MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
 
         // This is updated
-        setUpdatedCall();
+        //setUpdatedCall();
     }
 
     public Venue getVenue() throws NotFoundException, ItemInstantiationException {
