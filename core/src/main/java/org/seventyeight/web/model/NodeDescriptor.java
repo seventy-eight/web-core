@@ -29,7 +29,8 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     public enum Status {
         CREATED,
-        UPDATED
+        UPDATED,
+        DELETED
     }
 
     @Override

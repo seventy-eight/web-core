@@ -155,7 +155,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public void save() {
         logger.debug( "Saving {}: {}", this, document );
         setUpdated( null );
-        MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
+        //MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
+        Core.getInstance().saveNode( this );
     }
 
     public void setOwner( User owner ) {
@@ -246,6 +247,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     public void delete() {
+        document.set( "status", NodeDescriptor.Status.DELETED );
         document.set( "deleted", new Date() );
     }
 

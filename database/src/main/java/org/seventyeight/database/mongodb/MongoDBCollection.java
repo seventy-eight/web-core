@@ -69,11 +69,22 @@ public class MongoDBCollection {
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument sort ) {
+        return find(query, offset, limit, sort, null);
+    }
+
+    public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument sort, String ... keys ) {
         List<DBObject> objs;
+        DBObject keysObj = null;
+        if(keys != null) {
+            keysObj = new BasicDBObject();
+            for(String key : keys) {
+                keysObj.put( key, true );
+            }
+        }
         if(sort != null && !sort.isNull()) {
-            objs = collection.find( query.getDocument() ).sort( sort.getDBObject() ).skip( offset ).limit( limit ).toArray();
+            objs = collection.find( query.getDocument(), keysObj ).sort( sort.getDBObject() ).skip( offset ).limit( limit ).toArray();
         } else {
-            objs = collection.find( query.getDocument() ).skip( offset ).limit( limit ).toArray();
+            objs = collection.find( query.getDocument(), keysObj ).skip( offset ).limit( limit ).toArray();
         }
         List<MongoDocument> docs = new ArrayList<MongoDocument>( objs.size() );
 

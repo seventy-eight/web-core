@@ -172,6 +172,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     /**
      * Get a list of {@link AbstractExtension}s
      */
+    /*
     public List<AbstractExtension> getExtensions( Class<?> extensionClass ) {
         MongoDocument extensionClassDocument = document.get( EXTENSIONS );
         List<MongoDocument> docs = extensionClassDocument.get( extensionClass.getName() );
@@ -187,13 +188,16 @@ public abstract class PersistedNode implements Node, Savable, Documented {
 
         return extensions;
     }
+    */
 
+    /*
     public void addExtension( AbstractExtension extension ) {
         logger.debug( "Adding extension " + extension );
         logger.debug( "Adding extension " + extension.getDocument() );
 
         document.addToList( "extensions", extension.getDocument() );
     }
+    */
 
 
     public <T> T getField( String key, T def ) {
@@ -220,10 +224,11 @@ public abstract class PersistedNode implements Node, Savable, Documented {
         /* Default implementation is no op */
     }
 
-
+    /*
     public static <T extends PersistedNode> T getSubDocument( MongoDocument document ) throws ItemInstantiationException {
         return Core.getInstance().getSubDocument( document );
     }
+    */
 
     @Override
     public MongoDocument getDocument() {

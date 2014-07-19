@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.TokenList;
+import org.seventyeight.cache.SessionCache;
 import org.seventyeight.database.mongodb.*;
 import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
@@ -147,6 +148,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     protected File uploadPath;
     protected File cachePath;
 
+    protected SessionCache documentCache;
+
     protected File portraitPath;
 
     /**
@@ -177,6 +180,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
+        this.documentCache = new SessionCache( 100, new MongoDatabaseStrategy( NODES_COLLECTION_NAME ) );
         this.cachePath = new File( path, CACHE_PATH_NAME );
         this.portraitPath = new File( path, "portraits" );
 
@@ -228,6 +232,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     /**
      * @deprecated ???
      */
+    /*
     public <T extends Node> T createNode( Class<T> clazz, String collectioName ) throws ItemInstantiationException {
         logger.debug( "Creating " + clazz.getName() );
 
@@ -247,10 +252,12 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
 
         return instance;
     }
+    */
 
     /**
      * @deprecated ???
      */
+    /*
     public <T extends Documented> T createSubDocument( Class<T> clazz ) throws ItemInstantiationException {
         logger.debug( "Creating sub item " + clazz.getName() );
 
@@ -268,7 +275,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
 
         return instance;
     }
+    */
 
+    /*
     public <T extends Documented> T getSubDocument( MongoDocument document ) throws ItemInstantiationException {
         String clazz = (String) document.get( "class" );
 
@@ -287,11 +296,11 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
             throw new ItemInstantiationException( "Unable to get the class " + clazz, e );
         }
     }
-
+    */
 
 
     /**
-     * Get an object from a {@link MongoDocument}
+     * Get an object given a {@link MongoDocument}
      * @param document
      * @param <T>
      * @return
@@ -327,15 +336,20 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         if(id == null) {
             throw new IllegalArgumentException( "Id not provided" );
         }
-        MongoDocument d = MongoDBCollection.get( NODES_COLLECTION_NAME ).getDocumentById( id );
+        //MongoDocument d = MongoDBCollection.get( NODES_COLLECTION_NAME ).getDocumentById( id );
+        MongoDocument d = documentCache.get( id );
 
-        if( d != null && !d.isNull() ) {
+        if(d != null) {
             PersistedNode obj = getNode( parent, d );
 
             return (T) obj;
         } else {
             throw new NotFoundException( "Could not find node with id " + id );
         }
+    }
+
+    public void saveNode(AbstractNode<?> node) {
+        documentCache.save( node.getDocument(), node.getIdentifier() );
     }
 
     @Override

@@ -1,5 +1,8 @@
 package org.seventyeight.cache;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -9,6 +12,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author cwolfgang
  */
 public class SessionCache {
+
+    private static Logger logger = LogManager.getLogger( SessionCache.class );
 
     private static Map<String, Object> cache;
     private DBStrategy dbStrategy;
@@ -21,6 +26,7 @@ public class SessionCache {
     }
 
     public void save(Object obj, String id) {
+        logger.debug( "[CACHE] saving {}", id );
         Object record = dbStrategy.save( obj, id );
         lock.writeLock().lock();
         try {
@@ -34,8 +40,10 @@ public class SessionCache {
         lock.readLock().lock();
         try {
             if(cache.containsKey( id )) {
+                logger.debug( "[CACHE] retrieved {}", id );
                 return (TYPE) dbStrategy.deserialize( cache.get( id ) );
             } else {
+                logger.debug( "[CACHE] missed {}", id );
                 lock.readLock().unlock();
                 TYPE o = resolve( id );
                 lock.readLock().lock();
@@ -47,6 +55,7 @@ public class SessionCache {
     }
 
     private <TYPE> TYPE resolve(String id) {
+        logger.debug( "[CACHE] resolving {}", id );
         Object record = dbStrategy.get( id );
         if(record != null) {
             Object object = dbStrategy.deserialize( record );
@@ -60,6 +69,7 @@ public class SessionCache {
 
             return (TYPE) object;
         } else {
+            logger.debug( "[CACHE] could not resolve {}", id );
             return null;
         }
     }

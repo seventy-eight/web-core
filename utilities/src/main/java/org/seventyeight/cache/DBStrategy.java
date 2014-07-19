@@ -9,12 +9,16 @@ public interface DBStrategy {
      */
     public Object get(String id);
 
+    /**
+     * Serialize an object
+     */
     public void serialize(Object object);
 
     public Object deserialize(Object record);
 
     /**
      * Save an object and retrieve the record.
+     * The returned record should be serialized by the db strategy.
      */
     public Object save(Object object, String id);
 }
