@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>system</artifactId>
+            <artifactId>utilities</artifactId>
             <version>0.1.0</version>
         </dependency>
 

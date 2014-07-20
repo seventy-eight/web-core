@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.ItemInstantiationException;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -37,6 +38,7 @@ public class SimpleAuthentication implements Authentication {
         request.getStopWatch().stop( "Finding cookies" );
         request.getStopWatch().start( "Creating session" );
 
+        // If no cookie session was found, create a new.
         if( hash == null ) {
             if( request.getValue( __NAME_KEY, null ) != null && request.getValue( __PASS_KEY, null ) != null ) {
                 String username = request.getValue( __NAME_KEY );
@@ -56,8 +58,15 @@ public class SimpleAuthentication implements Authentication {
         request.getStopWatch().stop( "Creating session" );
         request.getStopWatch().start( "Getting user" );
 
+        // Registering the session user
         if( session != null ) {
-            User user = User.getUserByUsername( Core.getInstance(), session.getUser() );
+            //User user = User.getUserByUsername( Core.getInstance(), session.getUser() );
+            User user;
+            try {
+                user = Core.getInstance().getNodeById( Core.getInstance(), session.getUserId() );
+            } catch( Exception e ) {
+                throw new AuthenticationException( e );
+            }
             //User user = null;
             if( user != null ) {
                 logger.debug( "Session user is " + user );

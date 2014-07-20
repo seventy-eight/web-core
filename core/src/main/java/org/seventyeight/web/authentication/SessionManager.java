@@ -55,7 +55,7 @@ public class SessionManager implements Node {
         //session.setCreated();
         session.setTimeToLive( ttl );
         session.getDocument().set( "_id", hash );
-        session.setUser( user );
+        session.setUserId( user.getIdentifier() );
 
 		return session;
 	}
@@ -63,13 +63,14 @@ public class SessionManager implements Node {
 	public Session getSession( String hash ) {
 		logger.debug( "Getting session for " + hash );
 
-        MongoDBQuery query = new MongoDBQuery().getId( hash );
-        MongoDocument doc = MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).findOne( query );
+        //MongoDBQuery query = new MongoDBQuery().getId( hash );
+        //MongoDocument doc = MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).findOne( query );
+        MongoDocument doc = Core.getInstance().getSessionCache().get( hash );
 
         logger.debug( "Session doc: " + doc );
 
         Session actual = null;
-        if( doc != null && !doc.isNull() ) {
+        if(doc != null) {
             Session session = new Session( Core.getInstance(), doc );
             logger.debug( "Comparing " + session.getEndingAsDate() + " with " + new Date() + "(" + session.getCreated() + ")" );
             if( session.getEndingAsDate().after( new Date() ) ) {

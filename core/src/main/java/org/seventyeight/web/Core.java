@@ -149,6 +149,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     protected File cachePath;
 
     protected SessionCache documentCache;
+    protected SessionCache sessionCache;
 
     protected File portraitPath;
 
@@ -181,6 +182,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         this.path = path;
         this.uploadPath = new File( path, "upload" );
         this.documentCache = new SessionCache( 100, new MongoDatabaseStrategy( NODES_COLLECTION_NAME ) );
+        this.sessionCache = new SessionCache( 100, new MongoDatabaseStrategy( SessionManager.SESSIONS_COLLECTION_NAME ) );
         this.cachePath = new File( path, CACHE_PATH_NAME );
         this.portraitPath = new File( path, "portraits" );
 
@@ -298,6 +300,13 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     }
     */
 
+    public SessionCache getDocumentCache() {
+        return documentCache;
+    }
+
+    public SessionCache getSessionCache() {
+        return sessionCache;
+    }
 
     /**
      * Get an object given a {@link MongoDocument}

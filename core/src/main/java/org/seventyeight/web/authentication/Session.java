@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
@@ -57,12 +58,12 @@ public class Session extends AbstractNode<Session> {
      }
      */
 
-    public void setUser( User user ) {
-        document.set( "user", user.getUsername() );
+    public void setUserId( String id ) {
+        document.set( "userId", id );
     }
 
-	public String getUser() {
-        return document.get( "user" );
+	public String getUserId() {
+        return document.get( "userId" );
 	}
 
     /*
@@ -107,6 +108,18 @@ public class Session extends AbstractNode<Session> {
     public void updateNode( JsonObject jsonData ) {
       /* Implementation is a no op */
     }
+
+    /**
+     * Save the document of the {@link Session}.
+     */
+    @Override
+    public void save() {
+        logger.debug( "Saving {}: {}", this, document );
+        setUpdated( null );
+        //MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
+        Core.getInstance().getSessionCache().save( document, getIdentifier() );
+    }
+
 
     public static class SessionsDescriptor extends Descriptor<Session> {
 
