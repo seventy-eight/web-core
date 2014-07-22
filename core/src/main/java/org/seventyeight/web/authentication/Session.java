@@ -114,7 +114,7 @@ public class Session extends AbstractNode<Session> {
      */
     @Override
     public void save() {
-        logger.debug( "Saving {}: {}", this, document );
+        logger.debug( "Saving SESSION {}: {}", this, document );
         setUpdated( null );
         //MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
         Core.getInstance().getSessionCache().save( document, getIdentifier() );

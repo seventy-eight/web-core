@@ -335,7 +335,20 @@ public class MongoDocument implements Document {
         return document.keySet();
     }
 
+    public MongoDocument copy() {
+        return new MongoDocument( (BasicDBObject) ((BasicDBObject)document).copy() );
+    }
+
     @Override
+    /*
+    public String toString() {
+        if( document != null && document.containsField( "_id" ) ) {
+            return document.get( "_id" ).toString();
+        } else {
+            return "Internal document is null";
+        }
+    }
+    */
     public String toString() {
         if( document != null ) {
             return document.toString();

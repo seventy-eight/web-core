@@ -2,32 +2,42 @@
 <h2>Statistics</h2>
 
 <table>
+    <tbody>
+        <td>Item</td>
+        <td>Document</td>
+        <td>Sessions</td>
+    </tbody>
     <tr>
         <td>Size:</td>
         <td>$item.getDocumentCache().getCache().size()</td>
+        <td>$item.getSessionCache().getCache().size()</td>
     </tr>
 
     <tr>
         <td>Misses:</td>
         <td>$item.getDocumentCache().getMisses()</td>
+        <td>$item.getSessionCache().getMisses()</td>
     </tr>
 
     <tr>
         <td>Hits:</td>
         <td>$item.getDocumentCache().getHits()</td>
+        <td>$item.getSessionCache().getHits()</td>
     </tr>
 
     <tr>
         <td>Writes:</td>
         <td>$item.getDocumentCache().getWrites()</td>
+        <td>$item.getSessionCache().getWrites()</td>
     </tr>
 </table>
 
-<h2>Info</h2>
+<h2>Document info</h2>
 
-$item.getDocumentCache().getCache()
+$item.getDocumentCache().getCache().keySet()
 
-<h2>Info 2</h2>
+<h2>Session info</h2>
 
-$item.getDocumentCache().mapToString()
+$item.getSessionCache().getCache().keySet()
+
 </div>

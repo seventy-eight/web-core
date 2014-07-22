@@ -42,7 +42,7 @@ public class Response extends HttpServletResponseWrapper {
 
     public void deliverFile( Request request, File file /*, String contentType */, boolean content ) throws IOException {
 
-        logger.debug( "FILE IS " + file );
+        logger.fatal( "FILE IS " + file );
 
         // Prepare some variables. The ETag is an unique identifier of the file.
         String fileName = file.getName();

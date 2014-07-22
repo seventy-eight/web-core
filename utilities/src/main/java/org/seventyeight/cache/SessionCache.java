@@ -16,10 +16,10 @@ public class SessionCache {
 
     private static Logger logger = LogManager.getLogger( SessionCache.class );
 
-    private static Map<String, Object> cache;
+    private Map<String, Object> cache;
     private DBStrategy dbStrategy;
 
-    private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     // Statistics
     private int misses = 0;
@@ -99,7 +99,7 @@ public class SessionCache {
         return cache.toString();
     }
 
-    public static Map<String, Object> getCache() {
+    public Map<String, Object> getCache() {
         return new HashMap<String, Object>( cache );
     }
 }

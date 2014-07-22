@@ -19,7 +19,7 @@ public class MongoDatabaseStrategy implements DBStrategy {
         MongoDBQuery query = new MongoDBQuery().getId( id );
         MongoDocument doc = collection.findOne( query );
         if(doc != null && !doc.isNull()) {
-            return doc;
+            return doc.copy();
         } else {
             return null;
         }
