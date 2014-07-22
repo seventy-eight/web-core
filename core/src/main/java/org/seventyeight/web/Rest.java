@@ -108,6 +108,7 @@ public class Rest extends HttpServlet {
         }
 
         sw.stop();
+        logger.info( "Request response: {}", response.getResponse() );
 
         // Render the bottom
         if( response.isRenderingMain() ) {
