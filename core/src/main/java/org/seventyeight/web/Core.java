@@ -181,8 +181,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
-        this.documentCache = new SessionCache( 100, new MongoDatabaseStrategy( NODES_COLLECTION_NAME ) );
-        this.sessionCache = new SessionCache( 100, new MongoDatabaseStrategy( SessionManager.SESSIONS_COLLECTION_NAME ) );
+        SessionCache.reset( 1000 );
+        this.documentCache = new SessionCache( new MongoDatabaseStrategy( NODES_COLLECTION_NAME ) );
+        this.sessionCache = new SessionCache( new MongoDatabaseStrategy( SessionManager.SESSIONS_COLLECTION_NAME ) );
         this.cachePath = new File( path, CACHE_PATH_NAME );
         this.portraitPath = new File( path, "portraits" );
 

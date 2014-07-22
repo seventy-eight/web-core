@@ -22,8 +22,8 @@ public class SessionCacheTest {
         }
 
         @Override
-        public void serialize( Object object ) {
-
+        public Object serialize( Object object ) {
+            return object;
         }
 
         @Override
@@ -45,7 +45,7 @@ public class SessionCacheTest {
 
     @Test
     public void test1() {
-        SessionCache session = new SessionCache( 10, new DB() );
+        SessionCache session = new SessionCache( new DB(), 10 );
 
         String item1 = "FIRST ITEM";
         session.save( item1, "1" );
@@ -61,7 +61,7 @@ public class SessionCacheTest {
     @Test
     public void test2() {
         DBStrategy db = new DB();
-        SessionCache session = new SessionCache( 10, db );
+        SessionCache session = new SessionCache( db, 10 );
 
         String item1 = "FIRST ITEM";
         session.save( item1, "1" );
@@ -73,7 +73,7 @@ public class SessionCacheTest {
 
         assertThat(out, is("FIRST ITEM"));
 
-        SessionCache session2 = new SessionCache( 10, db );
+        SessionCache session2 = new SessionCache( db, 10 );
 
         System.out.println("DB: " + db);
 

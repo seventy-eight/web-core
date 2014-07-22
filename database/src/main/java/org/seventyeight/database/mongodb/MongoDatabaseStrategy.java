@@ -25,8 +25,8 @@ public class MongoDatabaseStrategy implements DBStrategy {
         }
     }
 
-    public void serialize( Object object ) {
-        // No op?
+    public Object serialize( Object object ) {
+        return object;
     }
 
     public Object deserialize( Object record ) {

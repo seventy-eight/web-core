@@ -12,7 +12,7 @@ public interface DBStrategy {
     /**
      * Serialize an object
      */
-    public void serialize(Object object);
+    public Object serialize( Object object );
 
     public Object deserialize(Object record);
 

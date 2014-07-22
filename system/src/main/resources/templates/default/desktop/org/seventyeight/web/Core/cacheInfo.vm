@@ -7,10 +7,10 @@
         <td>Document</td>
         <td>Sessions</td>
     </tbody>
+
     <tr>
         <td>Size:</td>
-        <td>$item.getDocumentCache().getCache().size()</td>
-        <td>$item.getSessionCache().getCache().size()</td>
+        <td colspan="2" style="text-align: center">$item.getDocumentCache().getCache().size()</td>
     </tr>
 
     <tr>
@@ -34,10 +34,13 @@
 
 <h2>Document info</h2>
 
-$item.getDocumentCache().getCache().keySet()
-
-<h2>Session info</h2>
-
-$item.getSessionCache().getCache().keySet()
+#set($cache = $item.getDocumentCache().getCache())
+<table>
+#foreach($c in $cache)
+    <tr>
+        <td style="text-align: left">$c</td>
+    </tr>
+#end
+</table>
 
 </div>
