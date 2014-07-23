@@ -214,14 +214,17 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
     */
 
+    /*
     public void addCall( Resource<?> resource ) {
         addCall( resource.getIdentifier() );
     }
+    */
 
     /**
      *
      * @deprecated
      */
+    /*
     public void addCall( String id ) {
         logger.debug( "Adding " + id + " to " + this );
         //document.addToList( "elements", new MongoDocument().set( "id", resource.getIdentifier() ).set( "sort", sortValue ) );
@@ -237,6 +240,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
 
         setUpdatedCall();
     }
+    */
 
     public void add( Resource<?> resource ) {
         int next = length();

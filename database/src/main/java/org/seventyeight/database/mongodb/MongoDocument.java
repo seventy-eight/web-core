@@ -339,8 +339,7 @@ public class MongoDocument implements Document {
         return new MongoDocument( (BasicDBObject) ((BasicDBObject)document).copy() );
     }
 
-    @Override
-    public String toString() {
+    public String getShortInfo() {
         StringBuilder sb = new StringBuilder();
         sb.append( "MongoDocument" );
         if( document != null && document.containsField( "_id" ) ) {
@@ -351,7 +350,8 @@ public class MongoDocument implements Document {
 
         return sb.toString();
     }
-    /*
+
+    @Override
     public String toString() {
         if( document != null ) {
             return document.toString();
@@ -359,5 +359,4 @@ public class MongoDocument implements Document {
             return "Internal document is null";
         }
     }
-    */
 }

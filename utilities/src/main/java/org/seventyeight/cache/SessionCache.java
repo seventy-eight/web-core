@@ -83,7 +83,7 @@ public class SessionCache {
         }
         lock.writeLock().lock();
         try {
-            cache.put( id, new Record(record) );
+            cache.put( id, new Record(record, !autoFlush) );
             writes++;
         } finally {
             lock.writeLock().unlock();

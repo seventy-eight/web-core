@@ -181,9 +181,13 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         /* Initialize paths */
         this.path = path;
         this.uploadPath = new File( path, "upload" );
+
+        // Caching
         SessionCache.reset( 1000 );
         this.documentCache = new SessionCache( new MongoDatabaseStrategy( NODES_COLLECTION_NAME ) );
+        this.documentCache.setAutoFlush( true );
         this.sessionCache = new SessionCache( new MongoDatabaseStrategy( SessionManager.SESSIONS_COLLECTION_NAME ) );
+        this.sessionCache.setAutoFlush( true );
         this.cachePath = new File( path, CACHE_PATH_NAME );
         this.portraitPath = new File( path, "portraits" );
 
@@ -375,9 +379,16 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         children.put( urlName, node );
     }
 
+    /*
     public Object resolve( String path ) {
 
         return null;
+    }
+    */
+
+    public void getIds(MongoDBQuery query, int offset, int number, MongoDocument sort) {
+        List<MongoDocument> docs = MongoDBCollection.get( NODES_COLLECTION_NAME ).find( query, offset, number, sort, "_id" );
+        logger.debug( "DOCS FOR IDS: {}", docs );
     }
 
     /**
