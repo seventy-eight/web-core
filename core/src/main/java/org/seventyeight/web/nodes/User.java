@@ -258,10 +258,13 @@ public class User extends Resource<User> implements Authorizable {
         if(username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
-        MongoDocument userDoc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
+        //MongoDocument userDoc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
+        MongoDocument d = Core.getInstance().getId( new MongoDBQuery().is( "username", username ) );
 
-        logger.debug( "USER DOOOOOOOOOOOOC: {}", userDoc );
-        if( userDoc != null && !userDoc.isNull() ) {
+        MongoDocument userDoc = Core.getInstance().getDocumentCache().get( d.getIdentifier() );
+
+        logger.debug( "USER DOOOOOOOC: {}", userDoc );
+        if( userDoc != null) {
             try {
                 return Core.getInstance().getNode( parent, userDoc );
             } catch( ItemInstantiationException e ) {

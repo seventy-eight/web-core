@@ -120,7 +120,6 @@ public class Rest extends HttpServlet {
             }
         }
 
-
         //logger.info( sw.print( 1000 ) );
         System.out.println( sw.print( 10000 ) );
     }

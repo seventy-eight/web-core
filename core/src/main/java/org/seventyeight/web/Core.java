@@ -237,7 +237,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     }
 
     /**
-     * @deprecated ???
+     * deprecated ???
      */
     /*
     public <T extends Node> T createNode( Class<T> clazz, String collectioName ) throws ItemInstantiationException {
@@ -262,7 +262,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     */
 
     /**
-     * @deprecated ???
+     * deprecated ???
      */
     /*
     public <T extends Documented> T createSubDocument( Class<T> clazz ) throws ItemInstantiationException {
@@ -385,6 +385,12 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         return null;
     }
     */
+
+    public MongoDocument getId(MongoDBQuery query) {
+        MongoDocument docs = MongoDBCollection.get( NODES_COLLECTION_NAME ).findOne( query, (MongoDocument) new MongoDocument().set( "_id", true ) );
+        logger.debug( "DOCS FOR IDS: {}", docs );
+        return docs;
+    }
 
     public void getIds(MongoDBQuery query, int offset, int number, MongoDocument sort) {
         List<MongoDocument> docs = MongoDBCollection.get( NODES_COLLECTION_NAME ).find( query, offset, number, sort, "_id" );

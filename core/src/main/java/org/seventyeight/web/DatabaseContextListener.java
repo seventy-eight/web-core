@@ -49,7 +49,6 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
     public abstract T getCore( File path, String dbname ) throws CoreException;
 
     public void contextInitialized( ServletContextEvent sce ) {
-
         String spath = sce.getServletContext().getRealPath( "" );
         logger.info( "Path: " + spath );
 
@@ -215,6 +214,9 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         }
 
         registerShutdownHook();
+
+        // Save the core to the context
+        sce.getServletContext().setAttribute( "core", core );
     }
 
     /**
