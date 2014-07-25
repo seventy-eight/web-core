@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author cwolfgang
  */
-public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem {
+public abstract class Core implements CoreSystem {
 
     private static Logger logger = LogManager.getLogger( Core.class );
 
@@ -54,10 +54,6 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     public static final String PLUGINS_PATH_NAME = "plugins";
     public static final String CACHE_PATH_NAME = "cache";
 
-    /**
-     * The instance of {@link Core}
-     */
-    protected static Core instance;
 
     protected TemplateManager templateManager = new TemplateManager();
 
@@ -124,10 +120,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
      */
     //private ConcurrentMap<String, TopLevelGizmo> topLevelGizmos = new ConcurrentHashMap<String, TopLevelGizmo>();
 
-    /**
-     * The Map of top level {@link Node}s
-     */
-    protected ConcurrentMap<String, Node> children = new ConcurrentHashMap<String, Node>();
+
 
     /**
      * Default {@link Group} that has no one in it
@@ -161,14 +154,14 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
 
     protected Theme defaultTheme = new DefaultTheme();
 
+    /** Root node */
+    protected RootNode root;
+
     public static class Relations {
         public static final String EXTENSIONS = "extensions";
     }
 
-    public Core( File path, String dbname ) throws CoreException {
-        if( instance != null ) {
-            throw new IllegalStateException( "Instance already defined" );
-        }
+    public Core( RootNode root, File path, String dbname ) throws CoreException {
 
         /* Initialize database */
         try {
@@ -200,13 +193,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
         this.pluginLoader = new Loader( classLoader );
 
-        /* Mandatory */
-        children.put( "get", new Get( this ) );  // This
-        children.put( "resource", new ResourceAction() ); // Or that?
-
         searchKeyMap.put( "title", "title" );
 
-        instance = this;
+        this.root = root;
     }
 
     public Core initialize() {
@@ -218,18 +207,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         return this;
     }
 
+    @Deprecated
     public static <T extends Core> T getInstance() {
-        return (T) instance;
-    }
-
-    @Override
-    public Node getParent() {
         return null;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return "Root";
     }
 
     public MongoDatabase getDatabase() {
@@ -366,19 +346,6 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         documentCache.save( node.getDocument(), node.getIdentifier() );
     }
 
-    @Override
-    public Node getChild( String name ) {
-        if( children.containsKey( name ) ) {
-            return children.get( name );
-        } else {
-            return null;
-        }
-    }
-
-    public void addNode( String urlName, Node node ) {
-        children.put( urlName, node );
-    }
-
     /*
     public Object resolve( String path ) {
 
@@ -499,9 +466,9 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
         //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
-        Node current = this;
+        Node current = root;
         Node next = null;
-        Node last = this;
+        Node last = root;
 
         while( tokens.hasMore() ) {
             String token = tokens.next();
@@ -631,7 +598,8 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
 
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
-            children.put( nd.getType(), nd );
+            //children.put( nd.getType(), nd );
+            root.addNode( nd.getType(), nd );
         }
 
         /* Find searchables */
@@ -738,7 +706,7 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
     }
 
     public Collection<Descriptor<?>> getAllDescriptors() {
-            return descriptors.values();
+        return descriptors.values();
     }
 
     public List<Descriptor> getCreatableDescriptors() {
@@ -1011,10 +979,5 @@ public abstract class Core implements TopLevelNode, RootNode, Parent, CoreSystem
         }
 
         response.sendRedirect( "/" );
-    }
-
-    @Override
-    public String getMainTemplate() {
-        return TemplateManager.getUrlFromClass( Core.class, "main.vm" );
     }
 }

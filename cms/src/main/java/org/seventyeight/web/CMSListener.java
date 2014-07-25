@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.installers.UserInstall;
+import org.seventyeight.web.model.RootNode;
 
 import javax.servlet.annotation.WebListener;
 import java.io.File;
@@ -26,7 +27,7 @@ public class CMSListener extends DatabaseContextListener<CMSCore> {
     }
 
     @Override
-    public CMSCore getCore( File path, String dbname ) throws CoreException {
-        return new CMSCore( path, dbname );
+    public CMSCore getCore( RootNode root, File path, String dbname ) throws CoreException {
+        return new CMSCore( root, path, dbname );
     }
 }

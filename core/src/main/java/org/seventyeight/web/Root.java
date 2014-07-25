@@ -1,11 +1,28 @@
 package org.seventyeight.web;
 
+import org.seventyeight.web.actions.Get;
+import org.seventyeight.web.actions.ResourceAction;
+import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author cwolfgang
  */
 public class Root implements TopLevelNode, RootNode, Parent {
+
+    /**
+     * The Map of top level {@link Node}s
+     */
+    protected ConcurrentMap<String, Node> children = new ConcurrentHashMap<String, Node>();
+
+    public Root() {
+        /* Mandatory */
+        children.put( "get", new Get( this ) );  // This
+        children.put( "resource", new ResourceAction() ); // Or that?
+    }
 
     @Override
     public void save() {
@@ -29,7 +46,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
     @Override
     public String getMainTemplate() {
-        return null;
+        return TemplateManager.getUrlFromClass( Root.class, "main.vm" );
     }
 
     @Override
@@ -39,5 +56,9 @@ public class Root implements TopLevelNode, RootNode, Parent {
         } else {
             return null;
         }
+    }
+
+    public void addNode( String urlName, Node node ) {
+        children.put( urlName, node );
     }
 }

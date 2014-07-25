@@ -38,29 +38,29 @@ public class CMSCore extends Core {
 
     private File signaturePath;
 
-    public CMSCore( File path, String dbname ) throws CoreException {
-        super( path, dbname );
+    public CMSCore( Root root, File path, String dbname ) throws CoreException {
+        super( root, path, dbname );
 
         signaturePath = new File( path, "signatures" );
 
         /* Mandatory top level Actions */
-        children.put( "static", new StaticFiles() );
-        children.put( "theme", new ThemeFiles() );
-        children.put( "new", new NewContent( this ) );
+        root.addNode( "static", new StaticFiles() );
+        root.addNode( "theme", new ThemeFiles() );
+        root.addNode( "new", new NewContent( root ) );
         //children.put( "get", new Get( this ) );
-        children.put( "upload", new Upload() );
-        children.put( "configuration", new GlobalConfiguration() );
-        children.put( "search", new org.seventyeight.web.actions.Search() );
+        root.addNode( "upload", new Upload() );
+        root.addNode( "configuration", new GlobalConfiguration() );
+        root.addNode( "search", new org.seventyeight.web.actions.Search() );
 
-        children.put( "resources", new ResourcesAction() );
+        root.addNode( "resources", new ResourcesAction() );
 
         WidgetAction widgets = new WidgetAction();
-        children.put( "widgets", widgets );
+        root.addNode( "widgets", widgets );
 
 
-        children.put( "information", new Information() );
+        root.addNode( "information", new Information() );
 
-        children.put( "language", new LanguageAction() );
+        root.addNode( "language", new LanguageAction() );
 
         addDescriptor( new Comment.CommentDescriptor() );
 
@@ -139,16 +139,6 @@ public class CMSCore extends Core {
 
     public String getSignatureURL() {
         return "signatures/";
-    }
-
-    @Override
-    public void save() {
-        logger.fatal( "SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
-    }
-
-    @Override
-    public String getIdentifier() {
-        return "cms";
     }
 
     @Override

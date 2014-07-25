@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.utils.TimeUtils;
 import org.seventyeight.web.extensions.StartupListener;
+import org.seventyeight.web.model.RootNode;
 import org.seventyeight.web.utilities.Installer;
 
 import javax.servlet.ServletContextEvent;
@@ -46,7 +47,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         } );
     }
 
-    public abstract T getCore( File path, String dbname ) throws CoreException;
+    public abstract T getCore( RootNode root, File path, String dbname ) throws CoreException;
 
     public void contextInitialized( ServletContextEvent sce ) {
         String spath = sce.getServletContext().getRealPath( "" );
@@ -58,9 +59,10 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         File path = new File( spath );
 
+        Root root = new Root();
         Core core = null;
         try {
-            core = getCore( path, "seventyeight" ).initialize();
+            core = getCore( root, path, "seventyeight" ).initialize();
         } catch( CoreException e ) {
             e.printStackTrace();
             logger.fatal( "Failed to initialize core", e );
@@ -217,6 +219,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         // Save the core to the context
         sce.getServletContext().setAttribute( "core", core );
+        sce.getServletContext().setAttribute( "root", root );
     }
 
     /**
