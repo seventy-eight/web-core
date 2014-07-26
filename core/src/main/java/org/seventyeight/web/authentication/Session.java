@@ -123,6 +123,10 @@ public class Session extends AbstractNode<Session> {
 
     public static class SessionsDescriptor extends Descriptor<Session> {
 
+        public SessionsDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public String getDisplayName() {
             return "Session";

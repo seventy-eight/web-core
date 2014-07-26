@@ -64,7 +64,7 @@ public class Tags extends ResourceExtension<Tags> {
 
     public static final class TagsDescriptor extends ExtensionDescriptor<Tags> {
 
-        protected TagsDescriptor( Core core ) {
+        public TagsDescriptor( Core core ) {
             super( core );
         }
 

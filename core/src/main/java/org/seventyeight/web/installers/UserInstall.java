@@ -42,6 +42,6 @@ public class UserInstall extends NodeInstaller<User> {
 
     @Override
     protected User getNodeFromDB() {
-        return User.getUserByUsername( core.getRoot(), title );
+        return User.getUserByUsername( core, core.getRoot(), title );
     }
 }

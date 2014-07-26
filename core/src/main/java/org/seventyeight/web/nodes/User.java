@@ -288,7 +288,7 @@ public class User extends Resource<User> implements Authorizable {
 
         public String testString;
 
-        protected UserDescriptor( Core core ) {
+        public UserDescriptor( Core core ) {
             super( core );
         }
 

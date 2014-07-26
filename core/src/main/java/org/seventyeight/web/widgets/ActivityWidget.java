@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ActivityWidget extends Widget {
 
-    protected ActivityWidget( Core core ) {
+    public ActivityWidget( Core core ) {
         super( core );
     }
 

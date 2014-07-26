@@ -87,7 +87,7 @@ public class SimpleAuthentication implements Authentication {
 
     public Session login( String username, String password ) throws AuthenticationException {
         if( !username.isEmpty() ) {
-            User user = User.getUserByUsername( null, username );
+            User user = User.getUserByUsername( core, null, username );
 
             if( user == null ) {
                 throw new AuthenticationException( "The user " + username + " does not exist!" );

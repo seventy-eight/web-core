@@ -70,11 +70,11 @@ public class Upload implements Node {
     }
     */
 
-    protected static FileResource getFileByUploadId( Node parent, String uploadId ) throws ItemInstantiationException {
+    protected static FileResource getFileByUploadId( Core core, Node parent, String uploadId ) throws ItemInstantiationException {
         MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "uploadID", uploadId ) );
 
         if( doc != null ) {
-            return new FileResource( parent, doc );
+            return new FileResource( core, parent, doc );
         } else {
             throw new ItemInstantiationException( "The File with upload id " + uploadId + " not found" );
         }
@@ -122,7 +122,7 @@ public class Upload implements Node {
             try {
                 if( UploadHandler.commonsUploader.isValid( item ) ) {
                     String filename = UploadHandler.commonsUploader.getUploadFilename( item );
-                    UploadHandler.UploadFile uf = UploadHandler.DefaultFilenamer.getUploadDestination( request.getUser().getIdentifier().toString(), filename );
+                    UploadHandler.UploadFile uf = UploadHandler.DefaultFilenamer.getUploadDestination( request.getUser().getIdentifier().toString(), filename, core.getUploadPath() );
 
                     UploadHandler.commonsUploader.write( item, uf.file );
 
@@ -166,7 +166,7 @@ public class Upload implements Node {
                         fr.save();
 
                         // Fire on created node, TODO: Perhaps an onCreatedResource?
-                        NodeListener.fireOnNodeCreated( fr );
+                        NodeListener.fireOnNodeCreated( core, fr );
 
                     } catch( ItemInstantiationException e ) {
                         logger.log( Level.ERROR, "Failed to create file resource for {}", item, e );

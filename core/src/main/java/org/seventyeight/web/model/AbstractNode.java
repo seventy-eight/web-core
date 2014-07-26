@@ -317,7 +317,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
                 JsonObject accessObject = json.getAsJsonObject( "access" );
                 if(accessObject != null) {
                     logger.debug( "THE ACCESS ARRAY: {}", accessObject );
-                    Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( accessObject, this );
+                    Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( core, accessObject, this );
                     logger.debug( "DESCRIBABABBABABA: {}", describable );
                     if(describable != null) {
                         document.set( "ACL", describable.getDocument() );

@@ -60,7 +60,7 @@ public class GravatarPortrait extends AbstractPortrait {
 
     public static class GravatarPortraitDescriptor extends AbstractPortraitDescriptor {
 
-        protected GravatarPortraitDescriptor( Core core ) {
+        public GravatarPortraitDescriptor( Core core ) {
             super( core );
         }
 

@@ -59,8 +59,8 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         File path = new File( spath );
 
-        Root root = new Root();
         Core core = null;
+        Root root = new Root(core); // Uh oh, cyclic....
         try {
             core = getCore( root, path, "seventyeight" ).initialize();
         } catch( CoreException e ) {

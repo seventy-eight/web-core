@@ -51,7 +51,7 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
 
     public static class ImageUploadsWrapperDescriptor extends NodeDescriptor<ImageUploadsWrapper> {
 
-        protected ImageUploadsWrapperDescriptor( Core core ) {
+        public ImageUploadsWrapperDescriptor( Core core ) {
             super( core );
         }
 

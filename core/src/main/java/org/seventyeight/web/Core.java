@@ -181,7 +181,7 @@ public abstract class Core implements CoreSystem {
         this.cachePath = new File( path, CACHE_PATH_NAME );
         this.portraitPath = new File( path, "portraits" );
 
-        addDescriptor( new Session.SessionsDescriptor() );
+        addDescriptor( new Session.SessionsDescriptor(this) );
 
         /* Default groups */
         // Group.de Maybe not???!?!?!?!

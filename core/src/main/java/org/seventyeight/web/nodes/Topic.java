@@ -158,7 +158,7 @@ public class Topic extends Resource<Topic> {
 
     public static class TopicDescriptor extends NodeDescriptor<Topic> {
 
-        protected TopicDescriptor( Core core ) {
+        public TopicDescriptor( Core core ) {
             super( core );
         }
 

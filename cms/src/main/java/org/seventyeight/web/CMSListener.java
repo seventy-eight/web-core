@@ -22,8 +22,8 @@ public class CMSListener extends DatabaseContextListener<CMSCore> {
     }
 
     @Override
-    protected void install() throws DatabaseException {
-        super.install();
+    protected void install(Core core) throws DatabaseException {
+        super.install(core);
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.seventyeight.web.actions;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
 /**
@@ -9,8 +10,8 @@ import org.seventyeight.web.model.*;
  */
 public class GetAction extends Action<GetAction> implements Parent {
 
-    public GetAction( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public GetAction( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -34,6 +35,10 @@ public class GetAction extends Action<GetAction> implements Parent {
     }
 
     public static class GetDescriptor extends Action.ActionDescriptor<GetAction> {
+
+        public GetDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

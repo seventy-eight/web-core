@@ -115,6 +115,10 @@ public class Comment extends AbstractNode<Comment> {
 
     public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
+        protected CommentDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public String getDisplayName() {
             return "Comment";

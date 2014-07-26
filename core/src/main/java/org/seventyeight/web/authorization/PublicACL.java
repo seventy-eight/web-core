@@ -45,6 +45,10 @@ public class PublicACL extends ACL<PublicACL> {
 
     public static class PublicACLDescriptor extends ACLDescriptor<PublicACL> {
 
+        public PublicACLDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public String getDisplayName() {
             return "Public ACL";

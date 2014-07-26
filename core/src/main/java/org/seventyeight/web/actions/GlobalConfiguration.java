@@ -33,7 +33,7 @@ public class GlobalConfiguration implements Node, Parent {
 
         try {
             Descriptor d = core.getDescriptor( name );
-            return new ViewWrapper( (Node)d, "globalConfigure" ).setClassOffset( d.getClazz() ).setPostViewTemplate( "submit" );
+            return new ViewWrapper( core, (Node)d, "globalConfigure" ).setClassOffset( d.getClazz() ).setPostViewTemplate( "submit" );
         } catch( ClassNotFoundException e ) {
             logger.debug( e );
             return null;

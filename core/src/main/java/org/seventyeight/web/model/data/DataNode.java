@@ -27,9 +27,11 @@ import java.util.List;
 public abstract class DataNode<T extends Node> implements Node {
 
     protected MongoDocument document;
+    protected Core core;
 
-    public DataNode( MongoDocument document ) {
+    public DataNode( Core core, MongoDocument document ) {
         this.document = document;
+        this.core = core;
     }
 
     /**
@@ -77,7 +79,7 @@ public abstract class DataNode<T extends Node> implements Node {
         }
 
         public T getNode() throws NotFoundException, ItemInstantiationException {
-            return (T) Core.getInstance().getNodeById( DataNode.this, getIdentifier() );
+            return (T) core.getNodeById( DataNode.this, getIdentifier() );
         }
 
     }

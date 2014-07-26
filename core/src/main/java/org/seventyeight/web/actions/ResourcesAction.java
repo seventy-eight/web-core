@@ -71,7 +71,7 @@ public class ResourcesAction implements Node {
         logger.debug( query + ", OFFSET: " + offset + ", NUMBER: " + number );
 
         if( query != null && !query.isEmpty() ) {
-            MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( query );
+            MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( core, query );
             logger.debug( "QUERY: " + dbquery );
 
             List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( dbquery, offset, number );
@@ -122,7 +122,7 @@ public class ResourcesAction implements Node {
             query.is( "type", type );
         }
         if( !username.isEmpty() ) {
-            User user = User.getUserByUsername( this, username );
+            User user = User.getUserByUsername( core, this, username );
             query.is( "owner", user.getIdentifier() );
         }
 

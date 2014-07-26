@@ -118,7 +118,7 @@ public class Group extends Resource<Group> implements Authorizable {
         List<User> users = new ArrayList<User>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            users.add( new User( this, d ) );
+            users.add( new User( core, this, d ) );
         }
 
         return users;
@@ -136,7 +136,7 @@ public class Group extends Resource<Group> implements Authorizable {
 
     public static class GroupDescriptor extends NodeDescriptor<Group> {
 
-        protected GroupDescriptor( Core core ) {
+        public GroupDescriptor( Core core ) {
             super( core );
         }
 

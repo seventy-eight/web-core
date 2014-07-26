@@ -98,6 +98,10 @@ public class Festival extends Resource<Festival> {
 
     public static class FestivalDescriptor extends NodeDescriptor<Festival> {
 
+        public FestivalDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public String getType() {
             return "festival";

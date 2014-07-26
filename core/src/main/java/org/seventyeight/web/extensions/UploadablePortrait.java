@@ -73,7 +73,7 @@ public class UploadablePortrait extends AbstractPortrait {
 
     public static class UploadablePortraitDescriptor extends AbstractPortraitDescriptor {
 
-        protected UploadablePortraitDescriptor( Core core ) {
+        public UploadablePortraitDescriptor( Core core ) {
             super( core );
         }
 

@@ -141,6 +141,10 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
 
     public static class BasicResourceBasedSecurityDescriptor extends ACLDescriptor<BasicResourceBasedSecurity> {
 
+        public BasicResourceBasedSecurityDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public String getDisplayName() {
             return "Basic resource based security";

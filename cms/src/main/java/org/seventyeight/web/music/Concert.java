@@ -77,6 +77,10 @@ public class Concert extends Resource<Concert> implements Event {
 
     public static class ConcertDescriptor extends NodeDescriptor<Concert> {
 
+        public ConcertDescriptor( Core core ) {
+            super( core );
+        }
+
         public void doGetConcerts(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 

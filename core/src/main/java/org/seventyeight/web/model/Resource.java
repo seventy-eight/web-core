@@ -296,7 +296,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         //String username = request.getValue( "username", null );
         int number = request.getInteger( "number", 1 );
 
-        DocumentFinder finder = new DocumentFinder( this, request, 1, 0 );
+        DocumentFinder finder = new DocumentFinder( core, this, request, 1, 0 );
         finder.getQuery().is("owner", request.getUser().getIdentifier()).is( "type", "comment" );
         finder.getSort().set( "created", 1 );
 

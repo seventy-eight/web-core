@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
@@ -15,8 +16,8 @@ public class Follow extends NodeExtension<Follow> {
 
     private static Logger logger = LogManager.getLogger( Follow.class );
 
-    public Follow( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Follow( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -35,6 +36,10 @@ public class Follow extends NodeExtension<Follow> {
     }
 
     public static class FollowDescriptor extends NodeExtensionDescriptor<Follow> {
+
+        public FollowDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public boolean isApplicable( Node node ) {

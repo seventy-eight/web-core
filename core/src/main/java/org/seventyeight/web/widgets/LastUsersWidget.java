@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class LastUsersWidget extends Widget {
 
-    protected LastUsersWidget( Core core ) {
+    public LastUsersWidget( Core core ) {
         super( core );
     }
 

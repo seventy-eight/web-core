@@ -2,6 +2,7 @@ package org.seventyeight.web.extensions;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
 /**
@@ -9,8 +10,8 @@ import org.seventyeight.web.model.*;
  */
 public class GetUserInfo extends Action {
 
-    public GetUserInfo( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public GetUserInfo( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     /*

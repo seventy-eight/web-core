@@ -21,8 +21,8 @@ public class Event extends ResourceExtension<Event> {
     private static final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
     private static final SimpleDateFormat sdfDate = new SimpleDateFormat( "yyyy-MM-dd" );
 
-    public Event( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Event( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Event extends ResourceExtension<Event> {
 
     public static final class EventDescriptor extends ExtensionDescriptor<Event> {
 
-        protected EventDescriptor( Core core ) {
+        public EventDescriptor( Core core ) {
             super( core );
         }
 

@@ -22,8 +22,8 @@ public class Attachments extends Action<Attachments> {
 
     public static final String FILE_ATTACHMENTS_ELEMENT = "attachments";
 
-    public Attachments( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Attachments( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -59,6 +59,10 @@ public class Attachments extends Action<Attachments> {
     }
 
     public static class AttachmentsDescriptor extends ActionDescriptor<Attachments> {
+
+        public AttachmentsDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

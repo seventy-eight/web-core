@@ -29,6 +29,10 @@ public class Artist extends Resource<Artist> {
 
     public static final class ArtistDescriptor extends NodeDescriptor<Artist> {
 
+        public ArtistDescriptor( Core core ) {
+            super( core );
+        }
+
         public void doGetArtists(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 

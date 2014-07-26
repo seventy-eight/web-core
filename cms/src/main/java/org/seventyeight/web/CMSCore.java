@@ -42,62 +42,62 @@ public class CMSCore extends Core {
         signaturePath = new File( path, "signatures" );
 
         /* Mandatory top level Actions */
-        root.addNode( "static", new StaticFiles() );
-        root.addNode( "theme", new ThemeFiles( core ) );
-        root.addNode( "new", new NewContent( root ) );
+        root.addNode( "static", new StaticFiles(this) );
+        root.addNode( "theme", new ThemeFiles(this) );
+        root.addNode( "new", new NewContent( this, root ) );
         //children.put( "get", new Get( this ) );
-        root.addNode( "upload", new Upload( core ) );
-        root.addNode( "configuration", new GlobalConfiguration( core ) );
-        root.addNode( "search", new org.seventyeight.web.actions.Search( core ) );
+        root.addNode( "upload", new Upload(this) );
+        root.addNode( "configuration", new GlobalConfiguration(this) );
+        root.addNode( "search", new org.seventyeight.web.actions.Search(this) );
 
-        root.addNode( "resources", new ResourcesAction( core ) );
+        root.addNode( "resources", new ResourcesAction(this) );
 
-        WidgetAction widgets = new WidgetAction( core );
+        WidgetAction widgets = new WidgetAction(this);
         root.addNode( "widgets", widgets );
 
 
-        root.addNode( "information", new Information( core ) );
+        root.addNode( "information", new Information(this) );
 
-        root.addNode( "language", new LanguageAction( core ) );
+        root.addNode( "language", new LanguageAction(this) );
 
         addDescriptor( new Comment.CommentDescriptor() );
 
-        addDescriptor( new User.UserDescriptor() );
+        addDescriptor( new User.UserDescriptor(this) );
 
-        addDescriptor( new Group.GroupDescriptor() );
+        addDescriptor( new Group.GroupDescriptor(this) );
 
-        addDescriptor( new FileResource.FileDescriptor() );
+        addDescriptor( new FileResource.FileDescriptor(this) );
 
-        addDescriptor( new Tags.TagsDescriptor() );
-        addDescriptor( new Event.EventDescriptor()   );
+        addDescriptor( new Tags.TagsDescriptor(this) );
+        addDescriptor( new Event.EventDescriptor(this)   );
 
-        addDescriptor( new Topic.TopicDescriptor() );
+        addDescriptor( new Topic.TopicDescriptor(this) );
 
-        addDescriptor( new Collection.CollectionDescriptor() );
+        addDescriptor( new Collection.CollectionDescriptor(this) );
 
-        addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor() );
+        addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(this) );
 
         addDescriptor( new GetAction.GetDescriptor() );
 
         addSearchable( new TitleSearch() );
         addSearchable( new TypeSearch() );
 
-        addDescriptor( new GravatarPortrait.GravatarPortraitDescriptor() );
-        addDescriptor( new UploadablePortrait.UploadablePortraitDescriptor() );
+        addDescriptor( new GravatarPortrait.GravatarPortraitDescriptor(this) );
+        addDescriptor( new UploadablePortrait.UploadablePortraitDescriptor(this) );
 
         addExtension( new TabbedPartitionedResource() );
         addExtension( new CollectionExtension() );
 
-        addExtension( new ActivityWidget() );
+        addExtension( new ActivityWidget(this) );
 
-        addExtension( new FileTypeListener() );
+        addExtension( new FileTypeListener(this) );
         addExtension( new ImageFileType() );
 
-        addExtension( new SearchFormatListener() );
+        addExtension( new SearchFormatListener(this) );
         //addExtension( new CollectionFormatter() );
-        addExtension( new WidgetListener( core ) );
-        addExtension( new NextEventWidget() );
-        addExtension( new LastUsersWidget() );
+        addExtension( new WidgetListener(this) );
+        addExtension( new NextEventWidget(this) );
+        addExtension( new LastUsersWidget(this) );
 
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );
@@ -105,12 +105,12 @@ public class CMSCore extends Core {
         addDescriptor( new BasicResourceBasedSecurity.BasicResourceBasedSecurityDescriptor() );
         addDescriptor( new PublicACL.PublicACLDescriptor() );
 
-        addDescriptor( new Artist.ArtistDescriptor() );
-        addDescriptor( new Venue.VenueDescriptor() );
-        addDescriptor( new Concert.ConcertDescriptor() );
-        addDescriptor( new Festival.FestivalDescriptor() );
+        addDescriptor( new Artist.ArtistDescriptor(this) );
+        addDescriptor( new Venue.VenueDescriptor(this) );
+        addDescriptor( new Concert.ConcertDescriptor(this) );
+        addDescriptor( new Festival.FestivalDescriptor(this) );
 
-        addDescriptor( new Follow.FollowDescriptor() );
+        addDescriptor( new Follow.FollowDescriptor(this) );
 
         //addDescriptor( new  );
 

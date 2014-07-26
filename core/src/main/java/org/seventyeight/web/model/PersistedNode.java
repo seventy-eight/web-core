@@ -80,12 +80,12 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             Map<String, MongoDocument> extensions = new HashMap<String, MongoDocument>(  );
             for(JsonObject o : objs) {
                 logger.debug( "JSON OBJECT: {}", o );
-                ExtensionGroup extensionGroup = ExtensionUtils.getExtensionGroup( o );
+                ExtensionGroup extensionGroup = ExtensionUtils.getExtensionGroup( core, o );
                 if(extensionGroup.getType() == ExtensionGroup.Type.one) {
                     logger.debug( "Single configurations" );
 
                     JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
-                    Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
+                    Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
                     if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
                         Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
                         if(describable != null) {
@@ -103,7 +103,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
                     for(JsonElement e : jsonElements) {
                         JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( e.getAsJsonObject() );
                         if(jsonConfiguration != null) {
-                            Descriptor<?> descriptor = ExtensionUtils.getDescriptor( jsonConfiguration );
+                            Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
                             if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
                                 Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
                                 jsonId = ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId();

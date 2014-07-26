@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class NextEventWidget extends Widget {
 
-    protected NextEventWidget( Core core ) {
+    public NextEventWidget( Core core ) {
         super( core );
     }
 

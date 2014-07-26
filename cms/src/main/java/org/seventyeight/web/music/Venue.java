@@ -110,6 +110,10 @@ public class Venue extends Resource<Venue> {
 
     public static class VenueDescriptor extends NodeDescriptor<Venue> implements MenuContributor<AbstractNode<Venue>> {
 
+        public VenueDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public void addContributingMenu( AbstractNode<Venue> node, Menu menu ) {
             if(node instanceof Venue) {
