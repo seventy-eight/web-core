@@ -15,8 +15,8 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
     public static final String UPLOADID = "uploadID";
     public static final String EXPECTEDSIZE = "expectedSize";
 
-    public UploadableNode( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public UploadableNode( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     public void setUploadIdentity( String uid ) {
@@ -37,7 +37,7 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
 
     public File getFile() {
         //return new File( getFilename() );
-        File file = new File( new File( Core.getInstance().getUploadPath(), getPath() ), getFilename() );
+        File file = new File( new File( core.getUploadPath(), getPath() ), getFilename() );
         return file;
     }
 
@@ -81,5 +81,8 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
 
     public static abstract class UploadableDescriptor<T1 extends UploadableNode<T1>> extends NodeDescriptor<T1> {
 
+        protected UploadableDescriptor( Core core ) {
+            super( core );
+        }
     }
 }

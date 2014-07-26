@@ -27,8 +27,8 @@ public class Group extends Resource<Group> implements Authorizable {
     public static final String GROUPS = "groups";
     public static final String GROUP = "group";
 
-    public Group( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Group( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Group extends Resource<Group> implements Authorizable {
             //List<String> artists = new ArrayList<String>( artistsArray.size() );
             for( JsonElement k : usersArray) {
                 try {
-                    User user = Core.getInstance().getNodeById( this, k.getAsString() );
+                    User user = core.getNodeById( this, k.getAsString() );
                     addMember( user );
                 } catch( Exception e ) {
                     logger.log( Level.WARN, "Unable to add " + k, e );
@@ -67,7 +67,7 @@ public class Group extends Resource<Group> implements Authorizable {
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            AbstractNode<?> n = Core.getInstance().getNodeById( this, d.getIdentifier() );
+            AbstractNode<?> n = core.getNodeById( this, d.getIdentifier() );
             //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
             nodes.add( n );
 
@@ -135,6 +135,10 @@ public class Group extends Resource<Group> implements Authorizable {
     }
 
     public static class GroupDescriptor extends NodeDescriptor<Group> {
+
+        protected GroupDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

@@ -89,7 +89,8 @@ public class RenderObject extends Directive {
         if( template == null ) {
             return false;
         } else {
-            TemplateManager.Renderer render = Core.getInstance().getTemplateManager().getRenderer( request );
+            Core core = request.getCore();
+            TemplateManager.Renderer render = core.getTemplateManager().getRenderer( request );
 
             if( newContext ) {
                 VelocityContext nc = new VelocityContext();

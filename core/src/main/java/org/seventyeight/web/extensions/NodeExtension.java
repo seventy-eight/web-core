@@ -1,6 +1,7 @@
 package org.seventyeight.web.extensions;
 
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.AbstractExtension;
 import org.seventyeight.web.model.Node;
 
@@ -9,11 +10,15 @@ import org.seventyeight.web.model.Node;
  */
 public abstract class NodeExtension<T extends NodeExtension<T>> extends AbstractExtension<T> {
 
-    public NodeExtension( Node node, MongoDocument document ) {
-        super( node, document );
+    public NodeExtension( Core core, Node node, MongoDocument document ) {
+        super( core, node, document );
     }
 
     public abstract static class NodeExtensionDescriptor<T extends NodeExtension<T>> extends ExtensionDescriptor<T> {
+
+        protected NodeExtensionDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public Class<NodeExtension> getExtensionClass() {

@@ -11,8 +11,8 @@ import org.seventyeight.web.nodes.User;
  */
 public class GroupInstall extends DefaultNodeInstall<Group> {
 
-    public GroupInstall( String title, User owner ) {
-        super( title, owner );
+    public GroupInstall( Core core, String title, User owner ) {
+        super( core, title, owner );
         this.owner = owner;
     }
 
@@ -23,6 +23,6 @@ public class GroupInstall extends DefaultNodeInstall<Group> {
 
     @Override
     protected Descriptor<Group> getDescriptor() {
-        return Core.getInstance().getDescriptor( Group.class );
+        return core.getDescriptor( Group.class );
     }
 }

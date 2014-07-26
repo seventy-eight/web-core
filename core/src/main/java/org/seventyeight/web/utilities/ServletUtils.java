@@ -37,10 +37,13 @@ public class ServletUtils {
         String pathPrefix;
         String id;
 
-        public Copier( AsyncContext ctx, String pathPrefix, String id ) {
+        private Core core;
+
+        public Copier( Core core, AsyncContext ctx, String pathPrefix, String id ) {
             this.ctx = ctx;
             this.pathPrefix = pathPrefix;
             this.id = id;
+            this.core = core;
         }
 
         public void run() {
@@ -49,7 +52,7 @@ public class ServletUtils {
 
             FileResource obj = null;
             try {
-                obj = (FileResource) Core.getInstance().getNodeById( Core.getInstance(), id );
+                obj = (FileResource) core.getNodeById( core.getRoot(), id );
             } catch( Exception e ) {
                 logger.log( Level.FATAL, "Failed to get node when uploading", e );
                 return;
@@ -58,7 +61,7 @@ public class ServletUtils {
             obj.getDocument().set( "file", null );
 
             logger.fatal( "TOIIIIIIIIIIITLOTLLTELE: " + obj.getTitle() );
-            Tuple<File, File> files = Upload.generateFile( obj.getTitle(), pathPrefix );
+            Tuple<File, File> files = Upload.generateFile( obj.getTitle(), pathPrefix, core.getUploadPath() );
             obj.getDocument().set( "file", files.getFirst().toString() );
             obj.save();
 
@@ -153,6 +156,7 @@ public class ServletUtils {
         return filename.replaceAll( "^.*?(\\..*)?$", replace + "$1" );
     }
 
+    /*
     public static class FileUploader implements Runnable {
         AsyncContext ctx;
         String pathPrefix;
@@ -207,6 +211,8 @@ public class ServletUtils {
 
             obj.save();
         }
+
     }
+    */
 
 }

@@ -52,12 +52,12 @@ public abstract class Core implements CoreSystem {
     public static final String CACHE_PATH_NAME = "cache";
 
 
-    protected TemplateManager templateManager = new TemplateManager();
+    protected TemplateManager templateManager = new TemplateManager( this );
 
-    protected ResourceBundles resourceBundles = new ResourceBundles();
+    protected ResourceBundles resourceBundles;
 
-    protected Authentication authentication = new SimpleAuthentication( core );
-    protected SessionManager sessionManager = new SessionManager( core );
+    protected Authentication authentication = new SimpleAuthentication( this );
+    protected SessionManager sessionManager = new SessionManager( this );
 
     protected Map<String, Searchable> searchables = new ConcurrentHashMap<String, Searchable>(  );
 
@@ -189,6 +189,8 @@ public abstract class Core implements CoreSystem {
         /* Class loader */
         classLoader = new org.seventyeight.loader.ClassLoader( Thread.currentThread().getContextClassLoader() );
         this.pluginLoader = new Loader( classLoader );
+
+        resourceBundles = new ResourceBundles( classLoader );
 
         searchKeyMap.put( "title", "title" );
 

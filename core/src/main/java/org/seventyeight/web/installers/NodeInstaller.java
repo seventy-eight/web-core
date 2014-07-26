@@ -28,8 +28,11 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
 
     protected abstract T getNodeFromDB();
 
-    protected NodeInstaller( String title ) {
+    protected Core core;
+
+    protected NodeInstaller( Core core, String title ) {
         this.title = title;
+        this.core = core;
     }
 
     @Override
@@ -41,7 +44,7 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
             JsonObject json = new JsonObject();
             setJson( json );
             try {
-                T instance = getDescriptor().newInstance( json, Core.getInstance() );
+                T instance = getDescriptor().newInstance( json, core.getRoot() );
                 instance.updateConfiguration( json );
                 instance.save();
                 node = instance;

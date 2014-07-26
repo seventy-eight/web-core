@@ -28,16 +28,20 @@ public class UploadHandler implements Runnable {
 
     private static Logger logger = LogManager.getLogger( UploadHandler.class );
 
+    private Core core;
+
     private AsyncContext context;
     private String pathPrefix;
     private Uploader uploader;
     private Filenamer filenamer;
 
-    public UploadHandler( AsyncContext context, String pathPrefix, Uploader uploader, Filenamer filenamer ) {
+    public UploadHandler( Core core, AsyncContext context, String pathPrefix, Uploader uploader, Filenamer filenamer ) {
         this.context = context;
         this.pathPrefix = pathPrefix;
         this.uploader = uploader;
         this.filenamer = filenamer;
+
+        this.core = core;
     }
 
     @Override
@@ -56,15 +60,15 @@ public class UploadHandler implements Runnable {
             try {
                 if( uploader.isValid( item ) ) {
                     String filename = uploader.getUploadFilename( item );
-                    UploadFile uf = filenamer.getUploadDestination( pathPrefix, filename );
+                    UploadFile uf = filenamer.getUploadDestination( pathPrefix, filename, core.getUploadPath() );
 
                     uploader.write( item, uf.file );
-                    FileResource.FileDescriptor descriptor = Core.getInstance().getDescriptor( FileResource.class );
+                    FileResource.FileDescriptor descriptor = core.getDescriptor( FileResource.class );
 
                     FileResource fr = null;
                     try {
                         //fr = FileResource.create( filename );
-                        fr = descriptor.newInstance( request, Core.getInstance() );
+                        fr = descriptor.newInstance( request, core.getRoot() );
                         fr.setPath( uf.relativePath );
                         fr.setFilename( filename );
                         fr.setFileExtension( uf.extension );
@@ -98,7 +102,7 @@ public class UploadHandler implements Runnable {
      * @param pathPrefix
      * @return First is a {@link java.io.File} relative to the context path, and the second is an absolute file.
      */
-    public static UploadFile generateFile( String filename, String pathPrefix ) {
+    public static UploadFile generateFile( String filename, String pathPrefix, File uploadPath ) {
         Date now = new Date();
         int mid = filename.lastIndexOf( "." );
         String fname = filename;
@@ -110,7 +114,7 @@ public class UploadHandler implements Runnable {
 
         String relativePathString = pathPrefix + "/" + formatYear.format( now ) + "/" + formatMonth.format( now ) + "/" + ext;
 
-        File path = new File( Core.getInstance().getUploadPath(), relativePathString );
+        File path = new File( uploadPath, relativePathString );
         File relativeFile = new File( relativePathString, filename );
         logger.debug( "Trying to create path " + path );
         path.mkdirs();
@@ -135,14 +139,14 @@ public class UploadHandler implements Runnable {
 
 
     public static interface Filenamer {
-        public UploadFile getUploadDestination( String pathPrefix, String filename );
+        public UploadFile getUploadDestination( String pathPrefix, String filename, File uploadPath );
     }
 
     public static class DefaultFilenamer implements Filenamer {
 
         @Override
-        public UploadFile getUploadDestination( String pathPrefix, String filename ) {
-            return generateFile( filename, pathPrefix );
+        public UploadFile getUploadDestination( String pathPrefix, String filename, File uploadPath ) {
+            return generateFile( filename, pathPrefix, uploadPath );
         }
     }
 

@@ -55,10 +55,14 @@ public class SearchHelper {
     private static QueryParser queryParser = new QueryParser();
     //private static SimpleSearchQueryParser parser = new SimpleSearchQueryParser();
 
+    private Core core;
+
     public SearchHelper( Node parent, Request request, Response response ) {
         this.request = request;
         this.response = response;
         this.parent = parent;
+
+        this.core = request.getCore();
     }
 
 
@@ -72,7 +76,7 @@ public class SearchHelper {
         if( query != null && !query.isEmpty() ) {
             //LinkedList<String> tokens = tokenizer.tokenize( query );
             Root root = queryParser.parse( query );
-            QueryVisitor visitor = new QueryVisitor( Core.getInstance() );
+            QueryVisitor visitor = new QueryVisitor( core );
             visitor.visit( root );
 
             logger.debug( "I GOT {}", visitor.getQuery() );
@@ -97,7 +101,7 @@ public class SearchHelper {
         logger.debug( query + ", OFFSET: " + offset + ", NUMBER: " + number );
 
         if( query != null && !query.isEmpty() ) {
-            MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( query );
+            MongoDBQuery dbquery = FeatureSearch.getSimpleQuery( core, query );
             logger.debug( "QUERY: " + dbquery );
 
             documents = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( dbquery, offset, number );
@@ -119,14 +123,14 @@ public class SearchHelper {
         if( documents.size() > 0 ) {
             for( MongoDocument d : documents ) {
                 logger.debug( "TYPE: {}, {}", d.get( "type", "N/A" ), d.getIdentifier() );
-                Node n = Core.getInstance().getNodeById( parent, d.getIdentifier() );
+                Node n = core.getNodeById( parent, d.getIdentifier() );
 
                 if( renderBadge ) {
-                    d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+                    d.set( "badge", core.getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
                 }
 
                 if( renderBadge ) {
-                    d.set( "avatar", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+                    d.set( "avatar", core.getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
                 }
 
                 if( removeExtensionFields ) {

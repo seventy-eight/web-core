@@ -20,8 +20,8 @@ public abstract class NodeListener {
         // No op
     }
 
-    public static void fireOnNodeCreated(AbstractNode<?> node) {
-        for(NodeListener listener : getAll()) {
+    public static void fireOnNodeCreated(Core core, AbstractNode<?> node) {
+        for(NodeListener listener : getAll(core)) {
             try {
                 listener.onNodeCreated( node );
             } catch( Exception e ) {
@@ -30,7 +30,7 @@ public abstract class NodeListener {
         }
     }
 
-    public static List<NodeListener> getAll() {
-        return Core.getInstance().getExtensions( NodeListener.class );
+    public static List<NodeListener> getAll(Core core) {
+        return core.getExtensions( NodeListener.class );
     }
 }

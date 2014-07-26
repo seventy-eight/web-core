@@ -15,11 +15,17 @@ public class NaturalSearch {
 
     private Tree<Tuple<String, NaturalSearchVerb>> tree;
 
+    private Core core;
+
+    public NaturalSearch( Core core ) {
+        this.core = core;
+    }
+
     public void buildTree() {
         /* Top node does not contain any data */
         tree = new Tree<Tuple<String, NaturalSearchVerb>>( null );
 
-        for( NaturalSearchable ns : Core.getInstance().getNaturalSearchables().values() ) {
+        for( NaturalSearchable ns : core.getNaturalSearchables().values() ) {
             /* First level nodes are types */
             Tree.Node<Tuple<String, NaturalSearchVerb>> child = findChild( tree.getRoot(), ns.getType() );
             if( child == null ) {
@@ -66,7 +72,7 @@ public class NaturalSearch {
 
         /* First find type */
         String type = tokens[TYPE_IDX];
-        NaturalSearchable searchable = Core.getInstance().getNaturalSearchable( type );
+        NaturalSearchable searchable = core.getNaturalSearchable( type );
 
 
     }

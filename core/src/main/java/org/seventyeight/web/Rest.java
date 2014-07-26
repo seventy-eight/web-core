@@ -48,7 +48,7 @@ public class Rest extends HttpServlet {
         logger.debug( "METHOD : {}", rqs.getMethod() );
 
         /* Instantiating request and response */
-        Request request = new Request( rqs );
+        Request request = new Request( rqs, core.getDefaultTemplate() );
         request.setLocaleFromCookie( "language" );
 
         Response response = new Response( rsp );

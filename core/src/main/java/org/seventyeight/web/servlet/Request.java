@@ -65,10 +65,11 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         PUT
     }
 
-    public Request( HttpServletRequest httpServletRequest ) {
+    public Request( HttpServletRequest httpServletRequest, String defaultTemplate ) {
         super( httpServletRequest );
         setRequestMethod( httpServletRequest.getMethod() );
-        this.template = Core.getInstance().getDefaultTemplate();
+
+        this.template = defaultTemplate;
 
         //
         ServletContext context = getSession().getServletContext();
@@ -100,6 +101,15 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
 
         return platform;
+    }
+
+    public Core getCore() {
+        Core core = (Core) getServletContext().getAttribute( "core" );
+        if(core == null) {
+            throw new IllegalStateException( "No core available in request" );
+        }
+
+        return core;
     }
 
     public void setRequestMethod( String m ) {

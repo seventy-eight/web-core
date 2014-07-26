@@ -5,6 +5,7 @@ import com.timgroup.jgravatar.Gravatar;
 import com.timgroup.jgravatar.GravatarDefaultImage;
 import com.timgroup.jgravatar.GravatarRating;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 
@@ -15,8 +16,8 @@ import java.io.File;
  */
 public class GravatarPortrait extends AbstractPortrait {
 
-    public GravatarPortrait( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public GravatarPortrait( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -58,6 +59,10 @@ public class GravatarPortrait extends AbstractPortrait {
     }
 
     public static class GravatarPortraitDescriptor extends AbstractPortraitDescriptor {
+
+        protected GravatarPortraitDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

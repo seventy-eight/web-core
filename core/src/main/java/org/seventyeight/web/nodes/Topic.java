@@ -29,8 +29,8 @@ public class Topic extends Resource<Topic> {
         html
     }
 
-    public Topic( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Topic( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
 
@@ -140,12 +140,12 @@ public class Topic extends Resource<Topic> {
         return document.get( "textParserVersion", "" );
     }
 
-    public static Topic getTopicByTitle( Node parent, String title ) {
+    public static Topic getTopicByTitle( Core core, Node parent, String title ) {
         MongoDocument docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "title", title ) );
 
         if( docs != null ) {
             try {
-                return Core.getInstance().getNode( parent, docs );
+                return core.getNode( parent, docs );
             } catch( ItemInstantiationException e ) {
                 logger.error( e );
                 return null;
@@ -157,6 +157,10 @@ public class Topic extends Resource<Topic> {
     }
 
     public static class TopicDescriptor extends NodeDescriptor<Topic> {
+
+        protected TopicDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getType() {

@@ -33,9 +33,11 @@ public class Activity implements Documented {
     }
 
     protected MongoDocument document;
+    protected Core core;
 
-    public Activity(MongoDocument document) {
+    public Activity( Core core, MongoDocument document ) {
         this.document = document;
+        this.core = core;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class Activity implements Documented {
     }
 
     public Resource<?> getResource() throws NotFoundException, ItemInstantiationException {
-        return Core.getInstance().getNodeById( null, (String) document.get("resource") );
+        return core.getNodeById( null, (String) document.get("resource") );
     }
 
     public String getType() {
@@ -56,16 +58,16 @@ public class Activity implements Documented {
     }
 
     public User getUser() throws NotFoundException, ItemInstantiationException {
-        return Core.getInstance().getNodeById( null, document.get("user", "") );
+        return core.getNodeById( null, document.get("user", "") );
     }
 
-    public static Activity create(User user, ActivityType type, Resource<?> resource) {
+    public static Activity create(Core core, User user, ActivityType type, Resource<?> resource) {
         logger.debug( "FIELDS: {}, {}", user, resource );
         MongoDocument document = new MongoDocument().set( "user", user.getIdentifier() ).set( "type", type.getName() ).set( "date", new Date() ).set( "resource", resource.getIdentifier() );
 
         logger.debug( "Saving document, {}", document );
         MongoDBCollection.get( ACTIVITY_COLLECTION ).save( document );
 
-        return new Activity( document );
+        return new Activity( core, document );
     }
 }

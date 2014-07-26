@@ -33,9 +33,13 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         DELETED
     }
 
+    protected NodeDescriptor( Core core ) {
+        super( core );
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     /*
@@ -138,7 +142,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     protected T create( Node parent ) throws ItemInstantiationException {
         T instance = super.create( parent );
 
-        String id = Core.getInstance().getUniqueName( this );
+        String id = core.getUniqueName( this );
         instance.getDocument().set( "_id", id );
         //instance.getDocument().set( "class", clazz.getName() );
         Date now = new Date();
@@ -179,20 +183,20 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         /* First, get by id */
         try {
             if( Integer.parseInt( token ) > 0 ) {
-                return Core.getInstance().getNodeById( this, getType() + "-" + token );
+                return core.getNodeById( this, getType() + "-" + token );
             }
         } catch( Exception e ) {
             logger.debug( "the id " + token + " for " + getType() + " does not exist, " + e.getMessage() );
         }
 
         try {
-            return Core.getInstance().getNodeById( this, token );
+            return core.getNodeById( this, token );
         } catch( Exception e ) {
             logger.debug( "the id " + token + " does not exist, " + e.getMessage() );
         }
 
         /* Get resource by title */
-        T node = AbstractNode.getNodeByTitle( this, token, getType() );
+        T node = AbstractNode.getNodeByTitle( core, this, token, getType() );
         if( node != null ) {
             return node;
         } else {
@@ -204,10 +208,10 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     @Override
     public List<ExtensionGroup> getApplicableExtensions() {
         ArrayList<ExtensionGroup> groups = new ArrayList<ExtensionGroup>(  );
-        groups.add( Core.getInstance().getExtensionGroup( Tags.class.getName() ) );
-        groups.add( Core.getInstance().getExtensionGroup( Event.class.getName() ) );
-        groups.add( Core.getInstance().getExtensionGroup( AbstractPortrait.class.getName() ) );
-        groups.add( Core.getInstance().getExtensionGroup( NodeExtension.class.getName() ) );
+        groups.add( core.getExtensionGroup( Tags.class.getName() ) );
+        groups.add( core.getExtensionGroup( Event.class.getName() ) );
+        groups.add( core.getExtensionGroup( AbstractPortrait.class.getName() ) );
+        groups.add( core.getExtensionGroup( NodeExtension.class.getName() ) );
 
         return groups;
     }

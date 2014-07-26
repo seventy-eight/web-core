@@ -45,13 +45,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
     protected Node parent;
 
-    protected Core core;
-
     public AbstractNode( Core core, Node parent, MongoDocument document ) {
-        super( document );
+        super( core, document );
 
         this.parent = parent;
-        this.core = core;
     }
 
     public String getIdentifier() {

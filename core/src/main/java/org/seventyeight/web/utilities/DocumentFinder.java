@@ -33,11 +33,14 @@ public class DocumentFinder {
 
     private boolean removeExtensionFields = true;
 
-    public DocumentFinder( Node parent, Request request, int number, int offset ) {
+    private Core core;
+
+    public DocumentFinder( Core core, Node parent, Request request, int number, int offset ) {
         this.number = number;
         this.offset = offset;
         this.parent = parent;
         this.request = request;
+        this.core = core;
     }
 
     public MongoDBQuery getQuery() {
@@ -52,8 +55,8 @@ public class DocumentFinder {
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
 
         for(MongoDocument d : docs) {
-            Node n = Core.getInstance().getNodeById( parent, d.getIdentifier() );
-            d.set( "view", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, view ) );
+            Node n = core.getNodeById( parent, d.getIdentifier() );
+            d.set( "view", core.getTemplateManager().getRenderer( request ).renderObject( n, view ) );
 
             if( removeExtensionFields ) {
                 d.removeField( "extensions" );

@@ -20,8 +20,8 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
     protected Node parent;
 
-    public AbstractExtension( Node parent, MongoDocument document ) {
-        super( document );
+    public AbstractExtension( Core core, Node parent, MongoDocument document ) {
+        super( core, document );
 
         this.parent = parent;
     }
@@ -58,7 +58,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
     @Override
     public Descriptor<T> getDescriptor() {
-        return Core.getInstance().getDescriptor( getClass() );
+        return core.getDescriptor( getClass() );
     }
 
     /**
@@ -66,6 +66,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
      * @param <T>
      */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
+
+        protected ExtensionDescriptor( Core core ) {
+            super( core );
+        }
 
         public abstract String getExtensionName();
 
@@ -104,7 +108,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             MongoDocument d = document.getr2( EXTENSIONS, getJsonId( getExtensionClass().getName() ) );
             logger.warn( "THE DESCRIBABABALE DOC IS {}", d );
             if(d != null && !d.isNull() && d.get( "class", null ) != null ) {
-                return (Describable<T>) Core.getInstance().getNode( parent, d );
+                return (Describable<T>) core.getNode( parent, d );
             } else {
                 return null;
             }
@@ -157,7 +161,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
                 throw new IllegalStateException( d.get( "class" ) + " is not equal to " + getId() );
             }
 
-            return Core.getInstance().getNode( (Node) parent, d );
+            return core.getNode( (Node) parent, d );
         }
 
         /**
@@ -170,7 +174,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             MongoDocument d = new MongoDocument().set( "class", getId() );
 
             logger.debug( "EXTENSION SUBDOC " + d );
-            return Core.getInstance().getNode( (Node) parent, d );
+            return core.getNode( (Node) parent, d );
         }
 
         public boolean isApplicable( Node node ) {

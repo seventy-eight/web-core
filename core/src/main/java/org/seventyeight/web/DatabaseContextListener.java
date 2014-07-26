@@ -108,7 +108,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
                     File[] libs = alibs.listFiles( new FF() );
                     for( File lib : libs ) {
-                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                        core.getTemplateManager().addTemplateLibrary( lib.getName() );
                     }
                 }
             }
@@ -138,7 +138,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
                     File[] libs = f2.listFiles( new FF() );
                     for( File lib : libs ) {
-                        Core.getInstance().getTemplateManager().addTemplateLibrary( lib.getName() );
+                        core.getTemplateManager().addTemplateLibrary( lib.getName() );
                     }
                 }
             }
@@ -172,7 +172,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         }
 
         logger.info( "Themes path: " + themePath.getAbsolutePath() );
-        Core.getInstance().setThemesPath( themePath );
+        core.setThemesPath( themePath );
 
         /*
         String libPathStr = System.getProperty( "lib", null );
@@ -198,7 +198,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
 
         try {
             logger.debug( "--------------INSTALL-----------------------------------------" );
-            install();
+            install(core);
         } catch( DatabaseException e ) {
             logger.fatal( "Unable to install", e );
         }
@@ -209,7 +209,7 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         sce.getServletContext().setAttribute( "executor", executor );
 
         // Run onStartup listeners
-        List<StartupListener> listeners = Core.getInstance().getExtensions( StartupListener.class );
+        List<StartupListener> listeners = core.getExtensions( StartupListener.class );
         logger.info( "Running {} startup listener{}.", listeners.size(), (listeners.size() == 1 ? "" : "s" ) );
         for( StartupListener listener : listeners ) {
             listener.onStartup();
@@ -225,9 +225,9 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
     /**
      * Default implementation of install. Could/should be overridden.
      */
-    protected void install() throws DatabaseException {
+    protected void install(Core core) throws DatabaseException {
         /* INSTALL */
-        Installer installer = new Installer();
+        Installer installer = new Installer(core);
         try {
             installer.install();
         } catch( Exception e ) {

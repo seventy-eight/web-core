@@ -20,9 +20,15 @@ public class ThemeFiles implements Autonomous, Node {
 
     private static Logger logger = LogManager.getLogger( ThemeFiles.class );
 
+    private Core core;
+
+    public ThemeFiles( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override
@@ -41,7 +47,7 @@ public class ThemeFiles implements Autonomous, Node {
 
         File themeFile = null;
         try {
-            themeFile = Core.getInstance().getThemeFile( request.getTheme(), request.getPlatform(), filename );
+            themeFile = core.getThemeFile( request.getTheme(), request.getPlatform(), filename );
         } catch ( IOException e ) {
             try {
                 Response.NOT_FOUND_404.render( request, response );

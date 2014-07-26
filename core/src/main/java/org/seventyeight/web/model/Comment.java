@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
+import org.seventyeight.web.Core;
 
 /**
  * @author cwolfgang
@@ -25,8 +26,8 @@ public class Comment extends AbstractNode<Comment> {
 
     public static final String COMMENTS_COLLECTION = "comments";
 
-    public Comment(Node parent, MongoDocument document) {
-        super(parent, document);
+    public Comment(Core core, Node parent, MongoDocument document) {
+        super(core, parent, document);
     }
 
     @Override

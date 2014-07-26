@@ -2,6 +2,7 @@ package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
 /**
@@ -9,8 +10,8 @@ import org.seventyeight.web.model.*;
  */
 public class Location extends Resource<Location> {
 
-    public Location( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Location( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -19,6 +20,10 @@ public class Location extends Resource<Location> {
     }
 
     public static class LocationDescriptor extends NodeDescriptor<Location> {
+
+        protected LocationDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getType() {

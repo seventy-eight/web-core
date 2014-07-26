@@ -280,7 +280,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         List<String> comments = new ArrayList<String>( docs.size() );
 
         for(MongoDocument d : docs) {
-            Comment c = new Comment( this, d );
+            Comment c = new Comment( core, this, d );
             comments.add( core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
         }
 

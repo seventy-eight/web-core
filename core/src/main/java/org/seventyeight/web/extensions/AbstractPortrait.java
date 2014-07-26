@@ -22,8 +22,8 @@ public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrai
     public static final int SMALL_SIZE = 80;
     public static final int LARGE_SIZE = 150;
 
-    public AbstractPortrait( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public AbstractPortrait( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     public Resource<?> getResource() {
@@ -31,7 +31,7 @@ public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrai
     }
 
     public File getPortraitPath() {
-        File p = new File( Core.getInstance().getPortrataitPath(), getResource().getIdentifier() );
+        File p = new File( core.getPortrataitPath(), getResource().getIdentifier() );
         if( !p.exists() ) {
             try {
                 FileUtils.forceMkdir( p );
@@ -47,6 +47,10 @@ public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrai
     public abstract String getUrl();
 
     public static abstract class AbstractPortraitDescriptor extends ExtensionDescriptor<AbstractPortrait> {
+
+        protected AbstractPortraitDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public Class<AbstractPortrait> getExtensionClass() {

@@ -16,12 +16,18 @@ public class FileTypeListener implements StartupListener {
 
     private static Logger logger = LogManager.getLogger( FileTypeListener.class );
 
+    private Core core;
+
+    public FileTypeListener( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public void onStartup() {
         logger.debug( "Gathering file types" );
-        List<FileType> fileTypes = Core.getInstance().getExtensions( FileType.class );
+        List<FileType> fileTypes = core.getExtensions( FileType.class );
 
-        FileResource.FileDescriptor fd = Core.getInstance().getDescriptor( FileResource.class );
+        FileResource.FileDescriptor fd = core.getDescriptor( FileResource.class );
         for( FileType fileType : fileTypes ) {
             fd.addFileType( fileType );
         }

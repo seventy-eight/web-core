@@ -39,8 +39,8 @@ public class User extends Resource<User> implements Authorizable {
         HIDDEN;
     }
 
-    public User( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public User( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     /**
@@ -114,7 +114,7 @@ public class User extends Resource<User> implements Authorizable {
         List<Group> groups = new ArrayList<Group>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            groups.add( new Group( this, d ) );
+            groups.add( new Group( core, this, d ) );
         }
 
         return groups;
@@ -254,19 +254,19 @@ public class User extends Resource<User> implements Authorizable {
     /**
      * Get a {@link User} by Username. Returns null if not found.
      */
-    public static User getUserByUsername( Node parent, String username ) {
+    public static User getUserByUsername( Core core, Node parent, String username ) {
         if(username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
         //MongoDocument userDoc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
-        MongoDocument d = Core.getInstance().getId( new MongoDBQuery().is( "username", username ) );
+        MongoDocument d = core.getId( new MongoDBQuery().is( "username", username ) );
 
-        MongoDocument userDoc = Core.getInstance().getDocumentCache().get( d.getIdentifier() );
+        MongoDocument userDoc = core.getDocumentCache().get( d.getIdentifier() );
 
         logger.debug( "USER DOOOOOOOC: {}", userDoc );
         if( userDoc != null) {
             try {
-                return Core.getInstance().getNode( parent, userDoc );
+                return core.getNode( parent, userDoc );
             } catch( ItemInstantiationException e ) {
                 logger.error( e );
                 return null;
@@ -287,6 +287,10 @@ public class User extends Resource<User> implements Authorizable {
     public static class UserDescriptor extends NodeDescriptor<User> {
 
         public String testString;
+
+        protected UserDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

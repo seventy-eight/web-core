@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 
 import java.text.ParseException;
@@ -104,6 +105,10 @@ public class Event extends ResourceExtension<Event> {
     }
 
     public static final class EventDescriptor extends ExtensionDescriptor<Event> {
+
+        protected EventDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

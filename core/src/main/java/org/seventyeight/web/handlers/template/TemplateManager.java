@@ -34,7 +34,13 @@ public class TemplateManager {
 
     private Set<String> libsList = new HashSet<String>();
 
-	private Template _getTemplate( Theme theme, Theme.Platform platform, String template ) throws TemplateException {
+    private Core core;
+
+    public TemplateManager( Core core ) {
+        this.core = core;
+    }
+
+    private Template _getTemplate( Theme theme, Theme.Platform platform, String template ) throws TemplateException {
 		try {
 		    return engine.getTemplate( theme.getName() + "/" + platform + "/" + template );
 		} catch( ResourceNotFoundException e ) {
@@ -53,7 +59,7 @@ public class TemplateManager {
             return _getTemplate( theme, platform, template );
         } catch( TemplateException e ) {
             /* If it goes wrong, try the default theme */
-            return _getTemplate( Core.getInstance().getDefaultTheme(), platform, template );
+            return _getTemplate( core.getDefaultTheme(), platform, template );
         }
     }
 
@@ -261,7 +267,7 @@ public class TemplateManager {
                 t = getTemplate( theme, platform, template );
             } catch( TemplateException e ) {
                 /* If it goes wrong, try the default theme */
-                t = getTemplate( Core.getInstance().getDefaultTheme(), platform, template );
+                t = getTemplate( core.getDefaultTheme(), platform, template );
             } catch( Exception e ) {
                 logger.error( e );
             }
@@ -275,7 +281,7 @@ public class TemplateManager {
 
 			logger.debug( "[Rendering] {}, {}, {}", template.getName(), template.isSourceModified(), template.requiresChecking() );
 
-            context.put( "core", Core.getInstance() );
+            context.put( "core", core );
             context.put( "theme", theme );
             //context.put( "url" );
 

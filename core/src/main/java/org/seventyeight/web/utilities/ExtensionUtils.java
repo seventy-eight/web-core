@@ -57,13 +57,13 @@ public class ExtensionUtils {
     }
     */
 
-    public static ExtensionGroup getExtensionGroup(JsonObject jsonData) {
+    public static ExtensionGroup getExtensionGroup(Core core, JsonObject jsonData) {
         if(jsonData.getAsJsonPrimitive( JsonUtils.EXTENSION ) == null) {
             throw new IllegalArgumentException( "The json data does not have the extension field" );
         }
 
         String extension = jsonData.get( JsonUtils.EXTENSION ).getAsString();
-        return Core.getInstance().getExtensionGroup( extension );
+        return core.getExtensionGroup( extension );
     }
 
     public static JsonArray getConfigurations(JsonObject jsonData) {
@@ -92,7 +92,7 @@ public class ExtensionUtils {
         return jsonData.getAsJsonObject( JsonUtils.CONFIGURATION );
     }
 
-    public static Descriptor<?> getDescriptor(JsonObject jsonConfiguration) throws ClassNotFoundException {
+    public static Descriptor<?> getDescriptor(Core core, JsonObject jsonConfiguration) throws ClassNotFoundException {
         if(jsonConfiguration.get(JsonUtils.CLASS_NAME) == null) {
             logger.debug( "The field \"class\" was not found" );
             return null;
@@ -103,7 +103,7 @@ public class ExtensionUtils {
         logger.debug( "Json Data for extension configuration: {}", jsonConfiguration );
 
         Class<?> clazz = Class.forName( cls );
-        Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
+        Descriptor<?> d = core.getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
         return d;
@@ -130,7 +130,7 @@ public class ExtensionUtils {
      *  config: { class: <class>, configuration ... }
      * }
      */
-    public static Describable handleExtensionConfiguration( JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
+    public static Describable handleExtensionConfiguration( Core core, JsonObject jsonData, PersistedNode node ) throws ItemInstantiationException, ClassNotFoundException {
         // Validate input
         if(jsonData.getAsJsonObject(JsonUtils.CONFIGURATION ) == null) {
             throw new IllegalArgumentException( JsonUtils.CONFIGURATION + " was not found" );
@@ -149,7 +149,7 @@ public class ExtensionUtils {
         logger.debug( "Json Data for extension configuration: {}", jsonConfiguration );
 
         Class<?> clazz = Class.forName( cls );
-        Descriptor<?> d = Core.getInstance().getDescriptor( clazz );
+        Descriptor<?> d = core.getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
         Describable e = d.newInstance( jsonConfiguration, node );

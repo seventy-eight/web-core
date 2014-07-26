@@ -5,4 +5,5 @@ package org.seventyeight.web.model;
  */
 public interface RootNode extends Node {
     public void addNode( String urlName, Node node );
+    public Node getChild( String name );
 }

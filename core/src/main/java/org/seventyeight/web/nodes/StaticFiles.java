@@ -20,9 +20,15 @@ public class StaticFiles implements Autonomous, Node {
 
     private static Logger logger = LogManager.getLogger( StaticFiles.class );
 
+    private Core core;
+
+    public StaticFiles( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override
@@ -51,7 +57,7 @@ public class StaticFiles implements Autonomous, Node {
 
         File file = null;
         try {
-            file = Core.getInstance().getTemplateManager().getStaticFile( filename );
+            file = core.getTemplateManager().getStaticFile( filename );
             response.deliverFile( request, file, true );
         } catch( IOException e ) {
             try {

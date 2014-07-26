@@ -56,7 +56,8 @@ public class RenderStatic extends Directive {
         Request request = (Request) context.get( "request" );
 
         try {
-            writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( clazz, template + ".vm", false ) );
+            Core core = request.getCore();
+            writer.write( core.getTemplateManager().getRenderer( request ).renderClass( clazz, template + ".vm", false ) );
         } catch( NotFoundException e ) {
             e.printStackTrace();
         }

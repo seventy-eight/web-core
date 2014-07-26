@@ -21,9 +21,12 @@ public class ViewWrapper implements Node, Autonomous {
     private String postView;
     private Class<?> offset;
 
-    public ViewWrapper( Node node, String template ) {
+    private Core core;
+
+    public ViewWrapper( Core core, Node node, String template ) {
         this.node = node;
         this.view = template;
+        this.core = core;
     }
 
     public ViewWrapper setPostViewTemplate( String template ) {
@@ -46,7 +49,7 @@ public class ViewWrapper implements Node, Autonomous {
 
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

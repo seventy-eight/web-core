@@ -18,9 +18,11 @@ public class Root implements TopLevelNode, RootNode, Parent {
      */
     protected ConcurrentMap<String, Node> children = new ConcurrentHashMap<String, Node>();
 
-    public Root() {
+    protected Core core;
+
+    public Root(Core core) {
         /* Mandatory */
-        children.put( "get", new Get( this ) );  // This
+        children.put( "get", new Get( core, this ) );  // This
         children.put( "resource", new ResourceAction( core ) ); // Or that?
     }
 
@@ -50,7 +52,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
     }
 
     @Override
-    public Node getChild( String name ) throws NotFoundException {
+    public Node getChild( String name ) {
         if( children.containsKey( name ) ) {
             return children.get( name );
         } else {

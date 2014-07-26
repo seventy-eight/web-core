@@ -15,6 +15,12 @@ import java.io.Writer;
  */
 public abstract class Widget extends Configurable implements ExtensionPoint, Node {
 
+    protected Core core;
+
+    protected Widget( Core core ) {
+        this.core = core;
+    }
+
     public abstract String getDisplayName();
 
     public abstract String getName();
@@ -23,6 +29,6 @@ public abstract class Widget extends Configurable implements ExtensionPoint, Nod
         response.setRenderType( Response.RenderType.NONE );
 
         PrintWriter writer = response.getWriter();
-        writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "view.vm" ) );
+        writer.write( core.getTemplateManager().getRenderer( request ).renderObject( this, "view.vm" ) );
     }
 }

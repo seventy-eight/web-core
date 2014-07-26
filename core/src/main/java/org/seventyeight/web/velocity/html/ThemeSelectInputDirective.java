@@ -10,6 +10,7 @@ import org.apache.velocity.runtime.directive.Directive;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.Node;
+import org.seventyeight.web.servlet.Request;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -65,7 +66,8 @@ public class ThemeSelectInputDirective extends Directive {
 		if( id != null ) {
 			Node r = null;
 			try {
-				r = Core.getInstance().getChild( id );
+                Core core = (Core) context.get( "core" );
+				r = core.getRoot().getChild( id );
 			} catch( Exception e ) {
 				logger.error( "Unable to load resource " + id + ": " + e.getMessage() );
 			}

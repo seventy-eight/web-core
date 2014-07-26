@@ -14,9 +14,13 @@ public class Message {
     private String className;
     private Locale locale;
 
-    public Message( Class<?> clazz, Locale locale ) {
+    private Core core;
+
+    public Message( Core core, Class<?> clazz, Locale locale ) {
         this.className = clazz.getName();
         this.locale = locale;
+
+        this.core = core;
     }
 
     public Message( String className, Locale locale ) {
@@ -26,6 +30,6 @@ public class Message {
 
     public String get(String message, String ... args) {
         logger.debug( "Message: {}, class: {}, locale: {}", message, className, locale );
-        return Core.getInstance().getMessages().getString( message, className, locale, args );
+        return core.getMessages().getString( message, className, locale, args );
     }
 }

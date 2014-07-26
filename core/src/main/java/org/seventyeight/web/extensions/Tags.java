@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public class Tags extends ResourceExtension<Tags> {
 
     private static Logger logger = LogManager.getLogger( Tags.class );
 
-    public Tags( Node node, MongoDocument document ) {
-        super( node, document );
+    public Tags( Core core, Node node, MongoDocument document ) {
+        super( core, node, document );
     }
 
     @Override
@@ -62,6 +63,10 @@ public class Tags extends ResourceExtension<Tags> {
     }
 
     public static final class TagsDescriptor extends ExtensionDescriptor<Tags> {
+
+        protected TagsDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

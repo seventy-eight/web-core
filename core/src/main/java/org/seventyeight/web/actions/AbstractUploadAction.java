@@ -21,15 +21,15 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @deprecated ????
+ * @deprecated
  * @author cwolfgang
  */
 public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> extends Action<T> {
 
     private static Logger logger = LogManager.getLogger( AbstractUploadAction.class );
 
-    protected AbstractUploadAction( Node parent, MongoDocument document ) {
-        super( parent, document );
+    protected AbstractUploadAction( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     public abstract File getPath();

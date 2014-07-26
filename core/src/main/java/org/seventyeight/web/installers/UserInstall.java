@@ -15,8 +15,8 @@ public class UserInstall extends NodeInstaller<User> {
     protected String email;
     protected boolean visible = true;
 
-    public UserInstall( String title, String email ) {
-        super( title );
+    public UserInstall( Core core, String title, String email ) {
+        super( core, title );
 
         this.email = email;
     }
@@ -28,7 +28,7 @@ public class UserInstall extends NodeInstaller<User> {
 
     @Override
     protected Descriptor<User> getDescriptor() {
-        return Core.getInstance().getDescriptor( User.class );
+        return core.getDescriptor( User.class );
     }
 
     @Override
@@ -42,6 +42,6 @@ public class UserInstall extends NodeInstaller<User> {
 
     @Override
     protected User getNodeFromDB() {
-        return User.getUserByUsername( Core.getInstance(), title );
+        return User.getUserByUsername( core.getRoot(), title );
     }
 }

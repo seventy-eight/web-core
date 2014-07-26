@@ -14,8 +14,8 @@ public abstract class DefaultNodeInstall<T extends AbstractNode<T>> extends Node
 
     protected User owner;
 
-    public DefaultNodeInstall( String title, User owner ) {
-        super( title );
+    public DefaultNodeInstall( Core core, String title, User owner ) {
+        super( core, title );
         this.owner = owner;
     }
 
@@ -27,6 +27,6 @@ public abstract class DefaultNodeInstall<T extends AbstractNode<T>> extends Node
 
     @Override
     protected T getNodeFromDB() {
-        return (T) AbstractNode.getNodeByTitle( Core.getInstance(), title );
+        return (T) AbstractNode.getNodeByTitle( core, core.getRoot(), title );
     }
 }

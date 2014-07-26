@@ -26,8 +26,8 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
 
     protected static final Pattern pattern = Pattern.compile( "\\.png", Pattern.CASE_INSENSITIVE );
 
-    public ImageUploadsWrapper( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public ImageUploadsWrapper( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     public void addImage(FileResource file) {
@@ -51,6 +51,10 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
 
     public static class ImageUploadsWrapperDescriptor extends NodeDescriptor<ImageUploadsWrapper> {
 
+        protected ImageUploadsWrapperDescriptor( Core core ) {
+            super( core );
+        }
+
         @Override
         public String getType() {
             return TITLE;
@@ -70,7 +74,7 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
                 instance.setOwner( user );
                 return instance;
             } else {
-                return Core.getInstance().getNode( this, doc );
+                return core.getNode( this, doc );
             }
         }
     }

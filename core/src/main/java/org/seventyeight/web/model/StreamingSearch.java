@@ -74,6 +74,7 @@ public class StreamingSearch {
     /**
      * Parse the query and build up the search data.
      */
+    /*
     public StreamingSearch parseQuery( String query ) {
         Matcher m = pattern.matcher( query );
 
@@ -86,7 +87,7 @@ public class StreamingSearch {
             for( int i = 0 ; i < m.groupCount() ; i++ ) {
                 logger.debug( "[" + i + "] " + m.group( i ) );
             }
-            /* It's a method! */
+            // It's a method!
             if( m.group( 1 ) != null ) {
                 logger.debug( "ITS A METHOD" );
                 Searchable s = Core.getInstance().getSearchables().get( m.group( 1 ) );
@@ -94,33 +95,33 @@ public class StreamingSearch {
                 if( s != null ) {
                     logger.debug( s.getName() );
                     String term = "";
-                    /* With quotes */
+                    // With quotes
                     if( m.group( 2 ) != null ) {
                         term = m.group( 2 );
-                    /* Without quotes */
+                    // Without quotes
                     } else if( m.group( 3 ) != null ) {
                         term = m.group( 3 );
                     }
 
-                    /*
+                    //
                     if( s.getType().equals( Searchable.CollectionType.RESOURCE ) ) {
                         s.search( trquery, term );
                     } else {
                         s.search( dbqueryData, term );
                     }
-                    */
+                    //
                 } else {
                     logger.debug( "Unknown method " + m.group( 1 ) );
                 }
 
-            /*QUE?!*/
+            // QUE?!
             } else if( m.group( 3 ) != null ) {
                 //dbqueryResources.addIn( "title", m.group( 3 ) );
-            /* Just a term with quotes */
+            // Just a term with quotes
             } else if( m.group( 4 ) != null ) {
                 titles.addIn( "title", m.group( 4 ) );
                 tags.addIn( "tags", m.group( 4 ) );
-            /* Just a term without quotes */
+            // Just a term without quotes
             } else if( m.group( 5 ) != null ) {
                 titles.addIn( "title", m.group( 5 ) );
                 tags.addIn( "tags", m.group( 5 ) );
@@ -133,6 +134,7 @@ public class StreamingSearch {
         //return finalQuery;
         return this;
     }
+    */
 
     public StreamingSearch generate() throws IOException {
 

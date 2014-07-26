@@ -18,12 +18,18 @@ public class WidgetListener implements StartupListener {
 
     private static Logger logger = LogManager.getLogger( WidgetListener.class );
 
+    private Core core;
+
+    public WidgetListener( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public void onStartup() {
         logger.debug( "Gathering widgets" );
-        List<Widget> widgets = Core.getInstance().getExtensions( Widget.class );
+        List<Widget> widgets = core.getExtensions( Widget.class );
 
-        WidgetAction wa = (WidgetAction) Core.getInstance().getChild( "widgets" );
+        WidgetAction wa = (WidgetAction) core.getRoot().getChild( "widgets" );
         if( wa == null ) {
             throw new IllegalStateException( "No Widgets action instance found" );
         }

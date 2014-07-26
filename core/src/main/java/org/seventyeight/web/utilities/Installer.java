@@ -21,8 +21,8 @@ public class Installer {
 
     private Core core;
 
-    public Installer() {
-        this.core = Core.getInstance();
+    public Installer(Core core) {
+        this.core = core;
     }
 
     public void install() throws ItemInstantiationException, ClassNotFoundException, SavingException, DatabaseException {
@@ -31,16 +31,16 @@ public class Installer {
         logger.debug( "-------------------------------------------------------" );
 
         logger.info( "Installing users" );
-        UserInstall adminInstall = new UserInstall( "wolle", "wolle@ejbyurterne.dk" );
+        UserInstall adminInstall = new UserInstall( core, "wolle", "wolle@ejbyurterne.dk" );
         adminInstall.install();
         adminInstall.after();
 
-        UserInstall aInstall = new UserInstall( "anonymous", "a@ejbyurterne.dk" ).setVisibility( false );
+        UserInstall aInstall = new UserInstall( core, "anonymous", "a@ejbyurterne.dk" ).setVisibility( false );
         //User anonymous = installUser( "anonymous", false );
         aInstall.install();
         aInstall.after();
-        Core.getInstance().setAnonymous( aInstall.getValue() );
-        logger.fatal( "------- Setting anonymous, {} - {}", aInstall.getValue(), Core.getInstance().getAnonymousUser() );
+        core.setAnonymous( aInstall.getValue() );
+        logger.fatal( "------- Setting anonymous, {} - {}", aInstall.getValue(), core.getAnonymousUser() );
 
         logger.info( "Installing groups" );
         //Group admins = installGroup( "Admins", admin );

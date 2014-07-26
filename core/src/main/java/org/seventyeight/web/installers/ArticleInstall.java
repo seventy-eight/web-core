@@ -11,8 +11,8 @@ import org.seventyeight.web.nodes.User;
  */
 public class ArticleInstall extends DefaultNodeInstall<Topic> {
 
-    public ArticleInstall( String title, User owner ) {
-        super( title, owner );
+    public ArticleInstall( Core core, String title, User owner ) {
+        super( core, title, owner );
         this.owner = owner;
     }
 
@@ -23,7 +23,7 @@ public class ArticleInstall extends DefaultNodeInstall<Topic> {
 
     @Override
     protected Descriptor<Topic> getDescriptor() {
-        return Core.getInstance().getDescriptor( Topic.class );
+        return core.getDescriptor( Topic.class );
     }
 
     @Override

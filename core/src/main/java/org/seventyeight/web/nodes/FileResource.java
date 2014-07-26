@@ -29,8 +29,8 @@ public class FileResource extends UploadableNode<FileResource> {
     private static SimpleDateFormat formatYear = new SimpleDateFormat( "yyyy" );
     private static SimpleDateFormat formatMonth = new SimpleDateFormat( "MM" );
 
-    public FileResource( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public FileResource( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -54,7 +54,7 @@ public class FileResource extends UploadableNode<FileResource> {
 
     @Override
     public FileDescriptor getDescriptor() {
-        return Core.getInstance().getDescriptor( FileResource.class );
+        return core.getDescriptor( FileResource.class );
     }
 
     public void doFile( Request request, Response response ) throws IOException {
@@ -86,18 +86,18 @@ public class FileResource extends UploadableNode<FileResource> {
     }
     */
 
-    public static FileResource getFileByFilename( Node parent, String filename ) throws ItemInstantiationException {
+    public static FileResource getFileByFilename( Core core, Node parent, String filename ) throws ItemInstantiationException {
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( new MongoDBQuery().is( "filename", filename ), 0, 1 );
 
         if( docs != null && !docs.isEmpty() ) {
-            return new FileResource( parent, docs.get( 0 ) );
+            return new FileResource( core, parent, docs.get( 0 ) );
         } else {
             throw new ItemInstantiationException( "The file " + filename + " not found" );
         }
     }
 
     public Class<?> getFileTypeClass() {
-        List<Descriptor> descriptors = Core.getInstance().getExtensionDescriptors( FileType.class );
+        List<Descriptor> descriptors = core.getExtensionDescriptors( FileType.class );
 
         logger.debug( "List is " + descriptors );
 
@@ -109,6 +109,10 @@ public class FileResource extends UploadableNode<FileResource> {
         private ConcurrentHashMap<String, FileType> fileTypes = new ConcurrentHashMap<String, FileType>(  );
 
         private DefaultFileType dft = new DefaultFileType();
+
+        protected FileDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getType() {

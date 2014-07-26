@@ -20,6 +20,12 @@ public class ResourceBundles {
 
     private ConcurrentMap<Locale, ConcurrentMap<String, ResourceBundle>> map = new ConcurrentHashMap<Locale, ConcurrentMap<String, ResourceBundle>>(  );
 
+    private ClassLoader classLoader;
+
+    public ResourceBundles( ClassLoader classLoader ) {
+        this.classLoader = classLoader;
+    }
+
     public ResourceBundle getBundle( String className, Locale locale ) {
 
         /* Locale check */
@@ -37,7 +43,7 @@ public class ResourceBundles {
             logger.debug( "Adding {} to resource bundles.", className );
             logger.debug( "CRMAP: {}", crmap );
             logger.debug( "Classname: {}, locale: {}", className, locale );
-            ResourceBundle rb = loadBundle( className, locale );
+            ResourceBundle rb = loadBundle( classLoader, className, locale );
             if(rb != null) {
                 crmap.put( className, rb );
             }
@@ -68,11 +74,11 @@ public class ResourceBundles {
     }
 
 
-    public static ResourceBundle loadBundle( String className, Locale locale ) {
+    public static ResourceBundle loadBundle( ClassLoader classLoader, String className, Locale locale ) {
         try {
             //return ResourceBundle.getBundle( "templates.default.desktop." + className + ".messages", locale );
             //return ResourceBundle.getBundle( className + ".messages", locale );
-            return ResourceBundle.getBundle( className + ".messages", locale, Core.getInstance().getClassLoader() );
+            return ResourceBundle.getBundle( className + ".messages", locale, classLoader );
         } catch( MissingResourceException e ) {
             // Can I live without it?
             return null;

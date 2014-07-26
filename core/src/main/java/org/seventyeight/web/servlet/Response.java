@@ -514,7 +514,9 @@ public class Response extends HttpServletResponseWrapper {
         request.getContext().put( "exception", e );
         request.getContext().put( "request", request );
 
-        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
+        Core core = request.getCore();
+
+        response.getWriter().write( core.getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
     }
 
     public static class HttpCode {
@@ -549,7 +551,9 @@ public class Response extends HttpServletResponseWrapper {
             request.getContext().put( "code", code );
             request.getContext().put( "request", request );
 
-            response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
+            Core core = request.getCore();
+
+            response.getWriter().write( core.getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/http/error.vm" ) );
         }
     }
 

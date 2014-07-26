@@ -36,7 +36,7 @@ public class FeatureSearch {
     /**
      * Get a simple {@link MongoDBQuery} for only resources, tags, title...?
      */
-    public static MongoDBQuery getSimpleQuery( String query ) {
+    public static MongoDBQuery getSimpleQuery( Core core, String query ) {
         logger.debug( "Getting simple query: " + query );
         Matcher m = pattern.matcher( query );
 
@@ -44,7 +44,7 @@ public class FeatureSearch {
         MongoDBQuery tags = new MongoDBQuery();
 
         Map<String, MongoDBQuery> searchKeys = new HashMap<String, MongoDBQuery>(  );
-        for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
+        for(String sk : core.getSearchKeyMap().keySet()) {
             searchKeys.put( sk, new MongoDBQuery() );
         }
 
@@ -57,7 +57,7 @@ public class FeatureSearch {
             /* It's a method! */
             if( m.group( 1 ) != null ) {
                 logger.debug( "ITS A METHOD" );
-                Searchable s = Core.getInstance().getSearchables().get( m.group( 1 ) );
+                Searchable s = core.getSearchables().get( m.group( 1 ) );
 
                 if( s != null ) {
                     logger.debug( s.getName() );
@@ -82,15 +82,15 @@ public class FeatureSearch {
             } else if( m.group( 4 ) != null ) {
                 //titles.addIn( "title", m.group( 4 ) );
                 //tags.addIn( "tags", m.group( 4 ) );
-                for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
-                    searchKeys.get( sk ).addIn( Core.getInstance().getSearchKeyMap().get( sk ), m.group( 4 ) );
+                for(String sk : core.getSearchKeyMap().keySet()) {
+                    searchKeys.get( sk ).addIn( core.getSearchKeyMap().get( sk ), m.group( 4 ) );
                 }
             /* Just a term without quotes */
             } else if( m.group( 5 ) != null ) {
                 //titles.addIn( "title", m.group( 5 ) );
                 //tags.addIn( "tags", m.group( 5 ) );
-                for(String sk : Core.getInstance().getSearchKeyMap().keySet()) {
-                    searchKeys.get( sk ).addIn( Core.getInstance().getSearchKeyMap().get( sk ), m.group( 5 ) );
+                for(String sk : core.getSearchKeyMap().keySet()) {
+                    searchKeys.get( sk ).addIn( core.getSearchKeyMap().get( sk ), m.group( 5 ) );
                 }
             }
         }
@@ -117,6 +117,7 @@ public class FeatureSearch {
     /**
      * Parse the query and build up the search data.
      */
+    /*
     public FeatureSearch parseQuery( String query ) {
         Matcher m = pattern.matcher( query );
 
@@ -129,7 +130,7 @@ public class FeatureSearch {
             for( int i = 0 ; i < m.groupCount() ; i++ ) {
                 logger.debug( "[" + i + "] " + m.group( i ) );
             }
-            /* It's a method! */
+            // It's a method!
             if( m.group( 1 ) != null ) {
                 logger.debug( "ITS A METHOD" );
                 Searchable s = Core.getInstance().getSearchables().get( m.group( 1 ) );
@@ -137,33 +138,33 @@ public class FeatureSearch {
                 if( s != null ) {
                     logger.debug( s.getName() );
                     String term = "";
-                    /* With quotes */
+                    // With quotes
                     if( m.group( 2 ) != null ) {
                         term = m.group( 2 );
-                    /* Without quotes */
+                    // Without quotes
                     } else if( m.group( 3 ) != null ) {
                         term = m.group( 3 );
                     }
 
-                    /*
+                    //
                     if( s.getType().equals( Searchable.CollectionType.RESOURCE ) ) {
                         s.search( trquery, term );
                     } else {
                         s.search( dbqueryData, term );
                     }
-                    */
+                    //
                 } else {
                     logger.debug( "Unknown method " + m.group( 1 ) );
                 }
 
-            /*QUE?!*/
+            //QUE?!
             } else if( m.group( 3 ) != null ) {
                 //dbqueryResources.addIn( "title", m.group( 3 ) );
-            /* Just a term with quotes */
+            // Just a term with quotes
             } else if( m.group( 4 ) != null ) {
                 titles.addIn( "title", m.group( 4 ) );
                 tags.addIn( "tags", m.group( 4 ) );
-            /* Just a term without quotes */
+            // Just a term without quotes
             } else if( m.group( 5 ) != null ) {
                 titles.addIn( "title", m.group( 5 ) );
                 tags.addIn( "tags", m.group( 5 ) );
@@ -176,4 +177,5 @@ public class FeatureSearch {
         //return finalQuery;
         return this;
     }
+            */
 }

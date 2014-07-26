@@ -23,10 +23,13 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
     public static final String DATA_COLLECTION = "data";
 	
 	protected transient Class<T> clazz;
+
+    protected Core core;
 	
-	protected Descriptor() {
+	protected Descriptor(Core core) {
 		clazz = (Class<T>) getClass().getEnclosingClass();
 		logger.debug( "Descriptor class is " + clazz );
+        this.core = core;
 	}
 
     public List<String> getRequiredJavascripts() {
@@ -139,17 +142,17 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         if( describable != null ) {
             logger.debug( "Extension is " + describable );
             c.put( "enabled", true );
-            c.put( "configuration", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderClass( describable, getClazz(), "config.vm" ) );
+            c.put( "configuration", core.getTemplateManager().getRenderer( request ).setContext( c ).renderClass( describable, getClazz(), "config.vm" ) );
         } else {
             logger.debug( "Preparing EMPTY " + getClazz() );
             c.put( "enabled", false );
-            c.put( "configuration", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).renderClass( getClazz(), "config.vm" ) );
+            c.put( "configuration", core.getTemplateManager().getRenderer( request ).setContext( c ).renderClass( getClazz(), "config.vm" ) );
         }
 
-        return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
+        return core.getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
     }
 
-    public Describable<T> getDescribable(Core core, Node parent, MongoDocument document) throws ItemInstantiationException {
+    public Describable<T> getDescribable(Node parent, MongoDocument document) throws ItemInstantiationException {
         return (Describable<T>) core.getNode( parent, document );
     }
 

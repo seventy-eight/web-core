@@ -20,8 +20,8 @@ public class UploadablePortrait extends AbstractPortrait {
 
     private static Logger logger = LogManager.getLogger( UploadablePortrait.class );
 
-    public UploadablePortrait( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public UploadablePortrait( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UploadablePortrait extends AbstractPortrait {
     }
 
     public FileResource getFile() throws NotFoundException, ItemInstantiationException {
-        return Core.getInstance().getNodeById( this, getFileId() );
+        return core.getNodeById( this, getFileId() );
     }
 
     public String getFileId() {
@@ -72,6 +72,10 @@ public class UploadablePortrait extends AbstractPortrait {
     }
 
     public static class UploadablePortraitDescriptor extends AbstractPortraitDescriptor {
+
+        protected UploadablePortraitDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getDisplayName() {

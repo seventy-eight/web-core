@@ -43,7 +43,7 @@ public class CMSCore extends Core {
 
         /* Mandatory top level Actions */
         root.addNode( "static", new StaticFiles() );
-        root.addNode( "theme", new ThemeFiles() );
+        root.addNode( "theme", new ThemeFiles( core ) );
         root.addNode( "new", new NewContent( root ) );
         //children.put( "get", new Get( this ) );
         root.addNode( "upload", new Upload( core ) );
@@ -95,7 +95,7 @@ public class CMSCore extends Core {
 
         addExtension( new SearchFormatListener() );
         //addExtension( new CollectionFormatter() );
-        addExtension( new WidgetListener() );
+        addExtension( new WidgetListener( core ) );
         addExtension( new NextEventWidget() );
         addExtension( new LastUsersWidget() );
 

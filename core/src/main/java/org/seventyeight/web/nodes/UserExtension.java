@@ -15,12 +15,12 @@ import java.util.List;
  * @author cwolfgang
  */
 public abstract class UserExtension extends NodeExtension<UserExtension> {
-    public UserExtension( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public UserExtension( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
-    public static List<UserExtension> all() {
-        return Core.getInstance().getExtensions( UserExtension.class );
+    public static List<UserExtension> all(Core core) {
+        return core.getExtensions( UserExtension.class );
 
     }
 

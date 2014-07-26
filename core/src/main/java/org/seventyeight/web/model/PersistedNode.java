@@ -29,10 +29,14 @@ public abstract class PersistedNode implements Node, Savable, Documented {
 
     protected MongoDocument document;
 
+    /** Access to the current core/system */
+    protected Core core;
+
     Map<Class<? extends AbstractExtension<?>>, Extension<? extends PersistedNode>> extensions = new HashMap<Class<? extends AbstractExtension<?>>, Extension<? extends PersistedNode>>(  );
 
-    public PersistedNode( MongoDocument document ) {
+    public PersistedNode( Core core, MongoDocument document ) {
         this.document = document;
+        this.core = core;
     }
 
     public MongoDocument resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {

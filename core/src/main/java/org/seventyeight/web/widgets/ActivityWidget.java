@@ -15,6 +15,10 @@ import java.util.List;
  */
 public class ActivityWidget extends Widget {
 
+    protected ActivityWidget( Core core ) {
+        super( core );
+    }
+
     @Override
     public Node getParent() {
         return null;  /* Implementation is a no op */
@@ -44,7 +48,7 @@ public class ActivityWidget extends Widget {
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 
         for( MongoDocument d : docs ) {
-            AbstractNode<?> n = Core.getInstance().getNodeById( this, d.getIdentifier() );
+            AbstractNode<?> n = core.getNodeById( this, d.getIdentifier() );
             //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
             nodes.add( n );
 

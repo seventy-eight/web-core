@@ -41,7 +41,8 @@ public class PreviewDirective extends Directive {
 			}
 
             Request request = (Request) context.get( "request" );
-            writer.write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( r, "preview.vm" ) );
+            Core core = request.getCore();
+            writer.write( core.getTemplateManager().getRenderer( request ).renderObject( r, "preview.vm" ) );
 			
 		} catch( Exception e ) {
 			logger.debug( e );

@@ -87,8 +87,8 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
 
     private int id = -1;
 
-    public Collection( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Collection( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         List<MongoDocument> docs = document.getList( "elements" );
 
         for(MongoDocument d : docs) {
-            Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
+            Node n = core.getNodeById( this, d.getIdentifier() );
             //d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
             d.removeField( "extensions" );
         }
@@ -179,8 +179,8 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
             //for( MongoDocument d : docs ) {
             for( int i = offset ; i < stop ; i++ ) {
                 MongoDocument d = docs.get( i );
-                Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
-                d.set( "avatar", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+                Node n = core.getNodeById( this, d.getIdentifier() );
+                d.set( "avatar", core.getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
                 d.set("counter", counter);
                 result.add( d );
 
@@ -198,7 +198,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         List<MongoDocument> docs = document.getList( ELEMENTS_FIELD );
 
         if(docs.size() >= itemNumber ) {
-            return Core.getInstance().getNodeById( this, docs.get( itemNumber ).getIdentifier() );
+            return core.getNodeById( this, docs.get( itemNumber ).getIdentifier() );
         } else {
             throw new IllegalStateException( "Item number " + itemNumber + " not found" );
         }
@@ -339,6 +339,10 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     public static class CollectionDescriptor extends NodeDescriptor<Collection> implements MenuContributor<AbstractNode<Collection>> {
+
+        protected CollectionDescriptor( Core core ) {
+            super( core );
+        }
 
         @Override
         public String getType() {
