@@ -11,8 +11,6 @@ import org.seventyeight.loader.Loader;
 import org.seventyeight.utils.ClassUtils;
 import org.seventyeight.utils.FileUtilities;
 import org.seventyeight.utils.PostMethod;
-import org.seventyeight.web.actions.Get;
-import org.seventyeight.web.actions.ResourceAction;
 import org.seventyeight.web.authentication.*;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
@@ -36,7 +34,6 @@ import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author cwolfgang
@@ -59,8 +56,8 @@ public abstract class Core implements CoreSystem {
 
     protected ResourceBundles resourceBundles = new ResourceBundles();
 
-    protected Authentication authentication = new SimpleAuthentication();
-    protected SessionManager sessionManager = new SessionManager();
+    protected Authentication authentication = new SimpleAuthentication( core );
+    protected SessionManager sessionManager = new SessionManager( core );
 
     protected Map<String, Searchable> searchables = new ConcurrentHashMap<String, Searchable>(  );
 
@@ -207,11 +204,6 @@ public abstract class Core implements CoreSystem {
         return this;
     }
 
-    @Deprecated
-    public static <T extends Core> T getInstance() {
-        return null;
-    }
-
     public MongoDatabase getDatabase() {
         return db;
     }
@@ -291,6 +283,10 @@ public abstract class Core implements CoreSystem {
 
     public SessionCache getSessionCache() {
         return sessionCache;
+    }
+
+    public RootNode getRoot() {
+        return root;
     }
 
     /**

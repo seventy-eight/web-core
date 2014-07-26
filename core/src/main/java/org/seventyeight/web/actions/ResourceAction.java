@@ -11,9 +11,15 @@ import org.seventyeight.web.model.Parent;
  */
 public class ResourceAction implements Node, Parent {
 
+    private Core core;
+
+    public ResourceAction( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override
@@ -29,7 +35,7 @@ public class ResourceAction implements Node, Parent {
     @Override
     public Node getChild( String name ) throws NotFoundException {
         try {
-            return Core.getInstance().getNodeById( this, name );
+            return core.getNodeById( this, name );
         } catch( ItemInstantiationException e ) {
             throw new NotFoundException( e.getMessage(), "Unable to find " + name, e );
         }

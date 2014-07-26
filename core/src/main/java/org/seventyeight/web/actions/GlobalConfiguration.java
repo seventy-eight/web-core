@@ -16,9 +16,15 @@ public class GlobalConfiguration implements Node, Parent {
 
     private static Logger logger = LogManager.getLogger( GlobalConfiguration.class );
 
+    private Core core;
+
+    public GlobalConfiguration( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override
@@ -26,7 +32,7 @@ public class GlobalConfiguration implements Node, Parent {
         logger.debug( "Configuration for " + name );
 
         try {
-            Descriptor d = Core.getInstance().getDescriptor( name );
+            Descriptor d = core.getDescriptor( name );
             return new ViewWrapper( (Node)d, "globalConfigure" ).setClassOffset( d.getClazz() ).setPostViewTemplate( "submit" );
         } catch( ClassNotFoundException e ) {
             logger.debug( e );

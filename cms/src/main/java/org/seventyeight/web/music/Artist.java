@@ -18,8 +18,8 @@ import java.io.PrintWriter;
  * @author cwolfgang
  */
 public class Artist extends Resource<Artist> {
-    public Artist( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Artist( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override

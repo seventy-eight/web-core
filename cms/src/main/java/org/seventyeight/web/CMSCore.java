@@ -3,17 +3,15 @@ package org.seventyeight.web;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
-import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
 import org.seventyeight.web.authorization.PublicACL;
 import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.extensions.filetype.ImageFileType;
 import org.seventyeight.web.extensions.listernes.ActivityNodeListener;
-import org.seventyeight.web.extensions.search.CollectionFormatter;
 import org.seventyeight.web.extensions.searchers.TitleSearch;
 import org.seventyeight.web.extensions.searchers.TypeSearch;
 import org.seventyeight.web.model.Comment;
-import org.seventyeight.web.model.Menu;
+import org.seventyeight.web.model.RootNode;
 import org.seventyeight.web.music.Artist;
 import org.seventyeight.web.music.Concert;
 import org.seventyeight.web.music.Festival;
@@ -38,7 +36,7 @@ public class CMSCore extends Core {
 
     private File signaturePath;
 
-    public CMSCore( Root root, File path, String dbname ) throws CoreException {
+    public CMSCore( RootNode root, File path, String dbname ) throws CoreException {
         super( root, path, dbname );
 
         signaturePath = new File( path, "signatures" );
@@ -48,19 +46,19 @@ public class CMSCore extends Core {
         root.addNode( "theme", new ThemeFiles() );
         root.addNode( "new", new NewContent( root ) );
         //children.put( "get", new Get( this ) );
-        root.addNode( "upload", new Upload() );
-        root.addNode( "configuration", new GlobalConfiguration() );
-        root.addNode( "search", new org.seventyeight.web.actions.Search() );
+        root.addNode( "upload", new Upload( core ) );
+        root.addNode( "configuration", new GlobalConfiguration( core ) );
+        root.addNode( "search", new org.seventyeight.web.actions.Search( core ) );
 
-        root.addNode( "resources", new ResourcesAction() );
+        root.addNode( "resources", new ResourcesAction( core ) );
 
-        WidgetAction widgets = new WidgetAction();
+        WidgetAction widgets = new WidgetAction( core );
         root.addNode( "widgets", widgets );
 
 
-        root.addNode( "information", new Information() );
+        root.addNode( "information", new Information( core ) );
 
-        root.addNode( "language", new LanguageAction() );
+        root.addNode( "language", new LanguageAction( core ) );
 
         addDescriptor( new Comment.CommentDescriptor() );
 

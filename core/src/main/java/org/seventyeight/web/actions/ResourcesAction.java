@@ -33,9 +33,15 @@ public class ResourcesAction implements Node {
 
     private ConcurrentHashMap<String, SearchFormatter> formatters = new ConcurrentHashMap<String, SearchFormatter>(  );
 
+    private Core core;
+
+    public ResourcesAction( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override
@@ -78,8 +84,8 @@ public class ResourcesAction implements Node {
 
             for( MongoDocument d : docs ) {
                 logger.debug( "TYPE: {}, {}", d.get( "type", "N/A" ), d.getIdentifier() );
-                Node n = Core.getInstance().getNodeById( this, d.getIdentifier() );
-                d.set( "badge", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
+                Node n = core.getNodeById( this, d.getIdentifier() );
+                d.set( "badge", core.getTemplateManager().getRenderer( request ).renderObject( n, "badge.vm" ) );
 
                 if( formatters.length > 0 ) {
                     for( String formatter : formatters ) {

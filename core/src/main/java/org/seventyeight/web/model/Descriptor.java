@@ -149,8 +149,8 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return Core.getInstance().getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
     }
 
-    public Describable<T> getDescribable(Node parent, MongoDocument document) throws ItemInstantiationException {
-        return (Describable<T>) Core.getInstance().getNode( parent, document );
+    public Describable<T> getDescribable(Core core, Node parent, MongoDocument document) throws ItemInstantiationException {
+        return (Describable<T>) core.getNode( parent, document );
     }
 
     public String getRelationType() {

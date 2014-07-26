@@ -24,8 +24,8 @@ public class Festival extends Resource<Festival> {
 
     private static Logger logger = LogManager.getLogger( Festival.class );
 
-    public Festival( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Festival( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Festival extends Resource<Festival> {
         String eventId = request.getValue( "event", null );
 
         if(eventId != null) {
-            Event event = Core.getInstance().getNodeById( this, eventId );
+            Event event = core.getNodeById( this, eventId );
             logger.debug( "Adding {} to {}", event, this );
             addEvent( event );
         } else {
@@ -76,7 +76,7 @@ public class Festival extends Resource<Festival> {
     public Venue getVenue() throws NotFoundException, ItemInstantiationException {
         String id = getVenueId();
         if(id != null) {
-            return Core.getInstance().getNodeById( this, id );
+            return core.getNodeById( this, id );
         } else {
             return null;
         }
@@ -89,7 +89,7 @@ public class Festival extends Resource<Festival> {
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query );
         List<Event> events = new ArrayList<Event>( docs.size() );
         for(MongoDocument doc : docs) {
-            Event event = (Event) Core.getInstance().getNode( this, doc );
+            Event event = (Event) core.getNode( this, doc );
             events.add( event );
         }
 

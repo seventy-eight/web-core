@@ -26,8 +26,8 @@ public class Concert extends Resource<Concert> implements Event {
 
     private static Logger logger = LogManager.getLogger( Concert.class );
 
-    public Concert( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Concert( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -68,7 +68,7 @@ public class Concert extends Resource<Concert> implements Event {
     }
 
     public Venue getVenue() throws NotFoundException, ItemInstantiationException {
-        return Core.getInstance().getNodeById( this, getVenueId() );
+        return core.getNodeById( this, getVenueId() );
     }
 
     public void setAsPartOf(Resource<?> resource) {

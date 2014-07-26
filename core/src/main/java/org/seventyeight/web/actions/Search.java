@@ -28,9 +28,15 @@ public class Search implements Node {
 
     private static Logger logger = LogManager.getLogger( Search.class );
 
+    private Core core;
+
+    public Search( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

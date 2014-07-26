@@ -19,6 +19,12 @@ public class Nodes implements Node {
 
     private static Logger logger = LogManager.getLogger( Nodes.class );
 
+    private Core core;
+
+    public Nodes( Core core ) {
+        this.core = core;
+    }
+
     public List<Node> getNodes( int offset, int number ) {
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( new MongoDBQuery(), offset, number );
 
@@ -26,7 +32,7 @@ public class Nodes implements Node {
 
         for( MongoDocument doc : docs ) {
             try {
-                nodes.add( (Node) Core.getInstance().getNode( this, doc ) );
+                nodes.add( (Node) core.getNode( this, doc ) );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
             }
@@ -37,7 +43,7 @@ public class Nodes implements Node {
 
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

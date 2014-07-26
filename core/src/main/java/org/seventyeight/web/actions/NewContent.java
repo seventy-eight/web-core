@@ -19,8 +19,11 @@ public class NewContent implements Node {
 
     private Node parent;
 
-    public NewContent( Node parent ) {
+    private Core core;
+
+    public NewContent( Core core, Node parent ) {
         this.parent = parent;
+        this.core = core;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class NewContent implements Node {
         /* Get the resource descriptor from the className name */
         NodeDescriptor<?> descriptor = null;
         try {
-            descriptor = (NodeDescriptor<?>) Core.getInstance().getDescriptor( className );
+            descriptor = (NodeDescriptor<?>) core.getDescriptor( className );
         } catch( ClassNotFoundException e ) {
             throw new IOException( e );
         }

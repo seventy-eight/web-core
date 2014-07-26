@@ -20,8 +20,8 @@ public class Session extends AbstractNode<Session> {
 
 	public static final String __END_DATE = "end";
 
-	public Session( Node parent, MongoDocument document ) {
-		super( parent, document );
+	public Session( Core core, Node parent, MongoDocument document ) {
+		super( core, parent, document );
 	}
 
     @Override
@@ -117,7 +117,7 @@ public class Session extends AbstractNode<Session> {
         logger.debug( "Saving SESSION {}: {}", this, document );
         setUpdated( null );
         //MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
-        Core.getInstance().getSessionCache().save( document, getIdentifier() );
+        core.getSessionCache().save( document, getIdentifier() );
     }
 
 

@@ -45,10 +45,13 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
     protected Node parent;
 
-    public AbstractNode( Node parent, MongoDocument document ) {
+    protected Core core;
+
+    public AbstractNode( Core core, Node parent, MongoDocument document ) {
         super( document );
 
         this.parent = parent;
+        this.core = core;
     }
 
     public String getIdentifier() {
@@ -100,12 +103,12 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public List<Layoutable> getLayoutableHavingTemplate( Theme theme, Theme.Platform platform, String template ) {
         List<Layoutable> ds = new ArrayList<Layoutable>(  );
 
-        logger.debug( "Layoutable: " + Core.getInstance().getExtensions( Layoutable.class ) );
+        logger.debug( "Layoutable: " + core.getExtensions( Layoutable.class ) );
         //logger.debug( "LIST: " +  );
 
-        for( Layoutable d : Core.getInstance().getExtensions( Layoutable.class ) ) {
+        for( Layoutable d : core.getExtensions( Layoutable.class ) ) {
             if( d.isApplicable( this ) &&
-                Core.getInstance().getTemplateManager().templateForClassExists( theme, platform, d.getClass(), template ) ) {
+                core.getTemplateManager().templateForClassExists( theme, platform, d.getClass(), template ) ) {
                 ds.add( d );
             }
         }
@@ -116,11 +119,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public List<AbstractExtension.ExtensionDescriptor<?>> getLayoutableHavingTemplate2( Theme theme, Theme.Platform platform, String template ) {
         List<AbstractExtension.ExtensionDescriptor<?>> ds = new ArrayList<AbstractExtension.ExtensionDescriptor<?>>(  );
 
-        logger.debug( "DS: " + Core.getInstance().getExtensionDescriptors( Layoutable.class ) );
+        logger.debug( "DS: " + core.getExtensionDescriptors( Layoutable.class ) );
 
-        for( Descriptor d : Core.getInstance().getExtensionDescriptors( Layoutable.class ) ) {
+        for( Descriptor d : core.getExtensionDescriptors( Layoutable.class ) ) {
             if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) &&
-                Core.getInstance().getTemplateManager().templateForClassExists( theme, platform, d.getClazz(), template ) ) {
+                core.getTemplateManager().templateForClassExists( theme, platform, d.getClazz(), template ) ) {
                 ds.add( (AbstractExtension.ExtensionDescriptor<?>) d );
             }
         }
@@ -145,7 +148,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
     @Override
     public Descriptor<T> getDescriptor() {
-        return Core.getInstance().getDescriptor( getClass() );
+        return core.getDescriptor( getClass() );
     }
 
     /**
@@ -156,7 +159,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         logger.debug( "Saving {}: {}", this, document );
         setUpdated( null );
         //MongoDBCollection.get( getDescriptor().getCollectionName() ).save( document );
-        Core.getInstance().saveNode( this );
+        core.saveNode( this );
     }
 
     public void setOwner( User owner ) {
@@ -165,7 +168,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     public User getOwner() throws ItemInstantiationException, NotFoundException {
-        return Core.getInstance().getNodeById( this, (String) document.get( "owner" ) );
+        return core.getNodeById( this, (String) document.get( "owner" ) );
     }
 
     public String getOwnerName() {
@@ -374,15 +377,15 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     /**
      * Get the first {@link Node} having the title.
      */
-    public static <N extends Node> N getNodeByTitle( Node parent, String title ) {
-        return getNodeByTitle( parent, title, null );
+    public static <N extends Node> N getNodeByTitle( Core core, Node parent, String title ) {
+        return getNodeByTitle( core, parent, title, null );
     }
 
     /**
      * Get the first {@link Node} having the title of the given type.
      * Type can be null and will then be disregarded.
      */
-    public static <N extends Node> N getNodeByTitle( Node parent, String title, String type ) {
+    public static <N extends Node> N getNodeByTitle( Core core, Node parent, String title, String type ) {
         MongoDBQuery q = new MongoDBQuery().is( "title", title );
         if( type != null && !type.isEmpty() ) {
             q.is( "type", type );
@@ -392,7 +395,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         if( docs != null ) {
             try {
-                return (N) Core.getInstance().getNode( parent, docs );
+                return (N) core.getNode( parent, docs );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
                 return null;
@@ -403,7 +406,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         }
     }
 
-    public static <N extends Node> List<N> getNodesByTitle( Node parent, String title, String type ) {
+    public static <N extends Node> List<N> getNodesByTitle( Core core, Node parent, String title, String type ) {
         MongoDBQuery q = new MongoDBQuery().is( "title", title );
         if( type != null && !type.isEmpty() ) {
             q.is( "type", type );
@@ -416,7 +419,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         if( docs != null ) {
             for( MongoDocument doc : docs ) {
                 try {
-                    nodes.add( (N)Core.getInstance().getNode( parent, doc ) );
+                    nodes.add( (N)core.getNode( parent, doc ) );
                 } catch( ItemInstantiationException e ) {
                     /* TODO should this fail the entire method???? */
                     logger.error( e.getMessage() );
@@ -429,11 +432,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         return nodes;
     }
 
-    public static <N extends Node> N getNodeById( Node parent, String id ) {
+    public static <N extends Node> N getNodeById( Core core, Node parent, String id ) {
         MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).getDocumentById( id );
         if( doc != null ) {
             try {
-                return (N) Core.getInstance().getNode( parent, doc );
+                return (N) core.getNode( parent, doc );
             } catch( ItemInstantiationException e ) {
                 logger.warn( e.getMessage() );
                 return null;
@@ -548,7 +551,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         String template = request.getValue( "view", "simpleIndex" );
 
-        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, template + ".vm" ) );
+        response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, template + ".vm" ) );
     }
 
 
@@ -571,7 +574,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         logger.debug( "Getting menu for {}", this );
         Menu menu = new Menu();
 
-        for( MenuContributor pc : Core.getInstance().getExtensions( MenuContributor.class ) ) {
+        for( MenuContributor pc : core.getExtensions( MenuContributor.class ) ) {
             logger.debug( "Menu contributor {}", pc );
             pc.addContributingMenu( this, menu );
             logger.debug( "ENDING::::.:.::::.:" );

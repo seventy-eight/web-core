@@ -41,6 +41,8 @@ public class Rest extends HttpServlet {
 
         sw.start( rqs.getRequestURI() );
 
+        Core core = (Core) getServletContext().getAttribute( "core" );
+
         logger.debug( "Query  : {]", rqs.getQueryString() );
         logger.debug( "URI    : {}", rqs.getRequestURI() );
         logger.debug( "METHOD : {}", rqs.getMethod() );
@@ -67,8 +69,8 @@ public class Rest extends HttpServlet {
 
         vc.put( "currentUrl", rqs.getRequestURI() );
 
-        request.setUser( Core.getInstance().getAnonymousUser() );
-        request.setTheme( Core.getInstance().getDefaultTheme() );
+        request.setUser( core.getAnonymousUser() );
+        request.setTheme( core.getDefaultTheme() );
 
         request.getStopWatch().stop( rqs.getRequestURI() );
         request.getStopWatch().start( "Authentication" );
@@ -78,7 +80,7 @@ public class Rest extends HttpServlet {
         //if() {
             try {
                 logger.debug( "AUTHENTICATING" );
-                Core.getInstance().getAuthentication().authenticate( request, response );
+                core.getAuthentication().authenticate( request, response );
             } catch( AuthenticationException e ) {
                 logger.warn( "Unable to authenticate", e );
             }
@@ -92,7 +94,7 @@ public class Rest extends HttpServlet {
 
         try {
             // Render the page
-            Core.getInstance().render( request, response );
+            core.render( request, response );
             request.getUser().setSeen();
         } catch( CoreException e ) {
             e.printStackTrace();
@@ -114,7 +116,7 @@ public class Rest extends HttpServlet {
         if( response.isRenderingMain() ) {
             try {
                 vc.put( "seconds", sw.getSeconds() );
-                response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/bottomPage.vm" ) );
+                response.getWriter().print( core.getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/bottomPage.vm" ) );
             } catch( TemplateException e ) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -131,11 +133,13 @@ public class Rest extends HttpServlet {
             vc.put( "stacktrace", e.getStackTrace() );
             vc.put( "message", message );
 
+            Core core = (Core) request.getContext().get( "core" );
+
             org.seventyeight.web.model.Error error = new org.seventyeight.web.model.Error( (Exception)e );
 
-            request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).setContext( vc ).renderObject( error, "view.vm" ) );
+            request.getContext().put( "content", core.getTemplateManager().getRenderer( request ).setContext( vc ).renderObject( error, "view.vm" ) );
             request.getContext().put( "title", message );
-            writer.print( Core.getInstance().getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/main.vm" ) );
+            writer.print( core.getTemplateManager().getRenderer( request ).render( "org/seventyeight/web/main.vm" ) );
         } catch( Exception ec ) {
             request.getContext().put( "content", "Error while displaying exception" );
         }

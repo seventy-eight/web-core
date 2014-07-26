@@ -18,8 +18,14 @@ import java.util.Date;
 public class SimpleAuthentication implements Authentication {
 
 	private static Logger logger = LogManager.getLogger( SimpleAuthentication.class );
-	
-	public void authenticate( Request request, Response response ) throws AuthenticationException {
+
+    private Core core;
+
+    public SimpleAuthentication( Core core ) {
+        this.core = core;
+    }
+
+    public void authenticate( Request request, Response response ) throws AuthenticationException {
 
 		String hash = null;
 
@@ -52,7 +58,7 @@ public class SimpleAuthentication implements Authentication {
             }
         } else {
 			logger.debug( "Found hash: " + hash );
-			session = Core.getInstance().getSessionManager().getSession( hash );
+			session = core.getSessionManager().getSession( hash );
 		}
 
         request.getStopWatch().stop( "Creating session" );
@@ -63,7 +69,7 @@ public class SimpleAuthentication implements Authentication {
             //User user = User.getUserByUsername( Core.getInstance(), session.getUser() );
             User user;
             try {
-                user = Core.getInstance().getNodeById( Core.getInstance(), session.getUserId() );
+                user = core.getNodeById( core.getRoot(), session.getUserId() );
             } catch( Exception e ) {
                 throw new AuthenticationException( e );
             }
@@ -100,7 +106,7 @@ public class SimpleAuthentication implements Authentication {
 
             Session session = null;
             try {
-                session = Core.getInstance().getSessionManager().createSession( user, new Date(), 10 * 60 *60 );
+                session = core.getSessionManager().createSession( user, new Date(), 10 * 60 *60 );
             } catch( ItemInstantiationException e ) {
                 throw new AuthenticationException( e );
             }

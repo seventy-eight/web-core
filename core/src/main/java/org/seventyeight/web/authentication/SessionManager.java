@@ -25,10 +25,13 @@ public class SessionManager implements Node {
     public static final String SESSION = "session";
     public static final String SESSIONS_COLLECTION_NAME = "sessions";
 
-	public SessionManager() {
+    private Core core;
+
+	public SessionManager( Core core ) {
         //db.createIndex( INDEX_SESSIONS, IndexType.UNIQUE, IndexValueType.STRING );
 		//logger.debug( "Initializing session index" );
-	}
+        this.core = core;
+    }
 
 	public Session createSession( User user, Date date, int ttl ) throws ItemInstantiationException, AuthenticationException {
 		logger.debug( "Creating session for " + user + ", " + ttl );
@@ -47,7 +50,7 @@ public class SessionManager implements Node {
 
 		//Session session = createSessionNode( hash, calendar.getTime() );
 
-        Session.SessionsDescriptor descriptor = Core.getInstance().getDescriptor( Session.class );
+        Session.SessionsDescriptor descriptor = core.getDescriptor( Session.class );
         Session session = descriptor.newInstance( this );
         session.setTitle( "Session for " + user.getDisplayName() );
         session.getDocument().set( "created", new Date() );
@@ -65,13 +68,13 @@ public class SessionManager implements Node {
 
         //MongoDBQuery query = new MongoDBQuery().getId( hash );
         //MongoDocument doc = MongoDBCollection.get( SESSIONS_COLLECTION_NAME ).findOne( query );
-        MongoDocument doc = Core.getInstance().getSessionCache().get( hash );
+        MongoDocument doc = core.getSessionCache().get( hash );
 
         logger.debug( "Session doc: " + doc );
 
         Session actual = null;
         if(doc != null) {
-            Session session = new Session( Core.getInstance(), doc );
+            Session session = new Session( core, core.getRoot(), doc );
             logger.debug( "Comparing " + session.getEndingAsDate() + " with " + new Date() + "(" + session.getCreated() + ")" );
             if( session.getEndingAsDate().after( new Date() ) ) {
                 logger.debug( "A valid session found" );
@@ -92,7 +95,7 @@ public class SessionManager implements Node {
 
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

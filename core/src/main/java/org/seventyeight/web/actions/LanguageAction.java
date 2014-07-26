@@ -17,9 +17,15 @@ public class LanguageAction implements Node {
 
     private Logger logger = LogManager.getLogger( LanguageAction.class );
 
+    private Core core;
+
+    public LanguageAction( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

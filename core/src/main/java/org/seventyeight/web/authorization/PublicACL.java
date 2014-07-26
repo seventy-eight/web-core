@@ -2,6 +2,7 @@ package org.seventyeight.web.authorization;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
@@ -13,8 +14,8 @@ import java.util.List;
  */
 public class PublicACL extends ACL<PublicACL> {
 
-    public PublicACL( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public PublicACL( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override

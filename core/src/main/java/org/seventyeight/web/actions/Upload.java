@@ -40,6 +40,12 @@ public class Upload implements Node {
     private static SimpleDateFormat formatYear = new SimpleDateFormat( "yyyy" );
     private static SimpleDateFormat formatMonth = new SimpleDateFormat( "MM" );
 
+    private Core core;
+
+    public Upload( Core core ) {
+        this.core = core;
+    }
+
     /*
     public void doMulti( Request request, Response response ) throws IOException {
 
@@ -80,7 +86,7 @@ public class Upload implements Node {
         response.setRenderType( Response.RenderType.NONE );
 
         /* Somehow get the right uploadable descriptor */
-        List<Descriptor> descriptors = Core.getInstance().getExtensionDescriptors( Uploadable.class );
+        List<Descriptor> descriptors = core.getExtensionDescriptors( Uploadable.class );
         for( Descriptor d : descriptors ) {
 
         }
@@ -125,8 +131,8 @@ public class Upload implements Node {
 
                         json.addProperty( "title", filename );
 
-                        FileResource.FileDescriptor d = Core.getInstance().getDescriptor( FileResource.class );
-                        fr = d.newInstance( json, Core.getInstance() );
+                        FileResource.FileDescriptor d = core.getDescriptor( FileResource.class );
+                        fr = d.newInstance( json, core.getRoot() );
 
                         fr.setPath( uf.relativePath );
                         fr.setFilename( uf.file.getName() );
@@ -146,7 +152,7 @@ public class Upload implements Node {
 
                         // Image uploads wrapper
                         if(ImageUploadsWrapper.isImage( filename )) {
-                            ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = Core.getInstance().getDescriptor( ImageUploadsWrapper.class );
+                            ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
                             ImageUploadsWrapper wrapper = descriptor.getWrapper( request.getUser() );
                             wrapper.addImage( fr );
                             wrapper.setUpdated(null);
@@ -183,7 +189,7 @@ public class Upload implements Node {
 
     public void doUploadForm(Request request, Response response) throws IOException, TemplateException, NotFoundException {
         response.setRenderType( Response.RenderType.NONE );
-        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );
+        response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );
     }
 
     private static class UploadResponse {
@@ -202,7 +208,7 @@ public class Upload implements Node {
      * @param pathPrefix
      * @return First is a {@link java.io.File} relative to the context path, and the second is an absolute file.
      */
-    public static Tuple<File, File> generateFile( String filename, String pathPrefix ) {
+    public static Tuple<File, File> generateFile( String filename, String pathPrefix, File uploadPath ) {
         Date now = new Date();
         int mid = filename.lastIndexOf( "." );
         String fname = filename;
@@ -214,7 +220,7 @@ public class Upload implements Node {
 
         String strpath = pathPrefix + "/" + formatYear.format( now ) + "/" + formatMonth.format( now ) + "/" + ext;
 
-        File path = new File( Core.getInstance().getUploadPath(), strpath );
+        File path = new File( uploadPath, strpath );
         File relativePath = new File( strpath, filename );
         logger.debug( "Trying to create path " + path );
         path.mkdirs();
@@ -234,7 +240,7 @@ public class Upload implements Node {
 
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

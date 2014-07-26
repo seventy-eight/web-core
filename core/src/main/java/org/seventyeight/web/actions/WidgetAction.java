@@ -20,9 +20,15 @@ public class WidgetAction implements Node, Parent {
 
     private GetWidget getWidget = new GetWidget();
 
+    private Core core;
+
+    public WidgetAction( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

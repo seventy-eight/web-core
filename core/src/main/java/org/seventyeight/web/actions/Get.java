@@ -14,9 +14,11 @@ public class Get implements Node, Parent {
     private Logger logger = LogManager.getLogger( Get.class );
 
     private Node parent;
+    private Core core;
 
-    public Get( Node parent ) {
+    public Get( Core core, Node parent ) {
         this.parent = parent;
+        this.core = core;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class Get implements Node, Parent {
     public Node getChild( String token ) {
         logger.debug( "Token is " + token );
         try {
-            return Core.getInstance().getNodeById( this, token );
+            return core.getNodeById( this, token );
         } catch( Exception e ) {
             logger.log( Level.DEBUG, "Unable to get " + token, e );
             return null;

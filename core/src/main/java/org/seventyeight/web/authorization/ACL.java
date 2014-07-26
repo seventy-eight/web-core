@@ -37,13 +37,16 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
 
     protected Node parent;
     protected Resource<?> resourceParent;
+    protected Core core;
 
-    public ACL( Node parent, MongoDocument document ) {
+    public ACL( Core core, Node parent, MongoDocument document ) {
         super(document);
         this.parent = parent;
         if(parent instanceof Resource) {
             resourceParent = (Resource<?>) parent;
         }
+
+        this.core = core;
     }
 
     public Node getParent() {
@@ -68,7 +71,7 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
 
     public abstract Permission getPermission( User user );
 
-    public static final AllAccess ALL_ACCESS = new AllAccess( null, null );
+    public static final AllAccess ALL_ACCESS = new AllAccess( null, null, null );
 
     @Override
     public MongoDocument getDocument() {
@@ -82,17 +85,17 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
 
     @Override
     public Descriptor<T> getDescriptor() {
-        return Core.getInstance().getDescriptor( getClass() );
+        return core.getDescriptor( getClass() );
     }
 
     public static abstract class ACLDescriptor<T extends ACL<T>> extends Descriptor<T> {
 
         @Override
-        public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
+        public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
             MongoDocument d = document.get( "ACL" );
             logger.debug( "ACL DOC: {}", d );
             if(d != null && !d.isNull()) {
-                return (Describable<T>) Core.getInstance().getNode( parent, d );
+                return (Describable<T>) core.getNode( parent, d );
             } else {
                 return null;
             }
@@ -101,8 +104,8 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
 
     private static class AllAccess extends ACL {
 
-        public AllAccess( Node parent, MongoDocument document ) {
-            super( parent, document );
+        public AllAccess( Core core, Node parent, MongoDocument document ) {
+            super( core, parent, document );
         }
 
         @Override

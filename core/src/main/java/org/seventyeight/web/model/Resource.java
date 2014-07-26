@@ -34,8 +34,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     private static Logger logger = LogManager.getLogger( Resource.class );
 
-    public Resource( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Resource( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     public void setPortrait(JsonObject json) {
         try {
-            AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) Core.getInstance().getDescriptor( json.get( "class" ).getAsString() );
+            AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) core.getDescriptor( json.get( "class" ).getAsString() );
             json.addProperty( "title", "portrait" );
             AbstractPortrait abstractPortrait = descriptor.newInstance(json, this);
             abstractPortrait.updateExtensions( json );
@@ -78,7 +78,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     @Override
     public NodeDescriptor<T> getDescriptor() {
-        return Core.getInstance().getDescriptor( getClass() );
+        return core.getDescriptor( getClass() );
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
         if( portrait != null && !portrait.isNull() && portrait.get( "class", null ) != null ) {
             try {
-                AbstractPortrait up = Core.getInstance().getNode( this, portrait );
+                AbstractPortrait up = core.getNode( this, portrait );
                 return up.getUrl();
             } catch( ItemInstantiationException e ) {
                 logger.warn( "Unable to get the portrait from " + portrait );
@@ -125,7 +125,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
         List<Action.ActionDescriptor<?>> ds = new ArrayList<Action.ActionDescriptor<?>>(  );
 
-        for( Descriptor d : Core.getInstance().getExtensionDescriptors( Action.class ) ) {
+        for( Descriptor d : core.getExtensionDescriptors( Action.class ) ) {
             if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) ) {
                 ds.add( (Action.ActionDescriptor<?>) d );
             }
@@ -140,7 +140,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     public void doBadge( Request request, Response response ) throws TemplateException, IOException {
-        response.getWriter().write( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
+        response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
     }
 
     public Set<String> getConfiguredExtensionTypes() {
@@ -153,7 +153,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     public List<AbstractExtension.ExtensionDescriptor> getExtensionDescriptors() {
-        return Core.getInstance().getExtensionDescriptors( ResourceExtension.class );
+        return core.getExtensionDescriptors( ResourceExtension.class );
     }
 
     /*
@@ -231,7 +231,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         //String title = request.getValue( "commentTitle", "" );
 
         if(text.length() > 1) {
-            Comment.CommentDescriptor descriptor = Core.getInstance().getDescriptor( Comment.class );
+            Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
             Comment comment = descriptor.newInstance( request, this );
             if(comment != null) {
                 JsonObject json = request.getJson();
@@ -254,7 +254,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
                 List<MongoDocument> d = finder.findNext();
                 */
 
-                comment.getDocument().set( "view", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
+                comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
 
                 PrintWriter writer = response.getWriter();
                 GsonBuilder builder = new GsonBuilder();
@@ -281,7 +281,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
         for(MongoDocument d : docs) {
             Comment c = new Comment( this, d );
-            comments.add( Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+            comments.add( core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
         }
 
         PrintWriter writer = response.getWriter();
@@ -344,7 +344,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             return ACL.ALL_ACCESS;
         } else {
             try {
-                return Core.getInstance().getNode( this, doc );
+                return core.getNode( this, doc );
             } catch( ItemInstantiationException e ) {
                 throw new IllegalStateException( "Unable to instantiate ACL for " + this, e );
             }

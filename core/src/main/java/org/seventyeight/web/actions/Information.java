@@ -8,9 +8,15 @@ import org.seventyeight.web.model.*;
  */
 public class Information implements Node {
 
+    private Core core;
+
+    public Information( Core core ) {
+        this.core = core;
+    }
+
     @Override
     public Node getParent() {
-        return Core.getInstance();
+        return core.getRoot();
     }
 
     @Override

@@ -31,8 +31,8 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
 
     private Permission permission = null;
 
-    public BasicResourceBasedSecurity( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public BasicResourceBasedSecurity( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     public List<Authorizable> getAuthorized(String permission) {
@@ -45,7 +45,7 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         List<String> l = document.get( permission.getDbname() );
         for( String id : l ) {
             try {
-                list.add( Core.getInstance().<Authorizable>getNodeById( getParent(), id ) );
+                list.add( core.<Authorizable>getNodeById( getParent(), id ) );
             } catch( Exception e ) {
                 logger.log( Level.ERROR, "Unable to get " + id, e );
             }

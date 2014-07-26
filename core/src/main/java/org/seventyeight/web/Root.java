@@ -21,7 +21,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
     public Root() {
         /* Mandatory */
         children.put( "get", new Get( this ) );  // This
-        children.put( "resource", new ResourceAction() ); // Or that?
+        children.put( "resource", new ResourceAction( core ) ); // Or that?
     }
 
     @Override

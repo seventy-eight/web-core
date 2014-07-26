@@ -28,8 +28,8 @@ public class Venue extends Resource<Venue> {
 
     private static Logger logger = LogManager.getLogger( Venue.class );
 
-    public Venue( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public Venue( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Venue extends Resource<Venue> {
     public void doAddConcert(Request request, Response response) throws ItemInstantiationException, IOException {
         response.setRenderType( Response.RenderType.NONE );
 
-        Concert.ConcertDescriptor descriptor = Core.getInstance().getDescriptor( Concert.class );
+        Concert.ConcertDescriptor descriptor = core.getDescriptor( Concert.class );
         Concert instance = descriptor.newInstance( request, this );
         instance.setVenue( this );
         instance.save();
