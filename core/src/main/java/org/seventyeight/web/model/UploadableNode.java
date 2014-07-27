@@ -81,8 +81,8 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
 
     public static abstract class UploadableDescriptor<T1 extends UploadableNode<T1>> extends NodeDescriptor<T1> {
 
-        protected UploadableDescriptor( Core core ) {
-            super( core );
+        protected UploadableDescriptor( Node parent ) {
+            super( parent );
         }
     }
 }

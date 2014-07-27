@@ -67,8 +67,8 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
      */
     public abstract static class ExtensionDescriptor<T extends AbstractExtension<T>> extends Descriptor<T> {
 
-        protected ExtensionDescriptor( Core core ) {
-            super( core );
+        protected ExtensionDescriptor() {
+            super();
         }
 
         public abstract String getExtensionName();
@@ -76,7 +76,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public abstract ExtensionGroup getExtensionGroup();
 
         @Override
-        public List<ExtensionGroup> getApplicableExtensions() {
+        public List<ExtensionGroup> getApplicableExtensions( Core core ) {
             return Collections.emptyList();
         }
 
@@ -97,12 +97,12 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             return getJsonId( getExtensionClassId() );
         }
 
-        public Describable<T> getDescribable( PersistedNode node ) throws ItemInstantiationException {
-            return getDescribable( node, node.getDocument() );
+        public Describable<T> getDescribable( Core core, PersistedNode node ) throws ItemInstantiationException {
+            return getDescribable( core, node, node.getDocument() );
         }
 
         @Override
-        public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
+        public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
             logger.warn( "THE DESCRIBABABALE DOC IS {}", document );
             logger.warn( "EXTENSION JSON ID {}", getJsonId( getExtensionClass().getName() ) );
             MongoDocument d = document.getr2( EXTENSIONS, getJsonId( getExtensionClass().getName() ) );
@@ -138,11 +138,13 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         /**
          * Get instantiated extension given a {@link Documented} parent.
+         *
+         * @param core
          * @param parent
          * @return
          * @throws ItemInstantiationException
          */
-        public T getExtension( Documented parent ) throws ItemInstantiationException {
+        public T getExtension( Core core, Documented parent ) throws ItemInstantiationException {
             MongoDocument d = getExtensionDocument( parent );
             logger.debug( "EXTENSION SUBDOC " + d );
 
@@ -161,16 +163,19 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
                 throw new IllegalStateException( d.get( "class" ) + " is not equal to " + getId() );
             }
 
+            logger.fatal( "CORFE OS {}", core );
             return core.getNode( (Node) parent, d );
         }
 
         /**
          * Return a new bare boned instantiation of T.
+         *
+         * @param core
          * @param parent
          * @return
          * @throws ItemInstantiationException
          */
-        public T getExtension( Descriptor parent ) throws ItemInstantiationException {
+        public T getExtension( Core core, Descriptor parent ) throws ItemInstantiationException {
             MongoDocument d = new MongoDocument().set( "class", getId() );
 
             logger.debug( "EXTENSION SUBDOC " + d );

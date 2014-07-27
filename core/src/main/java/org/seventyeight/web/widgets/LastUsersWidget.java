@@ -16,9 +16,6 @@ import java.util.List;
  */
 public class LastUsersWidget extends Widget {
 
-    public LastUsersWidget( Core core ) {
-        super( core );
-    }
 
     @Override
     public Node getParent() {
@@ -45,6 +42,8 @@ public class LastUsersWidget extends Widget {
         MongoDBQuery query = new MongoDBQuery().is( "type", "user");
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
+
+        Core core = request.getCore();
 
         for( MongoDocument d : docs ) {
             AbstractNode<?> n = core.getNodeById( this, d.getIdentifier() );

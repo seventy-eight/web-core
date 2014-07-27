@@ -88,11 +88,11 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
     public static abstract class ACLDescriptor<T extends ACL<T>> extends Descriptor<T> {
 
         protected ACLDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         @Override
-        public Describable<T> getDescribable( Node parent, MongoDocument document ) throws ItemInstantiationException {
+        public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
             MongoDocument d = document.get( "ACL" );
             logger.debug( "ACL DOC: {}", d );
             if(d != null && !d.isNull()) {

@@ -51,8 +51,8 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
 
     public static class ImageUploadsWrapperDescriptor extends NodeDescriptor<ImageUploadsWrapper> {
 
-        public ImageUploadsWrapperDescriptor( Core core ) {
-            super( core );
+        public ImageUploadsWrapperDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override
@@ -65,12 +65,12 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
             return "Image uploads wrapper";
         }
 
-        public ImageUploadsWrapper getWrapper(User user) throws ItemInstantiationException {
+        public ImageUploadsWrapper getWrapper( Core core, User user ) throws ItemInstantiationException {
             MongoDBQuery query = new MongoDBQuery().is( "type", TITLE ).is( "owner", user.getIdentifier() );
             MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( query );
             logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
             if(doc == null || doc.isNull()) {
-                ImageUploadsWrapper instance = newInstance( user.getIdentifier(), this, "Wrapper for " + user.getDisplayName() );
+                ImageUploadsWrapper instance = newInstance( core, user.getIdentifier(), this, "Wrapper for " + user.getDisplayName() );
                 instance.setOwner( user );
                 return instance;
             } else {

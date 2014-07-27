@@ -52,7 +52,7 @@ public abstract class Core implements CoreSystem {
     public static final String CACHE_PATH_NAME = "cache";
 
 
-    protected TemplateManager templateManager = new TemplateManager( this );
+    protected TemplateManager templateManager = new TemplateManager();
 
     protected ResourceBundles resourceBundles;
 
@@ -475,6 +475,11 @@ public abstract class Core implements CoreSystem {
 
             /* Find a child node */
 
+            // TEST
+            if(current instanceof PersistedNode) {
+                logger.fatal( "CURRENT NODES CORE IS {}", ( (PersistedNode) current ).getCore() );
+            }
+
             next = null;
             if( current instanceof Parent ) {
                 next = ((Parent)current).getChild( token );
@@ -493,10 +498,10 @@ public abstract class Core implements CoreSystem {
                     if( d != null && d.getExtensionName().equals( token ) ) {
                         if( d.isApplicable( current ) ) {
                             if( current instanceof PersistedNode ) {
-                                next = d.getExtension( (PersistedNode) current );
+                                next = d.getExtension( this, (PersistedNode) current );
                                 logger.debug( "Found action is {}", next );
                             } else if( current instanceof Descriptor ) {
-                                next = d.getExtension( (Descriptor) current );
+                                next = d.getExtension( this, (Descriptor) current );
                             }
                         }
 

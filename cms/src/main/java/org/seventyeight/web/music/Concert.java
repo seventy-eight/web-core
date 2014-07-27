@@ -77,8 +77,8 @@ public class Concert extends Resource<Concert> implements Event {
 
     public static class ConcertDescriptor extends NodeDescriptor<Concert> {
 
-        public ConcertDescriptor( Core core ) {
-            super( core );
+        public ConcertDescriptor( Node parent ) {
+            super( parent );
         }
 
         public void doGetConcerts(Request request, Response response) throws IOException {

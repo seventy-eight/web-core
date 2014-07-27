@@ -14,7 +14,6 @@ import org.seventyeight.web.nodes.User;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
 public class SessionManager implements Node {
@@ -51,7 +50,7 @@ public class SessionManager implements Node {
 		//Session session = createSessionNode( hash, calendar.getTime() );
 
         Session.SessionsDescriptor descriptor = core.getDescriptor( Session.class );
-        Session session = descriptor.newInstance( this );
+        Session session = descriptor.newInstance( core, this );
         session.setTitle( "Session for " + user.getDisplayName() );
         session.getDocument().set( "created", new Date() );
         session.setEndDate( calendar.getTime() );

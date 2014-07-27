@@ -9,7 +9,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.*;
-import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
@@ -27,19 +26,22 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     private static Logger logger = LogManager.getLogger( NodeDescriptor.class );
 
+    protected Node parent;
+
     public enum Status {
         CREATED,
         UPDATED,
         DELETED
     }
 
-    protected NodeDescriptor( Core core ) {
-        super( core );
+    protected NodeDescriptor( Node parent ) {
+        super();
+        this.parent = parent;
     }
 
     @Override
     public Node getParent() {
-        return core.getRoot();
+        return parent;
     }
 
     /*
@@ -50,30 +52,31 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     //@Override
     public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
-        return newInstance( request.getJson(), parent );
+        Core core = request.getCore();
+        return newInstance( core, request.getJson(), parent );
     }
 
     @Override
-    public T newInstance( JsonObject json, Node parent ) throws ItemInstantiationException {
+    public T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
         String title = JsonUtils.get( json, "title", null );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
-        return newInstance( json, parent, title );
+        return newInstance( core, json, parent, title );
     }
 
-    public T newInstance( JsonObject json, Node parent, String title ) throws ItemInstantiationException {
+    public T newInstance( Core core, JsonObject json, Node parent, String title ) throws ItemInstantiationException {
         logger.debug( "OWNER JSON::::::::::::::::::::::::::::: {}", json );
         String ownerId = null;
         if(json.has( Request.SESSION_USER )) {
             ownerId = json.get( CoreRequest.SESSION_USER ).getAsString();
         }
 
-        return newInstance( ownerId, parent, title );
+        return newInstance( core, ownerId, parent, title );
     }
 
-    public T newInstance(String ownerId, Node parent, String title) throws ItemInstantiationException {
+    public T newInstance( Core core, String ownerId, Node parent, String title ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -81,7 +84,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             }
         }
 
-        T node = create( parent );
+        T node = create( core, parent );
 
         node.getDocument().set( "type", getType() );
         node.getDocument().set( "title", title );
@@ -112,10 +115,11 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     @PostMethod
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
         JsonObject json = request.getJson();
+        Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
         if( title != null ) {
             logger.debug( "Creating " + title );
-            T instance = newInstance(json, this);
+            T instance = newInstance( core, json, this);
             instance.updateConfiguration( json );
             instance.save();
             response.sendRedirect( instance.getUrl() );
@@ -139,8 +143,8 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     @Override
-    protected T create( Node parent ) throws ItemInstantiationException {
-        T instance = super.create( parent );
+    protected T create( Core core, Node parent ) throws ItemInstantiationException {
+        T instance = super.create( core, parent );
 
         String id = core.getUniqueName( this );
         instance.getDocument().set( "_id", id );
@@ -177,7 +181,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     @Override
-    public T get( String token ) throws NotFoundException {
+    public T get( Core core, String token ) throws NotFoundException {
         logger.debug( "Getting " + token );
 
         /* First, get by id */
@@ -206,7 +210,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
 
     @Override
-    public List<ExtensionGroup> getApplicableExtensions() {
+    public List<ExtensionGroup> getApplicableExtensions( Core core ) {
         ArrayList<ExtensionGroup> groups = new ArrayList<ExtensionGroup>(  );
         groups.add( core.getExtensionGroup( Tags.class.getName() ) );
         groups.add( core.getExtensionGroup( Event.class.getName() ) );

@@ -329,7 +329,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     @Override
-    public Node get( String token ) throws NotFoundException {
+    public Node get( Core core, String token ) throws NotFoundException {
         try {
             id = Integer.parseInt( token );
             return getItem( id );
@@ -340,8 +340,8 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
 
     public static class CollectionDescriptor extends NodeDescriptor<Collection> implements MenuContributor<AbstractNode<Collection>> {
 
-        public CollectionDescriptor( Core core ) {
-            super( core );
+        public CollectionDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

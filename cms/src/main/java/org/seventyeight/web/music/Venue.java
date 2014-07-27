@@ -110,8 +110,8 @@ public class Venue extends Resource<Venue> {
 
     public static class VenueDescriptor extends NodeDescriptor<Venue> implements MenuContributor<AbstractNode<Venue>> {
 
-        public VenueDescriptor( Core core ) {
-            super( core );
+        public VenueDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

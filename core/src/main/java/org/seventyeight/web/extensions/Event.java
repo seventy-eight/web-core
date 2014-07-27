@@ -107,7 +107,7 @@ public class Event extends ResourceExtension<Event> {
     public static final class EventDescriptor extends ExtensionDescriptor<Event> {
 
         public EventDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         @Override

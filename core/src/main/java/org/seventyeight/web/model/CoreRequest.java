@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
+import org.seventyeight.web.Core;
 
 /**
  * @author cwolfgang
@@ -8,4 +9,5 @@ import com.google.gson.JsonObject;
 public interface CoreRequest extends ParameterRequest {
     public static final String SESSION_USER = "sessionUser";
     public JsonObject getJson();
+    public Core getCore();
 }

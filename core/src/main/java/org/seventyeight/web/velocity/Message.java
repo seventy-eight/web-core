@@ -23,9 +23,10 @@ public class Message {
         this.core = core;
     }
 
-    public Message( String className, Locale locale ) {
+    public Message( Core core, String className, Locale locale ) {
         this.className = className;
         this.locale = locale;
+        this.core = core;
     }
 
     public String get(String message, String ... args) {

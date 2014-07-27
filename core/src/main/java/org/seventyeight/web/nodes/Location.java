@@ -21,8 +21,8 @@ public class Location extends Resource<Location> {
 
     public static class LocationDescriptor extends NodeDescriptor<Location> {
 
-        protected LocationDescriptor( Core core ) {
-            super( core );
+        protected LocationDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

@@ -15,10 +15,6 @@ import java.util.List;
  */
 public class ActivityWidget extends Widget {
 
-    public ActivityWidget( Core core ) {
-        super( core );
-    }
-
     @Override
     public Node getParent() {
         return null;  /* Implementation is a no op */
@@ -46,6 +42,8 @@ public class ActivityWidget extends Widget {
         query.notEquals( "visibility", AbstractNode.Visibility.INVISIBLE.name() );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
+
+        Core core = request.getCore();
 
         for( MongoDocument d : docs ) {
             AbstractNode<?> n = core.getNodeById( this, d.getIdentifier() );

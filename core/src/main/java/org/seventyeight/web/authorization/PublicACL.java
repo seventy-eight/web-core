@@ -55,7 +55,7 @@ public class PublicACL extends ACL<PublicACL> {
         }
 
         @Override
-        public List<ExtensionGroup> getApplicableExtensions() {
+        public List<ExtensionGroup> getApplicableExtensions( Core core ) {
             return null;  /* Implementation is a no op */
         }
     }

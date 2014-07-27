@@ -17,7 +17,7 @@ public abstract class NodeExtension<T extends NodeExtension<T>> extends Abstract
     public abstract static class NodeExtensionDescriptor<T extends NodeExtension<T>> extends ExtensionDescriptor<T> {
 
         protected NodeExtensionDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         @Override

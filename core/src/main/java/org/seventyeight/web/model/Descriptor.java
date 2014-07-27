@@ -9,7 +9,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.utilities.JsonUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.Collections;
@@ -24,12 +23,10 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 	
 	protected transient Class<T> clazz;
 
-    protected Core core;
-	
-	protected Descriptor(Core core) {
+	protected Descriptor() {
 		clazz = (Class<T>) getClass().getEnclosingClass();
-		logger.debug( "Descriptor class is " + clazz );
-        this.core = core;
+		logger.debug( "Descriptor class is {}", clazz );
+
 	}
 
     public List<String> getRequiredJavascripts() {
@@ -47,7 +44,7 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
     //public abstract T newInstance( String title ) throws ItemInstantiationException;
 
-    public T newInstance(JsonObject json, Node parent) throws ItemInstantiationException {
+    public T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
         // Mandatory
         /*
         String title = JsonUtils.get( json, "title", null );
@@ -55,15 +52,15 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
             throw new IllegalArgumentException( "Title must be provided" );
         }
         */
-        return create( parent );
+        return create( core, parent );
     }
 
-    public T newInstance(Node parent) throws ItemInstantiationException {
+    public T newInstance( Core core, Node parent ) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        return create( parent );
+        return create( core, parent );
     }
 
-    protected T create( Node parent ) throws ItemInstantiationException {
+    protected T create( Core core, Node parent ) throws ItemInstantiationException {
         logger.debug( "Creating document " + clazz.getName() );
 
         MongoDocument document = new MongoDocument();
@@ -139,6 +136,8 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         c.put( "descriptor", this );
         c.put( "groupName", groupName );
 
+        Core core = request.getCore();
+
         if( describable != null ) {
             logger.debug( "Extension is " + describable );
             c.put( "enabled", true );
@@ -152,7 +151,7 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return core.getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
     }
 
-    public Describable<T> getDescribable(Node parent, MongoDocument document) throws ItemInstantiationException {
+    public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
         return (Describable<T>) core.getNode( parent, document );
     }
 
@@ -179,6 +178,7 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
     /**
      * @return A {@link List} of {@link ExtensionGroup}'s defining the applicable extensions.
+     * @param core
      */
-    public abstract List<ExtensionGroup> getApplicableExtensions();
+    public abstract List<ExtensionGroup> getApplicableExtensions( Core core );
 }

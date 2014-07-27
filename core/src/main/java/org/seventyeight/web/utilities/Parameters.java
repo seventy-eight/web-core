@@ -1,6 +1,7 @@
 package org.seventyeight.web.utilities;
 
 import com.google.gson.JsonObject;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.model.CoreRequest;
@@ -16,6 +17,12 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     private User user;
     private PersistedNode modelObject;
     private JsonObject json = null;
+
+    private Core core;
+
+    public Parameters( Core core ) {
+        this.core = core;
+    }
 
     @Override
     public User getUser() {
@@ -84,5 +91,10 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
         }
 
         return json;
+    }
+
+    @Override
+    public Core getCore() {
+        return core;
     }
 }

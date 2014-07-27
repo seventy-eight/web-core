@@ -1,8 +1,10 @@
 package org.seventyeight.web.model;
 
+import org.seventyeight.web.Core;
+
 /**
  * @author cwolfgang
  */
 public interface Getable<T extends Object> {
-    public T get( String token ) throws NotFoundException;
+    public T get( Core core, String token ) throws NotFoundException;
 }

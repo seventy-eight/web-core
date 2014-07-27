@@ -29,8 +29,8 @@ public class Artist extends Resource<Artist> {
 
     public static final class ArtistDescriptor extends NodeDescriptor<Artist> {
 
-        public ArtistDescriptor( Core core ) {
-            super( core );
+        public ArtistDescriptor( Node parent ) {
+            super( parent );
         }
 
         public void doGetArtists(Request request, Response response) throws IOException {

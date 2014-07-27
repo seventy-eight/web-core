@@ -10,7 +10,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.ExtensionUtils;
-import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.util.ArrayList;
@@ -37,6 +36,10 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     public PersistedNode( Core core, MongoDocument document ) {
         this.document = document;
         this.core = core;
+    }
+
+    public Core getCore() {
+        return core;
     }
 
     public MongoDocument resolveExtension(AbstractExtension.ExtensionDescriptor<?> descriptor) {
@@ -87,7 +90,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
                     JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
                     Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
                     if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
-                        Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
+                        Describable<?> describable = ExtensionUtils.getDescribable( core, (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
                         if(describable != null) {
                             extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
                         }
@@ -105,7 +108,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
                         if(jsonConfiguration != null) {
                             Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
                             if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
-                                Describable<?> describable = ExtensionUtils.getDescribable( (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
+                                Describable<?> describable = ExtensionUtils.getDescribable( core, (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
                                 jsonId = ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId();
                                 if(describable != null) {
                                     //describableDocuments.add( describable.getDocument() );

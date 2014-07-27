@@ -23,6 +23,8 @@ public class Rest extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger( Rest.class );
 
+
+
     @Override
     public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         doRequest( request, response );
@@ -46,6 +48,7 @@ public class Rest extends HttpServlet {
         logger.debug( "Query  : {]", rqs.getQueryString() );
         logger.debug( "URI    : {}", rqs.getRequestURI() );
         logger.debug( "METHOD : {}", rqs.getMethod() );
+        logger.debug( "CORE   : {}", core );
 
         /* Instantiating request and response */
         Request request = new Request( rqs, core.getDefaultTemplate() );

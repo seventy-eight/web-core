@@ -34,12 +34,6 @@ public class TemplateManager {
 
     private Set<String> libsList = new HashSet<String>();
 
-    private Core core;
-
-    public TemplateManager( Core core ) {
-        this.core = core;
-    }
-
     private Template _getTemplate( Theme theme, Theme.Platform platform, String template ) throws TemplateException {
 		try {
 		    return engine.getTemplate( theme.getName() + "/" + platform + "/" + template );
@@ -53,13 +47,13 @@ public class TemplateManager {
      * If the {@link org.seventyeight.web.model.Theme} does not have the {@link Template}, try to find it in the default theme.
      * Throws a TemplateException if not found.
      */
-    public Template getTemplate( Theme theme, Theme.Platform platform, String template ) throws TemplateException {
+    public Template getTemplate( Theme theme, Theme defaultTheme, Theme.Platform platform, String template ) throws TemplateException {
         logger.debug( "[Finding] {} for {}", template, theme.getName() );
         try {
             return _getTemplate( theme, platform, template );
         } catch( TemplateException e ) {
             /* If it goes wrong, try the default theme */
-            return _getTemplate( core.getDefaultTheme(), platform, template );
+            return _getTemplate( defaultTheme, platform, template );
         }
     }
 
@@ -193,8 +187,8 @@ public class TemplateManager {
 		return engine;
 	}
 	
-	public Renderer getRenderer( Theme theme ) {
-		return new Renderer( theme );
+	public Renderer getRenderer( Core core, Theme theme ) {
+		return new Renderer( core, theme );
 	}
 
     public Renderer getRenderer( Request request ) {
@@ -212,7 +206,9 @@ public class TemplateManager {
 
         private Message message;
 
-        public Renderer( Theme theme ) {
+        private Core core;
+
+        public Renderer( Core core, Theme theme ) {
             this.theme = theme;
         }
 
@@ -225,6 +221,8 @@ public class TemplateManager {
 
             //
             platform = request.getPlatform();
+
+            this.core = request.getCore();
         }
 
         public Renderer setContext( VelocityContext context ) {
@@ -264,10 +262,10 @@ public class TemplateManager {
             /* Resolve template */
             Template t = null;
             try {
-                t = getTemplate( theme, platform, template );
+                t = getTemplate( theme, core.getDefaultTheme(), platform, template );
             } catch( TemplateException e ) {
                 /* If it goes wrong, try the default theme */
-                t = getTemplate( core.getDefaultTheme(), platform, template );
+                t = getTemplate( core.getDefaultTheme(), core.getDefaultTheme(), platform, template );
             } catch( Exception e ) {
                 logger.error( e );
             }
@@ -289,7 +287,7 @@ public class TemplateManager {
             logger.debug( "LANG: {}", locale );
 			context.put( "locale", locale );
             logger.debug( "MESSAGE: {}", "templates." + templatePathToClass( template.getName() ) );
-            message = new Message( "templates." + templatePathToClass( template.getName() ), locale );
+            message = new Message( core, "templates." + templatePathToClass( template.getName() ), locale );
             context.put( "message", message );
             //context.put( "message2", new Message( "stuff", locale ) );
             //context.put( "dateTool", new DateTool() );
@@ -327,7 +325,7 @@ public class TemplateManager {
         }
 
         public String renderObject( Object object, String method, boolean trySuper ) throws TemplateException {
-            Template template = getTemplate( theme, platform, object, method, trySuper );
+            Template template = getTemplate( theme, core.getDefaultTheme(), platform, object, method, trySuper );
             context.put( "item", object );
             context.put( "rb", getBundle( object.getClass() ) );
             return render( template );
@@ -339,21 +337,21 @@ public class TemplateManager {
         }
 
         public String renderClass( Class clazz, String method, boolean trySuper ) throws NotFoundException {
-            Template template = getTemplateFromClass( theme, platform, clazz, method, trySuper );
+            Template template = getTemplateFromClass( theme, core.getDefaultTheme(), platform, clazz, method, trySuper );
             context.put( "rb", getBundle( clazz ) );
             return render( template );
         }
 
 
         public String renderClass( Object object, Class clazz, String method ) throws NotFoundException {
-            Template template = getTemplateFromClass( theme, platform, clazz, method, true );
+            Template template = getTemplateFromClass( theme, core.getDefaultTheme(), platform, clazz, method, true );
             context.put( "item", object );
             context.put( "rb", getBundle( clazz ) );
             return render( template );
         }
 
         public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws NotFoundException {
-            Template template = getTemplateFromClass( theme, platform, clazz, method, trySuper );
+            Template template = getTemplateFromClass( theme, core.getDefaultTheme(), platform, clazz, method, trySuper );
             context.put( "item", object );
             context.put( "rb", getBundle( clazz ) );
             return render( template );
@@ -374,17 +372,19 @@ public class TemplateManager {
 
     /**
      * Given a class, get the corresponding template
+     *
+     * @param defaultTheme
      * @param object
      * @param method
      * @param trySuper If true, try objects super classes
      * @return
      */
-	public Template getTemplate( Theme theme, Theme.Platform platform, Object object, String method, boolean trySuper ) throws TemplateException {
+	public Template getTemplate( Theme theme, Theme defaultTheme, Theme.Platform platform, Object object, String method, boolean trySuper ) throws TemplateException {
 		/* Resolve template */
 		Class<?> clazz = object.getClass();
 		while( clazz != null && clazz != Object.class ) {
             try {
-                return getTemplate( theme, platform, getUrlFromClass( clazz.getCanonicalName(), method ) );
+                return getTemplate( theme, defaultTheme, platform, getUrlFromClass( clazz.getCanonicalName(), method ) );
             } catch( TemplateException e ) {
                 if( trySuper ) {
                     clazz = clazz.getSuperclass();
@@ -397,9 +397,9 @@ public class TemplateManager {
 		throw new TemplateException( method + " for " + object.getClass().getName() + " not found" );
 	}
 
-    public boolean templateExists( Theme theme, Theme.Platform platform, Object object, String method ) {
+    public boolean templateExists( Theme theme, Theme defaultTheme, Theme.Platform platform, Object object, String method ) {
         try {
-            getTemplate( theme, platform, getUrlFromClass( object.getClass().getCanonicalName(), method ) );
+            getTemplate( theme, defaultTheme, platform, getUrlFromClass( object.getClass().getCanonicalName(), method ) );
             return true;
         } catch( TemplateException e ) {
             return false;
@@ -409,9 +409,9 @@ public class TemplateManager {
     /**
      * Determine whether a template for the given {@link Class} exists or not
      */
-    public boolean templateForClassExists( Theme theme, Theme.Platform platform, Class<?> clazz, String method ) {
+    public boolean templateForClassExists( Theme theme, Theme defaultTheme, Theme.Platform platform, Class<?> clazz, String method ) {
         try {
-            getTemplate( theme, platform, getUrlFromClass( clazz, method ) );
+            getTemplate( theme, defaultTheme, platform, getUrlFromClass( clazz, method ) );
             return true;
         } catch( TemplateException e ) {
             return false;
@@ -422,18 +422,20 @@ public class TemplateManager {
 
     /**
      * Given a class, get the corresponding template
+     *
+     * @param defaultTheme
      * @param clazz
      * @param method
      * @param trySuper If true, try objects super classes
      * @return
      */
-	public Template getTemplateFromClass( Theme theme, Theme.Platform platform, Class<?> clazz, String method, boolean trySuper ) throws NotFoundException {
+	public Template getTemplateFromClass( Theme theme, Theme defaultTheme, Theme.Platform platform, Class<?> clazz, String method, boolean trySuper ) throws NotFoundException {
         Class<?> org = clazz;
 		/* Resolve template */
 		int cnt = 0;
 		while( clazz != null && clazz != Object.class ) {
             try {
-                return getTemplate( theme, platform, getUrlFromClass( clazz.getCanonicalName(), method ) );
+                return getTemplate( theme, defaultTheme, platform, getUrlFromClass( clazz.getCanonicalName(), method ) );
             } catch( TemplateException e ) {
                 if( trySuper ) {
                     clazz = clazz.getSuperclass();

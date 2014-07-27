@@ -8,8 +8,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
 
-import java.util.List;
-
 /**
  * @author cwolfgang
  */
@@ -109,8 +107,8 @@ public class ExtensionUtils {
         return d;
     }
 
-    public static Describable<?> getDescribable(AbstractExtension.ExtensionDescriptor descriptor, PersistedNode node, JsonObject jsonConfiguration) throws ItemInstantiationException {
-        Describable e = descriptor.newInstance( jsonConfiguration, node );
+    public static Describable<?> getDescribable( Core core, AbstractExtension.ExtensionDescriptor descriptor, PersistedNode node, JsonObject jsonConfiguration ) throws ItemInstantiationException {
+        Describable e = descriptor.newInstance( core, jsonConfiguration, node );
         e.updateNode( jsonConfiguration );
 
         /* Remove data!? */
@@ -152,7 +150,7 @@ public class ExtensionUtils {
         Descriptor<?> d = core.getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
-        Describable e = d.newInstance( jsonConfiguration, node );
+        Describable e = d.newInstance( core, jsonConfiguration, node );
         e.updateNode( jsonConfiguration );
 
         /* Remove data!? */

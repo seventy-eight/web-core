@@ -65,7 +65,7 @@ public class Tags extends ResourceExtension<Tags> {
     public static final class TagsDescriptor extends ExtensionDescriptor<Tags> {
 
         public TagsDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         @Override

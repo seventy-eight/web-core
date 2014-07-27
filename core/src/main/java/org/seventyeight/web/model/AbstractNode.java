@@ -105,7 +105,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         for( Layoutable d : core.getExtensions( Layoutable.class ) ) {
             if( d.isApplicable( this ) &&
-                core.getTemplateManager().templateForClassExists( theme, platform, d.getClass(), template ) ) {
+                core.getTemplateManager().templateForClassExists( theme, core.getDefaultTheme(), platform, d.getClass(), template ) ) {
                 ds.add( d );
             }
         }
@@ -120,7 +120,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         for( Descriptor d : core.getExtensionDescriptors( Layoutable.class ) ) {
             if( (( AbstractExtension.ExtensionDescriptor)d).isApplicable( this ) &&
-                core.getTemplateManager().templateForClassExists( theme, platform, d.getClazz(), template ) ) {
+                core.getTemplateManager().templateForClassExists( theme, core.getDefaultTheme(), platform, d.getClazz(), template ) ) {
                 ds.add( (AbstractExtension.ExtensionDescriptor<?>) d );
             }
         }

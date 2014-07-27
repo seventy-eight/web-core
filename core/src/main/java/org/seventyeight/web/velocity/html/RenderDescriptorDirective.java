@@ -9,6 +9,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Describable;
 import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.model.ItemInstantiationException;
@@ -74,6 +75,7 @@ public class RenderDescriptorDirective extends Directive {
         }
 
         Request request = (Request) context.get( "request" );
+        Core core = (Core) context.get( "core" );
 
         logger.fatal( "ITEM IS " + describable );
 
@@ -85,7 +87,7 @@ public class RenderDescriptorDirective extends Directive {
                 if(!d.getClazz().isInstance( describable )) {
                     logger.debug( "{} is not instance of {}", describable, d.getClazz() );
                     try {
-                        describable = d.getDescribable( describable, describable.getDocument() );
+                        describable = d.getDescribable( core, describable, describable.getDocument() );
                     } catch( ItemInstantiationException e ) {
                         logger.log( Level.WARN, "Unable to get describable for " + d.getClazz() );
                         describable = null;

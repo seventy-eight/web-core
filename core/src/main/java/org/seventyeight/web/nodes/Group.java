@@ -136,8 +136,8 @@ public class Group extends Resource<Group> implements Authorizable {
 
     public static class GroupDescriptor extends NodeDescriptor<Group> {
 
-        public GroupDescriptor( Core core ) {
-            super( core );
+        public GroupDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

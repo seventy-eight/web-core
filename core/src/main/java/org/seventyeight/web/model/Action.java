@@ -22,7 +22,7 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
     public static abstract class ActionDescriptor<T extends Action<T>> extends ExtensionDescriptor<T> {
 
         protected ActionDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         /*

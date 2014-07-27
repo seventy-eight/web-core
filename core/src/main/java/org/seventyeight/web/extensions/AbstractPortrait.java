@@ -49,7 +49,7 @@ public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrai
     public static abstract class AbstractPortraitDescriptor extends ExtensionDescriptor<AbstractPortrait> {
 
         protected AbstractPortraitDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         @Override

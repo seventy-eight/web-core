@@ -9,7 +9,6 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Descriptor;
-import org.seventyeight.web.utilities.Parameters;
 
 /**
  * @author cwolfgang
@@ -44,7 +43,7 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
             JsonObject json = new JsonObject();
             setJson( json );
             try {
-                T instance = getDescriptor().newInstance( json, core.getRoot() );
+                T instance = getDescriptor().newInstance( core, json, core.getRoot() );
                 instance.updateConfiguration( json );
                 instance.save();
                 node = instance;

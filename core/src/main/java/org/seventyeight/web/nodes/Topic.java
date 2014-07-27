@@ -158,8 +158,8 @@ public class Topic extends Resource<Topic> {
 
     public static class TopicDescriptor extends NodeDescriptor<Topic> {
 
-        public TopicDescriptor( Core core ) {
-            super( core );
+        public TopicDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

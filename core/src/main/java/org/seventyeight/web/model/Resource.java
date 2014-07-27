@@ -65,7 +65,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         try {
             AbstractPortrait.AbstractPortraitDescriptor descriptor = (AbstractPortrait.AbstractPortraitDescriptor) core.getDescriptor( json.get( "class" ).getAsString() );
             json.addProperty( "title", "portrait" );
-            AbstractPortrait abstractPortrait = descriptor.newInstance(json, this);
+            AbstractPortrait abstractPortrait = descriptor.newInstance( core, json, this);
             abstractPortrait.updateExtensions( json );
             //ExtensionUtils.retrieveExtensions( request, json, abstractPortrait );
             //abstractPortrait.save( request, json );

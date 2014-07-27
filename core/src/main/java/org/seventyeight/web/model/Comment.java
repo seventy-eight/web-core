@@ -115,8 +115,8 @@ public class Comment extends AbstractNode<Comment> {
 
     public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
-        public CommentDescriptor( Core core ) {
-            super( core );
+        public CommentDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

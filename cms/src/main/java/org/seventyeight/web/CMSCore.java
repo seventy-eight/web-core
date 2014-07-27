@@ -60,22 +60,22 @@ public class CMSCore extends Core {
 
         root.addNode( "language", new LanguageAction(this) );
 
-        addDescriptor( new Comment.CommentDescriptor(this) );
+        addDescriptor( new Comment.CommentDescriptor(root) );
 
-        addDescriptor( new User.UserDescriptor(this) );
+        addDescriptor( new User.UserDescriptor(root) );
 
-        addDescriptor( new Group.GroupDescriptor(this) );
+        addDescriptor( new Group.GroupDescriptor(root) );
 
-        addDescriptor( new FileResource.FileDescriptor(this) );
+        addDescriptor( new FileResource.FileDescriptor(root) );
 
         addDescriptor( new Tags.TagsDescriptor(this) );
         addDescriptor( new Event.EventDescriptor(this)   );
 
-        addDescriptor( new Topic.TopicDescriptor(this) );
+        addDescriptor( new Topic.TopicDescriptor(root) );
 
-        addDescriptor( new Collection.CollectionDescriptor(this) );
+        addDescriptor( new Collection.CollectionDescriptor(root) );
 
-        addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(this) );
+        addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(root) );
 
         addDescriptor( new GetAction.GetDescriptor(this) );
 
@@ -88,7 +88,7 @@ public class CMSCore extends Core {
         addExtension( new TabbedPartitionedResource() );
         addExtension( new CollectionExtension() );
 
-        addExtension( new ActivityWidget(this) );
+        addExtension( new ActivityWidget() );
 
         addExtension( new FileTypeListener(this) );
         addExtension( new ImageFileType() );
@@ -96,8 +96,8 @@ public class CMSCore extends Core {
         addExtension( new SearchFormatListener(this) );
         //addExtension( new CollectionFormatter() );
         addExtension( new WidgetListener(this) );
-        addExtension( new NextEventWidget(this) );
-        addExtension( new LastUsersWidget(this) );
+        addExtension( new NextEventWidget() );
+        addExtension( new LastUsersWidget() );
 
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );
@@ -105,10 +105,10 @@ public class CMSCore extends Core {
         addDescriptor( new BasicResourceBasedSecurity.BasicResourceBasedSecurityDescriptor(this) );
         addDescriptor( new PublicACL.PublicACLDescriptor(this) );
 
-        addDescriptor( new Artist.ArtistDescriptor(this) );
-        addDescriptor( new Venue.VenueDescriptor(this) );
-        addDescriptor( new Concert.ConcertDescriptor(this) );
-        addDescriptor( new Festival.FestivalDescriptor(this) );
+        addDescriptor( new Artist.ArtistDescriptor(root) );
+        addDescriptor( new Venue.VenueDescriptor(root) );
+        addDescriptor( new Concert.ConcertDescriptor(root) );
+        addDescriptor( new Festival.FestivalDescriptor(root) );
 
         addDescriptor( new Follow.FollowDescriptor(this) );
 

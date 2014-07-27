@@ -13,7 +13,7 @@ public class DummyCore extends Core {
     public DummyCore( RootNode root, File path, String dbname ) throws CoreException {
         super( root, path, dbname );
 
-        addDescriptor( new Group.GroupDescriptor(this) );
-        addDescriptor( new User.UserDescriptor(this) );
+        addDescriptor( new Group.GroupDescriptor(root) );
+        addDescriptor( new User.UserDescriptor(root) );
     }
 }

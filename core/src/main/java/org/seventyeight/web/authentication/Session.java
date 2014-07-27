@@ -7,7 +7,6 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.nodes.User;
 
 import java.util.Collections;
 import java.util.Date;
@@ -124,7 +123,7 @@ public class Session extends AbstractNode<Session> {
     public static class SessionsDescriptor extends Descriptor<Session> {
 
         public SessionsDescriptor( Core core ) {
-            super( core );
+            super();
         }
 
         @Override
@@ -138,7 +137,7 @@ public class Session extends AbstractNode<Session> {
         }
 
         @Override
-        public List<ExtensionGroup> getApplicableExtensions() {
+        public List<ExtensionGroup> getApplicableExtensions( Core core ) {
             return Collections.emptyList();
         }
 

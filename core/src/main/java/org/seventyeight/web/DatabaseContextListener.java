@@ -198,14 +198,12 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         logger.debug( core.getTemplateManager().toString() );
         core.getTemplateManager().initialize();
 
-        /*
         try {
             logger.debug( "--------------INSTALL-----------------------------------------" );
-            //install(core);
+            install(core);
         } catch( DatabaseException e ) {
             logger.fatal( "Unable to install", e );
         }
-        */
 
         /* Asynch */
         //Executor executor = new ThreadPoolExecutor(10, 10, 50000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100));

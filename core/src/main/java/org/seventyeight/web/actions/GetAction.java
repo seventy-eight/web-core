@@ -26,7 +26,7 @@ public class GetAction extends Action<GetAction> implements Parent {
 
     @Override
     public Node getChild( String name ) throws NotFoundException {
-        return (Node) ((Getable)parent).get( name );
+        return (Node) ((Getable)parent).get( core, name );
     }
 
     @Override

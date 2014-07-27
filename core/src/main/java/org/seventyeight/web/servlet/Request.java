@@ -103,6 +103,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         return platform;
     }
 
+    @Override
     public Core getCore() {
         Core core = (Core) getServletContext().getAttribute( "core" );
         if(core == null) {

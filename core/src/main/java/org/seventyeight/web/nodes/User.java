@@ -288,8 +288,8 @@ public class User extends Resource<User> implements Authorizable {
 
         public String testString;
 
-        public UserDescriptor( Core core ) {
-            super( core );
+        public UserDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override

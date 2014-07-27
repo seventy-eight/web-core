@@ -110,8 +110,8 @@ public class FileResource extends UploadableNode<FileResource> {
 
         private DefaultFileType dft = new DefaultFileType();
 
-        public FileDescriptor( Core core ) {
-            super( core );
+        public FileDescriptor( Node parent ) {
+            super( parent );
         }
 
         @Override
