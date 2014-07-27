@@ -1,5 +1,6 @@
 package org.seventyeight.web;
 
+import org.seventyeight.web.model.RootNode;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
 
@@ -9,21 +10,10 @@ import java.io.File;
  * @author cwolfgang
  */
 public class DummyCore extends Core {
-    public DummyCore( File path, String dbname ) throws CoreException {
-        super( path, dbname );
+    public DummyCore( RootNode root, File path, String dbname ) throws CoreException {
+        super( root, path, dbname );
 
-        addDescriptor( new Group.GroupDescriptor() );
-        addDescriptor( new User.UserDescriptor() );
-    }
-
-
-    @Override
-    public void save() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String getIdentifier() {
-        return "Root";
+        addDescriptor( new Group.GroupDescriptor(this) );
+        addDescriptor( new User.UserDescriptor(this) );
     }
 }

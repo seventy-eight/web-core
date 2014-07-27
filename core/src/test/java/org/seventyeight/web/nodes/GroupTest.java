@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.web.DummyCoreEnvironment;
+import org.seventyeight.web.Root;
 import org.seventyeight.web.WebCoreEnv;
 
 import static com.mongodb.util.MyAsserts.assertFalse;
@@ -22,7 +23,7 @@ public class GroupTest {
     private static Logger logger = LogManager.getLogger( GroupTest.class );
 
     @Rule
-    public WebCoreEnv env = new DummyCoreEnvironment( "seventyeight-test-group-test" );
+    public WebCoreEnv env = new DummyCoreEnvironment( new Root(), "seventyeight-test-group-test" );
 
     @Test
     public void basicTest() throws DatabaseException {

@@ -60,7 +60,7 @@ public class CMSCore extends Core {
 
         root.addNode( "language", new LanguageAction(this) );
 
-        addDescriptor( new Comment.CommentDescriptor() );
+        addDescriptor( new Comment.CommentDescriptor(this) );
 
         addDescriptor( new User.UserDescriptor(this) );
 
@@ -77,7 +77,7 @@ public class CMSCore extends Core {
 
         addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(this) );
 
-        addDescriptor( new GetAction.GetDescriptor() );
+        addDescriptor( new GetAction.GetDescriptor(this) );
 
         addSearchable( new TitleSearch() );
         addSearchable( new TypeSearch() );
@@ -102,8 +102,8 @@ public class CMSCore extends Core {
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );
 
-        addDescriptor( new BasicResourceBasedSecurity.BasicResourceBasedSecurityDescriptor() );
-        addDescriptor( new PublicACL.PublicACLDescriptor() );
+        addDescriptor( new BasicResourceBasedSecurity.BasicResourceBasedSecurityDescriptor(this) );
+        addDescriptor( new PublicACL.PublicACLDescriptor(this) );
 
         addDescriptor( new Artist.ArtistDescriptor(this) );
         addDescriptor( new Venue.VenueDescriptor(this) );

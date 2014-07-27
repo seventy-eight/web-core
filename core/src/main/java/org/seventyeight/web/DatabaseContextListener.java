@@ -60,13 +60,15 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         File path = new File( spath );
 
         Core core = null;
-        Root root = new Root(core); // Uh oh, cyclic....
+        Root root = new Root();
         try {
             core = getCore( root, path, "seventyeight" ).initialize();
         } catch( CoreException e ) {
             e.printStackTrace();
             logger.fatal( "Failed to initialize core", e );
         }
+
+        root.initialize( core );
 
         try {
             List<File> plugins = core.extractPlugins( core.getPath() );
@@ -196,12 +198,14 @@ public abstract class DatabaseContextListener<T extends Core> implements Servlet
         logger.debug( core.getTemplateManager().toString() );
         core.getTemplateManager().initialize();
 
+        /*
         try {
             logger.debug( "--------------INSTALL-----------------------------------------" );
-            install(core);
+            //install(core);
         } catch( DatabaseException e ) {
             logger.fatal( "Unable to install", e );
         }
+        */
 
         /* Asynch */
         //Executor executor = new ThreadPoolExecutor(10, 10, 50000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100));

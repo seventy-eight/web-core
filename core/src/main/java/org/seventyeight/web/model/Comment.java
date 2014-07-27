@@ -115,7 +115,7 @@ public class Comment extends AbstractNode<Comment> {
 
     public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
-        protected CommentDescriptor( Core core ) {
+        public CommentDescriptor( Core core ) {
             super( core );
         }
 

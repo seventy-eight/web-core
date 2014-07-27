@@ -21,13 +21,13 @@ import static org.junit.Assert.assertTrue;
 public class CoreTest {
 
     @ClassRule
-    public static DummyCoreEnvironment env = new DummyCoreEnvironment( "coreTest" );
+    public static DummyCoreEnvironment env = new DummyCoreEnvironment( new Root(), "coreTest" );
 
     @Test
     public void test01() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException, NoAuthorizationException {
 
         TokenList tokens = new TokenList( "/user/wolle" );
-        Node nodeItem = Core.getInstance().resolveNode( tokens, null );
+        Node nodeItem = env.getCore().resolveNode( tokens, null );
 
         System.out.println( tokens );
 
@@ -38,18 +38,18 @@ public class CoreTest {
     @Test
     public void test02() throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException, NoAuthorizationException {
 
-        Core.getInstance().addNode( "user", new DummyNode( Core.getInstance() ) );
+        env.getCore().getRoot().addNode( "user", new DummyNode( env.getCore().getRoot() ) );
 
         TokenList tokens = new TokenList( "/user/wolle" );
-        Node nodeItem = Core.getInstance().resolveNode( tokens, null );
+        Node nodeItem = env.getCore().resolveNode( tokens, null );
 
         System.out.println( tokens );
     }
 
     public User createUser( String username ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
         //User user = Core.getInstance().createNode( User.class, "users" );
-        User.UserDescriptor d = Core.getInstance().getDescriptor( User.class );
-        User user = d.newInstance( "owner-0", Core.getInstance(), username );
+        User.UserDescriptor d = env.getCore().getDescriptor( User.class );
+        User user = d.newInstance( "owner-0", env.getCore().getRoot(), username );
 
         Parameters p = new Parameters();
         p.put( "username", username );

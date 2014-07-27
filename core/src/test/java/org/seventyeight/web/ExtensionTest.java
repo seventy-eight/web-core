@@ -10,7 +10,7 @@ import org.seventyeight.web.model.NotFoundException;
 public class ExtensionTest {
 
     @ClassRule
-    public static DummyCoreEnvironment env = new DummyCoreEnvironment( "coreTest" );
+    public static DummyCoreEnvironment env = new DummyCoreEnvironment( new Root(), "coreTest" );
 
     @Test
     public void test01() throws NotFoundException {

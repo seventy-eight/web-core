@@ -18,9 +18,8 @@ public class Root implements TopLevelNode, RootNode, Parent {
      */
     protected ConcurrentMap<String, Node> children = new ConcurrentHashMap<String, Node>();
 
-    protected Core core;
-
-    public Root(Core core) {
+    @Override
+    public void initialize( Core core ) {
         /* Mandatory */
         children.put( "get", new Get( core, this ) );  // This
         children.put( "resource", new ResourceAction( core ) ); // Or that?

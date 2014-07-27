@@ -2,6 +2,7 @@ package org.seventyeight.web.functional.actiontest;
 
 import com.google.gson.JsonObject;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 
 /**
@@ -9,8 +10,8 @@ import org.seventyeight.web.model.*;
  */
 public class MyNode extends AbstractNode<MyNode> implements Parent {
 
-    public MyNode( Node parent, MongoDocument document ) {
-        super( parent, document );
+    public MyNode( Core core, Node parent, MongoDocument document ) {
+        super( core, parent, document );
     }
 
     public void setValue( String key, String value ) {

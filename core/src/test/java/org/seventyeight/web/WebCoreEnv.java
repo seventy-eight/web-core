@@ -9,6 +9,7 @@ import org.seventyeight.database.DatabaseException;
 import org.seventyeight.database.mongodb.MongoDatabase;
 import org.seventyeight.web.installers.GroupInstall;
 import org.seventyeight.web.installers.UserInstall;
+import org.seventyeight.web.model.RootNode;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
 
@@ -27,15 +28,16 @@ public abstract class WebCoreEnv<C extends Core> implements TestRule {
     protected String databaseName;
     protected MongoDatabase db;
     protected C core;
+    protected RootNode root;
 
-    public WebCoreEnv( String databaseName ) {
+    public WebCoreEnv( RootNode root, String databaseName ) {
         this.databaseName = databaseName;
     }
 
-    public abstract C getCore( File path, String databaseName ) throws CoreException;
+    protected abstract C getCore( RootNode root, File path, String databaseName ) throws CoreException;
 
-    protected void before( File path ) throws UnknownHostException, CoreException {
-        this.core = getCore( path, databaseName );
+    protected void before( RootNode root, File path ) throws UnknownHostException, CoreException {
+        this.core = getCore( root, path, databaseName );
         db = core.getDatabase();
     }
 
@@ -48,14 +50,18 @@ public abstract class WebCoreEnv<C extends Core> implements TestRule {
         return core;
     }
 
+    public RootNode getRoot() {
+        return root;
+    }
+
     public User createUser( String name ) throws DatabaseException {
-        UserInstall ui = new UserInstall( name, name + "@seventyeight.org" );
+        UserInstall ui = new UserInstall( core, name, name + "@seventyeight.org" );
         ui.install();
         return ui.getValue();
     }
 
     public Group createGroup( String name, User owner ) throws DatabaseException {
-        GroupInstall i = new GroupInstall( name, owner );
+        GroupInstall i = new GroupInstall( core, name, owner );
         i.install();
         return i.getValue();
     }
@@ -87,7 +93,7 @@ public abstract class WebCoreEnv<C extends Core> implements TestRule {
                 System.out.println( " ===== Setting up Seventy Eight Web Environment =====" );
 
                 try {
-                    before( path );
+                    before( root, path );
                     System.out.println( " ===== Running test: " + description.getDisplayName() + " =====" );
                     base.evaluate();
                 } catch( Exception e ) {

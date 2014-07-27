@@ -315,8 +315,8 @@ public abstract class Core implements CoreSystem {
 
         try {
             Class<PersistedNode> eclass = (Class<PersistedNode>) Class.forName(clazz, true, classLoader );
-            Constructor<?> c = eclass.getConstructor( Node.class, MongoDocument.class );
-            return (T) c.newInstance( parent, document );
+            Constructor<?> c = eclass.getConstructor( Core.class, Node.class, MongoDocument.class );
+            return (T) c.newInstance( this, parent, document );
         } catch( Exception e ) {
             logger.error( "Unable to get the class " + clazz );
             throw new ItemInstantiationException( "Unable to get the class " + clazz, e );

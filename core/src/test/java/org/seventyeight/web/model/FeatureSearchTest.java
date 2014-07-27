@@ -43,10 +43,12 @@ public class FeatureSearchTest {
         }
     }
 
+    /*
     @Test
     public void testParser() {
         MongoDBQuery query = FeatureSearch.getSimpleQuery( "term1 \"term 2\" jaha" );
 
         System.out.println(query.getDocument());
     }
+    */
 }
