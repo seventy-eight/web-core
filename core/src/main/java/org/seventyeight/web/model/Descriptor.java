@@ -67,8 +67,8 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
         T instance = null;
         try {
-            Constructor<T> c = clazz.getConstructor( Node.class, MongoDocument.class );
-            instance = c.newInstance( parent, document );
+            Constructor<T> c = clazz.getConstructor( Core.class, Node.class, MongoDocument.class );
+            instance = c.newInstance( core, parent, document );
         } catch( Exception e ) {
             throw new ItemInstantiationException( "Unable to instantiate " + clazz.getName(), e );
         }

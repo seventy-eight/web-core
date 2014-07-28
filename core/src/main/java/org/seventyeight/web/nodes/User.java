@@ -60,7 +60,7 @@ public class User extends Resource<User> implements Authorizable {
     @Override
     public void updateNode( JsonObject jsonData ) {
 
-        if(jsonData != null) {
+        if(jsonData == null) {
             throw new IllegalArgumentException( "Json object was null" );
         }
 
@@ -260,6 +260,10 @@ public class User extends Resource<User> implements Authorizable {
         }
         //MongoDocument userDoc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( "username", username ) );
         MongoDocument d = core.getId( new MongoDBQuery().is( "username", username ) );
+
+        if(d == null || d.isNull()) {
+            return null;
+        }
 
         MongoDocument userDoc = core.getDocumentCache().get( d.getIdentifier() );
 

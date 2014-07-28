@@ -947,40 +947,4 @@ public abstract class Core implements CoreSystem {
         return mainMenu;
     }
 
-    @PostMethod
-    public void doLogin( Request request, Response response ) throws AuthenticationException, IOException {
-
-        String username = request.getValue( Authentication.__NAME_KEY );
-        String password = request.getValue( Authentication.__PASS_KEY );
-        logger.debug( "U: " + username + ", P:" + password );
-
-        Session session = getAuthentication().login( username, password );
-
-        session.save();
-
-        Cookie c = new Cookie( Authentication.__SESSION_ID, session.getIdentifier() );
-        c.setMaxAge( session.getTimeToLive() );
-        response.addCookie( c );
-
-        response.sendRedirect( request.getValue( "url", "/" ) );
-    }
-
-    public void doLogout( Request request, Response response ) throws IOException {
-        logger.debug( "Logging out" );
-
-        for( Cookie cookie : request.getCookies() ) {
-            logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
-            if( cookie.getName().equals( Authentication.__SESSION_ID ) ) {
-                cookie.setMaxAge( 0 );
-                response.addCookie( cookie );
-
-                /* Remove the session object */
-                sessionManager.removeSession( cookie.getValue() );
-
-                break;
-            }
-        }
-
-        response.sendRedirect( "/" );
-    }
 }

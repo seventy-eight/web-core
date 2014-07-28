@@ -20,7 +20,7 @@
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('accessConfig', this)">Access</a>
 
-            #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+            #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions($core) )
                 <a href="#" class="button" onclick="activate('${extensionGroup.getName()}config', this)">$extensionGroup.getName()</a>
             #end
         </td>
@@ -49,7 +49,7 @@
             </div>
 
 
-                #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+                #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions($core) )
                 <div name="extensions">
                     <div id="${extensionGroup.getName()}config" style="display: none" class="configurationDiv">
                         <input type="hidden" name="extension" value="$extensionGroup.getClazz().getName()" />
@@ -84,7 +84,7 @@
 
 </form>
 
-#foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions() )
+#foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions($core) )
     #foreach($extension in $extensionGroup.getDescriptors())
         #if($extension.getPostConfigurationPage())
             $extension.getClazz() - $extension.getPostConfigurationPage()<br>
