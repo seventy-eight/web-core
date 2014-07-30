@@ -118,11 +118,11 @@ public class MongoDocument implements Document {
     }
 
     public MongoDocument getr2( String ... keys ) {
-
         DBObject current = document;
         int i = 0;
         for( ; i < keys.length ; i++ ) {
             String key = keys[i];
+            System.out.println( current.toMap() );
             Object o = current.get( key );
 
             if( o == null ) {
@@ -167,7 +167,7 @@ public class MongoDocument implements Document {
                     t.put( o, t.get( o ) );
                 }
             }
-            document.put( key, t );
+            document.put( key, new BasicDBObject( t ) );
         } else {
             document.put( key, value );
         }
