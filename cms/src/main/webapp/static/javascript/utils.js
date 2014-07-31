@@ -313,3 +313,54 @@ Utils.fetchResourceView = function(id, view, f) {
         error: function(ajax, text, error) {alert(error)}
     });
 }
+
+
+Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, inputCallback) {
+    //$(function() {
+        $( '#' + autoCompleteInput ).autocomplete({
+            source: inputSource,
+            select: function( event, ui ) {
+                this.value = "";
+                //$('#' + container).append('<table><tr><td id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
+                //$('#' + container).append('<div class="" id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
+                $('#' + container).append(inputCallback(ui.item._id));
+                add(ui.item._id);
+                return false;
+            }
+        }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li>" )
+                .append( "<a>" + item.title + ", " + item.type + "</a>" )
+                .appendTo( ul );
+        };
+    //});
+
+    $(function() {
+        $('.' + callbackClass).each(function(index) {
+            getView(this.id);
+        });
+    });
+
+    function add(id) {
+        $.ajax({
+            type: "POST",
+            url: addUrl,
+            data: {"resource": id},
+            success: function(data, textStatus, jqxhr){
+                getView(id);
+            },
+            error: function(ajax, text, error) {alert(error); $('#' + id + '.newResource').remove()}
+        });
+    }
+
+    function getView(id) {
+        $.ajax({
+            type: "GET",
+            url: "/resource/" + id + "/getView?view=wide",
+            success: function(data, textStatus, jqxhr){
+                $('#' + id).html(data);
+            },
+            error: function(ajax, text, error) {alert(error)}
+        });
+    }
+
+}

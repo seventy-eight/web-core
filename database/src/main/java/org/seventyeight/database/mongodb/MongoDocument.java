@@ -322,9 +322,14 @@ public class MongoDocument implements Document {
         return get( "_id" );
     }
 
-    public boolean arrayHas( String field, String value ) {
-
-        return true;
+    public boolean arrayHasId( String field, String id ) {
+        List<String> ids = getObjectList2( field );
+        for(String i : ids) {
+            if(i.equals( id )) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Map getMap() {
