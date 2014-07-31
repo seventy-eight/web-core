@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        
+    </head>
+
+<body>
+<table align="center" style="width:500px">
+    <tr>
+        <td>
+            <img src="/theme/logo.png" alt="">
+        </td>
+    </tr>
+
+    #if( !$request.isAuthenticate() )
+        <tr>
+            <td align="center" style="border-style: solid">
+                #parse( "/default/org/seventyeight/web/login.vm" )
+            </td>
+        </tr>
+    #end
+</table>
+</body>
+</html>
+
