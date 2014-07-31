@@ -8,11 +8,14 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -41,8 +44,8 @@ public class Concert extends Resource<Concert> implements Event {
             document.set( "venue", venueElement.getAsString() );
 
             JsonElement artistsElement = jsonData.get( "artists" );
-            if(artistsElement.isJsonNull()) {
-
+            if(artistsElement == null || artistsElement.isJsonNull()) {
+                logger.debug( "No artists provided" );
             } else {
                 JsonArray artistsArray = artistsElement.getAsJsonArray();
                 List<String> artists = new ArrayList<String>( artistsArray.size() );
@@ -73,6 +76,30 @@ public class Concert extends Resource<Concert> implements Event {
 
     public void setAsPartOf(Resource<?> resource) {
         document.set( "partOf", resource.getIdentifier() );
+    }
+
+    public boolean hasArtist(String id) {
+        return document.arrayHasId( "artists", id );
+    }
+
+    @PostMethod
+    public void doAddArtist(Request request, Response response) throws IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        String artist = request.getValue( "resource", null );
+        logger.debug( "Adding artist to {}", this );
+
+        if(hasArtist( artist )) {
+            response.sendError( HttpServletResponse.SC_CONFLICT, "The artist with id " + artist + ", is already added" );
+            return;
+        }
+
+        if(artist != null) {
+            document.addToList( "artists", artist );
+            save();
+        } else {
+            throw new IllegalArgumentException( "No artist provided" );
+        }
     }
 
     public static class ConcertDescriptor extends NodeDescriptor<Concert> {

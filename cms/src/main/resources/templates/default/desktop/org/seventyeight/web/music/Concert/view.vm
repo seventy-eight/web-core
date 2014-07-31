@@ -1,11 +1,27 @@
 
-#foreach($id in $item.getArtistIds())
-    <div id="$id" class="artist" style="float: left">
-    Loading
-    </div>
-#end
+<div id="container">
+    #foreach($id in $item.getArtistIds())
+        <div id="$id" class="artist" style="float: left">
+        Loading
+        </div>
+    #end
+</div>
+
+<div class="ui-widget" style="width: 100%">
+    <input id="artistInput">
+</div>
+
+<br>
+
 
 <script type="text/javascript">
+
+    var callback = function(id){ return '<div class="newResource" id="' + id + '" style="float:left">Waiting for ' + id + '</div>' };
+    //$("#container").append(callback("hej"));
+    Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', 'addArtist', 'artist', callback);
+
+
+    /*
     $(function() {
         $('.artist').each(function(index) {
             getArtistView(this.id);
@@ -21,4 +37,5 @@
             error: function(ajax, text, error) {alert(error)}
         });
     }
+    */
 </script>
