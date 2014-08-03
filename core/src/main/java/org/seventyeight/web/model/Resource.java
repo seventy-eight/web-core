@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.DeleteMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
@@ -21,6 +22,7 @@ import org.seventyeight.web.utilities.DocumentFinder;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -349,6 +351,19 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             } catch( ItemInstantiationException e ) {
                 throw new IllegalStateException( "Unable to instantiate ACL for " + this, e );
             }
+        }
+    }
+
+    @PostMethod
+    public void doDelete(Request request, Response response) throws IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        logger.debug( "Deleting {}", this );
+
+        if(parent != null && parent instanceof DeletingParent) {
+            ( (DeletingParent) parent ).deleteChild( this );
+        } else {
+            response.sendError( HttpServletResponse.SC_BAD_REQUEST, "Whoops" );
         }
     }
 }

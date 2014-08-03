@@ -72,7 +72,7 @@ public class ExecuteUtils {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
 
         switch( requestMethod ) {
-            case POST:
+        case POST:
             return ClassUtils.getInheritedPostMethod( object.getClass(), m, Request.class, Response.class );
 
         case GET:
@@ -81,7 +81,11 @@ public class ExecuteUtils {
         case PUT:
             return ClassUtils.getInheritedPutMethod( object.getClass(), m, Request.class, Response.class );
 
-        default:
+        case DELETE:
+            return ClassUtils.getInheritedDeleteMethod( object.getClass(), m, Request.class, Response.class );
+
+
+            default:
             return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
         }
     }

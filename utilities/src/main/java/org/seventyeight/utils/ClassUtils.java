@@ -65,6 +65,23 @@ public class ClassUtils {
         throw new NoSuchMethodException( method );
     }
 
+    public static Method getInheritedDeleteMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
+        while( clazz != null ) {
+            try {
+                Method m = clazz.getDeclaredMethod( method, args );
+                if( m.getAnnotation( DeleteMethod.class ) != null ) {
+                    return m;
+                }
+            } catch( NoSuchMethodException e ) {
+                /* Just carry on */
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        throw new NoSuchMethodException( method );
+    }
+
 
     public static List<Class<?>> getInterfaces( Class<?> clazz ) {
         //System.out.println( "[CLASS=" + clazz + "]" );

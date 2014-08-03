@@ -200,6 +200,11 @@ public class MongoDocument implements Document {
         return this;
     }
 
+    public <T> boolean removeFromList( String key, T value ) {
+        BasicDBList list = (BasicDBList) document.get( key );
+        return list.remove( value );
+    }
+
     /**
      * Add an entry to a field. If the entry doesn't exist, it will be created.
      *

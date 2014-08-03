@@ -33,7 +33,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
     @Override
     public void initialize( Core core ) {
         /* Mandatory */
-        children.put( "get", new Get( core, this ) );  // This
+        //children.put( "get", new Get( core, this ) );  // This
         children.put( "resource", new ResourceAction( core ) ); // Or that?
     }
 
@@ -118,4 +118,8 @@ public class Root implements TopLevelNode, RootNode, Parent {
         response.sendRedirect( "/" );
     }
 
+    @Override
+    public void deleteChild( Node node ) {
+        logger.debug( "DELETING {}", node );
+    }
 }

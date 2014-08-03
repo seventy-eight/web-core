@@ -1,6 +1,8 @@
 package org.seventyeight.web.actions;
 
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
@@ -8,7 +10,9 @@ import org.seventyeight.web.model.*;
 /**
  * @author cwolfgang
  */
-public class GetAction extends Action<GetAction> implements Parent {
+public class GetAction extends Action<GetAction> implements Parent, DeletingParent {
+
+    private static Logger logger = LogManager.getLogger( GetAction.class );
 
     public GetAction( Core core, Node parent, MongoDocument document ) {
         super( core, parent, document );
@@ -32,6 +36,15 @@ public class GetAction extends Action<GetAction> implements Parent {
     @Override
     public void updateNode( JsonObject jsonData ) {
       /* Implementation is a no op */
+    }
+
+    @Override
+    public void deleteChild( Node node ) {
+        if(parent != null && parent instanceof DeletingParent) {
+            ( (DeletingParent) parent ).deleteChild( node );
+        } else {
+            logger.debug( "No deleting operation for {}", this );
+        }
     }
 
     public static class GetDescriptor extends Action.ActionDescriptor<GetAction> {

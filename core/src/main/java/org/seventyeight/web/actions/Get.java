@@ -8,6 +8,7 @@ import org.seventyeight.web.model.*;
 
 /**
  * @author cwolfgang
+ * @deprecated ????
  */
 public class Get implements Node, Parent {
 

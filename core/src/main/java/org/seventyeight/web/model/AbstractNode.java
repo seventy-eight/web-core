@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author cwolfgang
  */
-public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedNode implements TopLevelNode, Describable<T>, Ownable {
+public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedNode implements TopLevelNode, Describable<T>, Ownable, DeletingParent {
 
     private static Logger logger = LogManager.getLogger( AbstractNode.class );
 
@@ -594,5 +594,19 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     @Override
     public String getMainTemplate() {
         return "org/seventyeight/web/main.vm";
+    }
+
+    /**
+     * Base implementation just delegates the deletion operation to its own parent.
+     * @param node
+     */
+    @Override
+    public void deleteChild( Node node ) {
+        logger.debug( "{} deleting {}", this, node );
+        if(parent != null && parent instanceof DeletingParent) {
+            ( (DeletingParent) parent ).deleteChild( node );
+        } else {
+            logger.debug( "No deleting operation for {}", this );
+        }
     }
 }

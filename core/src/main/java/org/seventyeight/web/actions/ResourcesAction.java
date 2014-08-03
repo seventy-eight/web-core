@@ -11,10 +11,7 @@ import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.search.SearchFormatter;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.FeatureSearch;
-import org.seventyeight.web.model.ItemInstantiationException;
-import org.seventyeight.web.model.Node;
-import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -27,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author cwolfgang
  */
-public class ResourcesAction implements Node {
+public class ResourcesAction implements Node, DeletingParent {
 
     private static Logger logger = LogManager.getLogger( ResourcesAction.class );
 
@@ -138,5 +135,10 @@ public class ResourcesAction implements Node {
         } else {
             response.getWriter().write( "{}" );
         }
+    }
+
+    @Override
+    public void deleteChild( Node node ) {
+        core.getRoot().deleteChild( node );
     }
 }

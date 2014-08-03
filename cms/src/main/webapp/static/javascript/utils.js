@@ -315,7 +315,7 @@ Utils.fetchResourceView = function(id, view, f) {
 }
 
 
-Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, inputCallback) {
+Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, removeUrl, callbackClass, inputCallback) {
     //$(function() {
         $( '#' + autoCompleteInput ).autocomplete({
             source: inputSource,
@@ -339,6 +339,18 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
             getView(this.id);
         });
     });
+
+    function remove(id) {
+        $.ajax({
+            type: "POST",
+            url: removeUrl + id + '/delete',
+            data: {"resource": id},
+            success: function(data, textStatus, jqxhr){
+                $('#' + id).remove()
+            },
+            error: function(ajax, text, error) {alert(error);}
+        });
+    }
 
     function add(id) {
         $.ajax({

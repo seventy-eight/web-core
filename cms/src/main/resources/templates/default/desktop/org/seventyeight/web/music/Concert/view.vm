@@ -1,4 +1,8 @@
 
+<div class="ui-widget" style="width: 100%">
+    <input id="artistInput">
+</div>
+
 <div id="container">
     #foreach($id in $item.getArtistIds())
         <div id="$id" class="artist" style="float: left">
@@ -7,35 +11,10 @@
     #end
 </div>
 
-<div class="ui-widget" style="width: 100%">
-    <input id="artistInput">
-</div>
-
-<br>
-
-
 <script type="text/javascript">
 
-    var callback = function(id){ return '<div class="newResource" id="' + id + '" style="float:left">Waiting for ' + id + '</div>' };
+    var callback = function(id){ return '<div onclick="remove("' + id + '"))" class="newResource" id="' + id + '" style="float:left">Waiting for ' + id + '</div>' };
     //$("#container").append(callback("hej"));
-    Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', 'addArtist', 'artist', callback);
+    Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', 'addArtist', 'get/', 'artist', callback);
 
-
-    /*
-    $(function() {
-        $('.artist').each(function(index) {
-            getArtistView(this.id);
-        });
-    });
-    function getArtistView(id) {
-        $.ajax({
-            type: "GET",
-            url: "/resource/" + id + "/getView?view=wide",
-            success: function(data, textStatus, jqxhr){
-                $('#' + id).html(data);
-            },
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
-    */
 </script>

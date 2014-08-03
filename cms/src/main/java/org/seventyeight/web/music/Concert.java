@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public class Concert extends Resource<Concert> implements Event {
+public class Concert extends Resource<Concert> implements Event, Getable<Artist> {
 
     private static Logger logger = LogManager.getLogger( Concert.class );
 
@@ -82,6 +82,19 @@ public class Concert extends Resource<Concert> implements Event {
         return document.arrayHasId( "artists", id );
     }
 
+    @Override
+    public Artist get( Core core, String token ) throws NotFoundException {
+        if(hasArtist( token )) {
+            try {
+                return core.getNodeById( this, token );
+            } catch( ItemInstantiationException e ) {
+                throw new NotFoundException( token + " not found, " + e.getMessage() );
+            }
+        } else {
+            throw new NotFoundException( token );
+        }
+    }
+
     @PostMethod
     public void doAddArtist(Request request, Response response) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
@@ -100,6 +113,19 @@ public class Concert extends Resource<Concert> implements Event {
         } else {
             throw new IllegalArgumentException( "No artist provided" );
         }
+    }
+
+    @Override
+    public void deleteChild( Node node ) {
+        if(node != null && node instanceof Artist) {
+            if(hasArtist( ( (Artist) node ).getIdentifier() )) {
+                document.removeFromList( "artists", ( (Artist) node ).getIdentifier() );
+            } else {
+                throw new IllegalArgumentException( node + " does not belong to " + this );
+            }
+        }
+
+        save();
     }
 
     public static class ConcertDescriptor extends NodeDescriptor<Concert> {
