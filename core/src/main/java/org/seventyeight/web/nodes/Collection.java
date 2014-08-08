@@ -3,12 +3,14 @@ package org.seventyeight.web.nodes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
@@ -20,6 +22,7 @@ import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.SearchHelper;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -162,6 +165,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         return MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).count( query ) > 0;
     }
 
+    @GetMethod
     public void doFetch( Request request, Response response ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );

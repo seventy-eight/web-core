@@ -3,6 +3,7 @@ package org.seventyeight.web.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.servlet.Request;
@@ -23,6 +24,7 @@ public abstract class Widget extends Configurable implements ExtensionPoint, Nod
 
     public abstract String getName();
 
+    @GetMethod
     public void doView(Request request, Response response) throws TemplateException, IOException {
         response.setRenderType( Response.RenderType.NONE );
 

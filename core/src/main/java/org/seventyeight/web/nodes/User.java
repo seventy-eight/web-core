@@ -1,12 +1,14 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Authorizable;
@@ -306,6 +308,7 @@ public class User extends Resource<User> implements Authorizable {
             return "user";
         }
 
+        @GetMethod
         public void doGetUsers(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 

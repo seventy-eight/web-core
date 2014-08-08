@@ -1,12 +1,14 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.Date;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.filetype.DefaultFileType;
 import org.seventyeight.web.extensions.filetype.FileType;
@@ -57,6 +59,7 @@ public class FileResource extends UploadableNode<FileResource> {
         return core.getDescriptor( FileResource.class );
     }
 
+    @GetMethod
     public void doFile( Request request, Response response ) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
         response.deliverFile( request, getFile(), true );

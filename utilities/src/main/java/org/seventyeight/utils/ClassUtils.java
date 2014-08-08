@@ -30,6 +30,23 @@ public class ClassUtils {
 
         throw new NoSuchMethodException( method );
     }
+    
+    public static Method getInheritedAnnotatedMethod( Class<?> clazz, String method, Class<? extends Annotation> annotation, Class<?>... args ) throws NoSuchMethodException {
+        while( clazz != null ) {
+            try {
+                Method m = clazz.getDeclaredMethod( method, args );
+                if( m.getAnnotation( annotation) != null ) {
+                    return m;
+                }
+            } catch( NoSuchMethodException e ) {
+                /* Just carry on */
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        throw new NoSuchMethodException( method );
+    }
 
     public static Method getInheritedPostMethod( Class<?> clazz, String method, Class<?>... args ) throws NoSuchMethodException {
         while( clazz != null ) {

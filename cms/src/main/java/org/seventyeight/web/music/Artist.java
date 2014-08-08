@@ -1,9 +1,11 @@
 package org.seventyeight.web.music;
 
 import com.google.gson.JsonObject;
+
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
@@ -33,6 +35,7 @@ public class Artist extends Resource<Artist> {
             super( parent );
         }
 
+        @GetMethod
         public void doGetArtists(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 

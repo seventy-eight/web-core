@@ -342,8 +342,9 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
 
     function remove(id) {
         $.ajax({
-            type: "POST",
-            url: removeUrl + id + '/delete',
+            type: "DELETE",
+            //url: removeUrl + id + '/delete',
+            url: removeUrl + id,
             data: {"resource": id},
             success: function(data, textStatus, jqxhr){
                 $('#' + id).remove()

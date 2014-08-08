@@ -6,6 +6,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.orm.SimpleORM;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.servlet.Request;
@@ -53,6 +54,7 @@ public abstract class Configurable {
         }
     }
 
+    @GetMethod
     public void doSubmit( Request request, Response response ) throws IOException {
         save( request, response );
         MongoDocument doc = getConfigurationDocument();

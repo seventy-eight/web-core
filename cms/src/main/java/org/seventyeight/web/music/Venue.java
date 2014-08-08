@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.extensions.MenuContributor;
@@ -69,6 +71,7 @@ public class Venue extends Resource<Venue> {
         return document.getObjectList2( "stages" );
     }
 
+    @GetMethod
     public void doGetStage(Request request, Response response) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
 
@@ -97,6 +100,7 @@ public class Venue extends Resource<Venue> {
         return r;
     }
 
+    @GetMethod
     public void doAddConcert(Request request, Response response) throws ItemInstantiationException, IOException {
         response.setRenderType( Response.RenderType.NONE );
 
@@ -121,6 +125,7 @@ public class Venue extends Resource<Venue> {
             }
         }
 
+        @GetMethod
         public void doGetVenues(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 
@@ -128,7 +133,7 @@ public class Venue extends Resource<Venue> {
 
             if( term.length() > 1 ) {
                 MongoDBQuery query = new MongoDBQuery().is( "type", "venue" ).regex( "title", "(?i)" + term + ".*" );
-
+                
                 PrintWriter writer = response.getWriter();
                 writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
             } else {

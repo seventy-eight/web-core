@@ -3,6 +3,10 @@ package org.seventyeight.web.utilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.ClassUtils;
+import org.seventyeight.utils.DeleteMethod;
+import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
+import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.NotFoundException;
@@ -73,20 +77,19 @@ public class ExecuteUtils {
 
         switch( requestMethod ) {
         case POST:
-            return ClassUtils.getInheritedPostMethod( object.getClass(), m, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PostMethod.class, Request.class, Response.class );
 
         case GET:
-            return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, Request.class, Response.class );
 
         case PUT:
-            return ClassUtils.getInheritedPutMethod( object.getClass(), m, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PutMethod.class, Request.class, Response.class );
 
         case DELETE:
-            return ClassUtils.getInheritedDeleteMethod( object.getClass(), m, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, DeleteMethod.class, Request.class, Response.class );
 
-
-            default:
-            return ClassUtils.getInheritedMethod( object.getClass(), m, Request.class, Response.class );
+        default:
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, Request.class, Response.class );
         }
     }
 }

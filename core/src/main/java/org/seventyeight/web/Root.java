@@ -2,6 +2,7 @@ package org.seventyeight.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.actions.Get;
 import org.seventyeight.web.actions.ResourceAction;
@@ -14,6 +15,7 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import javax.servlet.http.Cookie;
+
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -98,6 +100,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
         response.sendRedirect( request.getValue( "url", "/" ) );
     }
 
+    @GetMethod
     public void doLogout( Request request, Response response ) throws IOException {
         logger.debug( "Logging out" );
         Core core = request.getCore();

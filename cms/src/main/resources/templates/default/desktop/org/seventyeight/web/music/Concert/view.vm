@@ -5,6 +5,7 @@
 
 <div id="container">
     #foreach($id in $item.getArtistIds())
+    	<div onclick="remove("' + id + '"))">REMOVE</div>
         <div id="$id" class="artist" style="float: left">
         Loading
         </div>
@@ -13,7 +14,7 @@
 
 <script type="text/javascript">
 
-    var callback = function(id){ return '<div onclick="remove("' + id + '"))" class="newResource" id="' + id + '" style="float:left">Waiting for ' + id + '</div>' };
+    var callback = function(id){ return '<div onclick="remove("' + id + '"))">REMOVE</div><div class="newResource" id="' + id + '" style="float:left">Waiting for ' + id + '</div>' };
     //$("#container").append(callback("hej"));
     Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', 'addArtist', 'get/', 'artist', callback);
 

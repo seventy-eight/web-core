@@ -2,11 +2,13 @@ package org.seventyeight.web.actions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.search.SearchFormatter;
@@ -105,6 +107,7 @@ public class ResourcesAction implements Node, DeletingParent {
     }
 
 
+    @GetMethod
     public void doList( Request request, Response response ) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
         response.setContentType( "json/app" );

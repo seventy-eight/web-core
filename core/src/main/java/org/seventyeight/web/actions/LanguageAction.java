@@ -2,12 +2,14 @@ package org.seventyeight.web.actions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import javax.servlet.http.Cookie;
+
 import java.io.IOException;
 
 /**
@@ -38,6 +40,7 @@ public class LanguageAction implements Node {
         return null;
     }
 
+    @GetMethod
     public void doSet( Request request, Response response ) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
 

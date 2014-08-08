@@ -3,12 +3,14 @@ package org.seventyeight.web.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.DeleteMethod;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
@@ -23,6 +25,7 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -142,6 +145,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         setOwner( owner );
     }
 
+    @GetMethod
     public void doBadge( Request request, Response response ) throws TemplateException, IOException {
         response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
     }
@@ -270,6 +274,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
 
+    @GetMethod
     public void doGetComments(Request request, Response response) throws IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );
 
@@ -293,6 +298,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         writer.write( gson.toJson( comments ) );
     }
 
+    @GetMethod
     public void doGetLatestComment(Request request, Response response) throws ItemInstantiationException, NotFoundException, TemplateException, IOException {
         response.setRenderType( Response.RenderType.NONE );
 
@@ -323,6 +329,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
     */
 
+    @GetMethod
     public void doGetAuthorizable(Request request, Response response) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
 

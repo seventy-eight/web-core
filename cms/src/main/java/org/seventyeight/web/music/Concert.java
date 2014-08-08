@@ -3,11 +3,13 @@ package org.seventyeight.web.music;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
@@ -16,6 +18,7 @@ import org.seventyeight.web.servlet.Response;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -134,6 +137,7 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
             super( parent );
         }
 
+        @GetMethod
         public void doGetConcerts(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 

@@ -3,6 +3,7 @@ package org.seventyeight.web.actions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.logging.log4j.Level;
@@ -13,6 +14,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.structure.Tuple;
 import org.seventyeight.utils.Date;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
@@ -187,6 +189,7 @@ public class Upload implements Node {
         writer.write( gson.toJson( r ) );
     }
 
+    @GetMethod
     public void doUploadForm(Request request, Response response) throws IOException, TemplateException, NotFoundException {
         response.setRenderType( Response.RenderType.NONE );
         response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );

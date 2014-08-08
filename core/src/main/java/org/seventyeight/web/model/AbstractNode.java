@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -10,6 +11,8 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
+import org.seventyeight.utils.DeleteMethod;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Ownable;
@@ -340,6 +343,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         save();
 
     }
+    
+    @DeleteMethod
+    public void doIndex(Request request, Response response) {
+    	logger.debug("DELEEEEEEEEEEEEEEEEEEETE!!!!!");
+    }
 
     public void postUpdate() {
         document.set( "status", NodeDescriptor.Status.UPDATED.name() );
@@ -543,6 +551,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         return doc;
     }
 
+    @GetMethod
     public void doGetView(Request request, Response response) throws TemplateException, IOException {
         response.setRenderType( Response.RenderType.NONE );
 

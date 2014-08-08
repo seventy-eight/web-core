@@ -3,6 +3,7 @@ package org.seventyeight.web.actions;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.SearchAction;
@@ -36,6 +37,7 @@ public class NodeSearch extends SearchAction {
     }
     */
 
+    @GetMethod
     public void doIndex( Request request, Response response ) throws IOException {
         String type = request.getValue( "type", null );
         String term = request.getValue( "term", "" );
