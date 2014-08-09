@@ -7,7 +7,8 @@ import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.webapp.*;
 import org.seventyeight.utils.FileUtilities;
 
@@ -90,14 +91,24 @@ public class Server {
 
         extractWar( path );
         FileUtilities.extractArchive( warfile, path );
-        org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server();
+        org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server(8080);
 
-        SelectChannelConnector connector0 = new SelectChannelConnector();
-        connector0.setPort( port );
-        connector0.setMaxIdleTime( 30000 );
-        connector0.setRequestHeaderSize( 8192 );
+        //SelectChannelConnector connector0 = new SelectChannelConnector();
+        //ServerConnector connector0 = new ServerConnector(server);
+        //connector0.setPort( port );
+        //connector0.setMaxIdleTime( 30000 );
+        //connector0.setRequestHeaderSize( 8192 );
+        //connector0.setIdleTimeout(30000);
 
-        server.setConnectors( new Connector[] { connector0 } );
+        //server.setConnectors( new Connector[] { connector0 } );
+        
+        
+        ServletContextHandler handler = new ServletContextHandler();
+        /*
+        handler.setContextPath("/");
+        handler.addServlet(Rest.class, "/*");
+        handler.addEventListener(new CMSListener());
+		*/
 
         //ServletContextHandler servletHandler = new ServletContextHandler( server, "/", true, false );
         //servletHandler.addServlet( Rest.class);
@@ -120,6 +131,7 @@ public class Server {
         } );
 
         server.setHandler( context );
+        //server.setHandler(handler);
 
         server.start();
         server.join();

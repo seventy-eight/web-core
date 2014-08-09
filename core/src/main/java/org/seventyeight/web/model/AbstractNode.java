@@ -21,6 +21,7 @@ import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.Response.RenderType;
 import org.seventyeight.web.utilities.ExtensionUtils;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
@@ -346,6 +347,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     
     @DeleteMethod
     public void doIndex(Request request, Response response) {
+    	response.setRenderType(RenderType.NONE);
     	logger.debug("DELEEEEEEEEEEEEEEEEEEETE!!!!!");
     }
 

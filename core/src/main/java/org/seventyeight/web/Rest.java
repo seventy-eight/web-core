@@ -34,6 +34,16 @@ public class Rest extends HttpServlet {
     public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         doRequest( request, response );
     }
+    
+    @Override
+    public void doDelete( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+        doRequest( request, response );
+    }
+    
+    @Override
+    public void doPut( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+        doRequest( request, response );
+    }
 
     public void doRequest( HttpServletRequest rqs, HttpServletResponse rsp ) throws ServletException, IOException {
         //PrintWriter out = response.getWriter();

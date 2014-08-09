@@ -314,44 +314,46 @@ Utils.fetchResourceView = function(id, view, f) {
     });
 }
 
+Utils.removeId = function(id, removeUrl) {
+	alert("ALLERTT1");
+    $.ajax({
+        type: "DELETE",
+        //url: removeUrl + id + '/delete',
+        url: removeUrl + id,
+        data: {"resource": id},
+        success: function(data, textStatus, jqxhr){
+        	alert("ALLERTT2");
+            $('#' + id).remove()
+        },
+        error: function(ajax, text, error) {alert(error);}
+    });
+}
 
-Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, removeUrl, callbackClass, inputCallback) {
-    //$(function() {
-        $( '#' + autoCompleteInput ).autocomplete({
-            source: inputSource,
-            select: function( event, ui ) {
-                this.value = "";
-                //$('#' + container).append('<table><tr><td id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
-                //$('#' + container).append('<div class="" id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
-                $('#' + container).append(inputCallback(ui.item._id));
-                add(ui.item._id);
-                return false;
-            }
-        }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-            return $( "<li>" )
-                .append( "<a>" + item.title + ", " + item.type + "</a>" )
-                .appendTo( ul );
-        };
-    //});
+Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, inputCallback, ids) {
+    $( '#' + autoCompleteInput ).autocomplete({
+        source: inputSource,
+        select: function( event, ui ) {
+            this.value = "";
+            //$('#' + container).append('<table><tr><td id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
+            //$('#' + container).append('<div class="" id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
+            $('#' + container).append(inputCallback(ui.item._id));
+            add(ui.item._id);
+            return false;
+        }
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+            .append( "<a>" + item.title + ", " + item.type + "</a>" )
+            .appendTo( ul );
+    };
 
     $(function() {
-        $('.' + callbackClass).each(function(index) {
-            getView(this.id);
-        });
+        for(id in ids) {
+        	$('#' + container).append(inputCallback(ids[id]));
+            getView(ids[id]);
+        }
     });
 
-    function remove(id) {
-        $.ajax({
-            type: "DELETE",
-            //url: removeUrl + id + '/delete',
-            url: removeUrl + id,
-            data: {"resource": id},
-            success: function(data, textStatus, jqxhr){
-                $('#' + id).remove()
-            },
-            error: function(ajax, text, error) {alert(error);}
-        });
-    }
+
 
     function add(id) {
         $.ajax({
@@ -370,10 +372,13 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
             type: "GET",
             url: "/resource/" + id + "/getView?view=wide",
             success: function(data, textStatus, jqxhr){
-                $('#' + id).html(data);
+                //$('#' + id).html(data);
+            	$('#' + id).html(data);
             },
             error: function(ajax, text, error) {alert(error)}
         });
     }
 
 }
+
+
