@@ -11,6 +11,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -98,8 +99,8 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
         }
     }
 
-    @PostMethod
-    public void doAddArtist(Request request, Response response) throws IOException {
+    @PutMethod
+    public void doIndex(Request request, Response response) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
 
         String artist = request.getValue( "resource", null );
