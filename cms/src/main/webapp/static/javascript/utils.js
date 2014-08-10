@@ -315,15 +315,13 @@ Utils.fetchResourceView = function(id, view, f) {
 }
 
 Utils.removeId = function(id, removeUrl) {
-	alert("ALLERTT1");
     $.ajax({
         type: "DELETE",
         //url: removeUrl + id + '/delete',
-        url: removeUrl + id,
+        url: removeUrl + id + '/',
         data: {"resource": id},
         success: function(data, textStatus, jqxhr){
-        	alert("ALLERTT2");
-            $('#' + id).remove()
+            $('#top_' + id).remove()
         },
         error: function(ajax, text, error) {alert(error);}
     });

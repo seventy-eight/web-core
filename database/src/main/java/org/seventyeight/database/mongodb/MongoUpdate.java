@@ -83,7 +83,7 @@ public class MongoUpdate {
             update.put( type, set );
         }
 
-        System.out.println( "SET: " + set );
+        logger.debug( "SET: " + set );
 
         if( value instanceof MongoDocument ) {
             set.append( key, ((MongoDocument)value).getDBObject() );

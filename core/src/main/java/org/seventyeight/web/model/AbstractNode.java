@@ -346,9 +346,15 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
     
     @DeleteMethod
-    public void doIndex(Request request, Response response) {
+    public void doIndex(Request request, Response response) throws IOException {
     	response.setRenderType(RenderType.NONE);
-    	logger.debug("DELEEEEEEEEEEEEEEEEEEETE!!!!!");
+    	
+    	if(parent instanceof DeletingParent) {
+    		logger.debug("Deleting {}", this);
+    		((DeletingParent) parent).deleteChild(this);
+    	} else {
+    		response.sendError(Response.SC_METHOD_NOT_ALLOWED);
+    	}
     }
 
     public void postUpdate() {

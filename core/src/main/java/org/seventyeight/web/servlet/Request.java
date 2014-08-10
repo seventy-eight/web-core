@@ -129,6 +129,10 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         return method.equals( RequestMethod.PUT );
     }
 
+    public boolean isRequestDelete() {
+        return method.equals( RequestMethod.DELETE );
+    }
+
     public String[] getRequestParts() {
         return requestParts;
     }
@@ -324,9 +328,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         if( cookies == null ) {
             logger.debug( "Getting COOOOOOOOKEIESS:...." );
             cookies = new HashMap<String, Cookie>(  );
-            for( Cookie cookie : getCookies() ) {
-                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
-                cookies.put( cookie.getName(), cookie );
+            if(cookies != null) {
+	            for( Cookie cookie : getCookies() ) {
+	                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
+	                cookies.put( cookie.getName(), cookie );
+	            }
+            } else {
+            	logger.debug("No cookies");
             }
         }
 

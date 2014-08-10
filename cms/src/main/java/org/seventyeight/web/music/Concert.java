@@ -120,6 +120,8 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
 
     @Override
     public void deleteChild( Node node ) {
+    	logger.debug("Trying to delete {}", this);
+
         if(node != null && node instanceof Artist) {
             if(hasArtist( ( (Artist) node ).getIdentifier() )) {
                 document.removeFromList( "artists", ( (Artist) node ).getIdentifier() );
