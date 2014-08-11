@@ -327,7 +327,12 @@ Utils.removeId = function(id, removeUrl) {
     });
 }
 
-Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, inputCallback, ids) {
+
+Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, ids, inputCallback) {
+	if(typeof(inputCallback) === "undefined") {
+		inputCallback = function(id){ return "<div style=\";float:left\" id=\"top_" + id + "\"><div class=\"newResource\" id=\"" + id + "\" style=\"\">Waiting for " + id + "</div><div onclick=\"Utils.removeId('" + id + "', 'get/')\">REMOVE</div></div>" };
+	}
+
     $( '#' + autoCompleteInput ).autocomplete({
         source: inputSource,
         select: function( event, ui ) {

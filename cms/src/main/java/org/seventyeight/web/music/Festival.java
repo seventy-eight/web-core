@@ -30,14 +30,6 @@ public class Festival extends Resource<Festival> {
 
     @Override
     public void updateNode( JsonObject jsonData ) {
-        if(jsonData != null) {
-            JsonElement venueElement = jsonData.get( "venue" );
-            if(venueElement.isJsonNull()) {
-                throw new IllegalArgumentException( "Venue is not provided" );
-            }
-
-            document.set( "venue", venueElement.getAsString() );
-        }
     }
 
 
@@ -71,15 +63,6 @@ public class Festival extends Resource<Festival> {
 
         // This is updated
         //setUpdatedCall();
-    }
-
-    public Venue getVenue() throws NotFoundException, ItemInstantiationException {
-        String id = getVenueId();
-        if(id != null) {
-            return core.getNodeById( this, id );
-        } else {
-            return null;
-        }
     }
 
     public List<Event> getEvents() throws ItemInstantiationException {

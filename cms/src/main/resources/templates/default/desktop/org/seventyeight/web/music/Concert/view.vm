@@ -9,13 +9,13 @@
 
 <script type="text/javascript">
 
-    var callback = function(id){ return "<div style=\";float:left\" id=\"top_" + id + "\"><div class=\"newResource\" id=\"" + id + "\" style=\"\">Waiting for " + id + "</div><div onclick=\"Utils.removeId('" + id + "', 'get/')\">REMOVE</div></div>" };
+    //var callback = function(id){ return "<div style=\";float:left\" id=\"top_" + id + "\"><div class=\"newResource\" id=\"" + id + "\" style=\"\">Waiting for " + id + "</div><div onclick=\"Utils.removeId('" + id + "', 'get/')\">REMOVE</div></div>" };
     //$("#container").append(callback("hej"));
     var ids = [
     #foreach($id in $item.getArtistIds())
     	'$id' #if( $foreach.hasNext ), #end
     #end
     ];
-    Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', '', 'artist', callback, ids);
+    Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', '', 'artist', ids);
 
 </script>
