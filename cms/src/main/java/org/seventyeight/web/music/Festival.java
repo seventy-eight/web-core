@@ -2,6 +2,7 @@ package org.seventyeight.web.music;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -9,18 +10,20 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author cwolfgang
  */
-public class Festival extends Resource<Festival> {
+public class Festival extends Resource<Festival> implements Getable<Event> {
 
     private static Logger logger = LogManager.getLogger( Festival.class );
 
@@ -32,17 +35,12 @@ public class Festival extends Resource<Festival> {
     public void updateNode( JsonObject jsonData ) {
     }
 
-
-    public String getVenueId() {
-        return document.get( "venue", null );
-    }
-
     @PostMethod
-    public void doAddEvent(Request request, Response response) throws NotFoundException, ItemInstantiationException {
+    public void doIndex(Request request, Response response) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Adding event for {}", this );
         response.setRenderType( Response.RenderType.NONE );
 
-        String eventId = request.getValue( "event", null );
+        String eventId = request.getValue( "resource", null );
 
         if(eventId != null) {
             Event event = core.getNodeById( this, eventId );
@@ -52,17 +50,28 @@ public class Festival extends Resource<Festival> {
             throw new IllegalArgumentException( "No event provided" );
         }
     }
+    
+    @Override
+    public void deleteChild( Node node ) {
+    	logger.debug("Trying to delete {}", this);
+
+    	/*
+        if(node != null && node instanceof Event) {
+            if(hasEvent( ( (Artist) node ).getIdentifier() )) {
+                document.removeFromList( "artists", ( (Artist) node ).getIdentifier() );
+            } else {
+                throw new IllegalArgumentException( node + " does not belong to " + this );
+            }
+        }
+
+        save();
+        */
+    }
+
 
     public void addEvent(Event event) {
         event.setAsPartOf( this );
         event.save();
-        //
-        //MongoDBQuery query = new MongoDBQuery().getId( event.getIdentifier() );
-        //MongoUpdate update = new MongoUpdate().set( "partOf", getIdentifier() );
-        //MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).update( query, update );
-
-        // This is updated
-        //setUpdatedCall();
     }
 
     public List<Event> getEvents() throws ItemInstantiationException {
@@ -78,6 +87,34 @@ public class Festival extends Resource<Festival> {
 
         return events;
     }
+    
+    public List<String> getEventIds(int offset, int number) {
+        logger.debug( "Getting event ids for {}", this );
+
+        MongoDBQuery query = new MongoDBQuery().is( "partOf", getIdentifier() );
+        return core.getIds(query, offset, number, null);
+    }
+    
+    public boolean hasEvent(String eventId) {
+    	MongoDBQuery query = new MongoDBQuery().is( "partOf", getIdentifier() ).getId(eventId);
+    	MongoDocument d = core.getId(query);
+    	
+    	return (d != null && !d.isNull());
+    }
+
+    @Override
+    public Event get( Core core, String token ) throws NotFoundException {
+        if(hasEvent( token )) {
+            try {
+                return core.getNodeById( this, token );
+            } catch( ItemInstantiationException e ) {
+                throw new NotFoundException( token + " not found, " + e.getMessage() );
+            }
+        } else {
+            throw new NotFoundException( token );
+        }
+    }
+
 
     public static class FestivalDescriptor extends NodeDescriptor<Festival> {
 

@@ -99,12 +99,12 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
         }
     }
 
-    @PutMethod
+    @PostMethod
     public void doIndex(Request request, Response response) throws IOException {
         response.setRenderType( Response.RenderType.NONE );
 
         String artist = request.getValue( "resource", null );
-        logger.debug( "Adding artist to {}", this );
+        logger.debug( "Adding {} to {}", artist, this );
 
         if(hasArtist( artist )) {
             response.sendError( HttpServletResponse.SC_CONFLICT, "The artist with id " + artist + ", is already added" );
