@@ -135,7 +135,8 @@ public class Comment extends AbstractNode<Comment> {
 
             if(parent instanceof PersistedNode) {
                 comment.getDocument().set( RESOURCE_FIELD, ((AbstractNode)parent).getIdentifier() );
-                comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
+                //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
+                comment.getDocument().set( PARENT_FIELD, request.getValue("parent") );
             }
 
             return comment;
