@@ -14,6 +14,7 @@ import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.utils.DeleteMethod;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
+import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Ownable;
 import org.seventyeight.web.extensions.MenuContributor;
@@ -294,7 +295,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
         logger.debug( "Configuration submit" );
 
-        JsonObject json = request.getJson();
+        JsonObject json = request.getJsonField();
 
         updateConfiguration( json );
 
@@ -346,7 +347,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
     
     @DeleteMethod
-    public void doIndex(Request request, Response response) throws IOException {
+    public void doIndex(Request request, Response response) throws Exception {
     	response.setRenderType(RenderType.NONE);
     	
     	if(parent instanceof DeletingParent) {

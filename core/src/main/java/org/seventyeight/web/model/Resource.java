@@ -241,7 +241,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
             Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
             Comment comment = descriptor.newInstance( request, this );
             if(comment != null) {
-                JsonObject json = request.getJson();
+                JsonObject json = request.getJsonField();
                 comment.updateConfiguration(json);
                 comment.save();
 

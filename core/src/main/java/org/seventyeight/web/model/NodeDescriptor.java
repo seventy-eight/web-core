@@ -53,7 +53,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     //@Override
     public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
         Core core = request.getCore();
-        return newInstance( core, request.getJson(), parent );
+        return newInstance( core, request.getJsonField(), parent );
     }
 
     @Override
@@ -114,7 +114,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     @PostMethod
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
-        JsonObject json = request.getJson();
+        JsonObject json = request.getJsonField();
         Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
         if( title != null ) {

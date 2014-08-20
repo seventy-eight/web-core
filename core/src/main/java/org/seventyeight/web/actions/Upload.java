@@ -118,7 +118,7 @@ public class Upload implements Node {
         r.deleteUrl = "http://jajdjawd";
         r.thumbnailUrl = "/images/none";
 
-        JsonObject json = request.getJson();
+        JsonObject json = request.getJsonField();
 
         for( FileItem item : items ) {
             try {
