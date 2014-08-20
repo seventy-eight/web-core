@@ -1,78 +1,19 @@
-EVENTS
-<div id="concertList">
-#foreach($r in $item.getEvents())
-<table style="width: 100%; min-width: inherit; margin-top: 15px">
-    <tr>
-        <td style="text-align: center;" colspan="">
-            #render($r "wide" true "" "" true)
-        </td>
 
-    </tr>
-
-</table>
-#end
+<div class="ui-widget" style="width: 100%">
+    <input id="concertInput">
 </div>
 
-ADD
-<table>
-<tr>
-    <td>
-        Event
-    </td>
-    <td style="text-align: left">
-        <div class="ui-widget">
-            <input id="concertInput">
-        </div>
+<div id="container">
 
-
-        <script type="text/javascript">
-            /*
-                            $('#venueContainer').on('click', 'div', function(e) {
-                                $(this).remove()
-                            })*/
-        </script>
-    </td>
-</tr>
-</table>
-
+</div>
 
 <script type="text/javascript">
-    $(function() {
-        $( '#concertInput' ).autocomplete({
-            source: "/concert/getConcerts",
-            select: function( event, ui ) {
-                this.value = "";
-                $('#concertList').append('<table><tr><td id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
-                addEvent(ui.item._id);
-                return false;
-            }
-        }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-            return $( "<li>" )
-                    .append( "<a>" + item.title + ", " + item.type + "</a>" )
-                    .appendTo( ul );
-        };
-    });
 
-    function addEvent(id) {
-        $.ajax({
-            type: "POST",
-            url: "addEvent",
-            data: {"event": id},
-            success: function(data, textStatus, jqxhr){
-                getEventView(id);
-            },
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
+    var ids = [
+    #foreach($id in $item.getEventIds(0, 1000))
+    	'$id' #if( $foreach.hasNext ), #end
+    #end
+    ];
+    Utils.resourceListHandler('container', 'concertInput', '/concert/getConcerts', '', 'concert', ids);
 
-    function getEventView(id) {
-        $.ajax({
-            type: "GET",
-            url: "/resource/" + id + "/getView?view=wide",
-            success: function(data, textStatus, jqxhr){
-                $('#' + id).html(data);
-            },
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
 </script>
