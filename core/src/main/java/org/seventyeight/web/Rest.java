@@ -6,6 +6,7 @@ import org.apache.velocity.VelocityContext;
 import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -14,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -86,40 +88,42 @@ public class Rest extends HttpServlet {
         request.setTheme( core.getDefaultTheme() );
 
         request.getStopWatch().stop( rqs.getRequestURI() );
-        request.getStopWatch().start( "Authentication" );
 
-        logger.debug( "THE USER: {}", request.getUser() );
+        if(request.getRequestParts().length > 0 && request.getRequestParts()[0].equalsIgnoreCase("static")) {
+        	((Autonomous)core.getRoot().getChild("static")).autonomize(request, response);
+        } else {
+            request.getStopWatch().start( "Authentication" );
 
-        //if() {
+            logger.debug( "THE USER: {}", request.getUser() );
             try {
                 logger.debug( "AUTHENTICATING" );
                 core.getAuthentication().authenticate( request, response );
             } catch( AuthenticationException e ) {
                 logger.warn( "Unable to authenticate", e );
             }
-        //}
-
-        logger.debug( "THE USER: {}", request.getUser() );
-        request.getStopWatch().stop( "Getting user" );
-
-        request.getStopWatch().stop( "Authentication" );
-        request.getStopWatch().start( "Render page" );
-
-        try {
-            // Render the page
-            core.render( request, response );
-            request.getUser().setSeen();
-        } catch( CoreException e ) {
-            e.printStackTrace();
-            if( response.isRenderingMain() ) {
-                response.renderError( request, e );
-            } else {
-                response.sendError( e.getCode(), e.getMessage() );
-            }
-        } catch( Exception e ) {
-            logger.error( "CAUGHT ERROR" );
-            e.printStackTrace();
-            generateException( request, rsp.getWriter(), e, e.getMessage() );
+		
+		    logger.debug( "THE USER: {}", request.getUser() );
+		    request.getStopWatch().stop( "Getting user" );
+		
+		    request.getStopWatch().stop( "Authentication" );
+		    request.getStopWatch().start( "Render page" );
+		
+		    try {
+		        // Render the page
+		        core.render( request, response );
+		        request.getUser().setSeen();
+		    } catch( CoreException e ) {
+		        e.printStackTrace();
+		        if( response.isRenderingMain() ) {
+		            response.renderError( request, e );
+		        } else {
+		            response.sendError( e.getCode(), e.getMessage() );
+		        }
+		    } catch( Exception e ) {
+		        logger.error( "CAUGHT ERROR" );
+		        e.printStackTrace();
+		        generateException( request, rsp.getWriter(), e, e.getMessage() );
+		    }
         }
 
         sw.stop();
