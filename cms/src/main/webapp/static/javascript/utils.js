@@ -360,7 +360,7 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
 
     function add(id) {
         $.ajax({
-            type: "PUT",
+            type: "POST",
             url: addUrl,
             data: {"resource": id},
             success: function(data, textStatus, jqxhr){
