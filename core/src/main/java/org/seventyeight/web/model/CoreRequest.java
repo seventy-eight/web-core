@@ -8,6 +8,6 @@ import org.seventyeight.web.Core;
  */
 public interface CoreRequest extends ParameterRequest {
     public static final String SESSION_USER = "sessionUser";
-    public JsonObject getJson();
+    public JsonObject getJsonField();
     public Core getCore();
 }

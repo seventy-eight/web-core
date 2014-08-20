@@ -78,7 +78,7 @@ public class Parameters extends HashMap<String, String> implements CoreRequest {
     }
 
     @Override
-    public JsonObject getJson() {
+    public JsonObject getJsonField() {
         if(json == null) {
             try {
                 json = JsonUtils.getJsonFromRequest( this );

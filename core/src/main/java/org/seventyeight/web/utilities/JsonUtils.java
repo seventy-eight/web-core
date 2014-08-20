@@ -1,10 +1,13 @@
 package org.seventyeight.web.utilities;
 
 import com.google.gson.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.model.ParameterRequest;
+import org.seventyeight.web.servlet.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +28,24 @@ public class JsonUtils {
             throw new JsonException( "Json was null" );
         }
 
-
         JsonParser parser = new JsonParser();
         JsonObject jo = (JsonObject) parser.parse( json );
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println( gson.toJson( jo ) );
+
+        return jo;
+    }
+    
+    public static JsonObject getJsonRequest(Request request) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String s;
+        while ((s = request.getReader().readLine()) != null) {
+        	sb.append(s);
+        }
+        
+        JsonParser parser = new JsonParser();
+        JsonObject jo = (JsonObject) parser.parse( sb.toString() );
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println( gson.toJson( jo ) );
