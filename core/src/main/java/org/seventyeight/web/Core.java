@@ -357,9 +357,17 @@ public abstract class Core implements CoreSystem {
         return docs;
     }
 
-    public void getIds(MongoDBQuery query, int offset, int number, MongoDocument sort) {
+    public List<String> getIds(MongoDBQuery query, int offset, int number, MongoDocument sort) {
         List<MongoDocument> docs = MongoDBCollection.get( NODES_COLLECTION_NAME ).find( query, offset, number, sort, "_id" );
         logger.debug( "DOCS FOR IDS: {}", docs );
+        
+        List<String> ids = new ArrayList<String>(docs.size());
+        
+        for(MongoDocument d : docs) {
+        	ids.add(d.getIdentifier());
+        }
+        
+        return ids;
     }
 
     /**
