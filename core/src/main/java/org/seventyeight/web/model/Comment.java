@@ -21,8 +21,15 @@ public class Comment extends AbstractNode<Comment> {
     public static final String TEXT_FIELD = "text";
     public static final String USER_FIELD = "owner";
     public static final String DATE_FIELD = "date";
+    
+    /** The resource this comment is attached to */
     public static final String RESOURCE_FIELD = "resource";
+    
+    /** The immediate comment or resource */
     public static final String PARENT_FIELD = "parent";
+    
+    /** The root comment node in the tree, empty if the root itself */
+    public static final String ROOT_FIELD = "root";
 
     public static final String COMMENTS_COLLECTION = "comments";
 
@@ -61,6 +68,9 @@ public class Comment extends AbstractNode<Comment> {
         return getText( TextType.markUp );
     }
 
+    public String getCommentParent() {
+    	return document.get("parent");
+    }
 
     /**
      * Assuming the text field is created
@@ -94,6 +104,10 @@ public class Comment extends AbstractNode<Comment> {
         setText( output.toString(), TextType.html );
 
         return this;
+    }
+    
+    public String getRootIdentifier() {
+    	return document.get(ROOT_FIELD, "");
     }
 
     /*
@@ -137,6 +151,7 @@ public class Comment extends AbstractNode<Comment> {
                 comment.getDocument().set( RESOURCE_FIELD, ((AbstractNode)parent).getIdentifier() );
                 //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
                 comment.getDocument().set( PARENT_FIELD, request.getValue("parent") );
+                comment.getDocument().set( ROOT_FIELD, request.getValue("root") );
             }
 
             return comment;

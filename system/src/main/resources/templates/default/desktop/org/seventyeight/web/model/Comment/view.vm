@@ -11,8 +11,12 @@ $item.getText()<br>
 		<form class="commentForm" style="min-width: inherit;">
 		    <input type="text" name="title" value="Re. $item.getDisplayName()" style="width: 80%">
 		    <input type="hidden" name="parent" value="$item.getIdentifier()">
+		    <input type="hidden" name="root" value="$item.getRootIdentifier()">
 		    <textarea style="width: 80%" name="comment"></textarea><br>
 		    <button class="commentSubmit" class="button">Send</button>
 		</form>
+	</div>
+	<br>
+	<div id="$item.getIdentifier()-container">
 	</div>
 </div>

@@ -50,10 +50,12 @@
     <tr>
         <td colspan="2" style="width: 100%; text-align: center;">
 
-            <form id="commentForm" style="min-width: inherit;">
+            <form method="post" class="commentForm" style="min-width: inherit;">
                 <input type="text" name="title" style="width: 100%">
+                <input type="hidden" name="root" value="">
+                <input type="hidden" name="parent" value="$item.getIdentifier()">
                 <textarea style="width: 100%" name="comment"></textarea>
-                <button id="commentSubmit" class="button">Send</button>
+                <button class="commentSubmit button">Send</button>
             </form>
 
             <script type="text/javascript">
@@ -74,21 +76,24 @@
                     event.preventDefault();
                     //Utils.addJsonElement( document.getElementById('commentForm') );
                     var form = $(this).parent();
-                    alert("adawd"+form.attr('id'));
+                    //alert("adawd"+form.attr('id'));
                     Utils.addJsonElement( form[0] );
                     $.ajax({
                         type: "POST",
                         url: "addComment",
                         data: form.serialize(),
-                        success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
+                        //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
+                        success: function(data, textStatus, jqxhr){addPost(data)},
                         error: function(ajax, text, error) {alert(error)}
                     });
                 });
 
                 function addPost(d) {
+                	//alert("--->" + d);
                     var json = eval("(" + d + ")");
                     //$("#commentsContainer").append(json.view + "<br>").children(':last').hide().fadeIn(2000);
-                    $(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
+                    //$(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
+                    $(json.view + "<br>").appendTo("#" + json.parent + "-container").hide().fadeIn(2000);
                 }
             </script>
 

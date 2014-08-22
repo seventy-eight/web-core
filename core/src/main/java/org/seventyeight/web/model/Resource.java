@@ -285,17 +285,26 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         MongoDocument sort = new MongoDocument().set( "created", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
 
-        List<String> comments = new ArrayList<String>( docs.size() );
+        //List<String> comments = new ArrayList<String>( docs.size() );
+        Map<String, List<MongoDocument>> comments = new HashMap<String, List<MongoDocument>>();
 
         for(MongoDocument d : docs) {
             Comment c = new Comment( core, this, d );
-            comments.add( core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+            if(!comments.containsKey(c.getCommentParent())) {
+            	comments.put(c.getCommentParent(), new ArrayList<MongoDocument>());
+            }
+            List<MongoDocument> cs = comments.get(c.getCommentParent());
+            
+            // Place view
+            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+            cs.add(d);
         }
 
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         writer.write( gson.toJson( comments ) );
+        //writer.write( comments.toString() );
     }
 
     @GetMethod

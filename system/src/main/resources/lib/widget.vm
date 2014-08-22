@@ -48,7 +48,7 @@
 
 #macro(comments $resource)
 <div class="headerContrast" style="width: 100%; min-width: inherit">Comments</div>
-<div id="commentsContainer" style="min-width: inherit">
+<div id="$resource.getIdentifier()-container" style="min-width: inherit">
 
 </div>
 
@@ -59,18 +59,31 @@
             type: "GET",
             url: "/resource/$resource.getIdentifier()/getComments",
             //success: function(data, textStatus, jqxhr){$('#commentsContainer').html(data)},
-            success: function(data, textStatus, jqxhr){addComments(data)},
+            success: function(data, textStatus, jqxhr){addComments(data, '$resource.getIdentifier()')},
             error: function(ajax, text, error) {alert(error)}
         });
     });
 
-    function addComments(data) {
-        var json = eval(data);
-
-        for( i = 0 ; i < json.length ; i++ ) {
+    function addComments(data, id) {
+        //var json = eval(data);
+        var json = JSON.parse(data);
+		var firstLevel = json[id];
+        for( i = 0 ; i < firstLevel.length ; i++ ) {
+        	//alert(firstLevel[i].parent);
             //$(json[i]).hide().insertBefore("#commentsContainer").fadeIn(600);
-            $("#commentsContainer").append(json[i] + "<br>");
+          	$("#" + firstLevel[i].document.parent + "-container").append(firstLevel[i].document.view + "<br>");
+          	addSubComments(json, firstLevel[i].document._id);
         }
+    }
+    
+    function addSubComments(json, id) {
+    	var s = json[id];
+    	if(s !== undefined) {
+			for( i = 0 ; i < s.length ; i++ ) {
+	          	$("#" + s[i].document.parent + "-container").append(s[i].document.view + "<br>");
+	          	addSubComments(json, s[i].document._id);
+	        }
+	    }
     }
 
 </script>
