@@ -60,6 +60,7 @@ public class CMSCore extends Core {
 
         root.addNode( "language", new LanguageAction(this) );
 
+        addDescriptor( new Conversation.ConversationDescriptor(root));
         addDescriptor( new Comment.CommentDescriptor(root) );
 
         addDescriptor( new User.UserDescriptor(root) );

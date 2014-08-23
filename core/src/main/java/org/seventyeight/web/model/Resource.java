@@ -17,6 +17,7 @@ import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.nodes.Conversation;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -229,11 +230,65 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
     */
+    
+    @PostMethod
+    public void doAddConversation(Request request, Response response) throws ItemInstantiationException, ClassNotFoundException, TemplateException, IOException {
+    	response.setRenderType( Response.RenderType.NONE );
+    	
+        String text = request.getValue( "comment", "" );
+        //String title = request.getValue( "commentTitle", "" );
+
+        if(text.length() > 1) {
+            Conversation.ConversationDescriptor descriptor = core.getDescriptor( Conversation.class );
+            Conversation conversation = descriptor.newInstance( request, this );
+            if(conversation != null) {
+                JsonObject json = request.getJsonField();
+                conversation.updateConfiguration(json);
+                conversation.save();
+                setUpdatedCall( null );
+                
+                Comment comment = addComment(request);
+                comment.setConversation(conversation);
+
+                comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ) );
+
+                PrintWriter writer = response.getWriter();
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                //writer.write( gson.toJson( comment.getDocument() ) );
+                writer.write( conversation.getDocument().toString() );
+            }
+        } else {
+            throw new IllegalStateException( "No text provided!" );
+        }
+    }
+    
+    private Comment addComment(Request request) throws ClassNotFoundException, ItemInstantiationException {
+        String text = request.getValue( "comment", "" );
+        //String title = request.getValue( "commentTitle", "" );
+
+        if(text.length() > 1) {
+            Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
+            Comment comment = descriptor.newInstance( request, this );
+            if(comment != null) {
+                JsonObject json = request.getJsonField();
+                comment.updateConfiguration(json);
+                comment.save();
+                setUpdatedCall( null );
+            }
+            
+            return comment;
+        } else {
+            throw new IllegalStateException( "No text provided!" );
+        }
+    }
 
     @PostMethod
     public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException, ClassNotFoundException, JsonException, NotFoundException {
         response.setRenderType( Response.RenderType.NONE );
 
+        //Comment comment = 
+        
         String text = request.getValue( "comment", "" );
         //String title = request.getValue( "commentTitle", "" );
 
@@ -274,6 +329,43 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
     }
 
+    @GetMethod
+    public void doGetConversations(Request request, Response response) throws IOException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        int number = request.getInteger( "number", 10 );
+        int offset = request.getInteger( "offset", 0 );
+
+        MongoDBQuery query = new MongoDBQuery().is( "parent", getIdentifier() ).is( "type", "conversation" );
+        MongoDocument sort = new MongoDocument().set( "created", 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
+
+        /*
+        //List<String> comments = new ArrayList<String>( docs.size() );
+        Map<String, List<MongoDocument>> conversation = new HashMap<String, List<MongoDocument>>();
+
+        for(MongoDocument d : docs) {
+            Comment c = new Comment( core, this, d );
+            if(!conversation.containsKey(c.getCommentParent())) {
+            	conversation.put(c.getCommentParent(), new ArrayList<MongoDocument>());
+            }
+            List<MongoDocument> cs = conversation.get(c.getCommentParent());
+            cs.add(d);
+        }
+
+*/
+        PrintWriter writer = response.getWriter();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        writer.write( gson.toJson( docs ) );
+        
+        
+        /*
+        PrintWriter writer = response.getWriter();
+        writer.write( docs );
+        */
+    }
+    
     @GetMethod
     public void doGetComments(Request request, Response response) throws IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );

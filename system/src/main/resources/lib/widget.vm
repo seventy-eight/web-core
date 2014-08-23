@@ -57,7 +57,7 @@
     $(function() {
         $.ajax({
             type: "GET",
-            url: "/resource/$resource.getIdentifier()/getComments",
+            url: "/resource/$resource.getIdentifier()/getConversations",
             //success: function(data, textStatus, jqxhr){$('#commentsContainer').html(data)},
             success: function(data, textStatus, jqxhr){addComments(data, '$resource.getIdentifier()')},
             error: function(ajax, text, error) {alert(error)}
