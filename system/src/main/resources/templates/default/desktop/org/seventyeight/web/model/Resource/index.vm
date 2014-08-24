@@ -54,7 +54,7 @@
                 <input type="text" name="title" style="width: 100%">
                 <input type="hidden" name="parent" value="$item.getIdentifier()">
                 <textarea style="width: 100%" name="comment"></textarea>
-                <button class="conversationSubmit button">Send</button>
+                <button id="conversationSubmit" class="button">Send</button>
             </form>
 
             <script type="text/javascript">
@@ -73,7 +73,7 @@
 				// Submit a new conversation
                 $( "#conversationSubmit" ).click(function(event) {
                     event.preventDefault();
-                    var form = $(this).parent();
+                    var form = $('#conversationForm');
                     //alert("adawd"+form.attr('id'));
                     Utils.addJsonElement( form[0] );
                     $.ajax({
@@ -81,7 +81,7 @@
                         url: "addConversation",
                         data: form.serialize(),
                         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
-                        success: function(data, textStatus, jqxhr){addPost(data)},
+                        success: function(data, textStatus, jqxhr){addConversation(data)},
                         error: function(ajax, text, error) {alert(error)}
                     });
                 });

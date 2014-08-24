@@ -235,12 +235,15 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     public void doAddConversation(Request request, Response response) throws ItemInstantiationException, ClassNotFoundException, TemplateException, IOException {
     	response.setRenderType( Response.RenderType.NONE );
     	
+    	logger.debug("Adding conversation to {}", this);
+    	
         String text = request.getValue( "comment", "" );
         //String title = request.getValue( "commentTitle", "" );
 
         if(text.length() > 1) {
             Conversation.ConversationDescriptor descriptor = core.getDescriptor( Conversation.class );
             Conversation conversation = descriptor.newInstance( request, this );
+            logger.debug("Conversation is {}", conversation);
             if(conversation != null) {
                 JsonObject json = request.getJsonField();
                 conversation.updateConfiguration(json);
@@ -249,14 +252,18 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
                 
                 Comment comment = addComment(request);
                 comment.setConversation(conversation);
+                comment.save();
+                logger.debug("Comment is {}", comment);
 
-                comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ) );
+                //comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
 
+                conversation.getDocument().set("view", core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ));
+                
                 PrintWriter writer = response.getWriter();
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
-                //writer.write( gson.toJson( comment.getDocument() ) );
-                writer.write( conversation.getDocument().toString() );
+                writer.write( gson.toJson( conversation.getDocument() ) );
+                //writer.write( core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ) );
             }
         } else {
             throw new IllegalStateException( "No text provided!" );
@@ -330,7 +337,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @GetMethod
-    public void doGetConversations(Request request, Response response) throws IOException {
+    public void doGetConversations(Request request, Response response) throws IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );
 
         int number = request.getInteger( "number", 10 );
@@ -343,17 +350,13 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         /*
         //List<String> comments = new ArrayList<String>( docs.size() );
         Map<String, List<MongoDocument>> conversation = new HashMap<String, List<MongoDocument>>();
+        */
 
         for(MongoDocument d : docs) {
-            Comment c = new Comment( core, this, d );
-            if(!conversation.containsKey(c.getCommentParent())) {
-            	conversation.put(c.getCommentParent(), new ArrayList<MongoDocument>());
-            }
-            List<MongoDocument> cs = conversation.get(c.getCommentParent());
-            cs.add(d);
+            Conversation c = new Conversation( core, this, d );
+            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ));
         }
 
-*/
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -366,39 +369,6 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         */
     }
     
-    @GetMethod
-    public void doGetComments(Request request, Response response) throws IOException, TemplateException {
-        response.setRenderType( Response.RenderType.NONE );
-
-        int number = request.getInteger( "number", 10 );
-        int offset = request.getInteger( "offset", 0 );
-
-        MongoDBQuery query = new MongoDBQuery().is( "resource", getIdentifier() ).is( "type", "comment" );
-        MongoDocument sort = new MongoDocument().set( "created", 1 );
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
-
-        //List<String> comments = new ArrayList<String>( docs.size() );
-        Map<String, List<MongoDocument>> comments = new HashMap<String, List<MongoDocument>>();
-
-        for(MongoDocument d : docs) {
-            Comment c = new Comment( core, this, d );
-            if(!comments.containsKey(c.getCommentParent())) {
-            	comments.put(c.getCommentParent(), new ArrayList<MongoDocument>());
-            }
-            List<MongoDocument> cs = comments.get(c.getCommentParent());
-            
-            // Place view
-            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
-            cs.add(d);
-        }
-
-        PrintWriter writer = response.getWriter();
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        writer.write( gson.toJson( comments ) );
-        //writer.write( comments.toString() );
-    }
-
     @GetMethod
     public void doGetLatestComment(Request request, Response response) throws ItemInstantiationException, NotFoundException, TemplateException, IOException {
         response.setRenderType( Response.RenderType.NONE );

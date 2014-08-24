@@ -385,3 +385,23 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
 }
 
 
+Utils.getConversation = function(id) {
+	function insertComments(data) {
+		alert("here " + data);
+	    var json = JSON.parse(data);
+		var firstLevel = json[id];
+		if(firstLevel !== undefined) {
+	        for( i = 0 ; i < firstLevel.length ; i++ ) {
+	          	$("#" + firstLevel[i].document.parent + "-conversation").append(firstLevel[i].document.view + "<br>");
+	          	//addSubComments(json, firstLevel[i].document._id);
+	        }
+	    }
+	}
+	
+	$.ajax({
+        type: "GET",
+        url: "/resource/" + id + "/getComments",
+        success: function(data, textStatus, jqxhr){insertComments(data)},
+        error: function(ajax, text, error) {alert(error)}
+    });
+}
