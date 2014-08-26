@@ -387,7 +387,7 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
 
 Utils.getConversation = function(id) {
 	function insertComments(data) {
-		alert("here " + data);
+		alert(id + ", here " + data);
 	    var json = JSON.parse(data);
 		var firstLevel = json[id];
 		if(firstLevel !== undefined) {

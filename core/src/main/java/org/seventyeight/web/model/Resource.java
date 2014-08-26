@@ -252,6 +252,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
                 
                 Comment comment = addComment(request);
                 comment.setConversation(conversation);
+                comment.setConversationParent(conversation.getIdentifier());
                 comment.save();
                 logger.debug("Comment is {}", comment);
 
