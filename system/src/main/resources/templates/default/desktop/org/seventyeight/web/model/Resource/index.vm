@@ -58,58 +58,6 @@
             </form>
 
             <script type="text/javascript">
-				$(document).on("click", '.replyable', function(event) { 
-				    //alert($(this).parent().parent().attr('id'));
-				    var p = $(this).parent().parent().attr('id');
-				    var pp = '#' + p + ' > .reply';
-				    //alert($('#' + p + ' < .reply'));
-				    //alert($(pp));
-				    
-				    $(pp).toggle();
-					event.preventDefault();
-				    return false;
-				});
-				
-				// Submit a new conversation
-                $( "#conversationSubmit" ).click(function(event) {
-                    event.preventDefault();
-                    var form = $('#conversationForm');
-                    //alert("adawd"+form.attr('id'));
-                    Utils.addJsonElement( form[0] );
-                    $.ajax({
-                        type: "POST",
-                        url: "addConversation",
-                        data: form.serialize(),
-                        //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
-                        success: function(data, textStatus, jqxhr){addConversation(data)},
-                        error: function(ajax, text, error) {alert(error)}
-                    });
-                });
-                
-                $(document).on("click", '.commentSubmit', function(event) {
-                	alert("HEY");
-                    event.preventDefault();
-                    //Utils.addJsonElement( document.getElementById('commentForm') );
-                    var form = $(this).parent();
-                    //alert("adawd"+form.attr('id'));
-                    Utils.addJsonElement( form[0] );
-                    $.ajax({
-                        type: "POST",
-                        url: "addComment",
-                        data: form.serialize(),
-                        //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
-                        success: function(data, textStatus, jqxhr){addPost(data)},
-                        error: function(ajax, text, error) {alert(error)}
-                    });
-                });
-
-                function addPost(d) {
-                	//alert("--->" + d);
-                    var json = eval("(" + d + ")");
-                    //$("#commentsContainer").append(json.view + "<br>").children(':last').hide().fadeIn(2000);
-                    //$(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
-                    $(json.view + "<br>").appendTo("#" + json.parent + "-container").hide().fadeIn(2000);
-                }
             </script>
 
         </td>

@@ -384,7 +384,7 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
 
 }
 
-
+/*
 Utils.getConversation = function(id) {
 	function insertComments(data) {
 		alert(id + ", here " + data);
@@ -405,3 +405,60 @@ Utils.getConversation = function(id) {
         error: function(ajax, text, error) {alert(error)}
     });
 }
+*/
+
+// Just for conversations
+/*
+$(document).on("click", '.replyable', function(event) { 
+    var p = $(this).parent().parent().attr('id');
+    var pp = '#' + p + ' > .reply';
+   
+    $(pp).toggle();
+	event.preventDefault();
+    return false;
+});
+
+
+// Submit a new conversation
+$( "#conversationSubmit" ).click(function(event) {
+    event.preventDefault();
+    var form = $('#conversationForm');
+    //alert("adawd"+form.attr('id'));
+    Utils.addJsonElement( form[0] );
+    $.ajax({
+        type: "POST",
+        url: "addConversation",
+        data: form.serialize(),
+        //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
+        success: function(data, textStatus, jqxhr){addConversation(data)},
+        error: function(ajax, text, error) {alert(error)}
+    });
+});
+
+
+$(document).on("click", '.commentSubmit', function(event) {
+	alert("HEY");
+    event.preventDefault();
+    //Utils.addJsonElement( document.getElementById('commentForm') );
+    var form = $(this).parent();
+    //alert("adawd"+form.attr('id'));
+    Utils.addJsonElement( form[0] );
+    $.ajax({
+        type: "POST",
+        url: "addComment",
+        data: form.serialize(),
+        //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
+        success: function(data, textStatus, jqxhr){Utils.addComment(data)},
+        error: function(ajax, text, error) {alert(error)}
+    });
+});
+*/
+/*
+Utils.addComment = function(d) {
+	//alert("--->" + d);
+    var json = eval("(" + d + ")");
+    //$("#commentsContainer").append(json.view + "<br>").children(':last').hide().fadeIn(2000);
+    //$(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
+    $(json.view + "<br>").appendTo("#" + json.parent + "-container").hide().fadeIn(2000);
+}
+*/

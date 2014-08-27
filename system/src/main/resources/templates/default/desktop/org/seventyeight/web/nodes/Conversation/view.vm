@@ -1,10 +1,16 @@
 <div style="width:100%; border-style:solid" id="$item.getIdentifier()-conversation">
 	$item.getDisplayName()<br>
 	
+	<br>
+	$item.getIdentifier()
+	<br>
+	$item.getUrl();
 </div>
 
 <script type="text/javascript">
 	$(function() {
-		Utils.getConversation('$item.getIdentifier()');
+		//Utils.getConversation('$item.getIdentifier()');
+		var c = new Conversation('$item.getIdentifier()');
+		c.getComments();
 	});
 </script>

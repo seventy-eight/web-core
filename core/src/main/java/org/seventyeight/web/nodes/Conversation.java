@@ -11,6 +11,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractNode;
@@ -19,15 +20,18 @@ import org.seventyeight.web.model.CoreRequest;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
+import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.PersistedNode;
+import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-public class Conversation extends AbstractNode<Conversation> {
+public class Conversation extends Resource<Conversation> {
 	
 	public static final String PARENT_FIELD = "parent";
 
@@ -40,7 +44,6 @@ public class Conversation extends AbstractNode<Conversation> {
 		// TODO Auto-generated method stub
 		
 	}
-	
 
     @GetMethod
     public void doGetComments(Request request, Response response) throws IOException, TemplateException {
@@ -73,6 +76,54 @@ public class Conversation extends AbstractNode<Conversation> {
         Gson gson = builder.create();
         writer.write( gson.toJson( comments ) );
         //writer.write( comments.toString() );
+    }
+
+
+    @PostMethod
+    public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException, ClassNotFoundException, JsonException, NotFoundException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        //Comment comment = 
+        
+        String text = request.getValue( "comment", "" );
+        //String title = request.getValue( "commentTitle", "" );
+
+        if(text.length() > 1) {
+            Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
+            Comment comment = descriptor.newInstance( request, this );
+            if(comment != null) {
+                JsonObject json = request.getJsonField();
+                comment.updateConfiguration(json);
+                comment.setConversation(this);
+                comment.save();
+
+                /*
+                update( null, false );
+                save();
+                */
+                setUpdatedCall( null );
+
+                int number = request.getInteger( "number", 1 );
+
+                /*
+                DocumentFinder finder = new DocumentFinder( this, request, 1, 0 );
+                finder.getQuery().is("owner", request.getUser().getIdentifier()).is( "type", "comment" );
+                finder.getSort().set( "created", 1 );
+
+                List<MongoDocument> d = finder.findNext();
+                */
+
+                comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
+
+                PrintWriter writer = response.getWriter();
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                //writer.write( gson.toJson( comment.getDocument() ) );
+                writer.write( comment.getDocument().toString() );
+            }
+        } else {
+            throw new IllegalStateException( "No text provided!" );
+        }
     }
 
 

@@ -25,20 +25,6 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
             super();
         }
 
-        /*
-        @Override
-        public Class<T> getExtensionClass() {
-            return Action.class;
-        }
-        */
-
-        /*
-        @Override
-        public boolean isOmnipresent() {
-            return true;
-        }
-        */
-
         @Override
         public ExtensionGroup getExtensionGroup() {
             return new ExtensionGroup( getClazz(), "Action", true );

@@ -115,6 +115,10 @@ public class Comment extends AbstractNode<Comment> {
     	document.set("conversation", conversation.getIdentifier());
     }
     
+    public void setConversationId(String id) {
+    	document.set("conversation", id);
+    }
+    
     public void setConversationParent(String identifier) {
     	document.set("parent", identifier);
     }
