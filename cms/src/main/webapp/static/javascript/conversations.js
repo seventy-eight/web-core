@@ -23,7 +23,7 @@ Conversations.prototype.insertConversations = function(json) {
 		//this.insertConversation(json[i].document);
 	    $.ajax({
 	        type: "GET",
-	        url: "/resource/" + this.resourceId + "/getConversation/" + json[i].document._id + "/getView?view=view",
+	        url: "/resource/" + this.resourceId + "/conversation/get/" + json[i].document._id + "/getView?view=view",
 	        //success: function(data, textStatus, jqxhr){alert(data);THIS.insertConversation(JSON.parse(data))},
 	        success: function(data, textStatus, jqxhr){THIS.insertConversation(data)},
 	        error: function(ajax, text, error) {alert(error)}

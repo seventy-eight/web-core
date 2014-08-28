@@ -2,23 +2,27 @@ package org.seventyeight.web.actions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.mongodb.MongoDBCollection;
+import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.DeletingParent;
+import org.seventyeight.web.model.Getable;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.Parent;
+import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.nodes.Conversation;
 
 import com.google.gson.JsonObject;
 
-public class GetConversation extends Action<GetConversation> implements Parent, DeletingParent {
+public class Conversations extends Action<Conversations> implements Getable<Conversation>, DeletingParent {
 	
-	private static Logger logger = LogManager.getLogger(GetConversation.class);
+	private static Logger logger = LogManager.getLogger(Conversations.class);
 
-	public GetConversation(Core core, Node parent, MongoDocument document) {
+	public Conversations(Core core, Node parent, MongoDocument document) {
 		super(core, parent, document);
 	}
 
@@ -48,6 +52,7 @@ public class GetConversation extends Action<GetConversation> implements Parent, 
         }	
 	}
 
+	/*
 	@Override
 	public Node getChild(String name) throws NotFoundException {
 		try {
@@ -56,26 +61,41 @@ public class GetConversation extends Action<GetConversation> implements Parent, 
 			throw new NotFoundException(e.getMessage());
 		}
 	}
+	*/
 
-	public static class GetConversationDescriptor extends Action.ActionDescriptor<GetConversation> {
+	@Override
+	public Conversation get(Core core, String token) throws NotFoundException {
+		try {
+			return core.getNodeById(this, token);
+		} catch (ItemInstantiationException e) {
+			throw new NotFoundException(e.getMessage());
+		}
+	}
+	
+	public long getNumberOfConversations() {
+    	MongoDBQuery query = new MongoDBQuery().is(Conversation.PARENT_FIELD, ((MongoDocument) parent).getIdentifier()).is("type", Conversation.TYPE_NAME);
+    	return MongoDBCollection.get(Core.NODES_COLLECTION_NAME).count(query);
+    }
 
-		public GetConversationDescriptor(Core core) {
+	public static class ConversationsDescriptor extends Action.ActionDescriptor<Conversations> {
+
+		public ConversationsDescriptor(Core core) {
 			super(core);
 		}
 
 		@Override
 		public String getExtensionName() {
-			return "getConversation";
+			return "conversations";
 		}
 
 		@Override
-		public Class<GetConversation> getExtensionClass() {
-			return GetConversation.class;
+		public Class<Conversations> getExtensionClass() {
+			return Conversations.class;
 		}
 
 		@Override
 		public String getDisplayName() {
-			return "Get conversation";
+			return "Conversations";
 		}
 
         @Override

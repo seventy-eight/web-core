@@ -79,7 +79,7 @@ public class CMSCore extends Core {
         addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(root) );
 
         addDescriptor( new GetAction.GetDescriptor(this) );
-        addDescriptor( new GetConversation.GetConversationDescriptor(this) );
+        addDescriptor( new Conversations.ConversationsDescriptor(this) );
 
         addSearchable( new TitleSearch() );
         addSearchable( new TypeSearch() );

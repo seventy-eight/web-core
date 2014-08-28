@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 public class Conversation extends Resource<Conversation> {
 	
 	public static final String PARENT_FIELD = "parent";
+	public static final String TYPE_NAME = "conversation";
 
 	public Conversation(Core core, Node parent, MongoDocument document) {
 		super(core, parent, document);
@@ -126,6 +127,10 @@ public class Conversation extends Resource<Conversation> {
         }
     }
 
+    public static long getNumberOfConversations(Resource<?> resource) {
+    	MongoDBQuery query = new MongoDBQuery().is(PARENT_FIELD, resource.getIdentifier()).is("type", TYPE_NAME);
+    	return MongoDBCollection.get(Core.NODES_COLLECTION_NAME).count(query);
+    }
 
 	public static class ConversationDescriptor extends NodeDescriptor<Conversation> {
 
