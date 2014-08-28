@@ -33,7 +33,12 @@ Conversations.prototype.insertConversations = function(json) {
 
 Conversations.prototype.insertConversation = function(view) {
 	$("#" + this.container).append(view + "<br>");
-	//this.getComments(json._id);
+}
+
+Conversations.insertConversation = function(d) {
+//	debugger;
+    var c = eval("(" + d + ")");
+	$("#" + c.document.parent + "-conversations").append(c.document.view + "<br>");
 }
 
 function Conversation(cid_) {
@@ -41,10 +46,7 @@ function Conversation(cid_) {
 }
 
 Conversation.addComment = function(d) {
-	//alert("--->" + d);
     var json = eval("(" + d + ")");
-    //$("#commentsContainer").append(json.view + "<br>").children(':last').hide().fadeIn(2000);
-    //$(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
     $(json.view + "<br>").appendTo("#" + json.parent + "-conversation").hide().fadeIn(2000);
 }
 
@@ -91,17 +93,25 @@ $(document).on("click", '.replyable', function(event) {
 
 
 // Submit a new conversation
-$( "#conversationSubmit" ).click(function(event) {
+//$( "#conversationSubmit" ).click(function(event) {
+$(document).on("click", '#conversationSubmit', function(event) {
     event.preventDefault();
     var form = $('#conversationForm');
-    //alert("adawd"+form.attr('id'));
+
+    // Remove previously added json inputs
+    $(form).children("input[name='json']").remove();
+
+    // Add new json input
     Utils.addJsonElement( form[0] );
     $.ajax({
         type: "POST",
         url: "addConversation",
         data: form.serialize(),
         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
-        success: function(data, textStatus, jqxhr){addConversation(data)},
+        success: function(data, textStatus, jqxhr){
+        	alert("HEY");
+        	Conversations.insertConversation(data)
+        },
         error: function(ajax, text, error) {alert(error)}
     });
 });
@@ -119,9 +129,12 @@ $(document).on("click", '.commentSubmit', function(event) {
 
     // Add new json input
     Utils.addJsonElement( form[0] );
+    
+    //
+    var c = $(form).children("input[name='conversation']").val();
     $.ajax({
         type: "POST",
-        url: "addComment",
+        url: "/resource/" + c + "/addComment",
         data: form.serialize(),
         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
         success: function(data, textStatus, jqxhr){$(form).parent().hide();form[0].reset();Conversation.addComment(data)},
