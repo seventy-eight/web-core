@@ -47,7 +47,7 @@
 #end
 
 #macro(comments $resource)
-<div class="headerContrast" style="width: 100%; min-width: inherit">Comments</div>
+<div class="headerContrast" style="width: 100%; min-width: inherit">Conversations</div>
 <div id="$resource.getIdentifier()-conversations" style="min-width: inherit">
 
 </div>

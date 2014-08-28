@@ -1,3 +1,4 @@
+
 function Conversations(resourceId_, container_) {
 	var THIS = this;
 	this.resourceId = resourceId_;
@@ -51,7 +52,7 @@ Conversation.prototype.getComments = function() {
 	var THIS = this;
 	$.ajax({
         type: "GET",
-        url: "getComments",
+        url: "/resource/" + this.cid + "/getComments",
         success: function(data, textStatus, jqxhr){THIS.insertComments(JSON.parse(data), THIS.cid)},
         error: function(ajax, text, error) {alert(error)}
     });
@@ -112,7 +113,11 @@ $(document).on("click", '.commentSubmit', function(event) {
     //Utils.addJsonElement( document.getElementById('commentForm') );
     var form = $(this).parent();
     //alert("adawd"+form.attr('id'));
-    debugger;
+    
+    // Remove previously added json inputs
+    $(form).children("input[name='json']").remove();
+
+    // Add new json input
     Utils.addJsonElement( form[0] );
     $.ajax({
         type: "POST",
