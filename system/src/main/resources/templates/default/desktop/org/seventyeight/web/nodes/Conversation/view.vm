@@ -12,6 +12,6 @@
 	
 	$(".conversation").click(function(){
 		//$(this).parent().children(".conversation").toggle();
-		$(this).parent().children(".container").toggle();
+		$(this).parent().children(".container").toggle(400);
 	});
 </script>

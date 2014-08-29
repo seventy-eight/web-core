@@ -78,7 +78,22 @@ public class Conversation extends Resource<Conversation> {
         writer.write( gson.toJson( comments ) );
         //writer.write( comments.toString() );
     }
+    
+    public Comment addComment(Request request) throws ClassNotFoundException, ItemInstantiationException {
+        String text = request.getValue( "comment", "" );
 
+        Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
+        Comment comment = descriptor.newInstance( request, this );
+
+        JsonObject json = request.getJsonField();
+        comment.updateConfiguration(json);
+        
+        // Set the correct conversation
+        comment.setConversation(this);
+        
+        comment.save();
+        return comment;
+    }
 
     @PostMethod
     public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException, ClassNotFoundException, JsonException, NotFoundException {
@@ -90,38 +105,13 @@ public class Conversation extends Resource<Conversation> {
         //String title = request.getValue( "commentTitle", "" );
 
         if(text.length() > 1) {
-            Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
-            Comment comment = descriptor.newInstance( request, this );
-            if(comment != null) {
-                JsonObject json = request.getJsonField();
-                comment.updateConfiguration(json);
-                comment.setConversation(this);
-                comment.save();
+        	Comment comment = addComment(request);
+            setUpdatedCall( null );
 
-                /*
-                update( null, false );
-                save();
-                */
-                setUpdatedCall( null );
+            comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
 
-                int number = request.getInteger( "number", 1 );
-
-                /*
-                DocumentFinder finder = new DocumentFinder( this, request, 1, 0 );
-                finder.getQuery().is("owner", request.getUser().getIdentifier()).is( "type", "comment" );
-                finder.getSort().set( "created", 1 );
-
-                List<MongoDocument> d = finder.findNext();
-                */
-
-                comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
-
-                PrintWriter writer = response.getWriter();
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                //writer.write( gson.toJson( comment.getDocument() ) );
-                writer.write( comment.getDocument().toString() );
-            }
+            PrintWriter writer = response.getWriter();
+            writer.write( comment.getDocument().toString() );
         } else {
             throw new IllegalStateException( "No text provided!" );
         }

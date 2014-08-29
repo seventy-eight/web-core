@@ -10,7 +10,7 @@ Conversations.prototype.get = function() {
 	var THIS = this;
     $.ajax({
         type: "GET",
-        url: "/resource/" + this.resourceId + "/getConversations",
+        url: "/resource/" + this.resourceId + "/conversations/getAll",
         success: function(data, textStatus, jqxhr){THIS.insertConversations(JSON.parse(data))},
         error: function(ajax, text, error) {alert(error)}
     });
@@ -105,7 +105,7 @@ $(document).on("click", '#conversationSubmit', function(event) {
     Utils.addJsonElement( form[0] );
     $.ajax({
         type: "POST",
-        url: "addConversation",
+        url: "conversations/add",
         data: form.serialize(),
         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
         success: function(data, textStatus, jqxhr){

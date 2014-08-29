@@ -218,7 +218,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         setUpdatedCall( null );
     }
 
-    protected void setUpdatedCall(Date date) {
+    /**
+     * Should be removed? 
+     * Do not use .update()!?
+     */
+    public void setUpdatedCall(Date date) {
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() );
         MongoUpdate update;
         if(date == null) {

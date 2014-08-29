@@ -1,13 +1,21 @@
 package org.seventyeight.web.actions;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Action;
+import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.DeletingParent;
 import org.seventyeight.web.model.Getable;
 import org.seventyeight.web.model.ItemInstantiationException;
@@ -16,7 +24,11 @@ import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.Parent;
 import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.nodes.Conversation;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 public class Conversations extends Action<Conversations> implements Getable<Conversation>, DeletingParent {
@@ -75,6 +87,63 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
 	public long getNumberOfConversations() {
     	MongoDBQuery query = new MongoDBQuery().is(Conversation.PARENT_FIELD, ((AbstractNode<?>) parent).getIdentifier()).is("type", Conversation.TYPE_NAME);
     	return MongoDBCollection.get(Core.NODES_COLLECTION_NAME).count(query);
+    }
+	
+    @PostMethod
+    public void doAdd(Request request, Response response) throws ItemInstantiationException, ClassNotFoundException, TemplateException, IOException {
+    	response.setRenderType( Response.RenderType.NONE );
+    	
+    	logger.debug("Adding conversation to {}", this);
+    	
+        String text = request.getValue( "comment", "" );
+
+        if(text.length() > 1) {
+            Conversation.ConversationDescriptor descriptor = core.getDescriptor( Conversation.class );
+            Conversation conversation = descriptor.newInstance( request, this );
+            logger.debug("Conversation is {}", conversation);
+            if(conversation != null) {
+                JsonObject json = request.getJsonField();
+                conversation.updateConfiguration(json);
+                conversation.save();
+                
+                ((Resource<?>) parent).setUpdatedCall( null );
+                
+                Comment comment = conversation.addComment(request);
+                // The special case, needs to set the parent for the comment
+                comment.setConversationParent(conversation.getIdentifier());
+                comment.save();
+                logger.debug("Comment is {}", comment);
+
+                //comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
+
+                conversation.getDocument().set("view", core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ));
+                
+                PrintWriter writer = response.getWriter();
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                writer.write( gson.toJson( conversation.getDocument() ) );
+                //writer.write( core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ) );
+            }
+        } else {
+            throw new IllegalStateException( "No text provided!" );
+        }
+    }
+
+    @GetMethod
+    public void doGetAll(Request request, Response response) throws IOException, TemplateException {
+        response.setRenderType( Response.RenderType.NONE );
+
+        int number = request.getInteger( "number", 10 );
+        int offset = request.getInteger( "offset", 0 );
+
+        MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" );
+        MongoDocument sort = new MongoDocument().set( "created", 1 );
+        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
+
+        PrintWriter writer = response.getWriter();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        writer.write( gson.toJson( docs ) );
     }
 
 	public static class ConversationsDescriptor extends Action.ActionDescriptor<Conversations> {
