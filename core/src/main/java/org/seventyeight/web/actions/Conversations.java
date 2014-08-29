@@ -6,6 +6,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.DeletingParent;
 import org.seventyeight.web.model.Getable;
@@ -39,8 +40,7 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
 
 	@Override
 	public String getDisplayName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Conversations()";
 	}
 	
 	@Override
@@ -73,7 +73,7 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
 	}
 	
 	public long getNumberOfConversations() {
-    	MongoDBQuery query = new MongoDBQuery().is(Conversation.PARENT_FIELD, ((MongoDocument) parent).getIdentifier()).is("type", Conversation.TYPE_NAME);
+    	MongoDBQuery query = new MongoDBQuery().is(Conversation.PARENT_FIELD, ((AbstractNode<?>) parent).getIdentifier()).is("type", Conversation.TYPE_NAME);
     	return MongoDBCollection.get(Core.NODES_COLLECTION_NAME).count(query);
     }
 

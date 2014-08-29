@@ -17,7 +17,7 @@ import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
-import org.seventyeight.web.model.CoreSystem;
+import org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
@@ -27,6 +27,7 @@ import org.seventyeight.web.utilities.ExecuteUtils;
 import org.seventyeight.web.utilities.ResourceBundles;
 
 import javax.servlet.http.Cookie;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -637,6 +638,21 @@ public abstract class Core implements CoreSystem {
 
         /**/
         //descriptor.configureIndex( db );
+    }
+    
+    /**
+     * Get an {@link Action} for a given node given the name.
+     */
+    public <T extends Action<T>> Action<T> getActionByName(PersistedNode node, String name) throws ItemInstantiationException {
+    	List<AbstractExtension.ExtensionDescriptor<T>> ds = getExtensionDescriptors( Action.class );
+    	for(AbstractExtension.ExtensionDescriptor<T> d : ds) {
+    		if(d.getExtensionName().equalsIgnoreCase(name)) {
+    			Action<T> next = (Action<T>) d.getExtension( this, node );
+    			return next;
+    		}
+    	}
+    	
+    	return null;
     }
 
     public void addExtensionsGroup(AbstractExtension.ExtensionDescriptor<?> descriptor) {

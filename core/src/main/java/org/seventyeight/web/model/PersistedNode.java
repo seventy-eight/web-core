@@ -3,6 +3,7 @@ package org.seventyeight.web.model;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -240,5 +241,9 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     @Override
     public MongoDocument getDocument() {
         return document;
+    }
+    
+    public <T extends Action<T>> Action<T> getActionByName(String name) throws ItemInstantiationException {
+    	return core.getActionByName(this, name);
     }
 }
