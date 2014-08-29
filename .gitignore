@@ -2,3 +2,6 @@
 target/
 *.iml
 velocity.log*
+*.settings
+*.project
+*.classpath
