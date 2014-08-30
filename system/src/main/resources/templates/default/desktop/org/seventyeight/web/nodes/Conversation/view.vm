@@ -9,9 +9,4 @@
 		var c = new Conversation('$item.getIdentifier()');
 		c.getComments();
 	});
-	
-	$(".conversation").click(function(){
-		//$(this).parent().children(".conversation").toggle();
-		$(this).parent().children(".container").toggle(400);
-	});
 </script>

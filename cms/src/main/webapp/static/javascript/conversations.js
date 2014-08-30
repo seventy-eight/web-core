@@ -91,6 +91,10 @@ $(document).on("click", '.replyable', function(event) {
     return false;
 });
 
+// Toggle conversations
+$(document).on("click", ".conversation", function(){
+	$(this).parent().children(".container").toggle(400);
+});
 
 // Submit a new conversation
 //$( "#conversationSubmit" ).click(function(event) {
