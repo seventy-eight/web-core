@@ -154,7 +154,7 @@ public class Comment extends AbstractNode<Comment> {
     @Override
 	public void save() {
     	logger.debug("Saving {}", this);
-		commentCache.save(this, getIdentifier());
+		commentCache.save(this.getDocument(), getIdentifier());
 	}
 
 	public static class CommentDescriptor extends NodeDescriptor<Comment> {

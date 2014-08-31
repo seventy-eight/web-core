@@ -138,7 +138,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     */
 
     private boolean titleExists( String title, String type ) {
-        MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ).is( "type", type ) );
+        MongoDocument doc = MongoDBCollection.get( getCollectionName() ).findOne( new MongoDBQuery().is( Core.NAME_FIELD, title ).is( "type", type ) );
         return !doc.isNull();
     }
 
