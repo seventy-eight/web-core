@@ -65,11 +65,11 @@ public class MongoDBCollection {
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit ) {
-        return find( query, offset, limit, null );
+        return find( query, offset, limit, null, new String[] {} );
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument sort ) {
-        return find(query, offset, limit, sort, null);
+        return find(query, offset, limit, sort, new String[] {});
     }
 
     public List<MongoDocument> find( MongoDBQuery query, int offset, int limit, MongoDocument sort, String ... keys ) {

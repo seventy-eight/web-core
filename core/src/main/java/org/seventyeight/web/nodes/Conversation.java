@@ -55,7 +55,7 @@ public class Conversation extends Resource<Conversation> {
 
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is( "type", "comment" );
         MongoDocument sort = new MongoDocument().set( "created", 1 );
-        List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
+        List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( query, offset, number, sort );
 
         //List<String> comments = new ArrayList<String>( docs.size() );
         Map<String, List<MongoDocument>> comments = new HashMap<String, List<MongoDocument>>();

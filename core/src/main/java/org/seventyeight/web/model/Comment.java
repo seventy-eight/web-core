@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.cache.SessionCache;
+import org.seventyeight.database.mongodb.MongoDatabaseStrategy;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
@@ -14,7 +16,7 @@ import org.seventyeight.web.nodes.Conversation;
  * @author cwolfgang
  */
 public class Comment extends AbstractNode<Comment> {
-
+	
     private static Logger logger = LogManager.getLogger( Comment.class );
 
     private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
@@ -31,6 +33,11 @@ public class Comment extends AbstractNode<Comment> {
     public static final String PARENT_FIELD = "parent";
 
     public static final String COMMENTS_COLLECTION = "comments";
+    
+    private static SessionCache commentCache = new SessionCache( new MongoDatabaseStrategy( COMMENTS_COLLECTION ) );
+    static {
+    	commentCache.setAutoFlush(true);
+    }
 
     public Comment(Core core, Node parent, MongoDocument document) {
         super(core, parent, document);
@@ -126,7 +133,7 @@ public class Comment extends AbstractNode<Comment> {
     public String getConversationId() {
     	return document.get("conversation", "");
     }
-
+    
     /*
     public static List<Comment> getCommentsByUser(User user, int offset, int number, Node parent) {
         MongoDBQuery query = new MongoDBQuery().is( "type", "comment" ).is( "owner", user.getIdentifier() );
@@ -144,7 +151,13 @@ public class Comment extends AbstractNode<Comment> {
     }
     */
 
-    public static class CommentDescriptor extends NodeDescriptor<Comment> {
+    @Override
+	public void save() {
+    	logger.debug("Saving {}", this);
+		commentCache.save(this, getIdentifier());
+	}
+
+	public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
         public CommentDescriptor( Node parent ) {
             super( parent );
@@ -159,8 +172,13 @@ public class Comment extends AbstractNode<Comment> {
         public String getType() {
             return "comment";
         }
-
+        
         @Override
+		public String getCollectionName() {
+			return Comment.COMMENTS_COLLECTION;
+		}
+
+		@Override
         public Comment newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
             Comment comment = super.newInstance( request, parent );
 
