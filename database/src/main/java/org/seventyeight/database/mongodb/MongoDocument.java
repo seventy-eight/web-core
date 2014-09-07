@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand;
+
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.seventyeight.database.Document;
@@ -168,6 +169,10 @@ public class MongoDocument implements Document {
                 }
             }
             document.put( key, new BasicDBObject( t ) );
+        } else if(value instanceof Collection) {
+        	BasicDBList list = new BasicDBList();
+        	list.addAll((Collection<? extends Object>) value);
+        	document.put(key, list);
         } else {
             document.put( key, value );
         }

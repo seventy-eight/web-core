@@ -1,5 +1,8 @@
 package org.seventyeight.web.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.JsonObject;
 
 import org.apache.logging.log4j.LogManager;
@@ -134,6 +137,15 @@ public class Comment extends AbstractNode<Comment> {
     	return document.get("conversation", "");
     }
     
+    public List<String> getAncestors() {
+    	return document.getObjectList2("ancestors");
+    }
+    
+    public static MongoDocument getComment(String id) {
+    	return commentCache.get(id);
+    }
+
+    
     /*
     public static List<Comment> getCommentsByUser(User user, int offset, int number, Node parent) {
         MongoDBQuery query = new MongoDBQuery().is( "type", "comment" ).is( "owner", user.getIdentifier() );
@@ -156,7 +168,7 @@ public class Comment extends AbstractNode<Comment> {
     	logger.debug("Saving {}", this);
 		commentCache.save(this.getDocument(), getIdentifier());
 	}
-
+    
 	public static class CommentDescriptor extends NodeDescriptor<Comment> {
 
         public CommentDescriptor( Node parent ) {
@@ -186,6 +198,12 @@ public class Comment extends AbstractNode<Comment> {
                 comment.getDocument().set( CONVERSATION_FIELD, ((AbstractNode)parent).getIdentifier() );
                 //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
                 comment.getDocument().set( PARENT_FIELD, request.getValue("parent") );
+                
+                Comment commentParent = new Comment(request.getCore(), parent, getComment((String) request.getValue("parent")));
+                List<String> ancestors = new ArrayList<String>(commentParent.getAncestors());
+                logger.debug("Parent ancestors: {}", ancestors);
+                ancestors.add(commentParent.getIdentifier());
+                comment.getDocument().set("ancestors", ancestors);
             }
 
             return comment;
