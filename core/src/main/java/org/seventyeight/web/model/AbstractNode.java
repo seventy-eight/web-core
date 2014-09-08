@@ -474,22 +474,15 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         html
     }
 
-    public String getText( String type, String language ) {
-        logger.debug( "Getting " + type + " for " + getIdentifier() );
+    public String getText( String field, String language, String type ) {
+        logger.debug( "Getting text " + field + ", " + language + " for " + getIdentifier() );
 
-        MongoDBQuery query = new MongoDBQuery().is( "identifier", getIdentifier() ).is( "type", type ).is( "language", language );
-        MongoDocument doc = MongoDBCollection.get( TEXTS_COLLECTION ).findOne( query );
-
+        MongoDocument doc = document.getr2("texts", field, "translations", language);
         if( doc == null || doc.isNull() ) {
-            query = new MongoDBQuery().is( "identifier", getIdentifier() ).is( "type", type );
-            doc = MongoDBCollection.get( TEXTS_COLLECTION ).findOne( query );
-
-            if( doc == null || doc.isNull() ) {
-                throw new IllegalStateException( language + " not found for " + type );
-            }
+            throw new IllegalStateException( language + " for " + field + " not found" );
         }
 
-        return doc.getr( "texts" ).get( TextType.html.name(), "" );
+        return doc.get( type, "" );
     }
 
     /**
@@ -498,70 +491,19 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
      * @param text The text itself
      * @param language
      */
-    public void setText( String type, String text, String language ) {
-        logger.debug( "Setting " + type + " for " + getIdentifier() );
-
-        MongoDBQuery query = new MongoDBQuery().is( "identifier", getIdentifier() ).is( "type", type ).is( "language", language );
-        MongoDocument doc = MongoDBCollection.get( TEXTS_COLLECTION ).findOne( query );
-
-        if( doc == null || doc.isNull() ) {
-            doc = createTextDocument( type, text, language );
-        } else {
-            updateTextDocument( doc, text );
-        }
-
-        MongoDBCollection.get( TEXTS_COLLECTION ).save( doc );
-    }
-
-    public void updateTextDocument( MongoDocument doc, String text ) {
-        // Meta data
-        doc.set( "revision", doc.get( "revision", 1 ) + 1 );
-        doc.set( "updated", new Date() );
-
-        StringBuilder output = textParser.parse( text );
+    public void setText( String field, String language, String text ) {
+        logger.debug( "Setting text " + field + " for " + getIdentifier() );
+        
+        MongoDocument textDoc = document.getr("texts", field, "translations", language);
 
         // Set the version of the parser and generator
         String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
-        doc.set( "textParserVersion", version );
+        textDoc.set( "version", version );
 
         // Set the texts
-        MongoDocument texts = doc.getSubDocument( "texts", null );
-        if( texts == null || texts.isNull() ) {
-            texts = new MongoDocument();
-            doc.set( "texts", texts );
-        }
-        texts.set( TextType.markUp.name(), text );
-        texts.set( TextType.html.name(), output.toString() );
-    }
-
-    /**
-     * Create a text document
-     */
-    public MongoDocument createTextDocument( String type, String text, String language ) {
-        logger.debug( "Creating text document" );
-
-        MongoDocument doc = new MongoDocument();
-
-        // Set meta data
-        doc.set( "identifier", this.getIdentifier() );
-        doc.set( "language", language );
-        doc.set( "type", type );
-        doc.set( "created", new Date() );
-        doc.set( "revision", 1 );
-
         StringBuilder output = textParser.parse( text );
-
-        // Set the version of the parser and generator
-        String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
-        doc.set( "textParserVersion", version );
-
-        // Set the texts
-        MongoDocument texts = new MongoDocument();
-        texts.set( TextType.markUp.name(), text );
-        texts.set( TextType.html.name(), output.toString() );
-        doc.set( "texts", texts );
-
-        return doc;
+        textDoc.set( TextType.markUp.name(), text );
+        textDoc.set( TextType.html.name(), output.toString() );
     }
 
     @GetMethod

@@ -1,5 +1,8 @@
 <div style="width:100%; border-style:solid">
 	<div class="header conversation">$item.getDisplayName()</div>
+	
+	#render($item.getRootComment())
+	
 	<div class="container" id="$item.getIdentifier()-conversation" style="display:none"></div>
 </div>
 

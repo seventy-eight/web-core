@@ -46,18 +46,21 @@ public class RenderObject extends Directive {
 	public boolean render( InternalContextAdapter context, Writer writer, Node node ) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
         logger.debug( "Rendering object" );
 		Object obj = null;
-        String template = null;
+        String template = "view";
         boolean superClass = false;
         Class<?> clazz2 = null;
         Object injected = null;
         boolean newContext = false;
 
-        if( node.jjtGetNumChildren() < 2 ) {
-            throw new IOException( "Object and template must be set" );
+        if( node.jjtGetNumChildren() < 1 ) {
+            throw new IOException( "Object must be set" );
         }
 
         obj = node.jjtGetChild( 0 ).value( context );
-        template = (String) node.jjtGetChild( 1 ).value( context );
+        
+        if( node.jjtGetNumChildren() > 1 ) {
+        	template = (String) node.jjtGetChild( 1 ).value( context );
+        }
 
         if( node.jjtGetNumChildren() > 2 ) {
             superClass = (Boolean) node.jjtGetChild( 2 ).value( context );

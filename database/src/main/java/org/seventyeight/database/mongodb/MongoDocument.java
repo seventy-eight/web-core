@@ -92,7 +92,6 @@ public class MongoDocument implements Document {
      * @return
      */
     public MongoDocument getr( String ... keys ) {
-
         DBObject current = document;
         int i = 0;
         for( ; i < keys.length ; i++ ) {
@@ -118,6 +117,12 @@ public class MongoDocument implements Document {
         return new MongoDocument( current );
     }
 
+    /**
+     * Returns the {@link MongoDocument} recursively given the keys.
+     * A new sub document will NOT be created.
+     * @param keys
+     * @return
+     */
     public MongoDocument getr2( String ... keys ) {
         DBObject current = document;
         int i = 0;

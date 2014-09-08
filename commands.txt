@@ -1,1 +1,3 @@
 java -Dadditional=project\src\main\resources -Dsystem=system\src\main\resources -Dtheme=system\src\main\resources\themes -jar server\target\server.jar
+
+java -Dadditional=cms/src/main/resources/ -Dsystem=system/src/main/resources/ -Dtheme=system/src/main/resources/themes/ -Dstatic=cms/src/main/webapp/static/ -jar server/target/server.jar

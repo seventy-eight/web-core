@@ -47,11 +47,12 @@ public class Conversation extends Resource<Conversation> {
 
 	@Override
 	public void updateNode(JsonObject jsonData) {
-		// TODO Auto-generated method stub
+		if(jsonData != null) {
+			
+		}
 	}
 	
 	public Comment getRootComment() {
-        // Find the root comment
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
         MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);
         
@@ -62,46 +63,36 @@ public class Conversation extends Resource<Conversation> {
     public void doGetComments(Request request, Response response) throws IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );
 
-        // Find the root comment
-        MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
-        MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);
-
-        //List<String> comments = new ArrayList<String>( docs.size() );
         // A map of lists of comments, keyed by the comments parent id
         Map<String, List<MongoDocument>> comments = new HashMap<String, List<MongoDocument>>();
         
-        // 
-        Comment c = new Comment( core, this, doc );
-       	comments.put(c.getCommentParent(), new ArrayList<MongoDocument>());
-        List<MongoDocument> cs = comments.get(c.getCommentParent());
+        int offset = request.getInteger("offset", 0);
+        int number = request.getInteger("number", 0);
         
-        // Place view
-        doc.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
-        cs.add(doc);
+        String rootCommentId = request.getValue("commentId", null);
+        
+        List<MongoDocument> firstLevelComments = new ArrayList<MongoDocument>();
         
         // First level replies
-        MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
+        MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( flquery, offset, number, sort );
         
-        
+        // A list of first level comments identifiers 
         List<String> ids = new ArrayList<String>(docs.size());
 
         for(MongoDocument d : docs) {
             Comment c = new Comment( core, this, d );
             
-            // Make sure the parent key is in the map
-            if(!comments.containsKey(c.getCommentParent())) {
-            	comments.put(c.getCommentParent(), new ArrayList<MongoDocument>());
-            }
-            List<MongoDocument> cs = comments.get(c.getCommentParent());
-            
             // Place view
             d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
-            cs.add(d);
+            
+            firstLevelComments.add(d);
             
             ids.add(c.getIdentifier());
         }
+        
+        comments.put(rootCommentId, firstLevelComments);
         
         /*
         // Get descendants
