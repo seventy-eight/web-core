@@ -87,6 +87,20 @@ $(document).on("click", '.replyable', function(event) {
     var pp = '#' + p + ' > .reply';
    
     $(pp).toggle();
+    
+    //var ppp = pp + ' > textarea[name="comment"]';
+    //var ppp = '#' + p + ' > textarea[name="comment"]';
+    var ppp = '#' + p + ' > textarea';
+    //alert(pp);
+    //$(pp).children('input[name="comment"]').trigger("focus");
+    //$(ppp).trigger("focus");
+    //alert($(ppp));
+    //$(ppp).focus();
+    //var o = $(pp).find("textarea");
+    $(pp).find("textarea").focus();
+    //debugger;
+    //$(ppp).trigger("focus");
+    
 	event.preventDefault();
     return false;
 });

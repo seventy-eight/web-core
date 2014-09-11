@@ -14,7 +14,7 @@ $item.getText()<br>
 		    <input type="hidden" name="parent" value="$item.getIdentifier()">
 		    <input type="hidden" name="conversation" value="$item.getConversationId()">
 		    <textarea style="width: 80%" name="comment"></textarea><br>
-		    <button class="commentSubmit" class="button">Send</button>
+		    <button class="commentSubmit button">Send</button>
 		</form>
 	</div>
 	<br>

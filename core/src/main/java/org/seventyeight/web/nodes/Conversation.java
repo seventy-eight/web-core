@@ -47,9 +47,7 @@ public class Conversation extends Resource<Conversation> {
 
 	@Override
 	public void updateNode(JsonObject jsonData) {
-		if(jsonData != null) {
-			
-		}
+		
 	}
 	
 	public Comment getRootComment() {
@@ -67,7 +65,7 @@ public class Conversation extends Resource<Conversation> {
         Map<String, List<MongoDocument>> comments = new HashMap<String, List<MongoDocument>>();
         
         int offset = request.getInteger("offset", 0);
-        int number = request.getInteger("number", 0);
+        int number = request.getInteger("number", 10);
         
         String rootCommentId = request.getValue("commentId", null);
         
@@ -94,7 +92,6 @@ public class Conversation extends Resource<Conversation> {
         
         comments.put(rootCommentId, firstLevelComments);
         
-        /*
         // Get descendants
         List<String> descendants = getDescendants(ids);
         for(String descendant : descendants) {
@@ -111,8 +108,7 @@ public class Conversation extends Resource<Conversation> {
             d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
             cs.add(d);
         }
-        */
-
+        
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();

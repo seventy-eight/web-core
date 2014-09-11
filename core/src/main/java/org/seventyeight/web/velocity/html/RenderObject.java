@@ -45,27 +45,37 @@ public class RenderObject extends Directive {
 	@Override
 	public boolean render( InternalContextAdapter context, Writer writer, Node node ) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
         logger.debug( "Rendering object" );
+        // 1
 		Object obj = null;
+		// 2
         String template = "view";
+        // 3
         boolean superClass = false;
+        // 4
         Class<?> clazz2 = null;
+        // 5
         Object injected = null;
+        // 6
         boolean newContext = false;
 
         if( node.jjtGetNumChildren() < 1 ) {
             throw new IOException( "Object must be set" );
         }
 
+        // 1
         obj = node.jjtGetChild( 0 ).value( context );
         
+        // 2
         if( node.jjtGetNumChildren() > 1 ) {
         	template = (String) node.jjtGetChild( 1 ).value( context );
         }
 
+        // 3
         if( node.jjtGetNumChildren() > 2 ) {
             superClass = (Boolean) node.jjtGetChild( 2 ).value( context );
         }
 
+        // 4
         if( node.jjtGetNumChildren() > 3 ) {
             try {
                 clazz2 = (Class<?>) node.jjtGetChild( 3 ).value( context );
@@ -77,10 +87,12 @@ public class RenderObject extends Directive {
             }
         }
 
+        // 5
         if( node.jjtGetNumChildren() > 4 ) {
             injected = node.jjtGetChild( 4 ).value( context );
         }
 
+        // 6
         if( node.jjtGetNumChildren() > 5 ) {
             newContext = (Boolean) node.jjtGetChild( 5 ).value( context );
         }
