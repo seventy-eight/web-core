@@ -10,7 +10,7 @@
 	$(function() {
 		//Utils.getConversation('$item.getIdentifier()');
 		alert('$item.getIdentifier()');
-		var c = new Conversation('$item.getIdentifier()');
+		var c = new Conversation('$item.getIdentifier()', 2);
 		c.getComments('$root.getIdentifier()');
 	});
 </script>

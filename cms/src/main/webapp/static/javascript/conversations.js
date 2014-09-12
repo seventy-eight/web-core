@@ -41,8 +41,10 @@ Conversations.insertConversation = function(d) {
 	$("#" + c.document.parent + "-conversations").append(c.document.view + "<br>");
 }
 
-function Conversation(cid_) {
+function Conversation(cid_, number_) {
 	this.cid = cid_;
+	this.number = number_;
+	this.offset = 0;
 }
 
 Conversation.addComment = function(d) {
@@ -51,31 +53,52 @@ Conversation.addComment = function(d) {
 }
 
 Conversation.prototype.getComments = function(rid) {
-	debugger;
 	var THIS = this;
 	$.ajax({
         type: "GET",
-        url: "/resource/" + this.cid + "/getComments",
+        url: "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number,
         success: function(data, textStatus, jqxhr){
         	THIS.insertComments(JSON.parse(data), rid);
-        	THIS.hasMore();
+        	THIS.offset += THIS.number;
+        	THIS.hasMore(rid, THIS.offset);
         },
         error: function(ajax, text, error) {alert(error)}
     });
 }
 
-Conversation.prototype.hasMore = function() {
+Conversation.prototype.hasMore = function(id, offset) {
+	var THIS = this;
 	$.ajax({
         type: "GET",
-        url: "/resource/" + this.cid + "/getNumberOfFirstLevelComments",
-        success: function(data, textStatus, jqxhr){alert(data)},
+        url: "/resource/" + THIS.cid + "/getNumberOfFirstLevelComments",
+        success: function(data, textStatus, jqxhr){
+        	if(data > offset) {
+        		var more = THIS.getMoreDialog(id);
+        		$("#" + id + "-conversation").append(more);
+        	} else {
+        		// No more
+        		//$("#" + id + "-conversation").append("NO MORE" + data + "<br>");
+        	}
+        },
         error: function(ajax, text, error) {alert(error)}
     });
 }
 
+Conversation.prototype.getMoreDialog = function(id) {
+	var div = document.createElement("div");
+	div.innerHTML = "More";
+	div.style.border = "2px solid";
+	var THIS = this;
+	$(div).on('click', function(){
+		THIS.getComments(id);
+		$(this).remove();
+	});
+	
+	return div;
+}
+
 Conversation.prototype.insertComments = function(json, id) {
 	var comments = json[id];
-	debugger;
 	//alert("Inserting comments: " + JSON.stringify(comments));
 	if(comments !== undefined) {
         for( i = 0 ; i < comments.length ; i++ ) {
