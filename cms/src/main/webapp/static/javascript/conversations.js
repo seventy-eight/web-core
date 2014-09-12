@@ -56,7 +56,19 @@ Conversation.prototype.getComments = function(rid) {
 	$.ajax({
         type: "GET",
         url: "/resource/" + this.cid + "/getComments",
-        success: function(data, textStatus, jqxhr){THIS.insertComments(JSON.parse(data), rid)},
+        success: function(data, textStatus, jqxhr){
+        	THIS.insertComments(JSON.parse(data), rid);
+        	THIS.hasMore();
+        },
+        error: function(ajax, text, error) {alert(error)}
+    });
+}
+
+Conversation.prototype.hasMore = function() {
+	$.ajax({
+        type: "GET",
+        url: "/resource/" + this.cid + "/getNumberOfFirstLevelComments",
+        success: function(data, textStatus, jqxhr){alert(data)},
         error: function(ajax, text, error) {alert(error)}
     });
 }

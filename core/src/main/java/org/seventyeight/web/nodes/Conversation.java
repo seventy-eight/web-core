@@ -28,6 +28,7 @@ import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.Response.RenderType;
 import org.seventyeight.web.utilities.JsonException;
 
 import com.google.gson.Gson;
@@ -124,6 +125,16 @@ public class Conversation extends Resource<Conversation> {
         Gson gson = builder.create();
         writer.write( gson.toJson( comments ) );
         //writer.write( comments.toString() );
+    }
+    
+    @GetMethod
+    public void doGetNumberOfFirstLevelComments(Request request, Response response) throws IOException {
+    	response.setRenderType(RenderType.NONE);
+    	
+        MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getRootComment().getIdentifier());
+        //logger.debug("QUERY: {}", query);
+        MongoDocument sort = new MongoDocument().set( "created", 1 );
+        response.getWriter().print(MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).count(query));
     }
     
     
