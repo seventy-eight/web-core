@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.JsonObject;
@@ -23,6 +24,8 @@ public class Comment extends AbstractNode<Comment> {
     private static Logger logger = LogManager.getLogger( Comment.class );
 
     private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
+    
+    public static final String typeName = "comment";
 
     public static final String TITLE_FIELD = "title";
     public static final String TEXT_FIELD = "text";
@@ -200,10 +203,14 @@ public class Comment extends AbstractNode<Comment> {
                 comment.getDocument().set( PARENT_FIELD, request.getValue("parent") );
                 
                 Comment commentParent = new Comment(request.getCore(), parent, getComment((String) request.getValue("parent")));
-                List<String> ancestors = new ArrayList<String>(commentParent.getAncestors());
-                logger.debug("Parent ancestors: {}", ancestors);
-                ancestors.add(commentParent.getIdentifier());
-                comment.getDocument().set("ancestors", ancestors);
+                if(commentParent.getType().equals(Comment.typeName)) {
+	                List<String> ancestors = new ArrayList<String>(commentParent.getAncestors());
+	                logger.debug("Parent ancestors: {}", ancestors);
+	                ancestors.add(commentParent.getIdentifier());
+	                comment.getDocument().set("ancestors", ancestors);
+                } else {
+                	comment.getDocument().set("ancestors", Collections.EMPTY_LIST);
+                }
             }
 
             return comment;

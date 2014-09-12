@@ -178,7 +178,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     public String getType() {
-        return document.get( "type", "unknown" );
+        return document.get( "type", null );
     }
 
     public Date getCreated() {

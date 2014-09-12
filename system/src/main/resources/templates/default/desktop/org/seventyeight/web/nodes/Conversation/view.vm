@@ -1,7 +1,7 @@
 <div style="width:100%; border-style:solid">
 	<div class="header conversation">$item.getDisplayName() -  $item.getIdentifier()</div>
-	
-	#render($item.getRootComment() "view" false "" "" true)
+	#set($root = $item.getRootComment())
+	#render($root "view" false "" "" true)
 	
 	<div class="container" id="$item.getIdentifier()-conversation" style="display:none"></div>
 </div>
@@ -11,6 +11,6 @@
 		//Utils.getConversation('$item.getIdentifier()');
 		alert('$item.getIdentifier()');
 		var c = new Conversation('$item.getIdentifier()');
-		c.getComments();
+		c.getComments('$root.getIdentifier()');
 	});
 </script>

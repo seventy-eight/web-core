@@ -20,7 +20,7 @@ public class SessionCache {
 
     private boolean autoFlush = false;
 
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     private class Record {
         public Object record;

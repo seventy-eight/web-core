@@ -50,18 +50,20 @@ Conversation.addComment = function(d) {
     $(json.view + "<br>").appendTo("#" + json.parent + "-conversation").hide().fadeIn(2000);
 }
 
-Conversation.prototype.getComments = function() {
+Conversation.prototype.getComments = function(rid) {
+	debugger;
 	var THIS = this;
 	$.ajax({
         type: "GET",
         url: "/resource/" + this.cid + "/getComments",
-        success: function(data, textStatus, jqxhr){THIS.insertComments(JSON.parse(data), THIS.cid)},
+        success: function(data, textStatus, jqxhr){THIS.insertComments(JSON.parse(data), rid)},
         error: function(ajax, text, error) {alert(error)}
     });
 }
 
 Conversation.prototype.insertComments = function(json, id) {
 	var comments = json[id];
+	debugger;
 	//alert("Inserting comments: " + JSON.stringify(comments));
 	if(comments !== undefined) {
         for( i = 0 ; i < comments.length ; i++ ) {

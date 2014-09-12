@@ -67,14 +67,20 @@ public class Conversation extends Resource<Conversation> {
         int offset = request.getInteger("offset", 0);
         int number = request.getInteger("number", 10);
         
-        String rootCommentId = request.getValue("commentId", null);
+        logger.debug("Fetch comments {}, {}", offset, number);
+        
+        String rootCommentId = getRootComment().getIdentifier();
+        logger.debug("Root comment id: {}", rootCommentId);
         
         List<MongoDocument> firstLevelComments = new ArrayList<MongoDocument>();
         
         // First level replies
         MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
+        //logger.debug("QUERY: {}", flquery);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( flquery, offset, number, sort );
+        
+        logger.debug("Number of docs: {}", docs.size());
         
         // A list of first level comments identifiers 
         List<String> ids = new ArrayList<String>(docs.size());
@@ -90,12 +96,16 @@ public class Conversation extends Resource<Conversation> {
             ids.add(c.getIdentifier());
         }
         
+        logger.debug("IDS: {}", ids);
+        
         comments.put(rootCommentId, firstLevelComments);
+        //logger.debug("First level comments: {}", comments);
         
         // Get descendants
         List<String> descendants = getDescendants(ids);
+        logger.debug("Descendants: {}", descendants.size());
         for(String descendant : descendants) {
-        	MongoDocument d = Comment.getComment(descendant);;
+        	MongoDocument d = Comment.getComment(descendant);
         	Comment c = new Comment(core, this, d);
         	
         	// Make sure the parent key is in the map
