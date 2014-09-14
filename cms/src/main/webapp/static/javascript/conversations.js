@@ -88,6 +88,8 @@ Conversation.prototype.getMoreDialog = function(id) {
 	var div = document.createElement("div");
 	div.innerHTML = "More";
 	div.style.border = "2px solid";
+	div.style.textAlign = "center";
+	div.style.backgroundColor = "#998877";
 	var THIS = this;
 	$(div).on('click', function(){
 		THIS.getComments(id);
@@ -144,7 +146,7 @@ $(document).on("click", '.replyable', function(event) {
 
 // Toggle conversations
 $(document).on("click", ".conversation", function(){
-	$(this).parent().children(".container").toggle(400);
+	$(this).parent().children(".container").toggle();
 });
 
 // Submit a new conversation
@@ -164,7 +166,6 @@ $(document).on("click", '#conversationSubmit', function(event) {
         data: form.serialize(),
         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
         success: function(data, textStatus, jqxhr){
-        	alert("HEY");
         	Conversations.insertConversation(data)
         },
         error: function(ajax, text, error) {alert(error)}

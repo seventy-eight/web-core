@@ -1,5 +1,4 @@
 <div style="min-width: inherit; min-height: 64px;padding: 5px;text-align: left; border-style: solid" class="widget" id="$item.getIdentifier()">
-$item.getIdentifier()
 <img style="float:left; width: 60px; height: 60px; padding-right: 10px" src="$item.getOwner().getPortrait()">
 <span class="header" style="clear: both">$item.getDisplayName()</span>, 
 $item.getOwner().getDisplayName(), $dateUtils.getDateString($item.getCreated()) ago

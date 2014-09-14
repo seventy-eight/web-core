@@ -1,15 +1,18 @@
 <div style="width:100%; border-style:solid">
-	<div class="header conversation">$item.getDisplayName() -  $item.getIdentifier()</div>
+	<div class="header conversation">$item.getDisplayName()</div>
 	#set($root = $item.getRootComment())
-	#render($root "view" false "" "" true)
 	
-	<div class="container" id="$item.getIdentifier()-conversation" style="display:none"></div>
+	<div class="container" style="display:none">
+		#render($root "view" false "" "" true)
+	
+		<div id="$item.getIdentifier()-conversation"></div>
+	</div>
 </div>
 
 <script type="text/javascript">
 	$(function() {
 		//Utils.getConversation('$item.getIdentifier()');
-		alert('$item.getIdentifier()');
+		//alert('$item.getIdentifier()');
 		var c = new Conversation('$item.getIdentifier()', 2);
 		c.getComments('$root.getIdentifier()');
 	});
