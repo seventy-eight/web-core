@@ -129,6 +129,7 @@ public class RenderObject extends Directive {
                     logger.debug("USING " + clazz2);
                     writer.write( render.renderClass( obj, clazz2, template + ".vm", superClass ) );
                 } catch( NotFoundException e ) {
+                	logger.warn("Could not find the template, {}, for {} with {}", template, obj, clazz2);
                     writer.write( "No " + template + " for " + obj );
                 }
             }

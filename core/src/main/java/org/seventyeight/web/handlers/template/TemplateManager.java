@@ -48,7 +48,7 @@ public class TemplateManager {
      * Throws a TemplateException if not found.
      */
     public Template getTemplate( Theme theme, Theme defaultTheme, Theme.Platform platform, String template ) throws TemplateException {
-        logger.debug( "[Finding] {} for {}", template, theme.getName() );
+        logger.debug( "[Finding] {} for {}, {}", template, theme.getName(), platform );
         try {
             return _getTemplate( theme, platform, template );
         } catch( TemplateException e ) {
@@ -351,6 +351,7 @@ public class TemplateManager {
         }
 
         public String renderClass( Object object, Class clazz, String method, boolean trySuper ) throws NotFoundException {
+        	logger.debug("Rendering {} with {}, trySuper: {}", object, clazz, trySuper);
             Template template = getTemplateFromClass( theme, core.getDefaultTheme(), platform, clazz, method, trySuper );
             context.put( "item", object );
             context.put( "rb", getBundle( clazz ) );

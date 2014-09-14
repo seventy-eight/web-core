@@ -144,6 +144,9 @@ public class FileResource extends UploadableNode<FileResource> {
 
         public FileType getDescriptor( String extension ) {
             FileType f = fileTypes.get( extension.toLowerCase() );
+            logger.debug("EXTENSION: {}, {}", extension, extension.toLowerCase());
+            logger.debug("FILE TYPES: {}", fileTypes);
+            logger.debug("FILE TYPE: {}", f);
             if(f != null) {
                 return f;
             } else {
