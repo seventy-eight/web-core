@@ -30,6 +30,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -117,6 +119,7 @@ public class Upload implements Node {
         r.length = 2000;
         r.deleteUrl = "http://jajdjawd";
         r.thumbnailUrl = "/images/none";
+        r.url = "http://www.tv2.dk";
 
         JsonObject json = request.getJsonField();
 
@@ -184,13 +187,21 @@ public class Upload implements Node {
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        writer.write( gson.toJson( r ) );
+        writer.write( gson.toJson( new UploadResponses(Collections.singletonList(r) ) ));
     }
 
     @GetMethod
     public void doUploadForm(Request request, Response response) throws IOException, TemplateException, NotFoundException {
         response.setRenderType( Response.RenderType.NONE );
         response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );
+    }
+    
+    public static class UploadResponses {
+    	private List<UploadResponse> files;
+    	
+    	public UploadResponses(List<UploadResponse> responses) {
+    		this.files = responses;
+    	}
     }
 
     private static class UploadResponse {

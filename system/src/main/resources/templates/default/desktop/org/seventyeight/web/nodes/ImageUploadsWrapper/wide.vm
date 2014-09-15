@@ -1,16 +1,29 @@
-<div style="overflow-x: scroll; border-style: none; overflow: hidden" id="imageWrapper$item.getIdentifier()">
+<div id="andmore$item.getIdentifier()">
+	<div style="overflow-x: scroll; border-style: none; overflow: hidden" id="imageWrapper$item.getIdentifier()">
 
+	</div>
 </div>
 
 <script type="text/javascript">
 
 
     $(function(){
-        #foreach($id in $item.getImageIds())
+    
+
+		#set($start = 0)
+		#set($end = 3)
+		#set($range = [$start..$end])
+        #foreach($i in $range)
+        	#set($id = $item.getImageIds().get($i))
         
             //Utils.fetchImage('$id', '#imageWrapper$item.getIdentifier()');
             Utils.fetchResourceViewAppend('$id', '#imageWrapper$item.getIdentifier()', 'avatar'); 
             //$('#imageWrapper$item.getIdentifier()').append('<img src="/resource/$id/file" style="width:100px"></img>');
+        #end
+        
+        #if($item.getImageIds().size() > 4)
+        	#set($v = ($item.getImageIds().size() - 4))
+        	$('#andmore$item.getIdentifier()').append('... And $v more');
         #end
     });
 </script>
