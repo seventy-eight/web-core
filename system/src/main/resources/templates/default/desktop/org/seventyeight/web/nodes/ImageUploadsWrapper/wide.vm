@@ -1,7 +1,9 @@
 <div id="andmore$item.getIdentifier()">
+	<a href="$item.getUrl()">
 	<div style="overflow-x: scroll; border-style: none; overflow: hidden" id="imageWrapper$item.getIdentifier()">
 
 	</div>
+	</a>
 </div>
 
 <script type="text/javascript">

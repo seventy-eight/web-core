@@ -42,7 +42,7 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
 
     @Override
     public void updateNode( JsonObject jsonData ) {
-      /* Implementation is a no op */
+    	/* Implementation is a no op */
     }
 
     public static boolean isImage(String filename) {
