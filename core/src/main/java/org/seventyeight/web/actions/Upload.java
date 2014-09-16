@@ -32,7 +32,11 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author cwolfgang
@@ -96,13 +100,9 @@ public class Upload implements Node {
         }
 
         logger.debug( "SERVLET THREAD: " + Thread.currentThread().getId() + " - " + Thread.currentThread().getName() );
-        //uploadExecutor.execute( new ServletUtils.FileUploader( aCtx, request.getUser().getIdentifier().toString(), (String) f.getIdentifier() ) );
 
-        //Executor executor = (Executor)request.getServletContext().getAttribute("executor");
-        //executor.execute( new ServletUtils.Copier( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
-        //executor.execute( new ServletUtils.FileUploader( aCtx, request.getUser().getIdentifier().toString(), f.getIdentifier() ) );
-        //executor.execute( new UploadHandler( aCtx, request.getUser().getIdentifier().toString(), UploadHandler.commonsUploader, UploadHandler.DefaultFilenamer ) );
-
+        HttpSession session = request.getSession();
+        String lastUploadSession = (String) session.getAttribute("uploadSession");
 
         List<FileItem> items = null;
         try {
@@ -111,7 +111,21 @@ public class Upload implements Node {
             logger.error( e.getMessage() );
             return;
         }
+        
+        JsonObject json = request.getJsonField();
+        Map<String, String> fields = new HashMap<String, String>();
+        
+        for( FileItem item : items ) {
+        	if (item.isFormField()) {
+        		fields.put(item.getFieldName(), item.getString());
+        	}
+        }
+        
+        String uploadSession = fields.get("uploadSession");
+        session.setAttribute("uploadSession", uploadSession);
+        logger.debug("Last session={}, new session={}", lastUploadSession, uploadSession);
 
+        
         UploadResponse r = new UploadResponse();
         r.name = "NAME";
         r.rid = "";
@@ -120,8 +134,6 @@ public class Upload implements Node {
         r.deleteUrl = "http://jajdjawd";
         r.thumbnailUrl = "/images/none";
         r.url = "http://www.tv2.dk";
-
-        JsonObject json = request.getJsonField();
 
         for( FileItem item : items ) {
             try {
@@ -133,7 +145,6 @@ public class Upload implements Node {
 
                     FileResource fr = null;
                     try {
-
                         json.addProperty( "title", filename );
 
                         FileResource.FileDescriptor d = core.getDescriptor( FileResource.class );
@@ -157,8 +168,11 @@ public class Upload implements Node {
 
                         // Image uploads wrapper
                         if(ImageUploadsWrapper.isImage( filename )) {
-                            ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
-                            ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser() );
+                        	boolean newSession = !uploadSession.equals(lastUploadSession);
+                    		logger.debug("We need a new upload session: {}", newSession);
+                    		ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
+                    		ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser(), newSession );
+
                             wrapper.addImage( fr );
                             wrapper.setUpdated(null);
                             wrapper.save();

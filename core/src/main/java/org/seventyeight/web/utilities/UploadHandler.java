@@ -95,6 +95,7 @@ public class UploadHandler implements Runnable {
         public File file;
         public String relativePath;
         public String extension;
+        public String session;
     }
 
     /**

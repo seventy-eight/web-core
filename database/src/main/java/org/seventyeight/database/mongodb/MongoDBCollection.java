@@ -99,10 +99,15 @@ public class MongoDBCollection {
         logger.debug( "Query is " + query.getDocument() );
         return new MongoDocument( collection.findOne( query.getDocument() ) );
     }
-
-    public MongoDocument findOne( MongoDBQuery query, MongoDocument field ) {
-        logger.debug( "Query is " + query.getDocument() );
+    
+	public MongoDocument findOne( MongoDBQuery query, MongoDocument field ) {
+        logger.debug( "Query is {}, fields {}", query.getDocument(), field );
         return new MongoDocument( collection.findOne( query.getDocument(), field.getDBObject() ) );
+	}
+
+    public MongoDocument findOne( MongoDBQuery query, MongoDocument field, MongoDocument sort ) {
+        logger.debug( "Query is " + query.getDocument() );
+        return new MongoDocument( collection.findOne( query.getDocument(), (field != null ? field.getDBObject() : null), sort.getDBObject() ) );
     }
 
     public MongoDocument getDocumentById( String id ) {

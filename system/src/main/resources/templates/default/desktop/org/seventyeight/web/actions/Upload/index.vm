@@ -1,5 +1,6 @@
 <div id="fileupload">
     <form method="post" enctype="multipart/form-data" action="upload">
+    <input type="hidden" name="testing" value="hej">
         <div class="fileupload-buttonbar">
             <label class="fileinput-button">
                 <span>Upload</span>
@@ -10,6 +11,8 @@
     <div class="fileupload-content">
         <table class="files"></table>
     </div>
+    
+    <span id="showSession"></span>
 </div>
 
 <div id="files">
@@ -17,6 +20,11 @@
 </div>
 
 <script>
+	var uploadSession = new Date();
+	/*
+	$('#uploadSession').val(uploadSession);
+	$('#showSession').html(uploadSession);
+	*/
     $(function () {
         $('#fileupload').fileupload({
             dataType: 'json',
@@ -26,6 +34,7 @@
             started: function(e, data) {
               //alert("YEAH");
             },
+            formData: {uploadSession: uploadSession},
             added: function(e, data) {
                 data.context = $('<div/>').appendTo('#files');
 				$.each(data.files, function (index, file) {
