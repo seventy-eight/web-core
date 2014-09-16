@@ -970,5 +970,16 @@ public abstract class Core implements CoreSystem {
     public Menu getMainMenu() {
         return mainMenu;
     }
+    
+    public <T extends Node> T find(Node node, Class<T> find) {
+    	while(node != null) {
+    		if(find.isInstance(node)) {
+    			return (T) node;
+    		}
+    		node = node.getParent();
+    	}
+    	
+    	return null;
+    }
 
 }

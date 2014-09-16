@@ -145,6 +145,8 @@ public class Conversation extends Resource<Conversation> {
     	logger.debug("Getting descendants for {}", parents.toArray());
         MongoDBQuery query = new MongoDBQuery().in("ancestors", parents);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
+        
+        logger.debug("Query for descendants: {}", query);
 
         List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( query, 0, 0, sort, "_id" );
         logger.debug( "DOCS FOR IDS: {}", docs );
@@ -171,6 +173,9 @@ public class Conversation extends Resource<Conversation> {
         comment.setConversation(this);
         
         comment.save();
+        
+        core.find(this, AbstractNode.class).touch();
+        
         return comment;
     }
 

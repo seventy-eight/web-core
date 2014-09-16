@@ -305,8 +305,20 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         // Update user + revision
         update( request.getUser() );
+        
+        this.setVisibility(Visibility.VISIBLE);
+
+        // Lastly, save
+        save();
 
         response.sendRedirect( getUrl() );
+    }
+    
+    public void touch() {
+    	logger.debug("Touching {}", this);
+    	update(null, false);
+    	this.setVisibility(Visibility.VISIBLE);
+    	save();
     }
 
     public void updateConfiguration(JsonObject json) throws ClassNotFoundException, ItemInstantiationException {
@@ -346,8 +358,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         updateNode( json );
 
         postUpdate();
-        save();
-
     }
     
     @DeleteMethod

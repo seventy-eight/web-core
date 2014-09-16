@@ -299,16 +299,19 @@ Utils.fetchResourceViewAppend = function(id, container, view) {
     });
 }
 
+Utils.fetchResourceViewAppendLink = function(id, container, view) {
+    Utils.fetchResourceView(id, view, function(e) {
+        $(container).append('<a href="/resource/' + id + '/" style="padding-right:5px">' + e + '</a>');
+        //alert(e);
+    });
+}
+
 Utils.fetchResourceView = function(id, view, f) {
     $.ajax({
         type: "GET",
         url: "/resource/" + id + "/getView" + (view !== undefined ? '?view=' + view : ''),
         success: function(data, textStatus, jqxhr){
-            //$('#imageWrapperimageuploadswrapper-9').append('#imageWrapperimageuploadswrapper-9');
-            //$(container).append("ID");
             f(data);
-            //alert($(container));
-            //alert(container);
         },
         error: function(ajax, text, error) {alert(error)}
     });

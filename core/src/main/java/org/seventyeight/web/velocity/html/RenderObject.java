@@ -99,7 +99,11 @@ public class RenderObject extends Directive {
 
         Request request = (Request) context.get( "request" );
 
-        logger.debug( "Rendering " + obj + " for " + template );
+        try {
+        	logger.debug( "Rendering " + obj + " for " + template );
+        } catch(NullPointerException e) {
+        	logger.warn("Unable to display debug");
+        }
 
         if( template == null ) {
             return false;
