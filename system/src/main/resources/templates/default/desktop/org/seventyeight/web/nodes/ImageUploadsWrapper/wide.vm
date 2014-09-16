@@ -12,6 +12,10 @@
 
 		#set($start = 0)
 		#set($end = 3)
+		#set($size = $item.getImageIds().size())
+		#if($size < 4)
+			#set($end = $size - 1)
+		#end
 		#set($range = [$start..$end])
         #foreach($i in $range)
         	#set($id = $item.getImageIds().get($i))
