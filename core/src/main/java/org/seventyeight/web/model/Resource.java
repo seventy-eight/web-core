@@ -99,10 +99,10 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     @Override
     public String getPortrait() {
-        logger.debug( "Getting portrait for {}", this );
+        //logger.debug( "Getting portrait for {}", this );
 
         MongoDocument portrait = getExtension( AbstractPortrait.class );
-        logger.debug( "PORTTRAIT: {}", portrait );
+//        logger.debug( "PORTTRAIT: {}", portrait );
 
         if( portrait != null && !portrait.isNull() && portrait.get( "class", null ) != null ) {
             try {

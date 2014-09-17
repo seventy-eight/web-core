@@ -284,9 +284,9 @@ public class TemplateManager {
             //context.put( "url" );
 
 			/* I18N */
-            logger.debug( "LANG: {}", locale );
+            //logger.debug( "LANG: {}", locale );
 			context.put( "locale", locale );
-            logger.debug( "MESSAGE: {}", "templates." + templatePathToClass( template.getName() ) );
+            //logger.debug( "MESSAGE: {}", "templates." + templatePathToClass( template.getName() ) );
             message = new Message( core, "templates." + templatePathToClass( template.getName() ), locale );
             context.put( "message", message );
             //context.put( "message2", new Message( "stuff", locale ) );

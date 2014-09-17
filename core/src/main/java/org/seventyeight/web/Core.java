@@ -325,7 +325,7 @@ public abstract class Core implements CoreSystem {
     }
 
     public <T extends Node> T getNodeById( Node parent, String id ) throws ItemInstantiationException, NotFoundException {
-        logger.debug( "Getting node by id: " + id );
+        //logger.debug( "Getting node by id: " + id );
         if(id == null) {
             throw new IllegalArgumentException( "Id not provided" );
         }

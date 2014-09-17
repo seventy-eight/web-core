@@ -70,14 +70,15 @@ public class Conversation extends Resource<Conversation> {
         
         logger.debug("Fetch comments {}, {}", offset, number);
         
+        // 1) Get the root comment
         String rootCommentId = getRootComment().getIdentifier();
         logger.debug("Root comment id: {}", rootCommentId);
         
         List<MongoDocument> firstLevelComments = new ArrayList<MongoDocument>();
         
-        // First level replies
+        // 2) First level replies
         MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
-        //logger.debug("QUERY: {}", flquery);
+        logger.debug("QUERY: {}", flquery);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( flquery, offset, number, sort );
         
@@ -100,24 +101,27 @@ public class Conversation extends Resource<Conversation> {
         logger.debug("IDS: {}", ids);
         
         comments.put(rootCommentId, firstLevelComments);
-        //logger.debug("First level comments: {}", comments);
-        
-        // Get descendants
-        List<String> descendants = getDescendants(ids);
-        logger.debug("Descendants: {}", descendants.size());
-        for(String descendant : descendants) {
-        	MongoDocument d = Comment.getComment(descendant);
-        	Comment c = new Comment(core, this, d);
-        	
-        	// Make sure the parent key is in the map
-            if(!comments.containsKey(c.getCommentParent())) {
-            	comments.put(c.getCommentParent(), new ArrayList<MongoDocument>());
-            }
-            List<MongoDocument> cs = comments.get(c.getCommentParent());
-            
-            // Place view
-            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
-            cs.add(d);
+
+        // 3) Get descendants, but only if there are any
+        if(!ids.isEmpty()) {
+	        List<String> descendants = getDescendants(ids);
+	        logger.debug("Descendants: {}", descendants.size());
+	        for(String descendant : descendants) {
+	        	MongoDocument d = Comment.getComment(descendant);
+	        	Comment c = new Comment(core, this, d);
+	        	
+	        	// Make sure the parent key is in the map
+	            if(!comments.containsKey(c.getCommentParent())) {
+	            	comments.put(c.getCommentParent(), new ArrayList<MongoDocument>());
+	            }
+	            List<MongoDocument> cs = comments.get(c.getCommentParent());
+	            
+	            // Place view
+	            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+	            cs.add(d);
+	        }
+        } else {
+        	logger.debug("NO DESCENDANTS!!!");
         }
         
         PrintWriter writer = response.getWriter();

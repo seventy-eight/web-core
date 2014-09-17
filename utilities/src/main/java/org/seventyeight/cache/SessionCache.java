@@ -94,7 +94,7 @@ public class SessionCache {
         lock.readLock().lock();
         try {
             if(cache.containsKey( id )) {
-                logger.debug( "[CACHE] retrieved {}", id );
+                //logger.debug( "[CACHE] retrieved {}", id );
                 hits++;
                 return (TYPE) dbStrategy.deserialize( cache.get( id ).record );
             } else {
@@ -111,7 +111,7 @@ public class SessionCache {
     }
 
     private <TYPE> TYPE resolve(String id) {
-        logger.debug( "[CACHE] resolving {}", id );
+        //logger.debug( "[CACHE] resolving {}", id );
         Object record = dbStrategy.get( id );
         if(record != null) {
             Object object = dbStrategy.deserialize( record );
