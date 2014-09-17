@@ -973,6 +973,7 @@ public abstract class Core implements CoreSystem {
     
     public <T extends Node> T find(Node node, Class<T> find) {
     	while(node != null) {
+    		logger.debug("NODE: {}", node);
     		if(find.isInstance(node)) {
     			return (T) node;
     		}

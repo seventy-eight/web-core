@@ -41,8 +41,9 @@ Conversations.insertConversation = function(d) {
 	$("#" + c.document.parent + "-conversations").append(c.document.view + "<br>");
 }
 
-function Conversation(cid_, number_) {
+function Conversation(cid_, parent_, number_) {
 	this.cid = cid_;
+	this.parent = parent_;
 	this.number = number_;
 	this.offset = 0;
 }
@@ -54,9 +55,15 @@ Conversation.addComment = function(d) {
 
 Conversation.prototype.getComments = function(rid) {
 	var THIS = this;
+	debugger;
+	if(this.parent) {
+		var url = "/resource/" + this.parent + "/conversations/get/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number;
+	} else {
+		var url = "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number;
+	}
 	$.ajax({
         type: "GET",
-        url: "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number,
+        url: url, 
         success: function(data, textStatus, jqxhr){
         	THIS.insertComments(JSON.parse(data), rid);
         	THIS.offset += THIS.number;

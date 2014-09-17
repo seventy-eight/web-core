@@ -178,9 +178,23 @@ public class Conversation extends Resource<Conversation> {
         
         comment.save();
         
-        core.find(this, Resource.class).touch();
+        Resource<?> r = core.find(this.parent, Resource.class);
+        if(r != null) {
+        	r.touch();
+        } else {
+        	logger.warn("Could not touch child resource of {}", this);
+        }
         
         return comment;
+    }
+    
+    public Resource<?> getResource() {
+    	Resource<?> r = core.find(this.parent, Resource.class);
+    	if(r != null) {
+    		return r;
+    	} else {
+    		return null;
+    	}
     }
 
     @PostMethod
