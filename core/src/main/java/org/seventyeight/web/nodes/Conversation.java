@@ -178,7 +178,7 @@ public class Conversation extends Resource<Conversation> {
         
         comment.save();
         
-        core.find(this, AbstractNode.class).touch();
+        core.find(this, Resource.class).touch();
         
         return comment;
     }
