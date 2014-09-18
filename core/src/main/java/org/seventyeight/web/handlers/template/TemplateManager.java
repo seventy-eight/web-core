@@ -229,6 +229,11 @@ public class TemplateManager {
             this.context = context;
             return this;
         }
+        
+        public Renderer updateContext(String key, Object value) {
+        	this.context.put(key, value);
+        	return this;
+        }
 
         /*
 		public Renderer setWriter( Writer writer ) {

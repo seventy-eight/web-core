@@ -54,6 +54,7 @@ public class Conversation extends Resource<Conversation> {
 	public Comment getRootComment() {
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
         MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);
+        doc.set("resource", document.get("parent", null));
         
         return new Comment( core, this, doc );
 	}
@@ -74,6 +75,8 @@ public class Conversation extends Resource<Conversation> {
         String rootCommentId = getRootComment().getIdentifier();
         logger.debug("Root comment id: {}", rootCommentId);
         
+        String resourceId = document.get("parent", null);
+        
         List<MongoDocument> firstLevelComments = new ArrayList<MongoDocument>();
         
         // 2) First level replies
@@ -91,7 +94,7 @@ public class Conversation extends Resource<Conversation> {
             Comment c = new Comment( core, this, d );
             
             // Place view
-            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+            d.set("view", core.getTemplateManager().getRenderer( request ).updateContext("contextResource", resourceId).renderObject( c, "view.vm" ) );
             
             firstLevelComments.add(d);
             
@@ -117,7 +120,9 @@ public class Conversation extends Resource<Conversation> {
 	            List<MongoDocument> cs = comments.get(c.getCommentParent());
 	            
 	            // Place view
-	            d.set("view", core.getTemplateManager().getRenderer( request ).renderObject( c, "view.vm" ) );
+	            d.set("view", core.getTemplateManager().getRenderer( request ).updateContext("contextResource", resourceId).renderObject( c, "view.vm" ) );
+	            //d.set("resource", parent);
+	            
 	            cs.add(d);
 	        }
         } else {

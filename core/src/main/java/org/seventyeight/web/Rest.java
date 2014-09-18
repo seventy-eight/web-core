@@ -90,7 +90,11 @@ public class Rest extends HttpServlet {
         request.getStopWatch().stop( rqs.getRequestURI() );
 
         if(request.getRequestParts().length > 0 && request.getRequestParts()[0].equalsIgnoreCase("static")) {
-        	((Autonomous)core.getRoot().getChild("static")).autonomize(request, response);
+        	try {
+				((Autonomous)core.getRoot().getChild("static")).autonomize(request, response);
+			} catch (Throwable e) {
+				throw new ServletException(e);
+			}
         } else {
             request.getStopWatch().start( "Authentication" );
 
@@ -119,7 +123,7 @@ public class Rest extends HttpServlet {
 		        } else {
 		            response.sendError( e.getCode(), e.getMessage() );
 		        }
-		    } catch( Exception e ) {
+		    } catch( Throwable e ) {
 		        logger.error( "CAUGHT ERROR" );
 		        e.printStackTrace();
 		        generateException( request, rsp.getWriter(), e, e.getMessage() );

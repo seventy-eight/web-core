@@ -140,6 +140,12 @@ public class Comment extends AbstractNode<Comment> {
     	return document.get("conversation", "");
     }
     
+    /*
+    public Conversation getConversation() {
+    	return core.getNodeById(parent, id)
+    }
+    */
+    
     public List<String> getAncestors() {
     	return document.getObjectList2("ancestors");
     }

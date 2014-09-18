@@ -373,8 +373,9 @@ public abstract class Core implements CoreSystem {
 
     /**
      * Render the path from the URL
+     * @throws Throwable 
      */
-    public void render( Request request, Response response ) throws CoreException {
+    public void render( Request request, Response response ) throws Throwable {
 
         request.getStopWatch().start( "Resolve node" );
         TokenList tokens = new TokenList( request.getRequestURI() );
@@ -435,7 +436,7 @@ public abstract class Core implements CoreSystem {
 
     }
 
-    private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Exception {
+    private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Throwable {
         logger.debug( "Rendering object {}, tokens: {}", obj, tokens );
         switch( tokens.left() ) {
                 /* If the last token on the path is a valid node */

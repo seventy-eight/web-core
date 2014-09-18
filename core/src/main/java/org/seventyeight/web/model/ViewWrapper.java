@@ -63,7 +63,7 @@ public class ViewWrapper implements Node, Autonomous {
     }
 
     @Override
-    public void autonomize( Request request, Response response ) throws IOException {
+    public void autonomize( Request request, Response response ) throws Throwable {
         logger.debug( "View wrapping " + node + "(" + offset + ")" );
 
         String template;

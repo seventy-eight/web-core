@@ -28,11 +28,11 @@ public class ExecuteUtils {
 
     }
 
-    public static void execute( Request request, Response response, Object object, String urlName ) throws Exception {
+    public static void execute( Request request, Response response, Object object, String urlName ) throws Throwable {
         execute( request, response, object, urlName, object.getClass() );
     }
 
-    public static void execute( Request request, Response response, Object object, String urlName, Class<?> imposter ) throws Exception {
+    public static void execute( Request request, Response response, Object object, String urlName, Class<?> imposter ) throws Throwable {
         logger.debug( "Executing: {}, {}", object, urlName );
 
         if( imposter == null ) {
@@ -44,7 +44,7 @@ public class ExecuteUtils {
             executeMethod( object, request, response, urlName );
             return;
         } catch( InvocationTargetException e ) {
-            throw (Exception)e.getCause();
+            throw (Throwable)e.getCause();
         } catch( ReflectiveOperationException e ) {
             logger.debug( "{} does not have {}, {} ", object, urlName, e.getMessage() );
         }

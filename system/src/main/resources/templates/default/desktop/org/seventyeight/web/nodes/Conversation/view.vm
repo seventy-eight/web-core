@@ -1,5 +1,4 @@
 <div style="width:100%; border-style:solid">
-	$item == $item.getResource()
 	<div class="header conversation">$item.getDisplayName()</div>
 	#set($root = $item.getRootComment())
 	
@@ -12,7 +11,7 @@
 
 <script type="text/javascript">
 	$(function() {
-		if('$item.getResource()' != "") {
+		if('$!item.getResource()' != "") {
 			var c = new Conversation('$item.getIdentifier()', '$item.getResource().getIdentifier()', 2);
 		} else {
 			alert("Something was not implemented...... Sigh!");
