@@ -68,7 +68,7 @@
             </form>
 
             <script type="text/javascript">
-			    Utils.resourceListHandler('conversationGroupContainer', 'conversationGroupInput', '/user/getUsers', '', 'artist');
+			    Utils.resourceListHandler('conversationGroupContainer', 'conversationGroupInput', '/group/getGroups', '', 'artist');
 
             </script>
 
