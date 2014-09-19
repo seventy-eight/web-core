@@ -53,11 +53,23 @@
             <form method="post" id="conversationForm" style="min-width: inherit;">
                 <input type="text" name="title" style="width: 100%">
                 <input type="hidden" name="parent" value="$item.getIdentifier()">
+                
+				<div class="ui-widget" style="width: 100%">
+					Group
+				    <input id="conversationGroupInput">
+				</div>
+				
+				<div id="conversationGroupContainer">
+				
+				</div>
+                
                 <textarea style="width: 100%" name="comment"></textarea>
                 <button id="conversationSubmit" class="button">Send</button>
             </form>
 
             <script type="text/javascript">
+			    Utils.resourceListHandler('conversationGroupContainer', 'conversationGroupInput', '/user/getUsers', '', 'artist');
+
             </script>
 
         </td>

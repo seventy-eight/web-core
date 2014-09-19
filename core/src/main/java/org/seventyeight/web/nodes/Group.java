@@ -3,17 +3,22 @@ package org.seventyeight.web.nodes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,5 +154,22 @@ public class Group extends Resource<Group> implements Authorizable {
         public String getType() {
             return GROUP;
         }
+        
+        @GetMethod
+        public void doGetGroups(Request request, Response response) throws IOException {
+            response.setRenderType( Response.RenderType.NONE );
+
+            String term = request.getValue( "term", "" );
+
+            if( term.length() > 1 ) {
+                MongoDBQuery query = new MongoDBQuery().is( "type", "group" ).regex( "title", "(?i)" + term + ".*" );
+
+                PrintWriter writer = response.getWriter();
+                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+            } else {
+                response.getWriter().write( "{}" );
+            }
+        }
+
     }
 }
