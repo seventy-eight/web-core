@@ -168,10 +168,12 @@ public class Upload implements Node {
 
                         // Image uploads wrapper
                         if(ImageUploadsWrapper.isImage( filename )) {
+                        	/*
                         	boolean newSession = !uploadSession.equals(lastUploadSession);
                     		logger.debug("We need a new upload session: {}", newSession);
+                    		*/
                     		ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
-                    		ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser(), newSession );
+                    		ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser(), uploadSession );
 
                             wrapper.addImage( fr );
                             wrapper.setUpdated(null);

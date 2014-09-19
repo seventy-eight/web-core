@@ -65,14 +65,15 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
             return "Image uploads wrapper";
         }
 
-        public ImageUploadsWrapper getWrapper( Core core, User user, boolean forceNew) throws ItemInstantiationException {
-            MongoDBQuery query = new MongoDBQuery().is( "type", TITLE ).is( "owner", user.getIdentifier() );
+        public ImageUploadsWrapper getWrapper( Core core, User user, String uploadSession) throws ItemInstantiationException {
+            MongoDBQuery query = new MongoDBQuery().is( "type", TITLE ).is( "owner", user.getIdentifier() ).is("uploadSession", uploadSession);
             MongoDocument sort = new MongoDocument().set( "created", -1 );
             MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( query, null, sort );
             logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
-            if(doc == null || doc.isNull() || forceNew) {
+            if(doc == null || doc.isNull()) {
                 ImageUploadsWrapper instance = newInstance( core, user.getIdentifier(), this, "Wrapper for " + user.getDisplayName() );
                 instance.setOwner( user );
+                instance.getDocument().set("uploadSession", uploadSession);
                 return instance;
             } else {
                 return core.getNode( this, doc );
