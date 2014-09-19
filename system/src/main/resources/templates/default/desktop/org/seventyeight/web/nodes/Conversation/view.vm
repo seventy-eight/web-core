@@ -1,8 +1,9 @@
 <div style="width:100%; border-style:solid">
 	<div class="header conversation">$item.getDisplayName()</div>
 	#set($root = $item.getRootComment())
-	
+
 	<div class="container" style="display:none">
+		
 		#render($root "view" false "" "" true)
 	
 		<div id="$item.getIdentifier()-conversation"></div>

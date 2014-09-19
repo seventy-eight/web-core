@@ -55,7 +55,7 @@ public class Conversation extends Resource<Conversation> {
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
         MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);
         doc.set("resource", document.get("parent", null));
-        
+                
         return new Comment( core, this, doc );
 	}
 
