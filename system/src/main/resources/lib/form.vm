@@ -271,6 +271,7 @@
                             </td>
                         </tr>
 
+ITEM=$item
                         #if($item.hasExtension($descriptor))
                             $extensions.add($descriptor.getClazz().getName())
                         #end

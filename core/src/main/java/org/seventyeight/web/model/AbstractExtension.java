@@ -129,7 +129,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             logger.info( "RETRIEVED EXTENSION DOCUMENT for {} IS:", getId() );
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             System.out.println( gson.toJson( d ) );
-            if(canHaveMultiple()) {
+            if(d != null && !d.isNull() && canHaveMultiple()) {
                 d = d.get( getJsonId() );
             }
 
