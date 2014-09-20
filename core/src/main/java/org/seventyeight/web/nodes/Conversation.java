@@ -33,6 +33,8 @@ import org.seventyeight.web.utilities.JsonException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Conversation extends Resource<Conversation> {
@@ -48,7 +50,18 @@ public class Conversation extends Resource<Conversation> {
 
 	@Override
 	public void updateNode(JsonObject jsonData) {
-		
+		if(jsonData != null) {
+			JsonArray ids = jsonData.get("ids").getAsJsonArray();
+			List<String> gids = new ArrayList<String>();
+			for(JsonElement e : ids) {
+				if(e.isJsonPrimitive()) {
+					String id = e.getAsString();
+					gids.add(id);
+				}
+			}
+			
+			document.set("groups", gids);
+		}
 	}
 	
 	public Comment getRootComment() {

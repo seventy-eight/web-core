@@ -333,7 +333,7 @@ Utils.removeId = function(id, removeUrl) {
 
 Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, ids, inputCallback) {
 	if(typeof(inputCallback) === "undefined") {
-		inputCallback = function(id){ return "<div style=\";float:left\" id=\"top_" + id + "\"><div class=\"newResource\" id=\"" + id + "\" style=\"\">Waiting for " + id + "</div><div onclick=\"Utils.removeId('" + id + "', 'get/')\">REMOVE</div></div>" };
+		inputCallback = function(id){ return "<div style=\";float:left\" id=\"top_" + id + "\"><div class=\"newResource\" id=\"" + id + "\" style=\"\">Waiting for " + id + "</div><div name=\"ids\" class=\"targetValue\" style=\"display:none\">" + id + "</div><div onclick=\"Utils.removeId('" + id + "', 'get/')\">REMOVE</div></div>" };
 	}
 
     $( '#' + autoCompleteInput ).autocomplete({
@@ -343,7 +343,11 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
             //$('#' + container).append('<table><tr><td id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
             //$('#' + container).append('<div class="" id="' + ui.item._id + '">Waiting ' + ui.item._id + '</td></tr></table>');
             $('#' + container).append(inputCallback(ui.item._id));
-            add(ui.item._id);
+            if(addUrl !== undefined) {
+            	add(ui.item._id);
+            } else {
+            	getView(ui.item._id);
+            }
             return false;
         }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
@@ -358,8 +362,6 @@ Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, 
             getView(ids[id]);
         }
     });
-
-
 
     function add(id) {
         $.ajax({
