@@ -590,12 +590,19 @@ public abstract class Core implements CoreSystem {
     */
 
     public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
+    	logger.info("----====> {} <====----", descriptor.getClazz());
         logger.debug( "Adding {}, {}", descriptor, descriptor.getClazz() );
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         /* Determine if the descriptor has something to be loaded */
+        if(descriptor instanceof NodeDescriptor<?>) {
+        	logger.debug("PArent before: {}", ((NodeDescriptor<?>) descriptor).getParent());
+        }
         descriptor.loadConfiguration();
-        logger.debug( "Adding {}, {}", descriptor, descriptor.getClazz() );
+        if(descriptor instanceof NodeDescriptor<?>) {
+        	logger.debug("PArent AFTER: {}", ((NodeDescriptor<?>) descriptor).getParent());
+        }
+
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
         for( Class<?> i : interfaces ) {
@@ -636,7 +643,7 @@ public abstract class Core implements CoreSystem {
         addExtension( descriptor );
 
 
-
+        descriptor.initialize();
         /**/
         //descriptor.configureIndex( db );
     }

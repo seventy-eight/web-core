@@ -28,12 +28,14 @@ public class SimpleORM {
             for( Field f : fs ) {
                 //System.out.println( "--->" + f.getName() + ", " + f.getModifiers() + ", " + ( f.getModifiers() | 4096 ) );
 
-                if( !Modifier.isTransient( f.getModifiers() ) && !Modifier.isStatic( f.getModifiers() ) && !isSynthetic( f.getModifiers() )  ) {
+            	if( !Modifier.isTransient( f.getModifiers() ) && !Modifier.isStatic( f.getModifiers() ) && !isSynthetic( f.getModifiers() )  ) {
                     System.out.println( "Setting " + f.getName() );
                     String name = f.getName();
-                    f.setAccessible( true );
-                    f.set( object, f.getType().cast( document.get( name ) ) );
-                }
+                    if(document.contains(name)) {
+                    	f.setAccessible( true );
+                    	f.set( object, f.getType().cast( document.get( name ) ) );
+                    }
+	           }
 
                 //System.out.println( f.getName() + " = " + f.get( object ) );
             }

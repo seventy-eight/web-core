@@ -175,6 +175,10 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         //Core.getInstance().getTemplateManager().getTemplateFromClass(  )
         return true;
     }
+    
+    public void initialize() {
+    	// Default implementation is a no op.
+    }
 
     /**
      * @return A {@link List} of {@link ExtensionGroup}'s defining the applicable extensions.
