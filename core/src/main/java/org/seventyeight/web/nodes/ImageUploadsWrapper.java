@@ -1,6 +1,7 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -13,6 +14,7 @@ import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -50,9 +52,14 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
     }
 
     public static class ImageUploadsWrapperDescriptor extends NodeDescriptor<ImageUploadsWrapper> {
+    	
+    	private ConcurrentHashMap<String, String> uploadSessions;
 
         public ImageUploadsWrapperDescriptor( Node parent ) {
             super( parent );
+            logger.debug("PARENTNTT: {}", parent);
+            
+            uploadSessions = new ConcurrentHashMap<String, String>();
         }
 
         @Override
@@ -64,18 +71,55 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
         public String getDisplayName() {
             return "Image uploads wrapper";
         }
+        
+        @Override
+		public void initialize() {
+        	logger.debug("Initializing wrapper, {}", System.identityHashCode(this));
+        	logger.debug("PARENT: {}", parent);
+        	logger.debug(Integer.toHexString(hashCode()));
+			uploadSessions = new ConcurrentHashMap<String, String>();
+		}
+
+		private synchronized boolean doSessionUploadThingy(User user, String uploadSession) {
+        	logger.debug("Fetching {} for {}", uploadSession, user);
+        	logger.debug("SESSIONS: {}", uploadSessions);
+        	logger.debug("ID: {}", System.identityHashCode(this));
+        	logger.debug("PARENT: {}", parent);
+        	logger.debug(Integer.toHexString(hashCode()));
+        	
+        	String us = uploadSessions.get(user.getIdentifier());
+        	if(us != null && us.equals(uploadSession)) {
+        		return false;
+        	} else {
+        		uploadSessions.put(user.getIdentifier(), uploadSession);
+        		return true;
+        	}
+        }
+        
+        public MongoDocument getWrapperDocument(User user, String uploadSession) {
+        	MongoDBQuery query = new MongoDBQuery().is( "type", TITLE ).is( "owner", user.getIdentifier() ).is("uploadSession", uploadSession);
+            MongoDocument sort = new MongoDocument().set( "created", -1 );
+            MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( query, null, sort );
+            logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
+            
+            return doc;
+        }
 
         public ImageUploadsWrapper getWrapper( Core core, User user, String uploadSession) throws ItemInstantiationException {
+        	/*
             MongoDBQuery query = new MongoDBQuery().is( "type", TITLE ).is( "owner", user.getIdentifier() ).is("uploadSession", uploadSession);
             MongoDocument sort = new MongoDocument().set( "created", -1 );
             MongoDocument doc = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).findOne( query, null, sort );
             logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
             if(doc == null || doc.isNull()) {
+            */
+        	if(doSessionUploadThingy(user, uploadSession)) {
                 ImageUploadsWrapper instance = newInstance( core, user.getIdentifier(), this, "Wrapper for " + user.getDisplayName() );
                 instance.setOwner( user );
                 instance.getDocument().set("uploadSession", uploadSession);
                 return instance;
             } else {
+            	MongoDocument doc = getWrapperDocument(user, uploadSession);
                 return core.getNode( this, doc );
             }
         }

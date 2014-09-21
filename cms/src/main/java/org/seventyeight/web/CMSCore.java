@@ -76,7 +76,10 @@ public class CMSCore extends Core {
 
         addDescriptor( new Collection.CollectionDescriptor(root) );
 
-        addDescriptor( new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(root) );
+        ImageUploadsWrapper.ImageUploadsWrapperDescriptor wrapper = new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(root);
+        logger.debug("-------> {}", Integer.toHexString(wrapper.hashCode()));
+        logger.debug("PAPAPPAPAPAPAP: {}", wrapper.getParent());
+        addDescriptor( wrapper );
 
         addDescriptor( new GetAction.GetDescriptor(this) );
         addDescriptor( new Conversations.ConversationsDescriptor(this) );
