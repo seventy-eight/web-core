@@ -45,6 +45,10 @@ public class MongoDocument implements Document {
             return (T) data;
         }
     }
+    
+    public boolean contains(String key) {
+    	return document.containsField(key);
+    }
 
     /*
     public <T> T getOrCreate(String key) {
