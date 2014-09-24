@@ -39,7 +39,14 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
     }
 
     public List<String> getImageIds() {
-        return document.getObjectList2( "images" );
+        MongoDBQuery query = new MongoDBQuery().is("uploadSession", this.getUploadSession()).is("type", "file");
+        MongoDocument sort = new MongoDocument().set("created", 1);
+        
+        return core.getIds(query, 0, 0, sort);
+    }
+    
+    public String getUploadSession() {
+    	return document.get("uploadSession");
     }
 
     @Override
@@ -74,19 +81,10 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
         
         @Override
 		public void initialize() {
-        	logger.debug("Initializing wrapper, {}", System.identityHashCode(this));
-        	logger.debug("PARENT: {}", parent);
-        	logger.debug(Integer.toHexString(hashCode()));
 			uploadSessions = new ConcurrentHashMap<String, String>();
 		}
 
 		private synchronized boolean doSessionUploadThingy(User user, String uploadSession) {
-        	logger.debug("Fetching {} for {}", uploadSession, user);
-        	logger.debug("SESSIONS: {}", uploadSessions);
-        	logger.debug("ID: {}", System.identityHashCode(this));
-        	logger.debug("PARENT: {}", parent);
-        	logger.debug(Integer.toHexString(hashCode()));
-        	
         	String us = uploadSessions.get(user.getIdentifier());
         	if(us != null && us.equals(uploadSession)) {
         		return false;

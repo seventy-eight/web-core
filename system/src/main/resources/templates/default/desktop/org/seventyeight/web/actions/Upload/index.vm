@@ -31,6 +31,7 @@
             previewMaxWidth: 100,
         	previewMaxHeight: 100,
         	previewCrop: true,
+        	limitConcurrentUploads: 1,
             started: function(e, data) {
               //alert("YEAH");
             },

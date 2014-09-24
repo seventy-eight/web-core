@@ -124,7 +124,6 @@ public class Upload implements Node {
         String uploadSession = fields.get("uploadSession");
         session.setAttribute("uploadSession", uploadSession);
         logger.debug("Last session={}, new session={}", lastUploadSession, uploadSession);
-
         
         UploadResponse r = new UploadResponse();
         r.name = "NAME";
@@ -154,6 +153,7 @@ public class Upload implements Node {
                         fr.setFilename( uf.file.getName() );
                         fr.setFileExtension( uf.extension );
                         fr.setSize( UploadHandler.commonsUploader.getSize( item ) );
+                        fr.setUploadSession(uploadSession);
 
                         String rid = request.getValue( "rid", null );
                         if(rid != null) {
@@ -168,17 +168,12 @@ public class Upload implements Node {
 
                         // Image uploads wrapper
                         if(ImageUploadsWrapper.isImage( filename )) {
-                        	/*
-                        	boolean newSession = !uploadSession.equals(lastUploadSession);
-                    		logger.debug("We need a new upload session: {}", newSession);
-                    		*/
                     		ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
                     		ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser(), uploadSession );
-
-                            wrapper.addImage( fr );
                             wrapper.setUpdated(null);
                             wrapper.save();
 
+                            
                             fr.setVisibility( AbstractNode.Visibility.INVISIBLE );
                         }
 

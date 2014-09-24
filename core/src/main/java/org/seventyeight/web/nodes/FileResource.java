@@ -106,6 +106,10 @@ public class FileResource extends UploadableNode<FileResource> {
 
         return null;
     }
+    
+    public void setUploadSession(String uploadSession) {
+    	document.set("uploadSession", uploadSession);
+    }
 
     public static class FileDescriptor extends UploadableDescriptor<FileResource> {
 
@@ -128,14 +132,7 @@ public class FileResource extends UploadableNode<FileResource> {
         }
 
         public void addFileType( FileType fileType ) {
-            logger.debug( "Adding {} for {}", fileType, fileType.getFileExtensions() );
-            logger.debug( "FILETYPRD: {}", fileTypes );
-
-            if( fileTypes == null ) {
-                fileTypes = new ConcurrentHashMap<String, FileType>(  );
-            }
-
-            logger.debug( "FILETYPRD2: {}", fileTypes );
+            logger.debug("Adding {} for {}", fileType, fileType.getFileExtensions() );
 
             for( String ext : fileType.getFileExtensions() ) {
                 fileTypes.put( ext, fileType );
@@ -144,30 +141,11 @@ public class FileResource extends UploadableNode<FileResource> {
 
         public FileType getDescriptor( String extension ) {
             FileType f = fileTypes.get( extension.toLowerCase() );
-            logger.debug("EXTENSION: {}, {}", extension, extension.toLowerCase());
-            logger.debug("FILE TYPES: {}", fileTypes);
-            logger.debug("FILE TYPE: {}", f);
             if(f != null) {
                 return f;
             } else {
-                if(dft == null) {
-                    dft = new DefaultFileType();
-                }
                 return dft;
             }
         }
-
-        /*
-        @Override
-        public Node getChild( String name ) throws NotFoundException {
-            try {
-                return getFileByFilename( this, name );
-            } catch( ItemInstantiationException e ) {
-                logger.debug( e );
-            }
-
-            throw new NotFoundException( "The file " + name + " was not found" );
-        }
-        */
     }
 }
