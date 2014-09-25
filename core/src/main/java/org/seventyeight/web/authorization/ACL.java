@@ -17,6 +17,8 @@ import java.util.List;
 public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Describable<T> {
 
     private static Logger logger = LogManager.getLogger( ACL.class );
+    
+    public static final String ALL = "group-all";
 
     public enum Permission {
         NONE("none"),
@@ -44,6 +46,10 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
         if(parent instanceof Resource) {
             resourceParent = (Resource<?>) parent;
         }
+    }
+    
+    protected void setReadAccess(List<Authorizable> as) {
+    	document.set("read", as);
     }
 
     public Node getParent() {

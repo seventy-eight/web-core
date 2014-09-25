@@ -40,7 +40,7 @@ public class PublicACL extends ACL<PublicACL> {
 
     @Override
     public void updateNode( JsonObject jsonData ) {
-      /* Implementation is a no op */
+    	document.set("read", ACL.ALL);
     }
 
     public static class PublicACLDescriptor extends ACLDescriptor<PublicACL> {

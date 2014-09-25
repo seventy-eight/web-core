@@ -4,7 +4,9 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.servlet.Request;
 
 import java.util.ArrayList;
@@ -36,10 +38,18 @@ public class ActivityWidget extends Widget {
     }
 
     public List<AbstractNode<?>> getActivities(Request request) throws NotFoundException, ItemInstantiationException {
+    	// Groups
+    	List<String> groupIds = Group.getGroupIds(request.getUser());
+    	groupIds.add(request.getUser().getIdentifier());
+    	groupIds.add(ACL.ALL);
+    	
         MongoDocument sort = new MongoDocument().set( "updated", -1 );
-        MongoDBQuery query = new MongoDBQuery().notExists( "parent" );
+        MongoDBQuery query = new MongoDBQuery().notExists( "parent" ).in("ACL.read", groupIds);
         query.notExists( "relations." + Relation.BasicRelation.CREATED_FOR.getName() );
         query.notEquals( "visibility", AbstractNode.Visibility.INVISIBLE.name() );
+        
+        System.out.println("BUUM: " + query);
+        
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10, sort );
         List<AbstractNode<?>> nodes = new ArrayList<AbstractNode<?>>( docs.size() );
 

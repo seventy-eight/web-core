@@ -275,7 +275,7 @@ public class MongoDocument implements Document {
             }
             return r;
         } else {
-            return Collections.emptyList();
+            return new ArrayList<T>();
         }
     }
 

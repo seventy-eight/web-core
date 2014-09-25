@@ -17,6 +17,8 @@ import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Ownable;
+import org.seventyeight.web.authorization.PublicACL;
+import org.seventyeight.web.authorization.PublicACL.PublicACLDescriptor;
 import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.nodes.User;
@@ -336,19 +338,33 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
             try {
                 // access
                 JsonObject accessObject = json.getAsJsonObject( "access" );
+                Describable<?> describable;
                 if(accessObject != null) {
                     logger.debug( "THE ACCESS ARRAY: {}", accessObject );
-                    Describable<?> describable = ExtensionUtils.handleExtensionConfiguration( core, accessObject, this );
+                    describable = ExtensionUtils.handleExtensionConfiguration( core, accessObject, this );
                     logger.debug( "DESCRIBABABBABABA: {}", describable );
-                    if(describable != null) {
-                        document.set( "ACL", describable.getDocument() );
-                    } else {
-                        logger.debug( "ACL describable not set" );
-                    }
+                } else {
+                	// Put in a public ACL
+                	PublicACLDescriptor d = core.getDescriptor(PublicACL.class);
+                	PublicACL instance = d.newInstance(core, this);
+                	instance.updateNode(null);
+                	describable = instance;
+                }
+                
+                if(describable != null) {
+                    document.set( "ACL", describable.getDocument() );
+                } else {
+                    logger.debug( "ACL describable not set" );
                 }
             } catch( NullPointerException e ) {
                 logger.debug( "No json object provided" );
             }
+        } else {
+        	// Put in a public ACL
+        	PublicACLDescriptor d = core.getDescriptor(PublicACL.class);
+        	PublicACL instance = d.newInstance(core, this);
+        	instance.updateNode(null);
+        	document.set( "ACL", instance.getDocument() );
         }
 
         // Update the node's extensions

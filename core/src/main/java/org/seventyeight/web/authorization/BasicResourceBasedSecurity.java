@@ -2,6 +2,7 @@ package org.seventyeight.web.authorization;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -127,6 +128,17 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
                 document.set( "read", reads );
             }
         }
+    }
+    
+    public void setAuthorizable(Authorizable a) {
+    	document.set("read", Collections.singletonList(a));
+    }
+    
+    public static BasicResourceBasedSecurity getFromGroup(Core core, Node parent, Authorizable a) throws ItemInstantiationException {
+    	BasicResourceBasedSecurityDescriptor d = core.getDescriptor(BasicResourceBasedSecurity.class);
+    	BasicResourceBasedSecurity r = d.newInstance(core, parent);
+    	r.setAuthorizable(a);
+    	return r;
     }
 
     @Override

@@ -148,6 +148,7 @@ public class Upload implements Node {
 
                         FileResource.FileDescriptor d = core.getDescriptor( FileResource.class );
                         fr = d.newInstance( core, json, core.getRoot() );
+                        fr.updateConfiguration(json);
 
                         fr.setPath( uf.relativePath );
                         fr.setFilename( uf.file.getName() );
@@ -171,6 +172,7 @@ public class Upload implements Node {
                     		ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
                     		ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser(), uploadSession );
                             wrapper.setUpdated(null);
+                            wrapper.updateConfiguration(json);
                             wrapper.save();
 
                             

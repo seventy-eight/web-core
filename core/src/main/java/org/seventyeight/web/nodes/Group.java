@@ -81,6 +81,11 @@ public class Group extends Resource<Group> implements Authorizable {
 
         return nodes;
     }
+    
+    public static List<String> getGroupIds(User user) {
+    	List<String> gs = user.getDocument().getObjectList2("groups");
+    	return gs;
+    }
 
     /**
      * Add a {@link User} to this {@link Group}.
