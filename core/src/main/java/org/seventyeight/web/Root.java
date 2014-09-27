@@ -9,6 +9,7 @@ import org.seventyeight.web.actions.ResourceAction;
 import org.seventyeight.web.authentication.Authentication;
 import org.seventyeight.web.authentication.AuthenticationException;
 import org.seventyeight.web.authentication.Session;
+import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
@@ -21,11 +22,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * This node is instantiated once and saved by the core. It is therefore always the same instance returned when GET'ing /.
+ * 
  * @author cwolfgang
  */
 public class Root implements TopLevelNode, RootNode, Parent {
 
     private static Logger logger = LogManager.getLogger(Root.class);
+    
+    private Core core;
 
     /**
      * The Map of top level {@link Node}s
@@ -37,6 +42,8 @@ public class Root implements TopLevelNode, RootNode, Parent {
         /* Mandatory */
         //children.put( "get", new Get( core, this ) );  // This
         children.put( "resource", new ResourceAction( core ) ); // Or that?
+        
+        this.core = core;
     }
 
     @Override
@@ -77,7 +84,18 @@ public class Root implements TopLevelNode, RootNode, Parent {
         children.put( urlName, node );
     }
 
+    public Menu getMenu() {
+        logger.debug( "Getting menu for {}", this );
+        Menu menu = new Menu();
 
+        for( MenuContributor pc : core.getExtensions( MenuContributor.class ) ) {
+        	if(pc.isApplicable(this)) {
+        		pc.addContributingMenu( this, menu );
+        	}
+        }
+
+        return menu;
+    }
 
 
     @PostMethod

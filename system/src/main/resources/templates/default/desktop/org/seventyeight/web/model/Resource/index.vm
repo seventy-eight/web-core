@@ -1,8 +1,10 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlatform(), "preResource.vm" ) )
     #render( $action "preResource" false "" $item true )
 #end
-
-#menu($item.getMenu())
 
 <table style="width:100%;height: 100%;border-collapse: collapse; max-width: inherit">
 
@@ -27,15 +29,17 @@
     </tr>
 
     <tr style="max-width: inherit;">
-        <td style="width:auto;height: 100%;max-width: inherit;padding: 0px; margin: 0px">
+        <td style="width:auto;height: 100%;max-width: inherit;padding: 0px; margin: 0px" colspan="2">
             #render($item "view")
 
         </td>
+        <!--
         <td style="text-align: center; vertical-align: top">
             #foreach($action in $item.getActions())
                 <div class="button">$action.getDisplayName()</div><br />
             #end
         </td>
+        -->
     </tr>
 
     <!-- Comments -->
@@ -110,3 +114,5 @@
     </tbody>
 
 </table>
+
+#footerBlock()

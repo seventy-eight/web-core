@@ -134,6 +134,7 @@ public class Rest extends HttpServlet {
         logger.info( "Request response: {}", response.getResponse() );
 
         // Render the bottom
+        /*
         if( response.isRenderingMain() ) {
             try {
                 vc.put( "seconds", sw.getSeconds() );
@@ -142,6 +143,7 @@ public class Rest extends HttpServlet {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
+        */
 
         //logger.info( sw.print( 1000 ) );
         System.out.println( sw.print( 10000 ) );

@@ -20,30 +20,19 @@
 
 #macro(menu $menu)
 
-    <script>
-        $(function() {
-            $( "#mainmenu" ).menu(/*{ position: { my: "top", at: "bottom" } }*/);
-        });
-    </script>
-<style>
-    .ui-menu { width: 150px; }
-</style>
-
-    <ul id="mainmenu">
-        <li><a href="#"><img src="/resource/file-2/file" style="width: 75px"></a>
+<nav style="margin:0px; padding:0px">
+    <ul>
+    #foreach($key in $menu.getHeaderKeys())
+        <li><a href="#">$key</a>
             <ul>
-            #foreach($key in $menu.getHeaderKeys())
-                <li><a href="#">$key</a>
-                    <ul>
-                        #foreach($item in $menu.getMenuItems($key))
-                            <li><a href="$item.getUrl()">$item.getTitle()</a></li>
-                        #end
-                    </ul>
-                </li>
-            #end
+                #foreach($item in $menu.getMenuItems($key))
+                    <li><a href="$item.getUrl()">$item.getTitle()</a></li>
+                #end
             </ul>
         </li>
+    #end
     </ul>
+</nav>    
 #end
 
 #macro(comments $resource)

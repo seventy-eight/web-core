@@ -174,7 +174,6 @@ public class Upload implements Node {
                             wrapper.setUpdated(null);
                             wrapper.updateConfiguration(json);
                             wrapper.save();
-
                             
                             fr.setVisibility( AbstractNode.Visibility.INVISIBLE );
                         }

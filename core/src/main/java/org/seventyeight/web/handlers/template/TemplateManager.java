@@ -11,6 +11,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Theme;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.SiteDefinition;
 import org.seventyeight.web.velocity.DateUtils;
 import org.seventyeight.web.velocity.Message;
 
@@ -287,6 +288,10 @@ public class TemplateManager {
             context.put( "core", core );
             context.put( "theme", theme );
             //context.put( "url" );
+            
+            SiteDefinition def = new SiteDefinition("My title");
+
+            context.put("definition", def);
 
 			/* I18N */
             //logger.debug( "LANG: {}", locale );

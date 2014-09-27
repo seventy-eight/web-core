@@ -1,13 +1,18 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <table style="min-width: inherit; width: 100%">
     <tr>
-        <td style="width: 40%; vertical-align: top">
+        <td style="width: 30%; vertical-align: top">
             #widget("Last users widget" "Last users" "widget1")
             <br>
             #widget("Next event widget" "Next events" "widget2")
         </td>
-        <td style="width: 60%;  vertical-align: top">
+        <td style="width: 70%;  vertical-align: top">
             #widget("Activity widget" "Activities" "widget3")
         </td>
     </tr>
 </table>
 
+#footerBlock()

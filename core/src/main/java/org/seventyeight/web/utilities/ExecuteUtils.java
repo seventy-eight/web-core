@@ -60,8 +60,9 @@ public class ExecuteUtils {
 
     public static void render( Request request, Response response, Object object, String method, Class<?> imposter ) throws NotFoundException, TemplateException, IOException {
         Core core = request.getCore();
-        request.getContext().put( "content", core.getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
-        response.getWriter().print( core.getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
+        //request.getContext().put( "content", core.getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
+        response.getWriter().print(core.getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
+        //response.getWriter().print( core.getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
     }
 
     private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {

@@ -112,14 +112,19 @@ public class Venue extends Resource<Venue> {
         response.sendRedirect( instance.getConfigUrl() );
     }
 
-    public static class VenueDescriptor extends NodeDescriptor<Venue> implements MenuContributor<AbstractNode<Venue>> {
+    public static class VenueDescriptor extends NodeDescriptor<Venue> implements MenuContributor {
 
         public VenueDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+    	public boolean isApplicable(Node node) {
+    		return node instanceof Venue;
+    	}
 
         @Override
-        public void addContributingMenu( AbstractNode<Venue> node, Menu menu ) {
+        public void addContributingMenu( Node node, Menu menu ) {
             if(node instanceof Venue) {
                 menu.addItem( "Venue", new Menu.MenuItem("Add concert", "addConcert", ACL.Permission.ADMIN) );
             }

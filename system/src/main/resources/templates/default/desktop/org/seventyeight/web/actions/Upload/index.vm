@@ -1,3 +1,7 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <div id="fileupload">
     <form method="post" enctype="multipart/form-data" action="upload">
     <input type="hidden" name="testing" value="hej">
@@ -64,3 +68,5 @@
         });
     });
 </script>
+
+#footerBlock()

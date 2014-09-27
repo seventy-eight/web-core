@@ -16,11 +16,13 @@ import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.Ownable;
 import org.seventyeight.web.authorization.PublicACL;
 import org.seventyeight.web.authorization.PublicACL.PublicACLDescriptor;
 import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.Menu.MenuItem;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -563,7 +565,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 
         for( MenuContributor pc : core.getExtensions( MenuContributor.class ) ) {
             logger.debug( "Menu contributor {}", pc );
-            pc.addContributingMenu( this, menu );
+            if(pc.isApplicable(this)) {
+            	pc.addContributingMenu( this, menu );
+            }
             logger.debug( "ENDING::::.:.::::.:" );
         }
 

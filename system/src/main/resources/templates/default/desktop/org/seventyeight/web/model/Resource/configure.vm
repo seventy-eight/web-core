@@ -1,3 +1,6 @@
+#headerBlock($definition)
+
+#menuBlock($item)
 
 #set( $descriptor = $item.getDescriptor() )
 
@@ -115,3 +118,5 @@
     }
 
 </script>
+
+#footerBlock()

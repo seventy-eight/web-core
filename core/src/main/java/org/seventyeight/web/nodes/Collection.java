@@ -342,7 +342,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         }
     }
 
-    public static class CollectionDescriptor extends NodeDescriptor<Collection> implements MenuContributor<AbstractNode<Collection>> {
+    public static class CollectionDescriptor extends NodeDescriptor<Collection> implements MenuContributor {
 
         public CollectionDescriptor( Node parent ) {
             super( parent );
@@ -357,9 +357,14 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         public String getDisplayName() {
             return "Collection";
         }
+        
+        @Override
+    	public boolean isApplicable(Node node) {
+    		return node instanceof Collection;
+    	}
 
         @Override
-        public void addContributingMenu( AbstractNode<Collection> node, Menu menu ) {
+        public void addContributingMenu( Node node, Menu menu ) {
             if(node instanceof Collection) {
                 menu.addItem( "Collection", new Menu.MenuItem("List edit", ((Collection)node).getEditListUrl(), ACL.Permission.ADMIN) );
             }

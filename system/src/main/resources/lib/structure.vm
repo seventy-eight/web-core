@@ -1,3 +1,75 @@
-#macro( viewResource $resource $template )
+#macro(headerBlock $def )
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	    <link rel="stylesheet" href="/theme/${def.theme}.css" type="text/css" />
+	    <link rel="stylesheet" href="/theme/${def.theme}-menu.css" type="text/css" />
+	    <link rel="stylesheet" href="/static/css/jquery-ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />
+	    
+	    #foreach($css in $def.cssSources)
+			<link rel="stylesheet" href="$css" />
+		#end
+	    
+	    <script src="/static/javascript/jquery/jquery-1.10.2.js"></script>
+	    <script src="/static/javascript/jquery/jquery-ui-1.10.3.js"></script>
+	
+	    <script src="/static/javascript/jquery/upload/jquery.fileupload.js"></script>
+	    <script src="/static/javascript/jquery/upload/jquery.fileupload-process.js"></script>
+	    <script src="/static/javascript/jquery/upload/jquery.iframe-transport.js"></script>
+	
+	    <script src="/static/javascript/jquery/upload/jquery.fileupload-ui.js"></script>
+	    <script src="/static/javascript/jquery.simplemodal.1.4.4.min.js"></script>
+	
+	    <script language="javascript" type="text/javascript" src="/static/javascript/utils.js"></script>
+	    <script language="javascript" type="text/javascript" src="/static/javascript/conversations.js"></script>
+	    <script language="javascript" type="text/javascript" src="/static/javascript/htmlDispatcher.js"></script>
+		
+		#foreach($js in $def.javaScriptSources)
+			<script language="javascript" type="text/javascript" src="$js"></script>
+		#end
+		
+		<title>$def.title</title>
+	</head>
+	
+	<body>
+	
+	<div style="width: 100%; float: left; text-align:center">
+
+		<!--
+	    <div style="float:left">
+	    	#menu($item.getMenu())
+	    </div>
+	    -->
+		
+	    <div style="width: auto;text-align: left;;height: 50px;">
+	        <a href="/"><img src="/theme/78.png"></a>
+	    </div>
+
+	    <!--
+	    <div style="padding-left:15px;padding-right:15px;width: auto;text-align: left; font-weight:bold; font-size:25px;vertical-align:middle; line-height:50px;border-bottom-style: solid;height: 50px; margin-bottom: 5px; border-bottom-color: darkblue;float:left">
+	        $def.title
+	    </div>
+	    -->
 #end
 
+#macro(footerBlock $def)
+
+	</div>
+</html>
+#end
+
+#macro(logoBlock $def)
+
+
+#end
+
+#macro(menuBlock $item)
+	<div style=";float:left;padding:0px">
+		#menu($item.getMenu())
+	</div>
+	<div>
+		<hr style="margin-left:10px;margin-right:10px">
+	</div>
+#end

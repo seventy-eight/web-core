@@ -1,15 +1,17 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <div style="overflow-x: scroll; border-style: none; overflow: hidden" id="imageWrapper$item.getIdentifier()">
 
 </div>
 
-
 <script type="text/javascript">
-
-
-    $(function(){
-		
+    $(function() {		
 		#foreach($id in $item.getImageIds())
 		    Utils.fetchResourceViewAppendLink('$id', '#imageWrapper$item.getIdentifier()', 'avatar');
 		#end
     });
 </script>
+
+#footerBlock()
