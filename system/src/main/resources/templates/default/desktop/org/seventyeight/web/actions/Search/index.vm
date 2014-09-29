@@ -1,3 +1,9 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <form action="result" method="get">
     <input name="query" type="text" style="width: 80%">
 </form>
+
+#footerBlock()

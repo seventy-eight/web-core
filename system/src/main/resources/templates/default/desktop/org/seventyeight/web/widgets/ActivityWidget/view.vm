@@ -2,7 +2,7 @@
 #foreach($r in $item.getActivities($request))
 <table style="width: 100%; min-width: inherit; margin-top: 15px" class="widget">
     <tr style="">
-        <td style="width: 20%;text-align: center; padding-left: 10px; background-color: #564e74;">
+        <td style="width: 80px;text-align: center;; background-color: #564e74;">
             
             #render($r.getOwner() "small" true "" "" true)
         </td>

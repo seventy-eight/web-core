@@ -1,3 +1,7 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <table style="width: 100%; text-align: center">
 
     <tr id="bottom">
@@ -52,3 +56,5 @@
         });
     }
 </script>
+
+#footerBlock()

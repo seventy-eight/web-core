@@ -140,6 +140,13 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
     	r.setAuthorizable(a);
     	return r;
     }
+    
+    public static BasicResourceBasedSecurity getFromGroupIds(Core core, Node parent, List<String> ids) throws ItemInstantiationException {
+    	BasicResourceBasedSecurityDescriptor d = core.getDescriptor(BasicResourceBasedSecurity.class);
+    	BasicResourceBasedSecurity r = d.newInstance(core, parent);
+    	r.document.set("read", ids);
+    	return r;
+    }
 
     @Override
     public String getDisplayName() {

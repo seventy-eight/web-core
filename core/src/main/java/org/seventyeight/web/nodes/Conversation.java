@@ -16,6 +16,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Comment;
@@ -51,16 +52,23 @@ public class Conversation extends Resource<Conversation> {
 	@Override
 	public void updateNode(JsonObject jsonData) {
 		if(jsonData != null) {
-			JsonArray ids = jsonData.get("ids").getAsJsonArray();
-			List<String> gids = new ArrayList<String>();
-			for(JsonElement e : ids) {
-				if(e.isJsonPrimitive()) {
-					String id = e.getAsString();
-					gids.add(id);
+			if(jsonData.has("ids")) {
+				JsonArray ids = jsonData.get("ids").getAsJsonArray();
+				List<String> gids = new ArrayList<String>();
+				for(JsonElement e : ids) {
+					if(e.isJsonPrimitive()) {
+						String id = e.getAsString();
+						gids.add(id);
+					}
+				}
+				
+				try {
+					BasicResourceBasedSecurity s = BasicResourceBasedSecurity.getFromGroupIds(core, this, gids);
+					document.set("ACL", s.getDocument());
+				} catch (ItemInstantiationException e) {
+					throw new IllegalArgumentException(e);
 				}
 			}
-			
-			document.set("groups", gids);
 		}
 	}
 	

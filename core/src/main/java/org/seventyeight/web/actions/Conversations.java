@@ -12,6 +12,7 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Action;
@@ -24,6 +25,7 @@ import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.Parent;
 import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.nodes.Conversation;
+import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -135,8 +137,12 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
 
         int number = request.getInteger( "number", 10 );
         int offset = request.getInteger( "offset", 0 );
+        
+        List<String> groupIds = Group.getGroupIds(request.getUser());
+    	groupIds.add(request.getUser().getIdentifier());
+    	groupIds.add(ACL.ALL);
 
-        MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" );
+        MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" ).in("ACL.read", groupIds);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
 
