@@ -111,11 +111,15 @@ public class RenderObject extends Directive {
             Core core = request.getCore();
             TemplateManager.Renderer render = core.getTemplateManager().getRenderer( request );
 
+            /*
             if( newContext ) {
                 VelocityContext nc = new VelocityContext();
                 nc.put( "request", request );
                 render.setContext( nc );
             }
+            */
+            
+            render.setContext(new VelocityContext(context));
 
             if( injected != null ) {
                 render.inject( "context", injected );

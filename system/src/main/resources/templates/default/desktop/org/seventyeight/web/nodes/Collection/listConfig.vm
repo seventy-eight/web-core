@@ -1,3 +1,7 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <input id="collectionQuery" type="text" style="width: 80%">
 
 <table style="width: 100%">
@@ -49,3 +53,5 @@
         });
     }
 </script>
+
+#footerBlock()
