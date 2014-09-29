@@ -1,18 +1,20 @@
 package org.seventyeight.web.social;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
+import org.seventyeight.web.model.Layoutable;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 
 /**
  * @author cwolfgang
  */
-public class Follow extends NodeExtension<Follow> {
+public class Follow extends NodeExtension<Follow> implements Layoutable {
 
     private static Logger logger = LogManager.getLogger( Follow.class );
 
@@ -57,4 +59,9 @@ public class Follow extends NodeExtension<Follow> {
         }
 
     }
+
+	@Override
+	public boolean isApplicable(Node node) {
+		return node instanceof User;
+	}
 }

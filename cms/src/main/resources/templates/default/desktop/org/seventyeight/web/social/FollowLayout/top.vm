@@ -1,0 +1,5 @@
+$request.getUser()
+$item
+#if(!$request.getUser().equals($item))
+	BOOOM
+#end
