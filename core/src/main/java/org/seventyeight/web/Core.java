@@ -756,7 +756,7 @@ public abstract class Core implements CoreSystem {
 
         List<Class<?>> interfaces = ClassUtils.getInterfaces( extension.getClass() );
         interfaces.addAll( ClassUtils.getClasses( extension.getClass() ) );
-
+        
         for( Class<?> i : interfaces ) {
             if( !extensionsList.containsKey( i ) ) {
                 extensionsList.put( i, new ArrayList<T>() );

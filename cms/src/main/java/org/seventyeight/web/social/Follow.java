@@ -14,7 +14,7 @@ import org.seventyeight.web.nodes.User;
 /**
  * @author cwolfgang
  */
-public class Follow extends NodeExtension<Follow> implements Layoutable {
+public class Follow extends NodeExtension<Follow> {
 
     private static Logger logger = LogManager.getLogger( Follow.class );
 
@@ -59,9 +59,4 @@ public class Follow extends NodeExtension<Follow> implements Layoutable {
         }
 
     }
-
-	@Override
-	public boolean isApplicable(Node node) {
-		return node instanceof User;
-	}
 }

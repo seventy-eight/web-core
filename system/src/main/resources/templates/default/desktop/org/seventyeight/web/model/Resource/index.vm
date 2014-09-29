@@ -10,14 +10,6 @@
 
     <tbody style="max-width: inherit">
 
-    #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlatform(), "top.vm" ) )
-        <tr>
-            <td colspan="2" class="nothing" style=";padding: 0px">
-                #render( $action "top" false "" $item true )
-            </td>
-        </tr>
-    #end
-
     <tr>
         <td style="width:auto; text-align: left" class="headerContrast" colspan="2">
             $item.getDisplayName()
@@ -27,6 +19,14 @@
             #end
         </td>
     </tr>
+    
+    #foreach( $action in $item.getLayoutableHavingTemplate( $request.getTheme(), $request.getPlatform(), "top.vm" ) )
+        <tr>
+            <td colspan="2" class="nothing" style=";padding: 0px">
+                #render( $action "top" false "" $item true )
+            </td>
+        </tr>
+    #end
 
     <tr style="max-width: inherit;">
         <td style="width:auto;height: 100%;max-width: inherit;padding: 0px; margin: 0px" colspan="2">

@@ -21,6 +21,7 @@ import org.seventyeight.web.nodes.listeners.FileTypeListener;
 import org.seventyeight.web.nodes.listeners.SearchFormatListener;
 import org.seventyeight.web.nodes.listeners.WidgetListener;
 import org.seventyeight.web.social.Follow;
+import org.seventyeight.web.social.FollowLayout;
 import org.seventyeight.web.widgets.ActivityWidget;
 import org.seventyeight.web.widgets.LastUsersWidget;
 import org.seventyeight.web.widgets.NextEventWidget;
@@ -117,6 +118,7 @@ public class CMSCore extends Core {
         addDescriptor( new Festival.FestivalDescriptor(root) );
 
         addDescriptor( new Follow.FollowDescriptor(this) );
+        addExtension(new FollowLayout());
 
         //addDescriptor( new  );
 
