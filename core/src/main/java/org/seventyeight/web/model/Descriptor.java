@@ -131,7 +131,8 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
     }
 
     public String getConfigurationPage( Request request, Describable<?> describable, String groupName ) throws TemplateException, NotFoundException, ItemInstantiationException {
-        VelocityContext c = new VelocityContext();
+        VelocityContext c = new VelocityContext(request.getContext());
+        
         c.put( "class", getClazz().getName() );
         c.put( "descriptor", this );
         c.put( "groupName", groupName );
