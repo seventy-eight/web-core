@@ -60,6 +60,11 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
     public Descriptor<T> getDescriptor() {
         return core.getDescriptor( getClass() );
     }
+    
+    public MongoDocument getDocument(Documented parent) {
+    	ExtensionDescriptor<?> d = core.getDescriptor(getClass());
+    	return d.getExtensionDocument(parent);
+    }
 
     /**
      *
@@ -157,6 +162,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
                 if(d.get( "class", null ) == null) {
                     d.set( "class", getId() );
                 }
+            } else {
+            	if(d == null) {
+            		return null;
+            	}
             }
 
             if(!d.get( "class" ).equals( getId() )) {

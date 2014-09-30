@@ -1,5 +1,28 @@
-$request.getUser()
-$item
-#if(!$request.getUser().equals($item))
-	BOOOM
-#end
+
+Following, <span id="following">N/A</span>
+
+<script type="text/javascript">
+
+	$(function() {
+	    $.ajax({
+	        type: "GET",
+	        url: "follow/isFollowing",
+	        data: {id:"$request.getUser().getIdentifier()"},
+	        success: function(data, textStatus, jqxhr){changeFollowStatus(data)},
+	        error: function(ajax, text, error) {alert(error)}
+	    });
+	});
+	
+	function changeFollowStatus(json) {
+		
+		//var f = (json.following !== undefined ? json.following : false);
+		var f = json.following || false;
+		alert("WHWHW: " + f);
+		//$('#following').html("YEAH : " + JSON.stringify(json));
+		if(f) {
+			$('#following').html("You are following");
+		} else {
+			$('#following').html("You are NOT following");
+		}
+	}
+</script>

@@ -1,15 +1,20 @@
 package org.seventyeight.web.social;
 
+import java.io.IOException;
+
 import com.google.gson.JsonObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.NodeExtension;
 import org.seventyeight.web.model.Layoutable;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
 /**
  * @author cwolfgang
