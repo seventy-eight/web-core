@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.AbstractPortrait;
+import org.seventyeight.web.extensions.AbstractPortrait.AbstractPortraitDescriptor;
+import org.seventyeight.web.extensions.Event;
+import org.seventyeight.web.extensions.Event.EventDescriptor;
 import org.seventyeight.web.extensions.Tags;
 import org.seventyeight.web.extensions.Tags.TagsDescriptor;
+import org.seventyeight.web.model.Action.ActionDescriptor;
 
 public abstract class ResourceDescriptor<T extends AbstractNode<T>> extends NodeDescriptor<T> {
 
@@ -15,6 +20,18 @@ public abstract class ResourceDescriptor<T extends AbstractNode<T>> extends Node
 	
 	public List<TagsDescriptor> getTagsDescriptors(Core core) {
 		return core.getExtensionDescriptors(Tags.class);
+	}
+	
+	public List<EventDescriptor> getEventDescriptors(Core core) {
+		return core.getExtensionDescriptors(Event.class);
+	}
+	
+	public List<AbstractPortraitDescriptor> getPortraitDescriptors(Core core) {
+		return core.getExtensionDescriptors(AbstractPortrait.class);
+	}
+	
+	public List<ActionDescriptor<?>> getActionDescriptors(Core core) {
+		return core.getExtensionDescriptors(Action.class);
 	}
 
 	/*

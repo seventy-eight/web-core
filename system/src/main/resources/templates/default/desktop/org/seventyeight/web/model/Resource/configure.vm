@@ -24,6 +24,9 @@
             <a href="#" class="button" onclick="activate('accessConfig', this)">Access</a>
 
             <a href="#" class="button" onclick="activate('Tagsconfig', this)">Tags</a>
+            <a href="#" class="button" onclick="activate('Eventconfig', this)">Event</a>
+            <a href="#" class="button" onclick="activate('Portraitconfig', this)">Portrait</a>
+            <a href="#" class="button" onclick="activate('Actionconfig', this)">Actions</a>
         </td>
 
         <td style="width: auto; vertical-align: top" name="OUTER">
@@ -51,6 +54,9 @@
 
 
 			#extensionGroupConfiguration("Tags" "snade" false $descriptor.getTagsDescriptors($core))
+			#extensionGroupConfiguration("Event" "snade" false $descriptor.getEventDescriptors($core))
+			#extensionGroupConfiguration("Portrait" "snade" false $descriptor.getPortraitDescriptors($core))
+			
 
         </td>
     </tr>
@@ -62,8 +68,13 @@
 
 </form>
 
+$descriptor.getEventDescriptors($core)
+
 
 #postExtensionConfiguration($descriptor.getTagsDescriptors())
+#postExtensionConfiguration($descriptor.getEventDescriptors())
+#postExtensionConfiguration($descriptor.getPortraitDescriptors())
+
 
 <script type="text/javascript">
 
