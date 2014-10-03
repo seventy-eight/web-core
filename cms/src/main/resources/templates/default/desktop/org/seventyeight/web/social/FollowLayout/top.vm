@@ -1,4 +1,6 @@
+$context
 
+$item
 Following, <span id="following">N/A</span>
 
 <script type="text/javascript">
@@ -6,8 +8,8 @@ Following, <span id="following">N/A</span>
 	$(function() {
 	    $.ajax({
 	        type: "GET",
-	        url: "follow/isFollowing",
-	        data: {id:"$request.getUser().getIdentifier()"},
+	        url: "/resource/$request.getUser().getIdentifier()/follow/isFollowing",
+	        data: {id:"$context.getIdentifier()"},
 	        success: function(data, textStatus, jqxhr){changeFollowStatus(data)},
 	        error: function(ajax, text, error) {alert(error)}
 	    });
@@ -22,7 +24,17 @@ Following, <span id="following">N/A</span>
 		if(f) {
 			$('#following').html("You are following");
 		} else {
-			$('#following').html("You are NOT following");
+			$('#following').html("You are NOT following, <a onclick=\"followThis();return false;\">FOLLOW</a>");
 		}
+	}
+	
+	function followThis() {
+	    $.ajax({
+	        type: "POST",
+	        url: "/resource/$request.getUser().getIdentifier()/follow/",
+	        data: {id:"$context.getIdentifier()"},
+	        success: function(data, textStatus, jqxhr){changeFollowStatus(data)},
+	        error: function(ajax, text, error) {alert(error)}
+	    });
 	}
 </script>
