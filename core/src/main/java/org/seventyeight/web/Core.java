@@ -583,12 +583,6 @@ public abstract class Core implements CoreSystem {
     }
     */
 
-    /*
-    public Action getAction( Actionable actionable, String action ) {
-        return null;
-    }
-    */
-
     public void addDescriptor( Descriptor<?> descriptor ) throws CoreException {
     	logger.info("----====> {} <====----", descriptor.getClazz());
         logger.debug( "Adding {}, {}", descriptor, descriptor.getClazz() );

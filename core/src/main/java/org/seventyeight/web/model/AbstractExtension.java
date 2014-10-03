@@ -80,10 +80,12 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         public abstract ExtensionGroup getExtensionGroup();
 
+        /*
         @Override
         public List<ExtensionGroup> getApplicableExtensions( Core core ) {
             return Collections.emptyList();
         }
+        */
 
         public boolean isOmnipresent() {
             return false;
@@ -140,6 +142,10 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
             return d;
         }
+        
+        public void setExtensionDocument(Documented d, MongoDocument extension) {
+        	d.getDocument().set(EXTENSIONS, new MongoDocument().set(getExtensionClassJsonId(), extension));
+        }
 
         /**
          * Get instantiated extension given a {@link Documented} parent.
@@ -157,6 +163,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             if(isOmnipresent()) {
                 if(d == null || d.isNull()) {
                     d = new MongoDocument().set( "class", getId() );
+                    setExtensionDocument(parent, d);
                 }
 
                 if(d.get( "class", null ) == null) {
@@ -172,7 +179,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
                 throw new IllegalStateException( d.get( "class" ) + " is not equal to " + getId() );
             }
 
-            logger.fatal( "CORFE OS {}", core );
             return core.getNode( (Node) parent, d );
         }
 

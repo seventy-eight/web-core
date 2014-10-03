@@ -19,6 +19,8 @@ public abstract class NodeExtension<T extends NodeExtension<T>> extends Abstract
         protected NodeExtensionDescriptor( Core core ) {
             super();
         }
+        
+        
 
         @Override
         public Class<NodeExtension> getExtensionClass() {

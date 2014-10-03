@@ -185,5 +185,5 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
      * @return A {@link List} of {@link ExtensionGroup}'s defining the applicable extensions.
      * @param core
      */
-    public abstract List<ExtensionGroup> getApplicableExtensions( Core core );
+    //public abstract List<ExtensionGroup> getApplicableExtensions( Core core );
 }

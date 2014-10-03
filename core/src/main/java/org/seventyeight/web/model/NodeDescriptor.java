@@ -208,15 +208,17 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         }
     }
 
-
+    /*
     @Override
     public List<ExtensionGroup> getApplicableExtensions( Core core ) {
         ArrayList<ExtensionGroup> groups = new ArrayList<ExtensionGroup>(  );
         groups.add( core.getExtensionGroup( Tags.class.getName() ) );
         groups.add( core.getExtensionGroup( Event.class.getName() ) );
         groups.add( core.getExtensionGroup( AbstractPortrait.class.getName() ) );
-        groups.add( core.getExtensionGroup( NodeExtension.class.getName() ) );
+        //groups.add( core.getExtensionGroup( NodeExtension.class.getName() ) );
+        groups.add( core.getExtensionGroup( Action.class.getName() ) );
 
         return groups;
     }
+    */
 }
