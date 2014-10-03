@@ -290,7 +290,7 @@ public class User extends Resource<User> implements Authorizable {
         return this;
     }
 
-    public static class UserDescriptor extends NodeDescriptor<User> {
+    public static class UserDescriptor extends ResourceDescriptor<User> {
 
         public String testString;
 

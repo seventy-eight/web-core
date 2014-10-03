@@ -23,9 +23,7 @@
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
             <a href="#" class="button" onclick="activate('accessConfig', this)">Access</a>
 
-            #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions($core) )
-                <a href="#" class="button" onclick="activate('${extensionGroup.getName()}config', this)">$extensionGroup.getName()</a>
-            #end
+            <a href="#" class="button" onclick="activate('Tagsconfig', this)">Tags</a>
         </td>
 
         <td style="width: auto; vertical-align: top" name="OUTER">
@@ -52,30 +50,7 @@
             </div>
 
 
-                #foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions($core) )
-                <div name="extensions">
-                    <div id="${extensionGroup.getName()}config" style="display: none" class="configurationDiv">
-                        <input type="hidden" name="extension" value="$extensionGroup.getClazz().getName()" />
-                            #if($extensionGroup.getType().name() == "one")
-                                #set($radio = $extensionGroup.getName() + "Radio")
-                                #set($config = $extensionGroup.getName() + "Config")
-                                <table style="width: 100%">
-                                    #heteroRadio($item $extensionGroup.getDescriptors() $radio $config true)
-                                </table>
-                            #elseif($extensionGroup.getType().name() == "multiple")
-                                #set($config = $extensionGroup.getName() + "Config")
-                                <div name="configurations">
-                                    <table style="width: 100%">
-                                        #heteroCheckbox($item $extensionGroup.getDescriptors() "" $config true)
-                                    </table>
-                                </div>
-                            #else
-                                WHOOP!
-                            #end
-                    </div>
-                </div>
-                #end
-
+			#extensionGroupConfiguration("Tags" "snade" false $descriptor.getTagsDescriptors($core))
 
         </td>
     </tr>
@@ -87,20 +62,8 @@
 
 </form>
 
-#foreach( $extensionGroup in $item.getDescriptor().getApplicableExtensions($core) )
-    #foreach($extension in $extensionGroup.getDescriptors())
-        #if($extension.getPostConfigurationPage())
-            $extension.getClazz() - $extension.getPostConfigurationPage()<br>
-            #set($o = $extension.getDescribable($item))
-            #if($o)
-                #render($o $extension.getPostConfigurationPage())
-            #else
-                #renderStatic($extension.getClazz() $extension.getPostConfigurationPage())
-            #end
-        #end
-    #end
-#end
 
+#postExtensionConfiguration($descriptor.getTagsDescriptors())
 
 <script type="text/javascript">
 

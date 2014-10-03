@@ -136,10 +136,12 @@ public class Session extends AbstractNode<Session> {
             return SessionManager.SESSIONS_COLLECTION_NAME;
         }
 
+        /*
         @Override
         public List<ExtensionGroup> getApplicableExtensions( Core core ) {
             return Collections.emptyList();
         }
+        */
 
         /*
         public Session newInstance(String title, Node parent) throws ItemInstantiationException {

@@ -413,3 +413,39 @@ ADD
 </table>
 
 #end
+
+#macro(extensionGroupConfiguration $name $clazz $multiple $descriptors)
+	<div name="extensions">
+	    <div id="${name}config" style="display: none" class="configurationDiv">
+	        <input type="hidden" name="extension" value="$clazz" />
+            #if($multiple)
+                #set($config = $name + "Config")
+                <div name="configurations">
+                    <table style="width: 100%">
+                        #heteroCheckbox($item $descriptors "" $config true)
+                    </table>
+                </div>
+            #else
+                #set($radio = $name + "Radio")
+                #set($config = $name + "Config")
+                <table style="width: 100%">
+                    #heteroRadio($item $descriptors $radio $config true)
+                </table>
+            #end
+	    </div>
+	</div>
+#end
+
+#macro(postExtensionConfiguration $descriptors)
+	#foreach($extension in $descriptors)
+		#if($extension.getPostConfigurationPage())
+		    $extension.getClazz() - $extension.getPostConfigurationPage()<br>
+		    #set($o = $extension.getDescribable($item))
+		    #if($o)
+		        #render($o $extension.getPostConfigurationPage())
+		    #else
+		        #renderStatic($extension.getClazz() $extension.getPostConfigurationPage())
+		    #end
+		#end
+	#end
+#end

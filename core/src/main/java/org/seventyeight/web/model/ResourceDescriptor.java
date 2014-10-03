@@ -1,5 +1,6 @@
 package org.seventyeight.web.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.seventyeight.web.Core;
@@ -12,7 +13,18 @@ public abstract class ResourceDescriptor<T extends AbstractNode<T>> extends Node
 		super(parent);
 	}
 	
-	public List<TagsDescriptor> get(Core core) {
+	public List<TagsDescriptor> getTagsDescriptors(Core core) {
 		return core.getExtensionDescriptors(Tags.class);
 	}
+
+	/*
+	@Override
+	public List<List<Descriptor<?>>> getApplicableExtensions(Core core) {
+		List<List<Descriptor<?>>> list = new ArrayList<List<Descriptor<?>>>();
+		list.addAll(getTagDescriptors(core));
+		
+		return list;
+	}
+	*/
+	
 }

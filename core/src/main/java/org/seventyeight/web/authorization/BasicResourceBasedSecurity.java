@@ -169,9 +169,11 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
             return "Basic resource based security";
         }
 
+        /*
         @Override
         public List<ExtensionGroup> getApplicableExtensions( Core core ) {
             return Collections.emptyList();
         }
+        */
     }
 }

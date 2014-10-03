@@ -54,9 +54,11 @@ public class PublicACL extends ACL<PublicACL> {
             return "Public ACL";
         }
 
+        /*
         @Override
         public List<ExtensionGroup> getApplicableExtensions( Core core ) {
-            return null;  /* Implementation is a no op */
+            return null;  // Implementation is a no op
         }
+    */
     }
 }
