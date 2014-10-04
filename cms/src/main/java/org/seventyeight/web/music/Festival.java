@@ -116,7 +116,7 @@ public class Festival extends Resource<Festival> implements Getable<Event> {
     }
 
 
-    public static class FestivalDescriptor extends NodeDescriptor<Festival> {
+    public static class FestivalDescriptor extends ResourceDescriptor<Festival> {
 
         public FestivalDescriptor( Node parent ) {
             super( parent );

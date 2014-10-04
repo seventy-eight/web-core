@@ -79,7 +79,7 @@ public abstract class UploadableNode<T extends UploadableNode<T>> extends Resour
         return this.document.get( "path" );
     }
 
-    public static abstract class UploadableDescriptor<T1 extends UploadableNode<T1>> extends NodeDescriptor<T1> {
+    public static abstract class UploadableDescriptor<T1 extends UploadableNode<T1>> extends ResourceDescriptor<T1> {
 
         protected UploadableDescriptor( Node parent ) {
             super( parent );

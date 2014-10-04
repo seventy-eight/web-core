@@ -10,6 +10,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;
 import org.seventyeight.web.model.Resource;
+import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -29,7 +30,7 @@ public class Artist extends Resource<Artist> {
 
     }
 
-    public static final class ArtistDescriptor extends NodeDescriptor<Artist> {
+    public static final class ArtistDescriptor extends ResourceDescriptor<Artist> {
 
         public ArtistDescriptor( Node parent ) {
             super( parent );

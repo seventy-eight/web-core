@@ -342,7 +342,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         }
     }
 
-    public static class CollectionDescriptor extends NodeDescriptor<Collection> implements MenuContributor {
+    public static class CollectionDescriptor extends ResourceDescriptor<Collection> implements MenuContributor {
 
         public CollectionDescriptor( Node parent ) {
             super( parent );

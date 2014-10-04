@@ -134,7 +134,7 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
         save();
     }
 
-    public static class ConcertDescriptor extends NodeDescriptor<Concert> {
+    public static class ConcertDescriptor extends ResourceDescriptor<Concert> {
 
         public ConcertDescriptor( Node parent ) {
             super( parent );

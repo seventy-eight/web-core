@@ -112,7 +112,7 @@ public class Venue extends Resource<Venue> {
         response.sendRedirect( instance.getConfigUrl() );
     }
 
-    public static class VenueDescriptor extends NodeDescriptor<Venue> implements MenuContributor {
+    public static class VenueDescriptor extends ResourceDescriptor<Venue> implements MenuContributor {
 
         public VenueDescriptor( Node parent ) {
             super( parent );

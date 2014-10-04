@@ -56,7 +56,7 @@
 			#extensionGroupConfiguration("Tags" $descriptor.getTagsClass() false $descriptor.getTagsDescriptors($core))
 			#extensionGroupConfiguration("Event" $descriptor.getEventClass() false $descriptor.getEventDescriptors($core))
 			#extensionGroupConfiguration("Portrait" $descriptor.getPortraitClass() false $descriptor.getPortraitDescriptors($core))
-			#extensionGroupConfiguration("Actions" $descriptor.getExtensionClass() false $descriptor.getNodeDescriptors($core))
+			#extensionGroupConfiguration("Extensions" $descriptor.getExtensionClass() true $descriptor.getNodeDescriptors($core))
 
         </td>
     </tr>

@@ -27,6 +27,7 @@ import org.seventyeight.web.model.NodeDescriptor;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.model.Resource;
+import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.Response.RenderType;
@@ -250,7 +251,7 @@ public class Conversation extends Resource<Conversation> {
     	return MongoDBCollection.get(Core.NODES_COLLECTION_NAME).count(query);
     }
 
-	public static class ConversationDescriptor extends NodeDescriptor<Conversation> {
+	public static class ConversationDescriptor extends ResourceDescriptor<Conversation> {
 
 		public ConversationDescriptor(Node parent) {
 			super(parent);

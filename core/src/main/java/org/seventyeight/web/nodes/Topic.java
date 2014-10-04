@@ -15,6 +15,7 @@ import org.seventyeight.web.model.*;
  * Basic {@link Resource} for texts.
  *
  * @author cwolfgang
+ * @deprecated
  */
 public class Topic extends Resource<Topic> {
 
