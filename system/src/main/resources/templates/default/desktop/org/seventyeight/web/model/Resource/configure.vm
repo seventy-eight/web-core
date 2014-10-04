@@ -26,7 +26,7 @@
             <a href="#" class="button" onclick="activate('Tagsconfig', this)">Tags</a>
             <a href="#" class="button" onclick="activate('Eventconfig', this)">Event</a>
             <a href="#" class="button" onclick="activate('Portraitconfig', this)">Portrait</a>
-            <a href="#" class="button" onclick="activate('Actionconfig', this)">Actions</a>
+            <a href="#" class="button" onclick="activate('Nodeconfig', this)">Extensions</a>
         </td>
 
         <td style="width: auto; vertical-align: top" name="OUTER">
@@ -53,10 +53,10 @@
             </div>
 
 
-			#extensionGroupConfiguration("Tags" "snade" false $descriptor.getTagsDescriptors($core))
-			#extensionGroupConfiguration("Event" "snade" false $descriptor.getEventDescriptors($core))
-			#extensionGroupConfiguration("Portrait" "snade" false $descriptor.getPortraitDescriptors($core))
-			
+			#extensionGroupConfiguration("Tags" $descriptor.getTagsClass() false $descriptor.getTagsDescriptors($core))
+			#extensionGroupConfiguration("Event" $descriptor.getEventClass() false $descriptor.getEventDescriptors($core))
+			#extensionGroupConfiguration("Portrait" $descriptor.getPortraitClass() false $descriptor.getPortraitDescriptors($core))
+			#extensionGroupConfiguration("Actions" $descriptor.getExtensionClass() false $descriptor.getNodeDescriptors($core))
 
         </td>
     </tr>
@@ -74,7 +74,7 @@ $descriptor.getEventDescriptors($core)
 #postExtensionConfiguration($descriptor.getTagsDescriptors())
 #postExtensionConfiguration($descriptor.getEventDescriptors())
 #postExtensionConfiguration($descriptor.getPortraitDescriptors())
-
+#postExtensionConfiguration($descriptor.getNodeDescriptors())
 
 <script type="text/javascript">
 
