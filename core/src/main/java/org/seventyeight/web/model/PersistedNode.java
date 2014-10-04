@@ -84,45 +84,48 @@ public abstract class PersistedNode implements Node, Savable, Documented {
             Map<String, MongoDocument> extensions = new HashMap<String, MongoDocument>(  );
             for(JsonObject o : objs) {
                 logger.debug( "JSON OBJECT: {}", o );
-                ExtensionGroup extensionGroup = ExtensionUtils.getExtensionGroup( core, o );
-                if(extensionGroup.getType() == ExtensionGroup.Type.one) {
-                    logger.debug( "Single configurations" );
-
-                    JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
-                    Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
-                    if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
-                        Describable<?> describable = ExtensionUtils.getDescribable( core, (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
-                        if(describable != null) {
-                            extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
-                        }
-                    }
-
+                if(o.isJsonObject()) {
+                	if(o.has("config")) {
+	                    logger.debug( "Single configurations" );
+	
+	                    JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( o );
+	                    Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
+	                    if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
+	                        Describable<?> describable = ExtensionUtils.getDescribable( core, (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
+	                        if(describable != null) {
+	                            extensions.put( ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId(), describable.getDocument() );
+	                        }
+	                    }
+	
+	                } else if(o.has("configurations") && o.get("configurations").isJsonArray()) {
+	                    logger.debug( "Multiple configurations" );
+	
+	                    JsonArray jsonElements = ExtensionUtils.getConfigurations( o );
+	                    String jsonId = null;
+	                    //List<MongoDocument> describableDocuments = new ArrayList<MongoDocument>(  );
+	                    MongoDocument describables = new MongoDocument();
+	                    for(JsonElement e : jsonElements) {
+	                        JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( e.getAsJsonObject() );
+	                        if(jsonConfiguration != null) {
+	                            Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
+	                            if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
+	                                Describable<?> describable = ExtensionUtils.getDescribable( core, (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
+	                                jsonId = ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId();
+	                                if(describable != null) {
+	                                    //describableDocuments.add( describable.getDocument() );
+	                                    describables.set( descriptor.getJsonId(), describable.getDocument() );
+	                                }
+	                            }
+	                        }
+	
+	                    }
+	
+	                    if(jsonId != null) {
+	                        extensions.put( jsonId, describables );
+	                    }
+	                }
                 } else {
-                    logger.debug( "Multiple configurations" );
-
-                    JsonArray jsonElements = ExtensionUtils.getConfigurations( o );
-                    String jsonId = null;
-                    //List<MongoDocument> describableDocuments = new ArrayList<MongoDocument>(  );
-                    MongoDocument describables = new MongoDocument();
-                    for(JsonElement e : jsonElements) {
-                        JsonObject jsonConfiguration = ExtensionUtils.getJsonConfiguration( e.getAsJsonObject() );
-                        if(jsonConfiguration != null) {
-                            Descriptor<?> descriptor = ExtensionUtils.getDescriptor( core, jsonConfiguration );
-                            if(descriptor != null && descriptor instanceof AbstractExtension.ExtensionDescriptor) {
-                                Describable<?> describable = ExtensionUtils.getDescribable( core, (AbstractExtension.ExtensionDescriptor) descriptor, this, jsonConfiguration );
-                                jsonId = ( (AbstractExtension.ExtensionDescriptor) descriptor ).getExtensionClassJsonId();
-                                if(describable != null) {
-                                    //describableDocuments.add( describable.getDocument() );
-                                    describables.set( descriptor.getJsonId(), describable.getDocument() );
-                                }
-                            }
-                        }
-
-                    }
-
-                    if(jsonId != null) {
-                        extensions.put( jsonId, describables );
-                    }
+                	throw new IllegalArgumentException("Json object was just a plain element? " + o);
                 }
             }
 

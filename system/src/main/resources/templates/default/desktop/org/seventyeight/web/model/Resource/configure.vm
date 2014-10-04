@@ -71,10 +71,10 @@
 $descriptor.getEventDescriptors($core)
 
 
-#postExtensionConfiguration($descriptor.getTagsDescriptors())
-#postExtensionConfiguration($descriptor.getEventDescriptors())
-#postExtensionConfiguration($descriptor.getPortraitDescriptors())
-#postExtensionConfiguration($descriptor.getNodeDescriptors())
+#postExtensionConfiguration($descriptor.getTagsDescriptors($core))
+#postExtensionConfiguration($descriptor.getEventDescriptors($core))
+#postExtensionConfiguration($descriptor.getPortraitDescriptors($core))
+#postExtensionConfiguration($descriptor.getNodeDescriptors($core))
 
 <script type="text/javascript">
 
