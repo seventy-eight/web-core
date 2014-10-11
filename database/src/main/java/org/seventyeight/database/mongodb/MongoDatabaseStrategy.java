@@ -26,11 +26,11 @@ public class MongoDatabaseStrategy implements DBStrategy {
     }
 
     public Object serialize( Object object ) {
-        return object;
+        return ((MongoDocument)object).copy();
     }
 
     public Object deserialize( Object record ) {
-        return record;
+    	return ((MongoDocument)record).copy();
     }
 
     public Object save( Object object, String id ) {

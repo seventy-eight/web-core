@@ -98,8 +98,8 @@ public class SessionCache {
         lock.readLock().lock();
         try {
             if(cache.containsKey( id )) {
-                logger.debug( "[CACHE] retrieved {}", id );
-                logger.debug("[CACHE] " + cache.get( id ).record);
+                //logger.debug( "[CACHE] retrieved {}", id );
+                //logger.debug("[CACHE] " + cache.get( id ).record);
                 hits++;
                 return (TYPE) dbStrategy.deserialize( cache.get( id ).record );
             } else {
@@ -123,7 +123,7 @@ public class SessionCache {
             // Put the record in the cache
             lock.writeLock().lock();
             try {
-            	logger.debug("[CACHE] " + object);
+            	//logger.debug("[CACHE] " + object);
                 cache.put( id, new Record(object, false) );
             } finally {
                 lock.writeLock().unlock();
