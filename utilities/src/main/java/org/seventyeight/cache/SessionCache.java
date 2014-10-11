@@ -22,7 +22,7 @@ public class SessionCache {
 
     private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private class Record {
+    public static class Record {
         public Object record;
         private boolean dirty = true;
 
@@ -41,6 +41,10 @@ public class SessionCache {
 
         private void setDirty( boolean dirty ) {
             this.dirty = dirty;
+        }
+        
+        public Object get() {
+        	return record;
         }
 
         @Override
@@ -94,7 +98,8 @@ public class SessionCache {
         lock.readLock().lock();
         try {
             if(cache.containsKey( id )) {
-                //logger.debug( "[CACHE] retrieved {}", id );
+                logger.debug( "[CACHE] retrieved {}", id );
+                logger.debug("[CACHE] " + cache.get( id ).record);
                 hits++;
                 return (TYPE) dbStrategy.deserialize( cache.get( id ).record );
             } else {
@@ -111,14 +116,15 @@ public class SessionCache {
     }
 
     private <TYPE> TYPE resolve(String id) {
-        //logger.debug( "[CACHE] resolving {}", id );
+        logger.debug( "[CACHE] resolving {}", id );
         Object record = dbStrategy.get( id );
         if(record != null) {
             Object object = dbStrategy.deserialize( record );
             // Put the record in the cache
             lock.writeLock().lock();
             try {
-                cache.put( id, new Record(record, false) );
+            	logger.debug("[CACHE] " + object);
+                cache.put( id, new Record(object, false) );
             } finally {
                 lock.writeLock().unlock();
             }

@@ -168,7 +168,7 @@ public class Upload implements Node {
                         logger.debug( "THE OWNER IS {}", fr.getOwner() );
 
                         // Image uploads wrapper
-                        if(ImageUploadsWrapper.isImage( filename )) {
+                        if(ImageUploadsWrapper.isImage( filename ) && uploadSession != null) {
                     		ImageUploadsWrapper.ImageUploadsWrapperDescriptor descriptor = core.getDescriptor( ImageUploadsWrapper.class );
                     		ImageUploadsWrapper wrapper = descriptor.getWrapper( core, request.getUser(), uploadSession );
                             wrapper.setUpdated(null);

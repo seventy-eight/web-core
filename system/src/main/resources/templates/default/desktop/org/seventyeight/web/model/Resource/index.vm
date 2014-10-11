@@ -83,6 +83,7 @@
     <tr>
         <td style="width:100%;height: 100%" colspan="3">
             <div style="width: 100%;min-height: 400px" align="center">
+            	<a href="getView?view=document">Document</a><br>
 
                 #foreach( $action in $item.getActions() )
                     #render( $action "bottom" )
@@ -97,6 +98,8 @@
                     #render( $view "bottom" )
                 #end
                 -->
+                
+                
             </div>
         </td>
     </tr>

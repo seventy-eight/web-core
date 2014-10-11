@@ -1,0 +1,18 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
+<table>
+	<tr>
+		<td style="font-weight:bold">Name</td>
+		<td style="font-weight:bold">Value</td>
+	</tr>
+#foreach($i in $item.getDocument().getKeys())
+	<tr>
+		<td>$i</td>
+		<td>$item.getDocument().get($i)</td>
+	</tr>
+#end
+</table>
+
+#footerBlock()

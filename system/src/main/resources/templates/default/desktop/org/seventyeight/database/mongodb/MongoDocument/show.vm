@@ -1,0 +1,15 @@
+<table>
+	<tr>
+		<td class="header">$item.get("_id")</td>
+	</tr>
+	<tr>
+		<td class="header">Key</td>
+		<td class="header">Value</td>
+	</tr>
+	#foreach($i in $item.getKeys())
+		<tr>
+			<td>$i</td>
+			<td>$item.get($i)</td>
+		</tr>
+	#end
+</table>

@@ -27,6 +27,7 @@ ITEM: $item
 <script type="text/javascript">
     $(function() {
         $('.selectPortrait').click(function(event){
+        	alert("1");
             $('#portraitUploadID').val($(this).attr("data-rid"));
             $.modal.close();
         });
@@ -35,6 +36,7 @@ ITEM: $item
     function addUploadedPortrait(title, rid) {
         var e = $('<span style="margin: 0"/>').text('[' + title + ']').appendTo('#uploaded');
         e.click(function(event){
+        	alert("2");
             $('#portraitUploadID').val(rid);
             $.modal.close();
         });
@@ -67,9 +69,10 @@ ITEM: $item
 
                         //data.context.text('Upload finished.');
                         //data.result.forEach(function(e) {
-                        data.context.text('Finished uploading ' + data.result.name);
+                        data.context.text('Finished uploading ' + data.result.files[0].name);
                         data.context.click(function(event){
-                            $('#portraitUploadID').val(data.result.rid);
+                        	//alert("YEAH!" + JSON.stringify(data));
+                            $('#portraitUploadID').val(data.result.files[0].rid);
                             $.modal.close();
                         });
                         //});
