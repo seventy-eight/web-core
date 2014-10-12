@@ -144,7 +144,22 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         }
         
         public void setExtensionDocument(Documented d, MongoDocument extension) {
-        	d.getDocument().set(EXTENSIONS, new MongoDocument().set(getExtensionClassJsonId(), extension));
+        	MongoDocument ed = d.getDocument().get(EXTENSIONS);
+        	if(ed == null || ed.isNull()) {
+        		ed = new MongoDocument();
+        		d.getDocument().set(EXTENSIONS, ed);
+        	}
+        	
+        	if(canHaveMultiple()) {
+        		if(ed.contains(getExtensionClassJsonId()) && !ed.getList(getExtensionClassJsonId()).contains(extension)) {
+        			ed.addToList(getExtensionClassJsonId(), extension);
+        		} else {
+        			ed.addToList(getExtensionClassJsonId(), extension);
+        		}
+        	} else {
+        		//d.getDocument().set(EXTENSIONS, new MongoDocument().set(getExtensionClassJsonId(), extension));
+        		ed.set(getExtensionClassJsonId(), extension);
+        	}
         }
 
         /**
@@ -156,6 +171,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
          * @throws ItemInstantiationException
          */
         public T getExtension( Core core, Documented parent ) throws ItemInstantiationException {
+        	logger.debug("Extension '{}' for parent: {}, DOC: {}", this, parent, parent.getDocument());
             MongoDocument d = getExtensionDocument( parent );
             logger.debug( "EXTENSION SUBDOC " + d );
 

@@ -974,9 +974,11 @@ public abstract class Core implements CoreSystem {
     }
     
     public <T extends Node> T find(Node node, Class<T> find) {
+    	logger.debug("Finding {} with class {}", node, find);
     	while(node != null) {
     		logger.debug("NODE: {}", node);
     		if(find.isInstance(node)) {
+    			logger.debug("WHOOP, node is {}", node);
     			return (T) node;
     		}
     		node = node.getParent();
