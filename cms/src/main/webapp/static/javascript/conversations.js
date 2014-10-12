@@ -165,7 +165,6 @@ $(document).on("click", '#conversationSubmit', function(event) {
     // Remove previously added json inputs
     $(form).children("input[name='json']").remove();
 
-    debugger;
     // Add new json input
     Utils.addJsonElement( form[0] );
     $.ajax({

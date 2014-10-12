@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -205,11 +206,21 @@ public class Conversation extends Resource<Conversation> {
         
         comment.save();
         
-        Resource<?> r = core.find(this.parent, Resource.class);
-        if(r != null) {
-        	r.touch();
+        if(json.has("resource")) {
+        	String resourceId = json.get("resource").getAsString();
+        	try {
+				Resource<?> r = core.getNodeById(this, resourceId);
+				r.touch();
+			} catch (NotFoundException e) {
+				logger.log(Level.WARN, "Unable to touch " + resourceId, e);
+			}
         } else {
-        	logger.warn("Could not touch child resource of {}", this);
+	        Resource<?> r = core.find(this.parent, Resource.class);
+	        if(r != null) {
+	        	r.touch();
+	        } else {
+	        	logger.warn("Could not touch child resource of {}", this);
+	        }
         }
         
         return comment;
