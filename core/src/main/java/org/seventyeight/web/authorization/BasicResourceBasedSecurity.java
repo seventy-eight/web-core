@@ -44,12 +44,16 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
     public List<Authorizable> getAuthorized( Permission permission ) {
         List<Authorizable> list = new ArrayList<Authorizable>(  );
         List<String> l = document.get( permission.getDbname() );
-        for( String id : l ) {
-            try {
-                list.add( core.<Authorizable>getNodeById( getParent(), id ) );
-            } catch( Exception e ) {
-                logger.log( Level.ERROR, "Unable to get " + id, e );
-            }
+        if(l != null) {
+	        for( String id : l ) {
+	            try {
+	                list.add( core.<Authorizable>getNodeById( getParent(), id ) );
+	            } catch( Exception e ) {
+	                logger.log( Level.ERROR, "Unable to get " + id, e );
+	            }
+	        }
+        } else {
+        	logger.warn("The list of {} was null", permission);
         }
 
         return list;
