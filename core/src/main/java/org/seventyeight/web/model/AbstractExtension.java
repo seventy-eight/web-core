@@ -134,8 +134,12 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         public MongoDocument getExtensionDocument( Documented parent ) {
             MongoDocument d = parent.getDocument().getr2( EXTENSIONS, getExtensionClassJsonId() );
             logger.info( "RETRIEVED EXTENSION DOCUMENT for {} IS:", getId() );
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            System.out.println( gson.toJson( d ) );
+            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            logger.debug("DOCUMENT FOUND: {}", d);
+            if(d != null && !d.isNull() && (!d.contains("class") || !d.get("class").equals(getClazz().getName()))) {
+            	logger.debug("Not the same extension");
+            	return null;
+            }
             if(d != null && !d.isNull() && canHaveMultiple()) {
                 d = d.get( getJsonId() );
             }
