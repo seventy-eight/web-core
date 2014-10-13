@@ -110,11 +110,19 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
         @Override
         public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
+        	/*
             logger.warn( "THE DESCRIBABABALE DOC IS {}", document );
             logger.warn( "EXTENSION JSON ID {}", getJsonId( getExtensionClass().getName() ) );
             MongoDocument d = document.getr2( EXTENSIONS, getJsonId( getExtensionClass().getName() ) );
             logger.warn( "THE DESCRIBABABALE DOC IS {}", d );
             if(d != null && !d.isNull() && d.get( "class", null ) != null ) {
+                return (Describable<T>) core.getNode( parent, d );
+            } else {
+                return null;
+            }
+            */
+        	MongoDocument d = getExtensionDocument(document);
+        	if(d != null && !d.isNull() && d.get( "class", null ) != null ) {
                 return (Describable<T>) core.getNode( parent, d );
             } else {
                 return null;
@@ -127,12 +135,19 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
         }
 
         /**
-         * Get the extension {@link MongoDocument} given a {@link Documented} parent.
-         * @param parent A {@link Documented} parent. Typically a {@link Node}.
+         * Get the extension {@link MongoDocument} from a {@link Documented} node.
+         * @param node A {@link Documented} node. Typically a {@link Node}.
          * @return A {@link MongoDocument}, can be null.
          */
-        public MongoDocument getExtensionDocument( Documented parent ) {
-            MongoDocument d = parent.getDocument().getr2( EXTENSIONS, getExtensionClassJsonId() );
+        public MongoDocument getExtensionDocument( Documented node ) {
+        	return getExtensionDocument(node.getDocument());
+        }
+        
+        /**
+         * Provided a {@link MongoDocument}, get the sub document representing this extension.
+         */
+        public MongoDocument getExtensionDocument(MongoDocument document) {
+        	MongoDocument d = document.getr2( EXTENSIONS, getExtensionClassJsonId() );
             logger.info( "RETRIEVED EXTENSION DOCUMENT for {} IS:", getId() );
             //Gson gson = new GsonBuilder().setPrettyPrinting().create();
             logger.debug("DOCUMENT FOUND: {}", d);

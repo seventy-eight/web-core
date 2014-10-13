@@ -152,6 +152,9 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
         return core.getTemplateManager().getRenderer( request ).setContext( c ).render( "org/seventyeight/web/model/descriptorpage.vm" );
     }
 
+    /**
+     * Given a {@link MongoDocument} for a {@link DocumentedNode} get the {@link Describable} for this {@link Descriptor}.
+     */
     public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
         return (Describable<T>) core.getNode( parent, document );
     }
