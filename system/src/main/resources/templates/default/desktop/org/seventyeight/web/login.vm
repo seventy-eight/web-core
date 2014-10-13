@@ -1,3 +1,7 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
 <form action="/login" method="post" name="login">
 
     <table>
@@ -18,4 +22,6 @@
 
     </table>
 
-</form
+</form>
+xx
+#footerBlock()
