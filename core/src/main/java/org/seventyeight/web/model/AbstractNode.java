@@ -354,7 +354,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
                 }
                 
                 if(describable != null) {
-                    document.set( "ACL", describable.getDocument() );
+                    //document.set( "ACL", describable.getDocument() );
+                	setACL(describable.getDocument());
                 } else {
                     logger.debug( "ACL describable not set" );
                 }
@@ -366,7 +367,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         	PublicACLDescriptor d = core.getDescriptor(PublicACL.class);
         	PublicACL instance = d.newInstance(core, this);
         	instance.updateNode(null);
-        	document.set( "ACL", instance.getDocument() );
+        	//document.set( "ACL", instance.getDocument() );
+        	setACL(instance.getDocument());
         }
 
         // Update the node's extensions
@@ -376,6 +378,14 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         updateNode( json );
 
         postUpdate();
+    }
+    
+    protected static final String fullAclField = EXTENSIONS + "." + Descriptor.getJsonId(ACL.class.getName());
+    protected static final String aclField = Descriptor.getJsonId(ACL.class.getName());
+    
+    protected void setACL(MongoDocument acl) {
+    	//document.set(aclField, acl);
+    	((MongoDocument)document.get(EXTENSIONS)).set(aclField, acl);
     }
     
     @DeleteMethod

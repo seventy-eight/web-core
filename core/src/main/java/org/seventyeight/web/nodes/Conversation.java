@@ -66,7 +66,8 @@ public class Conversation extends Resource<Conversation> {
 				
 				try {
 					BasicResourceBasedSecurity s = BasicResourceBasedSecurity.getFromGroupIds(core, this, gids);
-					document.set("ACL", s.getDocument());
+					//document.set("ACL", s.getDocument());
+					setACL(s.getDocument());
 				} catch (ItemInstantiationException e) {
 					throw new IllegalArgumentException(e);
 				}

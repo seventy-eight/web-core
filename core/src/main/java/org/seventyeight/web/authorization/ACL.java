@@ -1,11 +1,14 @@
 package org.seventyeight.web.authorization;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.extensions.ExtensionGroup;
 import org.seventyeight.web.model.*;
+import org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor;
 import org.seventyeight.web.nodes.User;
 
 import java.util.Collections;
@@ -14,7 +17,7 @@ import java.util.List;
 /**
  * @author cwolfgang
  */
-public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Describable<T> {
+public abstract class ACL<T extends ACL<T>> extends AbstractExtension<T> {
 
     private static Logger logger = LogManager.getLogger( ACL.class );
     
@@ -37,12 +40,10 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
         }
     }
 
-    protected Node parent;
     protected Resource<?> resourceParent;
 
     public ACL( Core core, Node parent, MongoDocument document ) {
-        super(core, document);
-        this.parent = parent;
+        super(core, parent, document);
         if(parent instanceof Resource) {
             resourceParent = (Resource<?>) parent;
         }
@@ -50,10 +51,6 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
     
     protected void setReadAccess(List<Authorizable> as) {
     	document.set("read", as);
-    }
-
-    public Node getParent() {
-        return parent;
     }
 
     //public abstract boolean hasPermission( User user, Permission permission );
@@ -86,17 +83,13 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
         // Should not be needed!?
     }
 
-    @Override
-    public Descriptor<T> getDescriptor() {
-        return core.getDescriptor( getClass() );
-    }
-
-    public static abstract class ACLDescriptor<T extends ACL<T>> extends Descriptor<T> {
+    public static abstract class ACLDescriptor<T extends ACL<T>> extends ExtensionDescriptor<T> {
 
         protected ACLDescriptor( Core core ) {
             super();
         }
 
+        /*
         @Override
         public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
             MongoDocument d = document.get( "ACL" );
@@ -107,6 +100,30 @@ public abstract class ACL<T extends ACL<T>> extends PersistedNode implements Des
                 return null;
             }
         }
+        */
+        
+        /*
+        @Override
+        public MongoDocument getExtensionDocument(MongoDocument document) {
+        	MongoDocument d = document.get("ACL");
+        	if(d != null && !d.isNull()) {
+        		return d;
+        	} else {
+        		return null;
+        	}
+        }
+		*/
+
+		@Override
+		public ExtensionGroup getExtensionGroup() {
+			return null;
+		}
+
+		@Override
+		public Class<?> getExtensionClass() {
+			return ACL.class;
+		}
+
     }
 
     private static class AllAccess extends ACL {

@@ -1,6 +1,7 @@
 package org.seventyeight.web.authorization;
 
 import com.google.gson.JsonObject;
+
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.ExtensionGroup;
@@ -54,11 +55,10 @@ public class PublicACL extends ACL<PublicACL> {
             return "Public ACL";
         }
 
-        /*
-        @Override
-        public List<ExtensionGroup> getApplicableExtensions( Core core ) {
-            return null;  // Implementation is a no op
-        }
-    */
+		@Override
+		public String getExtensionName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 }

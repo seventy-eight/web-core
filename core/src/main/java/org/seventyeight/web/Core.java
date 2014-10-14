@@ -630,9 +630,11 @@ public abstract class Core implements CoreSystem {
             naturalSearchables.put( ( (NaturalSearchable) descriptor ).getType(), ( NaturalSearchable )descriptor );
         }
 
+        /*
         if( descriptor instanceof AbstractExtension.ExtensionDescriptor ) {
             addExtensionsGroup( (AbstractExtension.ExtensionDescriptor) descriptor );
         }
+        */
 
         addExtension( descriptor );
 

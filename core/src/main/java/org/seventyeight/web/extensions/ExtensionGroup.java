@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * @author cwolfgang
+ * @deprecated
  */
 public class ExtensionGroup {
 

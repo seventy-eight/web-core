@@ -161,7 +161,7 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
 
             return d;
         }
-        
+                
         public void setExtensionDocument(Documented d, MongoDocument extension) {
         	MongoDocument ed = d.getDocument().get(EXTENSIONS);
         	if(ed == null || ed.isNull()) {
