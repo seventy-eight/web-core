@@ -21,7 +21,7 @@
         <!-- Menus -->
         <td style="width: 200px; text-align: center; vertical-align: top">
             <a href="#" class="button enabledButton" onclick="activate('$item.getType()-config', this)">$item.getDescriptor().getDisplayName()</a>
-            <a href="#" class="button" onclick="activate('accessConfig', this)">Access</a>
+            <a href="#" class="button" onclick="activate('Accessconfig', this)">Access</a>
 
             <a href="#" class="button" onclick="activate('Tagsconfig', this)">Tags</a>
             <a href="#" class="button" onclick="activate('Eventconfig', this)">Event</a>
@@ -44,15 +44,7 @@
                 </table>
             </div>
 
-            <div name="access" id="accessConfig" style="display: none; width: 100%" class="configurationDiv targetObject">
-                <input type="hidden" name="extension" value="ACL" />
-                <table style="width: 100%">
-                    #heteroRadio($item $core.getACLs() "accessRadio" "accessConfig" true)
-                </table>
-
-            </div>
-
-
+			#extensionGroupConfiguration("Access" $descriptor.getACLClass() false $descriptor.getACLDescriptors($core))
 			#extensionGroupConfiguration("Tags" $descriptor.getTagsClass() false $descriptor.getTagsDescriptors($core))
 			#extensionGroupConfiguration("Event" $descriptor.getEventClass() false $descriptor.getEventDescriptors($core))
 			#extensionGroupConfiguration("Portrait" $descriptor.getPortraitClass() false $descriptor.getPortraitDescriptors($core))
@@ -70,7 +62,7 @@
 
 $descriptor.getEventDescriptors($core)
 
-
+#postExtensionConfiguration($descriptor.getACLDescriptors($core))
 #postExtensionConfiguration($descriptor.getTagsDescriptors($core))
 #postExtensionConfiguration($descriptor.getEventDescriptors($core))
 #postExtensionConfiguration($descriptor.getPortraitDescriptors($core))

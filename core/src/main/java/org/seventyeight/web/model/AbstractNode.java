@@ -2,6 +2,7 @@ package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -334,8 +335,13 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         } else {
             throw new IllegalArgumentException( "Title not provided" );
         }
+        
+        if(json == null && !hasExtensionType(ACL.class)) {
+        	
+        }
 
         // Access configuration
+        /*
         if(json != null) {
             try {
                 // access
@@ -360,7 +366,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
                     logger.debug( "ACL describable not set" );
                 }
             } catch( NullPointerException e ) {
-                logger.debug( "No json object provided" );
+                logger.log( Level.WARN, "No json object provided", e );
             }
         } else {
         	// Put in a public ACL
@@ -369,7 +375,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         	instance.updateNode(null);
         	//document.set( "ACL", instance.getDocument() );
         	setACL(instance.getDocument());
+        	logger.debug("THE DOC IS NOW {}", document);
         }
+        */
 
         // Update the node's extensions
         updateExtensions(json);
@@ -384,6 +392,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     protected static final String aclField = Descriptor.getJsonId(ACL.class.getName());
     
     protected void setACL(MongoDocument acl) {
+    	logger.debug("Setting acl, {} for {}", acl, this);
     	//document.set(aclField, acl);
     	((MongoDocument)document.get(EXTENSIONS)).set(aclField, acl);
     }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authorization.ACL;
+import org.seventyeight.web.authorization.ACL.ACLDescriptor;
 import org.seventyeight.web.extensions.AbstractPortrait;
 import org.seventyeight.web.extensions.AbstractPortrait.AbstractPortraitDescriptor;
 import org.seventyeight.web.extensions.Event;
@@ -17,6 +19,14 @@ public abstract class ResourceDescriptor<T extends AbstractNode<T>> extends Node
 
 	protected ResourceDescriptor(Node parent) {
 		super(parent);
+	}
+	
+	public List<ACLDescriptor<?>> getACLDescriptors(Core core) {
+		return core.getExtensionDescriptors(ACL.class);
+	}
+	
+	public Class<ACL> getACLClass() {
+		return ACL.class;
 	}
 	
 	public List<TagsDescriptor> getTagsDescriptors(Core core) {

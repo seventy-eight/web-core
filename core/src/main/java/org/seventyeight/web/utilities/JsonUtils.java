@@ -22,6 +22,22 @@ public class JsonUtils {
 
     }
 
+    public static boolean hasACLExtension(JsonObject json) {
+    	if(json == null) {
+    		return false;
+    	}
+    	
+    	if(!json.has("extensions") || !json.get("extensions").isJsonArray()) {
+    		return false;
+    	}
+    	
+    	for(JsonElement e : json.get("extensions").getAsJsonArray()) {
+    		
+    	}
+    	
+    	return true;
+    }
+    
     public static JsonObject getJsonFromRequest( ParameterRequest request ) throws JsonException {
         String json = request.getParameter( "json" );
         if( json == null ) {
