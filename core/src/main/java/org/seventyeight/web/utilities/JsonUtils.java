@@ -32,10 +32,15 @@ public class JsonUtils {
     	}
     	
     	for(JsonElement e : json.get("extensions").getAsJsonArray()) {
-    		
+    		if(e.isJsonObject()) {
+    			JsonObject o = e.getAsJsonObject();
+    			if(o.has("extension")) {
+    				
+    			}
+    		}
     	}
     	
-    	return true;
+    	return false;
     }
     
     public static JsonObject getJsonFromRequest( ParameterRequest request ) throws JsonException {

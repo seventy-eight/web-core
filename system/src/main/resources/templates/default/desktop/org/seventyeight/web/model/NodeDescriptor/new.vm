@@ -4,7 +4,7 @@
 
 <h1>New $item.getDisplayName()</h1>
 
-<form action="create" method="post" id="create" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );">
+<form action="create" method="post" id="create" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" >
 
     <table style="width: 100%">
         <tr>
@@ -12,7 +12,15 @@
             <td><input type="text" name="title" class="configure"></td>
         </tr>
 
+        <div name="extensions" style="display:none">
+        	<input name="extension" value="org.seventyeight.web.authorization.ACL">
+    		<div name="config" class="targetObject">
+    			<input name="class" value="org.seventyeight.web.authorization.PublicACL">
+    		</div>
+        </div>
+
         #renderDescriptor( $item )
+        
 
         <tr>
             <td colspan="2" align="center"><input type="submit" value="Save"></td>
@@ -20,5 +28,13 @@
     </table>
 
 </form>
+
+<script type="">
+	$('#create').submit(function(event) {
+		//var json = Utils.getJsonElement(event.target);
+		Utils.addJsonElement(event.target);
+
+	});
+</script>
 
 #footerBlock()

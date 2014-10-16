@@ -74,12 +74,26 @@ Utils.popupselect = function( myurl, height ) {
 }
 
 Utils.addJsonElement = function( form ) {
-	
 	var jsonData = {};
-	//var jsonData  = Utils.getJsonFromForm( form, j );
     var d = new Dispatch();
     d.dispatch(form, jsonData);
 	alert( "JSON: " + JSON.stringify( jsonData ) );
+	var element   = document.createElement( 'input' );
+	element.name  = "json";
+	element.type  = "hidden";
+	element.value = JSON.stringify( jsonData );
+	form.appendChild( element );
+}
+
+Utils.getJsonElement = function( form ) {
+	var jsonData = {};
+    var d = new Dispatch();
+    d.dispatch(form, jsonData);
+	alert( "JSON: " + JSON.stringify( jsonData ) );
+	return d;
+}
+
+Utils.injectJson = function(form, json) {
 	var element   = document.createElement( 'input' );
 	element.name  = "json";
 	element.type  = "hidden";
