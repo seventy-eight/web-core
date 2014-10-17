@@ -60,15 +60,4 @@ public abstract class ResourceDescriptor<T extends AbstractNode<T>> extends Node
 	public Class<NodeExtension> getExtensionClass() {
 		return NodeExtension.class;
 	}
-
-	/*
-	@Override
-	public List<List<Descriptor<?>>> getApplicableExtensions(Core core) {
-		List<List<Descriptor<?>>> list = new ArrayList<List<Descriptor<?>>>();
-		list.addAll(getTagDescriptors(core));
-		
-		return list;
-	}
-	*/
-	
 }

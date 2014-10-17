@@ -10,6 +10,7 @@ import org.seventyeight.web.servlet.Request;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * @author cwolfgang
@@ -22,6 +23,45 @@ public class JsonUtils {
 
     }
 
+	public static String toHtml(String key, JsonElement json) {
+		StringBuilder sb = new StringBuilder();
+		
+		if(json.isJsonObject()) {
+			JsonObject o = (JsonObject) json;
+			if(key != null) {
+				sb.append("<div ");			
+				sb.append("name=\"");
+				sb.append(key);
+				sb.append("\" ");
+				sb.append("class=\"targetObject\">");
+			}
+			
+			for(Entry<String, JsonElement> e : o.entrySet()) {
+				sb.append(toHtml(e.getKey(), e.getValue()));
+			}
+			if(key != null) {
+				sb.append("</div>");
+			}
+		} else if(json.isJsonArray()) {
+			JsonArray a = (JsonArray) json;
+			sb.append("<div name=\"");
+			sb.append(key);
+			sb.append("\">");
+			for(JsonElement e : a) {
+				sb.append(toHtml(null, e));
+			}
+			sb.append("</div>");
+		} else {
+			sb.append("<input name=\"");
+			sb.append(key);
+			sb.append("\" value=");
+			sb.append(json.toString());
+			sb.append(">");
+		}
+		
+		return sb.toString();
+	}
+    
     public static boolean hasACLExtension(JsonObject json) {
     	if(json == null) {
     		return false;

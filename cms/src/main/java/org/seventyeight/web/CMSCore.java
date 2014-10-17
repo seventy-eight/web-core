@@ -3,6 +3,7 @@ package org.seventyeight.web;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.actions.*;
+import org.seventyeight.web.authorization.ACLFiller;
 import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
 import org.seventyeight.web.authorization.PublicACL;
 import org.seventyeight.web.extensions.*;
@@ -121,6 +122,8 @@ public class CMSCore extends Core {
         //addDescriptor( new Follow.FollowDescriptor(this) );
         addDescriptor( new FollowAction.FollowActionDescriptor(this) );
         addExtension(new FollowLayout());
+        
+        addExtension(new ACLFiller());
 
         //addDescriptor( new  );
 

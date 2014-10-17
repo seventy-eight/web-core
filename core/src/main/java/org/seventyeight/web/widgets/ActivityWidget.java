@@ -16,6 +16,8 @@ import java.util.List;
  * @author cwolfgang
  */
 public class ActivityWidget extends Widget {
+	
+	private static final String ACLField = AbstractExtension.EXTENSIONS + "." + Descriptor.getJsonId(ACL.class.getName()) + ".read";
 
     @Override
     public Node getParent() {
@@ -44,7 +46,9 @@ public class ActivityWidget extends Widget {
     	groupIds.add(ACL.ALL);
     	
         MongoDocument sort = new MongoDocument().set( "updated", -1 );
-        MongoDBQuery query = new MongoDBQuery().notExists( "parent" ).in("ACL.read", groupIds);
+        //MongoDBQuery query = new MongoDBQuery().notExists( "parent" ).in("ACL.read", groupIds);
+        
+        MongoDBQuery query = new MongoDBQuery().notExists( "parent" ).in(ACLField, groupIds);
         query.notExists( "relations." + Relation.BasicRelation.CREATED_FOR.getName() );
         query.notEquals( "visibility", AbstractNode.Visibility.INVISIBLE.name() );
         

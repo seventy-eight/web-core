@@ -335,10 +335,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         } else {
             throw new IllegalArgumentException( "Title not provided" );
         }
-        
-        if(json == null && !hasExtensionType(ACL.class)) {
-        	
-        }
 
         // Access configuration
         /*
