@@ -12,15 +12,7 @@
             <td><input type="text" name="title" class="configure"></td>
         </tr>
 
-        <div name="extensions" style="display:none">
-        	<input name="extension" value="org.seventyeight.web.authorization.ACL">
-    		<div name="config" class="targetObject">
-    			<input name="class" value="org.seventyeight.web.authorization.PublicACL">
-    		</div>
-        </div>
-
         #renderDescriptor( $item )
-        
 
         <tr>
             <td colspan="2" align="center"><input type="submit" value="Save"></td>

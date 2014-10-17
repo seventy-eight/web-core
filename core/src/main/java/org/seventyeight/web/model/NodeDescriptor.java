@@ -156,6 +156,13 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         instance.getDocument().set( "revision", 0 );
         instance.getDocument().set( "status", Status.CREATED.name() );
         instance.getDocument().set( "visibility", AbstractNode.Visibility.VISIBLE.name() );
+        
+        for(DefaultInstanceFiller filler : core.getExtensions(DefaultInstanceFiller.class)) {
+        	logger.debug("Filling with {}, applicable={}", filler, filler.isApplicable(this));
+        	if(filler.isApplicable(this)) {
+        		filler.fill(core, instance.getDocument());
+        	}
+        }
 
         return instance;
     }
