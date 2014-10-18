@@ -89,32 +89,7 @@ public abstract class ACL<T extends ACL<T>> extends AbstractExtension<T> {
             super();
         }
 
-        /*
-        @Override
-        public Describable<T> getDescribable( Core core, Node parent, MongoDocument document ) throws ItemInstantiationException {
-            MongoDocument d = document.get( "ACL" );
-            logger.debug( "ACL DOC: {}", d );
-            if(d != null && !d.isNull()) {
-                return (Describable<T>) core.getNode( parent, d );
-            } else {
-                return null;
-            }
-        }
-        */
-        
-        /*
-        @Override
-        public MongoDocument getExtensionDocument(MongoDocument document) {
-        	MongoDocument d = document.get("ACL");
-        	if(d != null && !d.isNull()) {
-        		return d;
-        	} else {
-        		return null;
-        	}
-        }
-		*/
-
-		@Override
+ 		@Override
 		public ExtensionGroup getExtensionGroup() {
 			return null;
 		}
@@ -136,13 +111,6 @@ public abstract class ACL<T extends ACL<T>> extends AbstractExtension<T> {
         public List<Authorizable> getAuthorized( Permission permission ) {
             return Collections.emptyList();
         }
-
-        /*
-        @Override
-        public List<Authorizable> getAuthorized( Permission permission ) {
-            return Collections.emptyList();
-        }
-        */
 
         @Override
         public Permission getPermission( User user ) {

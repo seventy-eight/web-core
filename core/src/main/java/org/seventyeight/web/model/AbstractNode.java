@@ -336,45 +336,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
             throw new IllegalArgumentException( "Title not provided" );
         }
 
-        // Access configuration
-        /*
-        if(json != null) {
-            try {
-                // access
-                JsonObject accessObject = json.getAsJsonObject( "access" );
-                Describable<?> describable;
-                if(accessObject != null) {
-                    logger.debug( "THE ACCESS ARRAY: {}", accessObject );
-                    describable = ExtensionUtils.handleExtensionConfiguration( core, accessObject, this );
-                    logger.debug( "DESCRIBABABBABABA: {}", describable );
-                } else {
-                	// Put in a public ACL
-                	PublicACLDescriptor d = core.getDescriptor(PublicACL.class);
-                	PublicACL instance = d.newInstance(core, this);
-                	instance.updateNode(null);
-                	describable = instance;
-                }
-                
-                if(describable != null) {
-                    //document.set( "ACL", describable.getDocument() );
-                	setACL(describable.getDocument());
-                } else {
-                    logger.debug( "ACL describable not set" );
-                }
-            } catch( NullPointerException e ) {
-                logger.log( Level.WARN, "No json object provided", e );
-            }
-        } else {
-        	// Put in a public ACL
-        	PublicACLDescriptor d = core.getDescriptor(PublicACL.class);
-        	PublicACL instance = d.newInstance(core, this);
-        	instance.updateNode(null);
-        	//document.set( "ACL", instance.getDocument() );
-        	setACL(instance.getDocument());
-        	logger.debug("THE DOC IS NOW {}", document);
-        }
-        */
-
         // Update the node's extensions
         updateExtensions(json);
 
