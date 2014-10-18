@@ -26,7 +26,6 @@ public class Response extends HttpServletResponseWrapper {
     // week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
-
     public enum RenderType {
         MAIN,
         NONE
@@ -34,6 +33,19 @@ public class Response extends HttpServletResponseWrapper {
 
     private RenderType renderType = RenderType.MAIN;
 
+    public enum ContentType {
+    	JSON("application/json");
+    	
+    	private String type;
+    	ContentType(String type) {
+    		this.type = type;
+    	}
+    	
+    	@Override
+    	public String toString() {
+    		return type;
+    	}
+    }
 
     public Response( HttpServletResponse response ) {
         super( response );

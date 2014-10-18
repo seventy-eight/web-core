@@ -619,7 +619,8 @@ public abstract class Core implements CoreSystem {
         /* Find searchables */
         List<Searchable> ss = descriptor.getSearchables();
         for( Searchable s : ss ) {
-            searchables.put( s.getMethodName(), s );
+            //searchables.put( s.getMethodName(), s );
+        	addSearchable(s);
         }
 
         // Search key maps
