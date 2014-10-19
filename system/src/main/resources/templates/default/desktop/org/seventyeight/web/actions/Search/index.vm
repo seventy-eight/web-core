@@ -2,28 +2,17 @@
 
 #menuBlock($item)
 
-<form action="result" method="get">
+<form action="result" method="get" id="queryForm">
     <input name="query" id="query" type="text" style="width: 80%">
 </form>
 
+<div id="container">
+</div>
+
 <script>
-    $('#query').autocomplete({
-        source: 'getMethods',
-        select: function( event, ui ) {
-            //this.value = "";
-            //$('#' + container).append(inputCallback(ui.item._id));
-            //if(addUrl !== undefined) {
-            //	add(ui.item._id);
-            //} else {
-            //	getView(ui.item._id);
-            //}
-            //return false;
-        }
-    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-        return $( "<li>" )
-            .append( "<a>" + item.value + "</a>" )
-            .appendTo( ul );
-    };
+	$('#queryForm').submit(function(event) {
+		
+	});
 </script>
 
 #footerBlock()

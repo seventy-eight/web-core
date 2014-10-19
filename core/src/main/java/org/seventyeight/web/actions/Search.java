@@ -101,6 +101,9 @@ public class Search implements Node {
     
     private static QueryParser queryParser = new QueryParser();
     
+    /**
+     * Get a complete list of methods
+     */
     @GetMethod
     public void doComplete(Request request, Response response) {
     	response.setContentType(Response.ContentType.JSON.toString());
