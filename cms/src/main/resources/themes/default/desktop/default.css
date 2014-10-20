@@ -121,6 +121,10 @@ tr.listing:hover {
      font-size: 20px;
      font-weight: bold;
  }
+ 
+.result {
+	border-style:solid;
+}
 
 .headerContrast {
     font-size: 20px;

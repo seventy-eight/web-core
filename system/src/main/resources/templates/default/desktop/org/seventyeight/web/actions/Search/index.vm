@@ -9,10 +9,13 @@
 <div id="container">
 </div>
 
+<div id="more">
+	More
+</div>
+
 <script>
-	$('#queryForm').submit(function(event) {
-		
-	});
+	var search = new Search('#queryForm', '#query');
+	
 </script>
 
 #footerBlock()
