@@ -3,13 +3,14 @@
 #menuBlock($item)
 
 <form action="result" method="get" id="queryForm">
-    <input name="query" id="query" type="text" style="width: 80%">
+    <input name="query" id="query" type="text" style="width: 80%"><br>
+    <input type="submit" value="Search">
 </form>
 
 <div id="container">
 </div>
 
-<div id="more">
+<div id="more" style="width:100%; border-style:solid">
 	More
 </div>
 
