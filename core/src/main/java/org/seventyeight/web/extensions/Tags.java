@@ -3,10 +3,12 @@ package org.seventyeight.web.extensions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.model.AbstractExtension;
 import org.seventyeight.web.model.Node;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.Map;
 /**
  * @author cwolfgang
  */
-public class Tags extends ResourceExtension<Tags> {
+public class Tags extends AbstractExtension<Tags> {
 
     private static Logger logger = LogManager.getLogger( Tags.class );
 

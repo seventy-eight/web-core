@@ -14,10 +14,17 @@
 
 
 <script type="text/javascript">
+	var list = {};
     $('#tagsInput').keypress(function(e) {
+    	var val = $(this).val();
         if(e.which == 13) {
-            $('#tagsContainer').append('<div name="tags" class="targetNode deletable targetValue">' + $(this).val() + '</div>');
-            return false;
+        	if(list[val] === undefined && val.length > 0 ) {
+            	$('#tagsContainer').append('<div name="tags" class="targetNode deletable targetValue">' + $(this).val() + '</div>');
+            	list[val] = true;
+           	}
+	        $('#tagsInput').val('');
+	        
+	        return false;
         }
     });
 
