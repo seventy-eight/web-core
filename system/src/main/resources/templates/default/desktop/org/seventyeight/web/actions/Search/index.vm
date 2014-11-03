@@ -10,10 +10,6 @@
 <div id="container">
 </div>
 
-<div id="more" style="width:100%; border-style:solid">
-	More
-</div>
-
 <script>
 	var search = new Search('#queryForm', '#query');
 	

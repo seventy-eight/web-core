@@ -12,14 +12,12 @@ function Search(formId, queryInputId) {
 	$(formId).submit(function(event) {
 		//debugger;
 		THIS.setQuery($(queryInputId).val());
+		
+		THIS.offset = 0;
+		$(THIS.container).empty();
+		
 		THIS.fetchNext(10);
 		return false;
-	});
-	
-	$(this.moreId).hide();
-	
-	$(this.moreId).click(function(event) {
-		THIS.fetchNext(10);
 	});
 }
 
@@ -40,6 +38,15 @@ Search.prototype.fetchNext = function(number) {
     this.offset = this.offset + number;
 }
 
+Search.prototype.addMore = function() {
+	var THIS = this;
+	$('<div class="result" style="text-align:center;margin:40px 40px 40px 40px" id="more">More</div>').hide().appendTo(this.container).fadeIn(600);
+	$(this.moreId).on('click', function(event) {
+		$(THIS.moreId).remove();
+		THIS.fetchNext(10);
+	});
+}
+
 Search.prototype.populate = function(jsonResult) {
 	//alert(jsonResult.length);
     if( jsonResult === undefined ) {
@@ -49,15 +56,17 @@ Search.prototype.populate = function(jsonResult) {
     	for(var i in jsonResult) {
         	var data = jsonResult[i];
         	//alert(i + ":" + data);
-            $('<div class="result" id="node' + (i+this.offset) + '">' + data.document.badge + '</div>').hide().insertBefore(this.container).fadeIn(600);
+            //$('<div class="result" id="node' + (i+this.offset) + '">' + data.document.badge + '</div>').hide().insertBefore(this.container).fadeIn(600);
+        	$('<div class="result" id="node' + (i+this.offset) + '">' + data.document.badge + '</div>').hide().appendTo(this.container).fadeIn(600);
             //getNode(data[i].document._id, "node" + (i+offset));
         }
 
     	debugger;
         if( jsonResult.length === undefined || jsonResult.length < 10 ) {
-            $(this.moreId).hide();
+            //$(this.moreId).hide();
         } else {
         	$(this.moreId).show();
+        	this.addMore();
         }
     }
 }
