@@ -6,7 +6,7 @@
     <parent>
         <artifactId>web-core-pom</artifactId>
         <groupId>org.seventyeight</groupId>
-        <version>0.1.0</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>database</artifactId>
@@ -15,13 +15,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>loader</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>utilities</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
