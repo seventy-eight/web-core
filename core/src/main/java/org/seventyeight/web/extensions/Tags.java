@@ -76,11 +76,6 @@ public class Tags extends AbstractExtension<Tags> {
         }
 
         @Override
-        public String getExtensionName() {
-            return "tags";
-        }
-
-        @Override
         public ExtensionGroup getExtensionGroup() {
             return new ExtensionGroup( getClazz(), "Tags" );
         }

@@ -76,8 +76,6 @@ public abstract class AbstractExtension<T extends AbstractExtension<T>> extends 
             super();
         }
 
-        public abstract String getExtensionName();
-
         public abstract ExtensionGroup getExtensionGroup();
 
         /*

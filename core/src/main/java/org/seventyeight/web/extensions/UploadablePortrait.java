@@ -83,11 +83,6 @@ public class UploadablePortrait extends AbstractPortrait {
         }
 
         @Override
-        public String getExtensionName() {
-            return "uploadable-portrait";
-        }
-
-        @Override
         public String getPostConfigurationPage() {
             return "postConfig";
         }

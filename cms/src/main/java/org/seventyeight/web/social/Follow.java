@@ -57,11 +57,5 @@ public class Follow extends NodeExtension<Follow> {
         public String getDisplayName() {
             return "Follow";
         }
-
-        @Override
-        public String getExtensionName() {
-            return "follow";
-        }
-
     }
 }

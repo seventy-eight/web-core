@@ -116,11 +116,6 @@ public class Event extends ResourceExtension<Event> {
         }
 
         @Override
-        public String getExtensionName() {
-            return "event";
-        }
-
-        @Override
         public ExtensionGroup getExtensionGroup() {
             return new ExtensionGroup( getClazz(), "Event" );
         }

@@ -28,6 +28,11 @@ public abstract class Action<T extends Action<T>> extends AbstractExtension<T> i
         protected ActionDescriptor( Core core ) {
             super();
         }
+        
+        /**
+         * Returns the extension name for the url sub path
+         */
+        public abstract String getExtensionName();
 
         @Override
         public ExtensionGroup getExtensionGroup() {

@@ -58,11 +58,6 @@ public abstract class AbstractPortrait extends AbstractExtension<AbstractPortrai
         }
 
         @Override
-        public String getExtensionName() {
-            return "portrait";
-        }
-
-        @Override
         public ExtensionGroup getExtensionGroup() {
             return new ExtensionGroup( AbstractPortrait.class, "Portrait" );
         }

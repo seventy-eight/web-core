@@ -70,11 +70,6 @@ public class GravatarPortrait extends AbstractPortrait {
         }
 
         @Override
-        public String getExtensionName() {
-            return "gravatar";
-        }
-
-        @Override
         public boolean isApplicable( Node node ) {
             return node.getClass().isInstance( User.class );
         }

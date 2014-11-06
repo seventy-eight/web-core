@@ -501,9 +501,10 @@ public abstract class Core implements CoreSystem {
 
                 //AbstractExtension.ExtensionDescriptor<?> d = extensionDescriptors.get( "action" ).get( token );
                 //List<AbstractExtension.ExtensionDescriptor> ds = getExtensionDescriptors( AbstractExtension.ExtensionDescriptor.class );
-                List<AbstractExtension.ExtensionDescriptor> ds = getExtensionDescriptors( Action.class );
+                //List<AbstractExtension.ExtensionDescriptor> ds = getExtensionDescriptors( Action.class );
+            	List<Action.ActionDescriptor<?>> ds = getExtensionDescriptors( Action.class );
                 logger.debug( "DS: " + ds );
-                for( AbstractExtension.ExtensionDescriptor d : ds) {
+                for( Action.ActionDescriptor<?> d : ds) {
                     logger.debug( "Found descriptor {} for {}", d, token );
                     if( d != null && d.getExtensionName().equals( token ) ) {
                         if( d.isApplicable( current ) ) {
@@ -649,8 +650,8 @@ public abstract class Core implements CoreSystem {
      * Get an {@link Action} for a given node given the name.
      */
     public <T extends Action<T>> Action<T> getActionByName(PersistedNode node, String name) throws ItemInstantiationException {
-    	List<AbstractExtension.ExtensionDescriptor<T>> ds = getExtensionDescriptors( Action.class );
-    	for(AbstractExtension.ExtensionDescriptor<T> d : ds) {
+    	List<Action.ActionDescriptor<T>> ds = getExtensionDescriptors( Action.class );
+    	for(Action.ActionDescriptor<T> d : ds) {
     		if(d.getExtensionName().equalsIgnoreCase(name)) {
     			Action<T> next = (Action<T>) d.getExtension( this, node );
     			return next;

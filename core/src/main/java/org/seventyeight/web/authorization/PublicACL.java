@@ -54,11 +54,5 @@ public class PublicACL extends ACL<PublicACL> {
         public String getDisplayName() {
             return "Public ACL";
         }
-
-		@Override
-		public String getExtensionName() {
-			// TODO Auto-generated method stub
-			return null;
-		}
     }
 }

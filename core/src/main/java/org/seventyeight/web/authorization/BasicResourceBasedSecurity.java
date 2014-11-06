@@ -172,10 +172,5 @@ public class BasicResourceBasedSecurity extends ACL<BasicResourceBasedSecurity> 
         public String getDisplayName() {
             return "Basic resource based security";
         }
-
-		@Override
-		public String getExtensionName() {
-			return "Basic resource based security";
-		}
     }
 }
