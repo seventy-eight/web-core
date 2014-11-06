@@ -352,10 +352,14 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
             logger.debug( "Getting COOOOOOOOKEIESS:...." );
             cookies = new HashMap<String, Cookie>(  );
             if(cookies != null) {
-	            for( Cookie cookie : getCookies() ) {
-	                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
-	                cookies.put( cookie.getName(), cookie );
-	            }
+            	try {
+		            for( Cookie cookie : getCookies() ) {
+		                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
+		                cookies.put( cookie.getName(), cookie );
+		            }
+            	} catch(NullPointerException e) {
+            		logger.warn("Not able to get cookies, was null");
+            	}
             } else {
             	logger.debug("No cookies");
             }
