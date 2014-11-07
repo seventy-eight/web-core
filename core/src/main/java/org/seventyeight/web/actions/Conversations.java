@@ -134,6 +134,7 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
     @GetMethod
     public void doGetAll(Request request, Response response) throws IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );
+        logger.fatal("WHHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT!");
 
         int number = request.getInteger( "number", 10 );
         int offset = request.getInteger( "offset", 0 );
@@ -142,10 +143,12 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
     	groupIds.add(request.getUser().getIdentifier());
     	groupIds.add(ACL.ALL);
 
-        MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" ).in("ACL.read", groupIds);
+        //MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" ).in("ACL.read", groupIds);
+    	MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" ).in(AbstractNode.fullAclReadField, groupIds);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
+        logger.fatal("--->{}", query);
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
-
+        logger.fatal("RES:{}", docs);
         PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();

@@ -104,6 +104,7 @@ public class Conversation extends Resource<Conversation> {
         List<MongoDocument> firstLevelComments = new ArrayList<MongoDocument>();
         
         // 2) First level replies
+        //MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
         MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
         logger.debug("QUERY: {}", flquery);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
