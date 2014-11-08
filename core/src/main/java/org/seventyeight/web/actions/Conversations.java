@@ -134,7 +134,6 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
     @GetMethod
     public void doGetAll(Request request, Response response) throws IOException, TemplateException {
         response.setRenderType( Response.RenderType.NONE );
-        logger.fatal("WHHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT!");
 
         int number = request.getInteger( "number", 10 );
         int offset = request.getInteger( "offset", 0 );

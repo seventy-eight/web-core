@@ -347,21 +347,25 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private Map<String, Cookie> cookies;
 
-    public Cookie getCookie( String name ) {
+    @Override
+	public Cookie[] getCookies() {
+		
+		Cookie[] cookies = super.getCookies();
+		
+		if(cookies != null) {
+			return cookies;
+		} else {
+			return new Cookie[0];
+		}
+	}
+
+	public Cookie getCookie( String name ) {
         if( cookies == null ) {
             logger.debug( "Getting COOOOOOOOKEIESS:...." );
             cookies = new HashMap<String, Cookie>(  );
-            if(cookies != null) {
-            	try {
-		            for( Cookie cookie : getCookies() ) {
-		                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
-		                cookies.put( cookie.getName(), cookie );
-		            }
-            	} catch(NullPointerException e) {
-            		logger.warn("Not able to get cookies, was null");
-            	}
-            } else {
-            	logger.debug("No cookies");
+            for( Cookie cookie : getCookies() ) {
+                logger.debug( "COOKIE {} = {}", cookie.getName(), cookie.getValue() );
+                cookies.put( cookie.getName(), cookie );
             }
         }
 
