@@ -9,6 +9,7 @@ import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
 import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Authorizable;
@@ -306,6 +307,11 @@ public class User extends Resource<User> implements Authorizable {
         @Override
         public String getType() {
             return "user";
+        }
+        
+        @PostMethod
+        public void doCreate(Request request, Response response) {
+        	
         }
 
         @GetMethod

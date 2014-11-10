@@ -112,9 +112,14 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
     */
 
+    /**
+     * Create a node and return the identifier.
+     */
     @PostMethod
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
-        JsonObject json = request.getJsonField();
+        //JsonObject json = request.getJsonField();
+    	//JsonObject json = request.getJson();
+    	JsonObject json = request.getJsonBody();
         Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
         if( title != null ) {
@@ -122,7 +127,8 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             T instance = newInstance( core, json, this);
             instance.updateConfiguration( json );
             instance.save();
-            response.sendRedirect( instance.getUrl() );
+            //response.sendRedirect( instance.getUrl() );
+            response.getWriter().print(instance.getIdentifier());
         } else {
             throw new ItemInstantiationException( "No title provided" );
         }

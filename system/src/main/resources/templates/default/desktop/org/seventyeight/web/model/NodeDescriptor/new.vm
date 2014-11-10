@@ -24,7 +24,19 @@
 <script type="">
 	$('#create').submit(function(event) {
 		//var json = Utils.getJsonElement(event.target);
-		Utils.addJsonElement(event.target);
+		//Utils.addJsonElement(event.target);
+		var j = Utils.getJsonElement(event.target);
+        $.ajax({
+            type: "POST",
+            url: 'create',
+            data: j,
+            contentType:"application/json; charset=utf-8",
+  			dataType:"json",
+            success: function(data, textStatus, jqxhr){
+                alert("Yay");
+            },
+            error: function(ajax, text, error) {alert(error); }
+        });
 
 	});
 </script>
