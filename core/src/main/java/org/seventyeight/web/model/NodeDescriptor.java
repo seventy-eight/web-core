@@ -128,7 +128,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             instance.updateConfiguration( json );
             instance.save();
             //response.sendRedirect( instance.getUrl() );
-            response.getWriter().print(instance.getIdentifier());
+            response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
         } else {
             throw new ItemInstantiationException( "No title provided" );
         }

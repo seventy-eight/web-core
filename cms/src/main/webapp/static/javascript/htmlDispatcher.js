@@ -3,9 +3,8 @@ function Dispatch() {
 
 Dispatch.prototype.start = function(element) {
     var data = {};
-    alert("DATA: " + data);
     this.dispatch(element, data);
-    alert(JSON.stringify(data));
+    alert("JSON: " + JSON.stringify(data));
 }
 
 Dispatch.prototype.dispatch = function(element, data) {

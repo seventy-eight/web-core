@@ -90,7 +90,7 @@ Utils.getJsonElement = function( form ) {
     var d = new Dispatch();
     d.dispatch(form, jsonData);
 	alert( "JSON: " + JSON.stringify( jsonData ) );
-	return d;
+	return jsonData;
 }
 
 Utils.injectJson = function(form, json) {
@@ -115,6 +115,7 @@ Utils.getAttribute = function( e, a ) {
     }
 }
 
+// @deprecated
 Utils.getJsonFromForm = function( e, jsonData ) {
     var childs = e.childNodes;
 
