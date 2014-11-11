@@ -39,7 +39,7 @@ public class Venue extends Resource<Venue> {
         if(jsonData != null) {
             boolean multiStaged = false;
             JsonElement e = jsonData.get( "multiStaged" );
-            if(!e.isJsonNull()) {
+            if(e != null && !e.isJsonNull()) {
                 multiStaged = e.getAsString().equals( "on" );
             }
 
