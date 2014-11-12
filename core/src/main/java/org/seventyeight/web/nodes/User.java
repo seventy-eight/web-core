@@ -308,11 +308,6 @@ public class User extends Resource<User> implements Authorizable {
         public String getType() {
             return "user";
         }
-        
-        @PostMethod
-        public void doCreate(Request request, Response response) {
-        	
-        }
 
         @GetMethod
         public void doGetUsers(Request request, Response response) throws IOException {

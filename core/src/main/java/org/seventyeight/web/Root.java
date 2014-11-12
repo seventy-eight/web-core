@@ -101,8 +101,8 @@ public class Root implements TopLevelNode, RootNode, Parent {
     @PostMethod
     public void doLogin( Request request, Response response ) throws AuthenticationException, IOException {
 
-        String username = request.getValue( Authentication.__NAME_KEY );
-        String password = request.getValue( Authentication.__PASS_KEY );
+        String username = request.getValue( Authentication.NAME_KEY );
+        String password = request.getValue( Authentication.PASS_KEY );
         logger.debug( "U: " + username + ", P:" + password );
 
         Core core = request.getCore();
@@ -111,7 +111,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
         session.save();
 
-        Cookie c = new Cookie( Authentication.__SESSION_ID, session.getIdentifier() );
+        Cookie c = new Cookie( Authentication.SESSION_ID, session.getIdentifier() );
         c.setMaxAge( session.getTimeToLive() );
         response.addCookie( c );
 
@@ -125,7 +125,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
         for( Cookie cookie : request.getCookies() ) {
             logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
-            if( cookie.getName().equals( Authentication.__SESSION_ID ) ) {
+            if( cookie.getName().equals( Authentication.SESSION_ID ) ) {
                 cookie.setMaxAge( 0 );
                 response.addCookie( cookie );
 

@@ -10,7 +10,11 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.servlet.Request;
 
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +23,24 @@ import java.util.Date;
 public class SessionManager implements Node {
 	
 	private static Logger logger = LogManager.getLogger( SessionManager.class );
+	
+	public static class Login {
+		private String username;
+		private String password;
+		
+		public String getUsername() {
+			return username;
+		}
+		
+		public String getPassword() {
+			return password;
+		}
+
+		@Override
+		public String toString() {
+			return "login[" + username + "/" + password + "]";
+		}
+	}
 
     public static final String SESSIONS = "sessions";
     public static final String SESSION = "session";
@@ -31,6 +53,28 @@ public class SessionManager implements Node {
 		//logger.debug( "Initializing session index" );
         this.core = core;
     }
+	
+	/**
+	 * Get login based on the given request.
+	 */
+	public static Login getCredentials(Request request) {
+		Login login = null;
+        if( request.getValue( Authentication.NAME_KEY, null ) != null && request.getValue( Authentication.PASS_KEY, null ) != null ) {
+        	login = new Login();
+            login.username = request.getValue( Authentication.NAME_KEY );
+            login.password = request.getValue( Authentication.PASS_KEY );
+        }
+
+		//JsonObject json = request.getJsonBody();
+		JsonObject json = request.getJson();
+		if(json.has("username") & json.has("password")) {
+			login = new Login();
+			login.username = json.get("username").getAsString();
+			login.password = json.get("password").getAsString();
+		}
+		
+		return login;
+	}
 
 	public Session createSession( User user, Date date, int ttl ) throws ItemInstantiationException, AuthenticationException {
 		logger.debug( "Creating session for " + user + ", " + ttl );

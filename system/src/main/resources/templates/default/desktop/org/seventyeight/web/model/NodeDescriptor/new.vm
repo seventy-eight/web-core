@@ -27,12 +27,11 @@
 		//var json = Utils.getJsonElement(event.target);
 		//Utils.addJsonElement(event.target);
 		var j = Utils.getJsonElement(event.target);
-		alert("1");
+		Utils.injectCredentials(j);
 		submitForm(j);
-        alert("2");
 
 		return false;
-	});
+	}); 
 	
 	function submitForm(j) {
 	alert(JSON.stringify(j));
@@ -43,9 +42,9 @@
             contentType:"application/json; charset=utf-8",
   			dataType:"json",
             success: function(data, textStatus, jqxhr){
-                alert("Yay");
+                window.location = "/resource/" + data.id;
             },
-            error: function(ajax, text, error) {"HEJ;"+ alert(error); }
+            error: function(ajax, text, error) {alert(error); }
         });
     }
 </script>

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.Utils;
 import org.seventyeight.web.Core;
+import org.seventyeight.web.authentication.SessionManager.Login;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.nodes.User;
@@ -11,6 +12,7 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 import javax.servlet.http.Cookie;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
@@ -33,7 +35,7 @@ public class SimpleAuthentication implements Authentication {
 
         for( Cookie cookie : request.getCookies() ) {
 			logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
-			if( cookie.getName().equals( __SESSION_ID ) ) {
+			if( cookie.getName().equals( SESSION_ID ) ) {
 				hash = cookie.getValue();
 				break;
 			}
@@ -46,12 +48,11 @@ public class SimpleAuthentication implements Authentication {
 
         // If no cookie session was found, create a new.
         if( hash == null ) {
-            if( request.getValue( __NAME_KEY, null ) != null && request.getValue( __PASS_KEY, null ) != null ) {
-                String username = request.getValue( __NAME_KEY );
-                String password = request.getValue( __PASS_KEY );
-                logger.debug( "U: " + username + ", P:" + password );
+        	Login login = SessionManager.getCredentials(request);
+            if(login != null) {
+                logger.debug( "{}", login );
                 try {
-                    session = login( username, password );
+                    session = login( login.getUsername(), login.getPassword());
                 } catch( Exception e ) {
                     /* Never mind, just move along... */
                 }
