@@ -123,15 +123,21 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
         if( title != null ) {
-            logger.debug( "Creating " + title );
-            T instance = newInstance( core, json, this);
-            instance.updateConfiguration( json );
-            instance.save();
-            //response.sendRedirect( instance.getUrl() );
-            response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
-        } else {
-            throw new ItemInstantiationException( "No title provided" );
+        	response.sendError(Response.SC_NOT_ACCEPTABLE, "No title provided");
+        	return;
         }
+        
+        logger.debug( "Creating " + title );
+        T instance = newInstance( core, json, this);
+        try {
+        	instance.updateConfiguration( json );
+        } catch(Exception e) {
+        	response.sendError(Response.SC_NOT_ACCEPTABLE, e.getMessage());
+        	return;        	
+        }
+        instance.save();
+        //response.sendRedirect( instance.getUrl() );
+        response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
     }
 
     /*
