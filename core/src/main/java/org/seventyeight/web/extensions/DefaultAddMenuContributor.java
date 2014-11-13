@@ -13,10 +13,10 @@ public class DefaultAddMenuContributor implements MenuContributor {
     @Override
     public void addContributingMenu( Node node, Menu menu ) {
         menu.addItem( "Add stuff", new Menu.MenuItem( "Upload", "/upload", ACL.Permission.READ ) );
-        menu.addItem( "Add stuff", new Menu.MenuItem( "Add collection", "/collection/new", ACL.Permission.READ ) );
-        menu.addItem( "Add stuff", new Menu.MenuItem( "Add artist", "/artist/new", ACL.Permission.READ ) );
-        menu.addItem( "Add stuff", new Menu.MenuItem( "Add venue", "/venue/new", ACL.Permission.READ ) );
-        menu.addItem( "Add stuff", new Menu.MenuItem( "Add concert", "/concert/new", ACL.Permission.READ ) );
+        menu.addItem( "Add stuff", new Menu.MenuItem( "Add collection", "/collections/new", ACL.Permission.READ ) );
+        menu.addItem( "Add stuff", new Menu.MenuItem( "Add artist", "/artists/new", ACL.Permission.READ ) );
+        menu.addItem( "Add stuff", new Menu.MenuItem( "Add venue", "/venues/new", ACL.Permission.READ ) );
+        menu.addItem( "Add stuff", new Menu.MenuItem( "Add concert", "/concerts/new", ACL.Permission.READ ) );
         
         menu.addItem( "Search", new Menu.MenuItem( "Search", "/search", ACL.Permission.READ ) );
     }

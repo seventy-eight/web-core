@@ -304,19 +304,23 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
         logger.debug( "Configuration submit" );
 
-        JsonObject json = request.getJsonField();
+        try {
+	        JsonObject json = request.getJson();
+	
+	        updateConfiguration( json );
+	
+	        // Update user + revision
+	        update( request.getUser() );
+	        
+	        this.setVisibility(Visibility.VISIBLE);
+	
+	        // Lastly, save
+	        save();
 
-        updateConfiguration( json );
-
-        // Update user + revision
-        update( request.getUser() );
-        
-        this.setVisibility(Visibility.VISIBLE);
-
-        // Lastly, save
-        save();
-
-        response.sendRedirect( getUrl() );
+	        response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+        } catch(Exception e) {
+        	response.sendError(Response.SC_NOT_ACCEPTABLE, e.getMessage());
+        }
     }
     
     public void touch() {

@@ -14,7 +14,7 @@
 
 <span align="center" style="font-size: 18px;font-weight: bold">Configuring $item.getDisplayName()</span>
 
-<form action="configurationSubmit" method="post" id="configure" name="configure" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" onsubmit="Utils.addJsonElement( this );">
+<form action="configurationSubmit" method="post" id="configure" name="configure">
 
 <table style="width: 100%">
     <tr>
@@ -82,6 +82,31 @@ $descriptor.getEventDescriptors($core)
         $(button).addClass('enabledButton');
 
     }
+    
+
+	$('#configure').submit(function(event) {
+		var j = Utils.getJsonElement(event.target);
+		Utils.injectCredentials(j);
+		submitForm(j);
+
+		return false;
+	}); 
+	
+	function submitForm(j) {
+	alert(JSON.stringify(j));
+        $.ajax({
+            type: "POST",
+            url: 'configurationSubmit',
+            data: JSON.stringify(j),
+            contentType:"application/json; charset=utf-8",
+  			dataType:"json",
+            success: function(data, textStatus, jqxhr){
+                window.location = "/resource/" + data.id;
+            },
+            error: function(ajax, text, error) {alert(error); }
+        });
+    }
+
 
 </script>
 

@@ -122,7 +122,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     	JsonObject json = request.getJson();
         Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
-        if( title != null ) {
+        if(title == null) {
         	response.sendError(Response.SC_NOT_ACCEPTABLE, "No title provided");
         	return;
         }

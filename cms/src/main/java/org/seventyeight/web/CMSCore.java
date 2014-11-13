@@ -74,9 +74,6 @@ public class CMSCore extends Core {
 
         addDescriptor( new Tags.TagsDescriptor(this) );
         addDescriptor( new Event.EventDescriptor(this)   );
-
-        addDescriptor( new Topic.TopicDescriptor(root) );
-
         addDescriptor( new Collection.CollectionDescriptor(root) );
 
         ImageUploadsWrapper.ImageUploadsWrapperDescriptor wrapper = new ImageUploadsWrapper.ImageUploadsWrapperDescriptor(root);
