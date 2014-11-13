@@ -73,6 +73,11 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
         public String getType() {
             return TITLE;
         }
+        
+        @Override
+		public String getUrlName() {
+			return "uploadWrapper";
+		}
 
         @Override
         public String getDisplayName() {

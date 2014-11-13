@@ -139,6 +139,11 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
         public ConcertDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return "concerts";
+		}
 
         @GetMethod
         public void doGetConcerts(Request request, Response response) throws IOException {

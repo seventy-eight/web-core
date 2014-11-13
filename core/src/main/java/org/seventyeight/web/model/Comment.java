@@ -183,6 +183,11 @@ public class Comment extends AbstractNode<Comment> {
         public CommentDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return "comments";
+		}
 
         @Override
         public String getDisplayName() {

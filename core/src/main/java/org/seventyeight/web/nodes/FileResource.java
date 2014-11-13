@@ -125,6 +125,11 @@ public class FileResource extends UploadableNode<FileResource> {
         public String getType() {
             return "file";
         }
+        
+        @Override
+		public String getUrlName() {
+			return "files";
+		}
 
         @Override
         public String getDisplayName() {

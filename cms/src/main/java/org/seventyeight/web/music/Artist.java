@@ -35,6 +35,11 @@ public class Artist extends Resource<Artist> {
         public ArtistDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return "artists";
+		}
 
         @GetMethod
         public void doGetArtists(Request request, Response response) throws IOException {

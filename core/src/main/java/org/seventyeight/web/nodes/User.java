@@ -308,8 +308,13 @@ public class User extends Resource<User> implements Authorizable {
         public String getType() {
             return "user";
         }
+        
+        @Override
+		public String getUrlName() {
+			return "users";
+		}
 
-        @GetMethod
+		@GetMethod
         public void doGetUsers(Request request, Response response) throws IOException {
             response.setRenderType( Response.RenderType.NONE );
 

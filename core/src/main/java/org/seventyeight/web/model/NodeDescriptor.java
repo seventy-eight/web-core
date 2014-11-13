@@ -185,6 +185,8 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     public abstract String getType();
+    
+    public abstract String getUrlName();
 
     /**
      * Determine whether to allow identical names or not.<br />

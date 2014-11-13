@@ -149,6 +149,11 @@ public class Group extends Resource<Group> implements Authorizable {
         public GroupDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return GROUPS;
+		}
 
         @Override
         public String getDisplayName() {

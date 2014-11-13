@@ -352,6 +352,11 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         public String getType() {
             return "collection";
         }
+        
+        @Override
+		public String getUrlName() {
+			return "collections";
+		}
 
         @Override
         public String getDisplayName() {

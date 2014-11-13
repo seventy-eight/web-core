@@ -1,6 +1,7 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
+
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
@@ -24,6 +25,11 @@ public class Location extends Resource<Location> {
         protected LocationDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return "locations";
+		}
 
         @Override
         public String getType() {

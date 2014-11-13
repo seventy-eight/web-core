@@ -121,6 +121,11 @@ public class Festival extends Resource<Festival> implements Getable<Event> {
         public FestivalDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return "festivals";
+		}
 
         @Override
         public String getType() {

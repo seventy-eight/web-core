@@ -270,6 +270,11 @@ public class Conversation extends Resource<Conversation> {
 			super(parent);
 		}
 		
+		@Override
+		public String getUrlName() {
+			return "conversations";
+		}
+		
         @Override
         public Conversation newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
             Conversation conversation = super.newInstance( request, parent );

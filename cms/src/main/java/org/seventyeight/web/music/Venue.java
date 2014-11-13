@@ -119,6 +119,11 @@ public class Venue extends Resource<Venue> {
         }
         
         @Override
+		public String getUrlName() {
+			return "venues";
+		}
+        
+        @Override
     	public boolean isApplicable(Node node) {
     		return node instanceof Venue;
     	}

@@ -215,7 +215,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
             try {
                 logger.fatal( "THE CURRENT SESSION USER IS {}", user );
                 json = JsonUtils.getJsonRequest( this );
-            } catch( IOException e ) {
+            } catch( Exception e ) {
                 logger.debug( "No json field associated with this request, {}", e.getMessage());
                 json = new JsonObject();
             }

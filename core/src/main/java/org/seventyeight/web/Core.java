@@ -614,7 +614,8 @@ public abstract class Core implements CoreSystem {
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
             //children.put( nd.getType(), nd );
-            root.addNode( nd.getType(), nd );
+            //root.addNode( nd.getType(), nd );
+            root.addNode( nd.getUrlName(), nd );
         }
 
         /* Find searchables */

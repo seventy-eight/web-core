@@ -1,6 +1,7 @@
 package org.seventyeight.web.nodes;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
@@ -162,6 +163,11 @@ public class Topic extends Resource<Topic> {
         public TopicDescriptor( Node parent ) {
             super( parent );
         }
+        
+        @Override
+		public String getUrlName() {
+			return "topics";
+		}
 
         @Override
         public String getType() {
