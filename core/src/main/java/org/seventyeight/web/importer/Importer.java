@@ -79,9 +79,6 @@ public class Importer {
 			        
 			        for(JsonElement je : ja) {
 			        	JsonObject jo = (JsonObject) je;
-			        	//System.out.println("---->" + je.toString());
-			        	//System.out.println(jo.get("username").getAsString());
-			        	//System.out.println(jo.get("username").toString() + "==" + username + "==" + jo.has("username") + "==" + (jo.get("username").toString().equalsIgnoreCase(username)));
 				        if(jo.has("username") && jo.get("username").getAsString().equalsIgnoreCase(username)) {
 				        	System.out.println("YAY");
 				        	result = true;
@@ -137,7 +134,12 @@ public class Importer {
 			    	json.addProperty("title", u);
 			    	json.addProperty("password", p);
 			    	json.addProperty("password_again", p);
+
+			    	if(e == null || e.isEmpty()) {
+			    		e = "noone@example.com";
+			    	}
 			    	json.addProperty("email", e);
+			    	
 			    	
 			    	JsonObject creds = new JsonObject();
 			    	creds.addProperty("username", "wolle");
