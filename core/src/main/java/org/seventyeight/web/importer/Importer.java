@@ -72,7 +72,7 @@ public class Importer {
 		    	
 		    	json.add("credentials", creds);
 
-				HttpPost postRequest = new HttpPost("http://localhost:8080/user/create");
+				HttpPost postRequest = new HttpPost("http://localhost:8080/users/create");
 				StringEntity input = new StringEntity(json.toString());
 				input.setContentType("application/json");
 				postRequest.setEntity(input);
@@ -81,9 +81,9 @@ public class Importer {
 				BufferedReader br = new BufferedReader(new InputStreamReader((response1.getEntity().getContent())));
  
 				String output;
-				System.out.println("Output from Server .... \n");
+				System.out.println("Output from Server:");
 				while ((output = br.readLine()) != null) {
-					System.out.println(output);
+					System.out.println("\"" + output + "\"");
 				}
 
 		    }

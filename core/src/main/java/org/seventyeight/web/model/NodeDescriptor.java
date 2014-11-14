@@ -1,11 +1,14 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
+
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.API;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.*;
@@ -116,28 +119,29 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
      * Create a node and return the identifier.
      */
     @PostMethod
+    @API
     public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
-        //JsonObject json = request.getJsonField();
-    	//JsonObject json = request.getJson();
     	JsonObject json = request.getJson();
         Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
         if(title == null) {
-        	response.sendError(Response.SC_NOT_ACCEPTABLE, "No title provided");
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No title provided");
         	return;
         }
         
         logger.debug( "Creating " + title );
-        T instance = newInstance( core, json, this);
         try {
+        	T instance = newInstance( core, json, this);
         	instance.updateConfiguration( json );
+            instance.save();
+
+        	response.setStatus(Response.SC_CREATED);
+            response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
         } catch(Exception e) {
-        	response.sendError(Response.SC_NOT_ACCEPTABLE, e.getMessage());
-        	return;        	
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print(e.getMessage());
         }
-        instance.save();
-        //response.sendRedirect( instance.getUrl() );
-        response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
     }
 
     /*
