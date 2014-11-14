@@ -8,6 +8,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.database.mongodb.MongoUpdate;
+import org.seventyeight.utils.API;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.Utils;
@@ -316,12 +317,11 @@ public class User extends Resource<User> implements Authorizable {
 
 		@GetMethod
         public void doGetUsers(Request request, Response response) throws IOException {
-            response.setRenderType( Response.RenderType.NONE );
-
             String term = request.getValue( "term", "" );
+            boolean exact = request.getBoolean("exact", false);
 
             if( term.length() > 1 ) {
-                MongoDBQuery query = new MongoDBQuery().is( "type", "user" ).regex( "title", "(?i)" + term + ".*" );
+                MongoDBQuery query = new MongoDBQuery().is( "type", "user" ).regex( "title", "(?i)" + term + (exact ? "" : ".*") );
 
                 PrintWriter writer = response.getWriter();
                 writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
@@ -329,6 +329,13 @@ public class User extends Resource<User> implements Authorizable {
                 response.getWriter().write( "{}" );
             }
         }
+		
+		@GetMethod
+		@API
+		public void doFind(Request request, Response response) {
+			JsonObject json = request.getJson();
+			json.get("");
+		}
 
         /*
         @Override

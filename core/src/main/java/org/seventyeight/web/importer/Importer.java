@@ -3,6 +3,7 @@ package org.seventyeight.web.importer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,12 +25,81 @@ import org.kohsuke.args4j.Option;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.User;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Importer {
 	
 	//@Option(name="-type", required=true)
 	private String type;
+	
+	public static abstract class Action<T> {
+		protected T result;
+		public abstract <E extends Action<T>> E act(CloseableHttpClient httpclient) throws IOException;
+		public T getResult() {
+			return result;
+		}
+	}
+	
+	public static class CheckUser extends Action<Boolean> {
+
+		private String username;
+		
+		public CheckUser setUsername(String username) {
+			this.username = username;
+			return this;
+		}
+		
+		@Override
+		public CheckUser act(CloseableHttpClient httpclient) throws IOException {
+			String url = "http://localhost:8080/users/getUsers?term=" + URLEncoder.encode(username, "UTF-8") + "&exact=1";
+			System.out.println(url);
+			HttpGet getRequest = new HttpGet(url);
+			CloseableHttpResponse response = httpclient.execute(getRequest);
+			System.out.println("----" + response.getStatusLine().getStatusCode() );
+			if(response.getStatusLine().getStatusCode() == 200) {
+				
+				BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+	
+				String output;
+				StringBuilder sb = new StringBuilder();
+				while ((output = br.readLine()) != null) {
+					sb.append(output);
+				}
+				
+		        JsonParser parser = new JsonParser();
+		        try {
+			        JsonArray ja = (JsonArray) parser.parse(sb.toString());
+			        
+			        //System.out.println("::::" + ja.toString());
+			        
+			        for(JsonElement je : ja) {
+			        	JsonObject jo = (JsonObject) je;
+			        	//System.out.println("---->" + je.toString());
+			        	//System.out.println(jo.get("username").getAsString());
+			        	//System.out.println(jo.get("username").toString() + "==" + username + "==" + jo.has("username") + "==" + (jo.get("username").toString().equalsIgnoreCase(username)));
+				        if(jo.has("username") && jo.get("username").getAsString().equalsIgnoreCase(username)) {
+				        	System.out.println("YAY");
+				        	result = true;
+				        	return this;
+				        }
+			        }
+		        } catch(Exception e) {
+		        	System.out.println(e.getMessage());
+		        }
+			} else {
+				
+			}
+			
+			result = false;
+			return this;
+		}
+		
+	}
 	
 	public static class UserImport {
 		
@@ -59,33 +129,36 @@ public class Importer {
 		    	String e = rs.getString("email");
 		    	System.out.println("Username; " + u);
 		    	
-		    	JsonObject json = new JsonObject();
-		    	json.addProperty("username", u);
-		    	json.addProperty("title", u);
-		    	json.addProperty("password", p);
-		    	json.addProperty("password_again", p);
-		    	json.addProperty("email", e);
-		    	
-		    	JsonObject creds = new JsonObject();
-		    	creds.addProperty("username", "wolle");
-		    	creds.addProperty("password", "pass");
-		    	
-		    	json.add("credentials", creds);
-
-				HttpPost postRequest = new HttpPost("http://localhost:8080/users/create");
-				StringEntity input = new StringEntity(json.toString());
-				input.setContentType("application/json");
-				postRequest.setEntity(input);
-				CloseableHttpResponse response1 = httpclient.execute(postRequest);
-				
-				BufferedReader br = new BufferedReader(new InputStreamReader((response1.getEntity().getContent())));
- 
-				String output;
-				System.out.println("Output from Server:");
-				while ((output = br.readLine()) != null) {
-					System.out.println("\"" + output + "\"");
-				}
-
+		    	// Checking
+		    	CheckUser cu = new CheckUser().setUsername(u).act(httpclient);
+		    	if(!cu.getResult()) {
+			    	JsonObject json = new JsonObject();
+			    	json.addProperty("username", u);
+			    	json.addProperty("title", u);
+			    	json.addProperty("password", p);
+			    	json.addProperty("password_again", p);
+			    	json.addProperty("email", e);
+			    	
+			    	JsonObject creds = new JsonObject();
+			    	creds.addProperty("username", "wolle");
+			    	creds.addProperty("password", "pass");
+			    	
+			    	json.add("credentials", creds);
+	
+					HttpPost postRequest = new HttpPost("http://localhost:8080/users/create");
+					StringEntity input = new StringEntity(json.toString());
+					input.setContentType("application/json");
+					postRequest.setEntity(input);
+					CloseableHttpResponse response1 = httpclient.execute(postRequest);
+					
+					BufferedReader br = new BufferedReader(new InputStreamReader((response1.getEntity().getContent())));
+	 
+					String output;
+					System.out.println("Output from Server:");
+					while ((output = br.readLine()) != null) {
+						System.out.println(response1.getStatusLine() + ", \"" + output + "\"");
+					}
+		    	}
 		    }
 		    
 		    httpclient.close();

@@ -276,6 +276,23 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
             return defaultValue;
         }
     }
+    
+    public boolean getBoolean(String key, boolean def) {
+    	String b = this.getParameter(key);
+    	if(b != null) {
+    		if(def) {
+	    		if(b.equals("0") || b.equalsIgnoreCase("off") || b.equalsIgnoreCase("false")) {
+	    			return false;
+	    		}
+    		} else {
+	    		if(b.equals("1") || b.equalsIgnoreCase("on") || b.equalsIgnoreCase("true")) {
+	    			return true;
+	    		}
+    		}
+    	}
+    	
+    	return def;
+	}
 
     @Override
     public Integer getInteger( String key ) {
