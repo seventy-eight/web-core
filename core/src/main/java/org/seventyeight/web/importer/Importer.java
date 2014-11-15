@@ -19,6 +19,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -34,18 +36,20 @@ import com.google.gson.JsonParser;
 
 public class Importer {
 	
+	private static Logger logger = LogManager.getLogger(Importer.class);
+	
 	//@Option(name="-type", required=true)
 	private String type;
 	
-	public static abstract class Action<T> {
-		protected T result;
-		public abstract <E extends Action<T>> E act(CloseableHttpClient httpclient) throws IOException;
-		public T getResult() {
+	public static abstract class Action<T extends Action<T, R>, R> {
+		protected R result;
+		public abstract T act(CloseableHttpClient httpclient) throws IOException;
+		public R getResult() {
 			return result;
 		}
 	}
 	
-	public static class CheckUser extends Action<Boolean> {
+	public static class CheckUser extends Action<CheckUser, Boolean> {
 
 		private String username;
 		
@@ -57,10 +61,10 @@ public class Importer {
 		@Override
 		public CheckUser act(CloseableHttpClient httpclient) throws IOException {
 			String url = "http://localhost:8080/users/getUsers?term=" + URLEncoder.encode(username, "UTF-8") + "&exact=1";
-			System.out.println(url);
+			logger.debug("Checking {} at {}", username, url );
+			
 			HttpGet getRequest = new HttpGet(url);
 			CloseableHttpResponse response = httpclient.execute(getRequest);
-			System.out.println("----" + response.getStatusLine().getStatusCode() );
 			if(response.getStatusLine().getStatusCode() == 200) {
 				
 				BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
@@ -75,24 +79,25 @@ public class Importer {
 		        try {
 			        JsonArray ja = (JsonArray) parser.parse(sb.toString());
 			        
-			        //System.out.println("::::" + ja.toString());
-			        
 			        for(JsonElement je : ja) {
 			        	JsonObject jo = (JsonObject) je;
 				        if(jo.has("username") && jo.get("username").getAsString().equalsIgnoreCase(username)) {
-				        	System.out.println("YAY");
+				        	
+				        	logger.debug("{} exists", username);
 				        	result = true;
 				        	return this;
 				        }
 			        }
 		        } catch(Exception e) {
-		        	System.out.println(e.getMessage());
+		        	logger.error(e.getMessage());
 		        }
 			} else {
 				
 			}
 			
+			logger.debug("{} does not exist", username);
 			result = false;
+			
 			return this;
 		}
 		
@@ -120,11 +125,12 @@ public class Importer {
 			CloseableHttpClient httpclient = HttpClients.createDefault();
 		    
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+			
 		    while(rs.next()) {
 		    	String u = rs.getString("username");
 		    	String p = rs.getString("password");
 		    	String e = rs.getString("email");
-		    	System.out.println("Username; " + u);
+		    	logger.info("Username: {}", u);
 		    	
 		    	// Checking
 		    	CheckUser cu = new CheckUser().setUsername(u).act(httpclient);
@@ -182,13 +188,7 @@ public class Importer {
 	
 	private List<Provider> providers = new ArrayList<Provider>();
 	
-	private Core core;
-	
 	public Importer() {
-	}
-	
-	public Importer(Core core) {
-		this.core = core;
 	}
 	
 	public Importer addProvider(Provider provider) {
