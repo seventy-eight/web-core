@@ -210,7 +210,6 @@ public class Importer {
 			    	}
 			    	json.addProperty("email", e);
 			    	
-			    	
 			    	JsonObject creds = new JsonObject();
 			    	creds.addProperty("username", "wolle");
 			    	creds.addProperty("password", "pass");
@@ -223,14 +222,12 @@ public class Importer {
 					postRequest.setEntity(input);
 					CloseableHttpResponse response1 = httpclient.execute(postRequest);
 					
-					BufferedReader br = new BufferedReader(new InputStreamReader((response1.getEntity().getContent())));
-	 
-					String output;
-					System.out.println("Output from Server:");
-					while ((output = br.readLine()) != null) {
-						System.out.println(response1.getStatusLine() + ", \"" + output + "\"");
+					JsonObject result = getReturnJsonObject(response1);
+					logger.debug("REULT: " + result.toString());
+					if(result != null && result.has("identifier")) {
+						userMap.put(userId, result.get("identifier").getAsString());
 					}
-		    	}
+				}
 		    }
 		    
 		    httpclient.close();
