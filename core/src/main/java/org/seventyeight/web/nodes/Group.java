@@ -11,11 +11,13 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,28 +39,70 @@ public class Group extends Resource<Group> implements Authorizable {
     }
 
     @Override
-    public void updateNode( JsonObject jsonData ) {
-        JsonElement usersElement = jsonData.get( "users" );
-        if(usersElement.isJsonNull()) {
-
-        } else {
-            JsonArray usersArray = usersElement.getAsJsonArray();
-            //List<String> artists = new ArrayList<String>( artistsArray.size() );
-            for( JsonElement k : usersArray) {
-                try {
-                    User user = core.getNodeById( this, k.getAsString() );
-                    addMember( user );
-                } catch( Exception e ) {
-                    logger.log( Level.WARN, "Unable to add " + k, e );
-                }
-            }
-
-            //document.set( "members", artists );
-        }
+    public void updateNode(JsonObject jsonData) {
+    	if(jsonData != null) {
+	        JsonElement usersElement = jsonData.get( "users" );
+	        if(usersElement == null || usersElement.isJsonNull()) {
+	
+	        } else {
+	            JsonArray usersArray = usersElement.getAsJsonArray();
+	            //List<String> artists = new ArrayList<String>( artistsArray.size() );
+	            for( JsonElement k : usersArray) {
+	                try {
+	                    User user = core.getNodeById( this, k.getAsString() );
+	                    addMember( user );
+	                } catch( Exception e ) {
+	                    logger.log( Level.WARN, "Unable to add " + k, e );
+	                }
+	            }
+	
+	            //document.set( "members", artists );
+	        }
+    	}
     }
 
     protected String getGroupType() {
         return GROUPS;
+    }
+    
+    @PostMethod
+    public void doAdd(Request request, Response response) throws IOException {
+    	JsonObject json = request.getJson();
+        Core core = request.getCore();
+        
+        if(json == null) {
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No data provided");
+        	return;
+        }
+        
+        if(!json.has("users")) {
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No users provided");
+        	return;
+        }
+        
+        JsonArray missing = new JsonArray();
+        
+        JsonArray ja = json.get("users").getAsJsonArray();
+        for(JsonElement je : ja) {
+			try {
+				User user = core.getNodeById( this, je.getAsString() );
+				addMember( user );
+			} catch (Exception e) {
+				JsonObject m = new JsonObject();
+				m.addProperty("user", je.getAsShort());
+				m.addProperty("error", e.getMessage());
+				missing.add(m);
+			}
+        }
+        
+        JsonObject result = new JsonObject();
+        result.addProperty("id", getIdentifier());
+        result.add("missing", missing);
+        
+    	response.setStatus(Response.SC_ACCEPTED);
+        response.getWriter().print(result.toString());
     }
 
     public List<AbstractNode<?>> getActivities(Request request) throws NotFoundException, ItemInstantiationException {

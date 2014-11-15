@@ -135,10 +135,12 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         	T instance = newInstance( core, json, this);
         	instance.updateConfiguration( json );
             instance.save();
-
+            logger.debug("Finally done!!!!");
         	response.setStatus(Response.SC_CREATED);
             response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
         } catch(Exception e) {
+        	e.printStackTrace();
+        	logger.log(Level.WARN, "Unable to create {}, {}", getType(), e);
         	response.setStatus(Response.SC_NOT_ACCEPTABLE);
         	response.getWriter().print(e.getMessage());
         }

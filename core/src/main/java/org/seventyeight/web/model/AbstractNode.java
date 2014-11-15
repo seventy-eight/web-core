@@ -344,7 +344,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         updateExtensions(json);
 
         // Update this nodes fields
-        updateNode( json );
+        updateNode(json);
 
         postUpdate();
     }
