@@ -82,7 +82,7 @@ public class Importer {
         }
 	}
 	
-	public static abstract class Action<T extends Action<T, R>, R> {
+	public static abstract class HTTPAction<T extends HTTPAction<T, R>, R> {
 		protected R result;
 		public abstract T act(CloseableHttpClient httpclient) throws IOException;
 		public R getResult() {
@@ -90,11 +90,11 @@ public class Importer {
 		}
 	}
 	
-	public static abstract class SQLAction {
-		public abstract void act(Connection connection) throws SQLException;
+	public static abstract class Action {
+		public abstract void act(Connection connection, CloseableHttpClient httpclient) throws SQLException;
 	}
 	
-	public class TruncateDatabases extends Action<TruncateDatabases, Boolean> {
+	public class TruncateDatabases extends HTTPAction<TruncateDatabases, Boolean> {
 
 		@Override
 		public TruncateDatabases act(CloseableHttpClient httpclient) throws IOException {
@@ -111,7 +111,7 @@ public class Importer {
 		
 	}
 	
-	public class CheckUser extends Action<CheckUser, Boolean> {
+	public class CheckUser extends HTTPAction<CheckUser, Boolean> {
 
 		private String username;
 		private int identifier;
@@ -169,18 +169,64 @@ public class Importer {
 			result = false;
 			
 			return this;
+		}	
+	}
+	
+	public class GroupInserter extends HTTPAction<GroupInserter, Boolean> {
+		
+		private String groupName;
+		private int groupId;
+		private int ownerId;
+		
+		public GroupInserter(String groupName, int groupId, int ownerId) {
+			this.groupName = groupName;
+			this.groupId = groupId;
+			this.ownerId = ownerId;
+		}
+
+		@Override
+		public GroupInserter act(CloseableHttpClient httpclient) throws IOException {
+			logger.debug("Adding {}({}) for {}({})", groupName, groupId, userMap.get(ownerId), ownerId);
+			
+	    	JsonObject json = new JsonObject();
+	    	json.addProperty("title", groupName);
+	    	json.addProperty("owner", userMap.get(ownerId));
+
+	    	JsonObject creds = new JsonObject();
+	    	creds.addProperty("username", "wolle");
+	    	creds.addProperty("password", "pass");
+	    	
+	    	json.add("credentials", creds);
+
+			HttpPost postRequest = new HttpPost("http://localhost:8080/groups/create");
+			StringEntity input = new StringEntity(json.toString());
+			input.setContentType("application/json");
+			postRequest.setEntity(input);
+			CloseableHttpResponse response1 = httpclient.execute(postRequest);
+			
+			JsonObject result = getReturnJsonObject(response1);
+			logger.debug("REULT: " + result.toString());
+			if(result != null && result.has("identifier")) {
+				groupMap.put(groupId, result.get("identifier").getAsString());
+			}
+
+			return this;
 		}
 		
 	}
 	
-	public static class GroupImport extends SQLAction {
+	public class GroupImport extends Action {
 
 		@Override
-		public void act(Connection connection) throws SQLException {
+		public void act(Connection connection, CloseableHttpClient httpclient) throws SQLException {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM groups");
 			while(rs.next()) {
 				String groupName = rs.getString("group_name");
+				int ownerId = rs.getInt("owner_id");
+				
+				// Insert
+
 			}
 		}
 		

@@ -167,12 +167,11 @@ public class Group extends Resource<Group> implements Authorizable {
         
         @GetMethod
         public void doGetGroups(Request request, Response response) throws IOException {
-            response.setRenderType( Response.RenderType.NONE );
-
-            String term = request.getValue( "term", "" );
+        	String term = request.getValue( "term", "" );
+            boolean exact = request.getBoolean("exact", false);
 
             if( term.length() > 1 ) {
-                MongoDBQuery query = new MongoDBQuery().is( "type", "group" ).regex( "title", "(?i)" + term + ".*" );
+                MongoDBQuery query = new MongoDBQuery().is( "type", "group" ).regex( "title", "(?i)" + term + (exact ? "" : ".*") );
 
                 PrintWriter writer = response.getWriter();
                 writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
