@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -38,8 +40,44 @@ public class Importer {
 	
 	private static Logger logger = LogManager.getLogger(Importer.class);
 	
+	private Map<Integer, String> userMap = new HashMap<Integer, String>();
+	
 	//@Option(name="-type", required=true)
 	private String type;
+	
+	public static JsonArray getReturnJsonArray(CloseableHttpResponse response) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+		
+		String output;
+		StringBuilder sb = new StringBuilder();
+		while ((output = br.readLine()) != null) {
+			sb.append(output);
+		}
+		
+        JsonParser parser = new JsonParser();
+        try {
+        	return (JsonArray) parser.parse(sb.toString());
+        } catch(Exception e) {
+        	return null;
+        }
+	}
+	
+	public static JsonObject getReturnJsonObject(CloseableHttpResponse response) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+		
+		String output;
+		StringBuilder sb = new StringBuilder();
+		while ((output = br.readLine()) != null) {
+			sb.append(output);
+		}
+		
+        JsonParser parser = new JsonParser();
+        try {
+        	return (JsonObject) parser.parse(sb.toString());
+        } catch(Exception e) {
+        	return null;
+        }
+	}
 	
 	public static abstract class Action<T extends Action<T, R>, R> {
 		protected R result;
@@ -49,12 +87,22 @@ public class Importer {
 		}
 	}
 	
-	public static class CheckUser extends Action<CheckUser, Boolean> {
+	public static abstract class SQLAction {
+		public abstract void act(Connection connection) throws SQLException;
+	}
+	
+	public class CheckUser extends Action<CheckUser, Boolean> {
 
 		private String username;
+		private int identifier;
 		
 		public CheckUser setUsername(String username) {
 			this.username = username;
+			return this;
+		}
+		
+		public CheckUser setIdentifier(int identifier) {
+			this.identifier = identifier;
 			return this;
 		}
 		
@@ -82,8 +130,10 @@ public class Importer {
 			        for(JsonElement je : ja) {
 			        	JsonObject jo = (JsonObject) je;
 				        if(jo.has("username") && jo.get("username").getAsString().equalsIgnoreCase(username)) {
-				        	
 				        	logger.debug("{} exists", username);
+				        	
+				        	userMap.put(identifier, jo.get("identifier").getAsString());
+				        	
 				        	result = true;
 				        	return this;
 				        }
@@ -103,7 +153,20 @@ public class Importer {
 		
 	}
 	
-	public static class UserImport {
+	public static class GroupImport extends SQLAction {
+
+		@Override
+		public void act(Connection connection) throws SQLException {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM groups");
+			while(rs.next()) {
+				String groupName = rs.getString("group_name");
+			}
+		}
+		
+	}
+	
+	public class UserImport {
 		
 		private String username;
 		private String password;
@@ -130,6 +193,7 @@ public class Importer {
 		    	String u = rs.getString("username");
 		    	String p = rs.getString("password");
 		    	String e = rs.getString("email");
+		    	int userId = rs.getInt("user_id");
 		    	logger.info("Username: {}", u);
 		    	
 		    	// Checking
