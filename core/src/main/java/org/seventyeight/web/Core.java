@@ -859,7 +859,7 @@ public abstract class Core implements CoreSystem {
         return anonymous;
     }
 
-    private static final String NUMBERS_COLLECTION = "numbers";
+    public static final String NUMBERS_COLLECTION = "numbers";
 
     /**
      * Given a {@link org.seventyeight.web.model.NodeDescriptor} a unique name is returned.

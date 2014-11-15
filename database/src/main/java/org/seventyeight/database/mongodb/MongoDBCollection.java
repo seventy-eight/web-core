@@ -125,6 +125,10 @@ public class MongoDBCollection {
     public void remove( MongoDBQuery query ) {
         collection.remove( query.getDocument() );
     }
+    
+    public void truncate() {
+    	collection.remove(new BasicDBObject());
+    }
 
     public void update( MongoUpdate update ) {
         update( new MongoDBQuery(), update );

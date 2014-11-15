@@ -55,6 +55,8 @@ public class CMSCore extends Core {
 
         root.addNode( "resources", new ResourcesAction(this) );
 
+        root.addNode("clear", new Clear());
+        
         WidgetAction widgets = new WidgetAction(this);
         root.addNode( "widgets", widgets );
 
@@ -115,7 +117,7 @@ public class CMSCore extends Core {
         addDescriptor( new Venue.VenueDescriptor(root) );
         addDescriptor( new Concert.ConcertDescriptor(root) );
         addDescriptor( new Festival.FestivalDescriptor(root) );
-
+       
         //addDescriptor( new Follow.FollowDescriptor(this) );
         addDescriptor( new FollowAction.FollowActionDescriptor(this) );
         addExtension(new FollowLayout());

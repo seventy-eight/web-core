@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -41,6 +42,8 @@ public class Importer {
 	private static Logger logger = LogManager.getLogger(Importer.class);
 	
 	private Map<Integer, String> userMap = new HashMap<Integer, String>();
+	private Map<Integer, String> groupMap = new HashMap<Integer, String>();
+	
 	
 	//@Option(name="-type", required=true)
 	private String type;
@@ -89,6 +92,23 @@ public class Importer {
 	
 	public static abstract class SQLAction {
 		public abstract void act(Connection connection) throws SQLException;
+	}
+	
+	public class TruncateDatabases extends Action<TruncateDatabases, Boolean> {
+
+		@Override
+		public TruncateDatabases act(CloseableHttpClient httpclient) throws IOException {
+			HttpDelete getRequest = new HttpDelete("http://localhost:8080/clear/");
+			CloseableHttpResponse response = httpclient.execute(getRequest);
+			if(response.getStatusLine().getStatusCode() == 200) {
+				logger.info("Databases truncated");
+			} else {
+				logger.info("Databases WAS NOT truncated");
+			}
+			
+			return this;
+		}
+		
 	}
 	
 	public class CheckUser extends Action<CheckUser, Boolean> {
@@ -186,6 +206,8 @@ public class Importer {
 			Statement stmt = con.createStatement();
 			
 			CloseableHttpClient httpclient = HttpClients.createDefault();
+			
+			new TruncateDatabases().act(httpclient);
 		    
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
 			
