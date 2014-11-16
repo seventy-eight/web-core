@@ -179,6 +179,7 @@ public class Importer {
 	public class GroupMemberInserter extends HTTPAction<GroupMemberInserter, Boolean> {
 		
 		private String groupId;
+		private String userId;
 		
 		public GroupMemberInserter(String groupId) {
 			this.groupId = groupId;
@@ -188,28 +189,19 @@ public class Importer {
 		public GroupMemberInserter act(CloseableHttpClient httpclient) throws IOException {
 			logger.debug("Adding members to {}", groupId);
 			
-	    	JsonObject json = new JsonObject();
-	    	json.addProperty("title", groupName);
-	    	json.addProperty("owner", userMap.get(ownerId));
-
-	    	JsonObject creds = new JsonObject();
-	    	creds.addProperty("username", "wolle");
-	    	creds.addProperty("password", "pass");
-	    	
-	    	json.add("credentials", creds);
-
-			HttpPost postRequest = new HttpPost("http://localhost:8080/groups/create");
-			StringEntity input = new StringEntity(json.toString());
-			input.setContentType("application/json");
-			postRequest.setEntity(input);
+			
+			HttpPost postRequest = new HttpPost("http://localhost:8080/resource/" + groupId + "/?user=" + userId + "&session=BWAH");
 			CloseableHttpResponse response1 = httpclient.execute(postRequest);
 			
 			JsonObject result = getReturnJsonObject(response1);
-			logger.debug("REULT: " + result);
-			if(result != null && result.has("identifier")) {
-				groupMap.put(groupId, result.get("identifier").getAsString());
-			}
+			logger.debug("RESULT: " + result);
 
+			if(response1.getStatusLine().getStatusCode() == 200) {
+				logger.debug("Added {} to {}", userId, groupId);
+			} else {
+				logger.error("Fail to add {} to {}", userId, groupId);
+			}
+			
 			return this;
 		}
 		

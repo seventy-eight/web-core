@@ -66,6 +66,30 @@ public class Group extends Resource<Group> implements Authorizable {
     }
     
     @PostMethod
+    public void doIndex(Request request, Response response) throws IOException {
+    	String userId = request.getValue("user", null);
+    	
+    	if(userId == null) {
+    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No user provided");
+        	return;
+    	}
+    	
+		try {
+			User user = core.getNodeById( this, userId );
+			addMember( user );
+
+	    	response.setStatus(Response.SC_ACCEPTED);
+	    	response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+		} catch (Exception e) {
+			logger.error(e);
+    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print(e.getMessage());
+		}
+		
+    }
+    
+    @PostMethod
     public void doAdd(Request request, Response response) throws IOException {
     	JsonObject json = request.getJson();
         Core core = request.getCore();
