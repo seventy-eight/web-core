@@ -59,7 +59,7 @@ public class SessionManager implements Node {
 	 */
 	public static Login getCredentials(Request request) {
 		Login login = null;
-        if( request.getValue( Authentication.NAME_KEY, null ) != null && request.getValue( Authentication.PASS_KEY, null ) != null ) {
+        if(request.getValue( Authentication.NAME_KEY, null ) != null && request.getValue( Authentication.PASS_KEY, null ) != null) {
         	login = new Login();
             login.username = request.getValue( Authentication.NAME_KEY );
             login.password = request.getValue( Authentication.PASS_KEY );

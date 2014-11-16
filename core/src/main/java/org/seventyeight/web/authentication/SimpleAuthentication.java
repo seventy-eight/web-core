@@ -35,7 +35,7 @@ public class SimpleAuthentication implements Authentication {
 
         for( Cookie cookie : request.getCookies() ) {
 			logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
-			if( cookie.getName().equals( SESSION_ID ) ) {
+			if( cookie.getName().equals( SESSION_NAME ) ) {
 				hash = cookie.getValue();
 				break;
 			}
@@ -45,6 +45,15 @@ public class SimpleAuthentication implements Authentication {
 
         request.getStopWatch().stop( "Finding cookies" );
         request.getStopWatch().start( "Creating session" );
+        
+        // If session hash is not found in cookies, try the url parameters
+        if(hash == null) {
+        	String requestSession = request.getValue(SESSION_NAME, null);
+        	if(requestSession != null) {
+        		logger.debug("Request session found");
+        		hash = requestSession;
+        	}
+        }
 
         // If no cookie session was found, create a new.
         if( hash == null ) {

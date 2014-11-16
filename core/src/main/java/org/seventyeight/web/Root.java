@@ -111,7 +111,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
         session.save();
 
-        Cookie c = new Cookie( Authentication.SESSION_ID, session.getIdentifier() );
+        Cookie c = new Cookie( Authentication.SESSION_NAME, session.getIdentifier() );
         c.setMaxAge( session.getTimeToLive() );
         response.addCookie( c );
 
@@ -125,7 +125,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
         for( Cookie cookie : request.getCookies() ) {
             logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
-            if( cookie.getName().equals( Authentication.SESSION_ID ) ) {
+            if( cookie.getName().equals( Authentication.SESSION_NAME ) ) {
                 cookie.setMaxAge( 0 );
                 response.addCookie( cookie );
 
