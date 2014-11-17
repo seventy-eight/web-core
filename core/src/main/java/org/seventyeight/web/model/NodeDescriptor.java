@@ -98,8 +98,14 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
         /* Save */
         //MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
+        
+        onNewInstance(node, core, parent);
 
         return node;
+    }
+    
+    protected void onNewInstance(T instance, Core core, Node parent) {
+    	// default implementation is a no op
     }
 
     protected void setOwner( T node, String ownerId ) {

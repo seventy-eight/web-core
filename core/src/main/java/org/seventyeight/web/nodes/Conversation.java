@@ -75,6 +75,26 @@ public class Conversation extends Resource<Conversation> {
 		}
 	}
 	
+	@PostMethod
+	public void doIndex(Request request, Response response) throws IOException {
+    	JsonObject json = request.getJson();
+        
+        if(json == null) {
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No data provided");
+        	return;
+        }
+        
+        if(!json.has("comment") || json.get("comment").getAsString().length() < 2) {
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No comment provided");
+        	return;
+        }
+
+    	response.setStatus(Response.SC_ACCEPTED);
+    	response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+	}
+	
 	public Comment getRootComment() {
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
         MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);

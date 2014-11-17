@@ -14,9 +14,16 @@ $item.getText()<br>
 	<div style="min-width: inherit; min-height: 64px;padding: 5px;text-align: center; border-style: solid;margin-top:10px;display:none" class="reply">
 		<form class="commentForm" style="min-width: inherit;">
 		    <input type="text" name="title" value="Re. $item.getDisplayName()" style="width: 80%">
+		    
+		    <!-- The immediate comment or conversation parent -->
 		    <input type="hidden" name="parent" value="$item.getIdentifier()">
+		    
+		    <!-- If this conversation is attached to a resource -->
 		    <input type="hidden" name="resource" value="$value">
+		    
+		    <!-- The conversation this comment is attached to -->
 		    <input type="hidden" name="conversation" value="$item.getConversationId()">
+		    
 		    <textarea style="width: 80%" name="comment"></textarea><br>
 		    <button class="commentSubmit button">Send</button>
 		</form>

@@ -15,6 +15,8 @@ import org.seventyeight.markup.HtmlGenerator;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.Conversation;
+import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 
 /**
  * @author cwolfgang
@@ -25,7 +27,9 @@ public class Comment extends AbstractNode<Comment> {
 
     private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
     
-    public static final String typeName = "comment";
+    public static final String TYPE_NAME = "comment";
+    
+    public static final String COMMENT_FIELD = "comment";
 
     public static final String TITLE_FIELD = "title";
     public static final String TEXT_FIELD = "text";
@@ -51,9 +55,10 @@ public class Comment extends AbstractNode<Comment> {
 
     @Override
     public void updateNode( JsonObject jsonData ) {
-        //String text = request.getValue( "comment", "" );
+    	
         String text = jsonData.getAsJsonPrimitive( "comment" ).getAsString();
         setText( text );
+        
     }
 
     protected void setTextParserVersion( String version ) {
@@ -67,6 +72,14 @@ public class Comment extends AbstractNode<Comment> {
         } else {
             return texts.get( type.name(), "" );
         }
+    }
+    
+    public static Comment makeComment(Request request) throws ItemInstantiationException {
+    	Core core = request.getCore();
+    	CommentDescriptor d = core.getDescriptor(Comment.class);
+    	Comment instance = d.newInstance(request, d);
+    	
+    	return instance;
     }
 
     /**
@@ -205,6 +218,26 @@ public class Comment extends AbstractNode<Comment> {
 		}
 
 		@Override
+		protected void onNewInstance(Comment instance, Core core, Node parent) {
+            if(parent instanceof PersistedNode) {
+            	instance.getDocument().set( CONVERSATION_FIELD, ((AbstractNode)parent).getIdentifier() );
+                //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
+            	instance.getDocument().set( PARENT_FIELD, request.getValue("parent") );
+                
+                Comment commentParent = new Comment(core, parent, getComment((String) request.getValue("parent")));
+                if(commentParent.getType().equals(Comment.typeName)) {
+	                List<String> ancestors = new ArrayList<String>(commentParent.getAncestors());
+	                logger.debug("Parent ancestors: {}", ancestors);
+	                ancestors.add(commentParent.getIdentifier());
+	                instance.getDocument().set("ancestors", ancestors);
+                } else {
+                	instance.getDocument().set("ancestors", Collections.EMPTY_LIST);
+                }
+            }
+		}
+        
+        /*
+		@Override
         public Comment newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
             Comment comment = super.newInstance( request, parent );
 
@@ -226,5 +259,8 @@ public class Comment extends AbstractNode<Comment> {
 
             return comment;
         }
+        */
+        
+        
     }
 }
