@@ -79,7 +79,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return newInstance( core, ownerId, parent, title );
     }
 
-    public T newInstance( Core core, String ownerId, Node parent, String title ) throws ItemInstantiationException {
+    private T newInstance( Core core, String ownerId, Node parent, String title ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
