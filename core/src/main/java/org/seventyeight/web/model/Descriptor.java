@@ -1,6 +1,7 @@
 package org.seventyeight.web.model;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -35,29 +36,19 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 	
 	public abstract String getDisplayName();
 
-    /*
-	public T newInstance( String title ) throws ItemInstantiationException {
-		logger.debug( "New instance for " + clazz );
-		return create( title, null );
-	}
-	*/
-
-    //public abstract T newInstance( String title ) throws ItemInstantiationException;
-
-    public T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
-        // Mandatory
-        /*
-        String title = JsonUtils.get( json, "title", null );
-        if(title == null) {
-            throw new IllegalArgumentException( "Title must be provided" );
-        }
-        */
-        return create( core, parent );
-    }
-
     public T newInstance( Core core, Node parent ) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        return create( core, parent );
+        return newInstance( core, null, parent );
+    }
+	
+    public T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
+        T instance = create( core, parent );
+        onNewInstance(instance, core, parent, json);
+        return instance;
+    }
+    
+    protected void onNewInstance(T instance, Core core, Node parent, JsonObject json) {
+    	// default implementation is a no op
     }
 
     protected T create( Core core, Node parent ) throws ItemInstantiationException {

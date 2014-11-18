@@ -12,6 +12,7 @@ import org.seventyeight.utils.API;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.extensions.*;
+import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.utilities.JsonException;
@@ -47,39 +48,32 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return parent;
     }
 
-    /*
-    public T newInstance( String title ) throws ItemInstantiationException {
-        return newInstance( title, this );
-    }
-    */
 
-    //@Override
     public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
         Core core = request.getCore();
         return newInstance( core, request.getJsonField(), parent );
     }
+    
+    public T newInstance(Core core, Node parent, String owner, String title) throws ItemInstantiationException {
+    	JsonObject obj = new JsonObject();
+    	obj.addProperty("title", title);
+    	obj.addProperty(CoreRequest.SESSION_USER, owner);
+    	
+    	return newInstance(core, obj, parent);
+    }
 
     @Override
-    public T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
+    public final T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
         String title = JsonUtils.get( json, "title", null );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
         }
 
-        return newInstance( core, json, parent, title );
-    }
-
-    public T newInstance( Core core, JsonObject json, Node parent, String title ) throws ItemInstantiationException {
-        logger.debug( "OWNER JSON::::::::::::::::::::::::::::: {}", json );
         String ownerId = null;
         if(json.has( Request.SESSION_USER )) {
             ownerId = json.get( CoreRequest.SESSION_USER ).getAsString();
         }
 
-        return newInstance( core, ownerId, parent, title );
-    }
-
-    private T newInstance( Core core, String ownerId, Node parent, String title ) throws ItemInstantiationException {
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
         if( !allowIdenticalNaming() ) {
             if( titleExists( title, getType() ) ) {
@@ -95,17 +89,10 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
         // TODO possibly have a system user account
         setOwner( node, ownerId );
-
-        /* Save */
-        //MongoDBCollection.get( getCollectionName() ).save( node.getDocument() );
         
-        onNewInstance(node, core, parent);
-
+        onNewInstance(node, core, parent, json);
+        
         return node;
-    }
-    
-    protected void onNewInstance(T instance, Core core, Node parent) {
-    	// default implementation is a no op
     }
 
     protected void setOwner( T node, String ownerId ) {

@@ -117,7 +117,7 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
             if(doc == null || doc.isNull()) {
             */
         	if(doSessionUploadThingy(user, uploadSession)) {
-                ImageUploadsWrapper instance = newInstance( core, user.getIdentifier(), this, "Wrapper for " + user.getDisplayName() );
+                ImageUploadsWrapper instance = newInstance( core, this, user.getIdentifier(), "Wrapper for " + user.getDisplayName() );
                 instance.setOwner( user );
                 instance.getDocument().set("uploadSession", uploadSession);
                 return instance;

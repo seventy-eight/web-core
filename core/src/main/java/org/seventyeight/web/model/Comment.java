@@ -218,14 +218,14 @@ public class Comment extends AbstractNode<Comment> {
 		}
 
 		@Override
-		protected void onNewInstance(Comment instance, Core core, Node parent) {
+		protected void onNewInstance(Comment instance, Core core, Node parent, JsonObject json) {
             if(parent instanceof PersistedNode) {
             	instance.getDocument().set( CONVERSATION_FIELD, ((AbstractNode)parent).getIdentifier() );
                 //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
-            	instance.getDocument().set( PARENT_FIELD, request.getValue("parent") );
+            	instance.getDocument().set( PARENT_FIELD, json.get("parent").getAsString() );
                 
-                Comment commentParent = new Comment(core, parent, getComment((String) request.getValue("parent")));
-                if(commentParent.getType().equals(Comment.typeName)) {
+                Comment commentParent = new Comment(core, parent, getComment((String) json.get("parent").getAsString()));
+                if(commentParent.getType().equals(Comment.TYPE_NAME)) {
 	                List<String> ancestors = new ArrayList<String>(commentParent.getAncestors());
 	                logger.debug("Parent ancestors: {}", ancestors);
 	                ancestors.add(commentParent.getIdentifier());

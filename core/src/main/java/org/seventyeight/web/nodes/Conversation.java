@@ -295,6 +295,7 @@ public class Conversation extends Resource<Conversation> {
 			return "conversations";
 		}
 		
+		/*
         @Override
         public Conversation newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
             Conversation conversation = super.newInstance( request, parent );
@@ -305,10 +306,20 @@ public class Conversation extends Resource<Conversation> {
 
             return conversation;
         }
+        */
+		
+		
 
 		@Override
 		public String getType() {
 			return "conversation";
+		}
+
+		@Override
+		protected void onNewInstance(Conversation instance, Core core, Node parent, JsonObject json) {
+            if(parent instanceof PersistedNode) {
+                instance.getDocument().set( PARENT_FIELD, json.get("parent") );
+            }
 		}
 
 		@Override
