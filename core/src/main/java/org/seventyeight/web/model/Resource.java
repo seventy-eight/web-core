@@ -57,7 +57,7 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         logger.debug( "Setting portrait" );
         response.setRenderType( Response.RenderType.NONE );
 
-        JsonObject json = JsonUtils.getJsonFromRequest( request );
+        JsonObject json = request.getJson();
         //List<JsonObject> objs = JsonUtils.getJsonObjects( json );
         if( json != null ) {
             setPortrait( json );

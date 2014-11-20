@@ -225,8 +225,12 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
                 logger.fatal( "THE CURRENT SESSION USER IS {}", user );
                 json = JsonUtils.getJsonRequest( this );
             } catch( Exception e ) {
-                logger.debug( "No json field associated with this request, {}", e.getMessage());
-                json = new JsonObject();
+            	try {
+					json = JsonUtils.getJsonFromField(this);
+				} catch (JsonException e1) {
+	                logger.debug( "No json associated with this request, {}", e.getMessage());
+	                json = new JsonObject();
+				}
             }
         }
 
@@ -293,13 +297,10 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
     	return def;
 	}
 
-    /*
-    @Override
     public Integer getInteger( String key ) {
         return getInteger( key, null );
     }
 
-    @Override
     public Integer getInteger( String key, Integer defaultValue ) {
         Integer i = defaultValue;
         if( this.getParameter( key ) != null ) {
@@ -313,7 +314,6 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
 
         return i;
     }
-    */
 
     /**
      * @deprecated use {@link #getInteger} instead

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
+import org.seventyeight.web.model.RunnerException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -21,11 +22,11 @@ public class MethodRunner implements Runner {
 	}
 	
 	@Override
-	public void run(Response response) {
+	public void run(Response response) throws RunnerException {
 		try {
 			method.invoke( object, context, response );
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RunnerException("Unable to run method, " + method, e);
 		}
 	}
 

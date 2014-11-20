@@ -112,7 +112,7 @@ public class Upload implements Node {
             return;
         }
         
-        JsonObject json = request.getJsonField();
+        JsonObject json = request.getJson();
         Map<String, String> fields = new HashMap<String, String>();
         
         for( FileItem item : items ) {

@@ -32,11 +32,11 @@ public class ExecuteUtils {
 
     }
 
-    public static Runner getRunner( CallContext request, Object object, String urlName ) throws Throwable {
+    public static Runner getRunner( CallContext request, Object object, String urlName ) throws Exception {
         return getRunner( request, object, urlName, object.getClass() );
     }
 
-    public static Runner getRunner( CallContext request, Object object, String urlName, Class<?> imposter ) throws Throwable {
+    public static Runner getRunner( CallContext request, Object object, String urlName, Class<?> imposter ) throws Exception {
         logger.debug( "Executing: {}, {}", object, urlName );
 
         if( imposter == null ) {
@@ -70,7 +70,7 @@ public class ExecuteUtils {
 
         Method method = getRequestMethod( object, actionMethod, request);
 
-        return new MethodRunner(method);
+        return new MethodRunner(object, method);
         // Implement MethodRunner
         //method.invoke( object, request, response );
     }

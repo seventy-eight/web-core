@@ -1,33 +1,37 @@
 package org.seventyeight.web.runners;
 
-import java.io.IOException;
-
 import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
+import org.seventyeight.web.model.RunnerException;
+import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 public class AutonomousRunner implements Runner {
 
 	private Autonomous a;
-	private CallContext context;
+	private Request context;
 	
 	public AutonomousRunner(Autonomous a) {
 		this.a = a;
 	}
 	
 	@Override
-	public void run(Response response) {
+	public void run(Response response) throws RunnerException {
 		try {
 			a.autonomize(context, response);
-		} catch (Throwable e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RunnerException("Unable to run autonomous, " + a, e);
 		}
 	}
 
 	@Override
 	public void injectContext(CallContext context) {
-		this.context = context;
+		if(!(context instanceof Request)) {
+			throw new IllegalArgumentException("Not correct context, " + context);
+		}
+		
+		this.context = (Request) context;
 	}
 
 }

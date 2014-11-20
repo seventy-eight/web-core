@@ -5,7 +5,6 @@ import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.model.CallContext;
-import org.seventyeight.web.model.ParameterRequest;
 import org.seventyeight.web.servlet.Request;
 
 import java.io.IOException;
@@ -84,8 +83,7 @@ public class JsonUtils {
     	return false;
     }
     
-    /*
-    public static JsonObject getJsonFromRequest( CallContext request ) throws JsonException {
+    public static JsonObject getJsonFromField( Request request ) throws JsonException {
         String json = request.getParameter( "json" );
         if( json == null ) {
             throw new JsonException( "Json was null" );
@@ -99,7 +97,6 @@ public class JsonUtils {
 
         return jo;
     }
-    */
     
     public static JsonObject getJsonRequest(Request request) throws IOException {
         StringBuilder sb = new StringBuilder();

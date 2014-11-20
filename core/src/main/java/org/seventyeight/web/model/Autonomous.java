@@ -9,5 +9,5 @@ import java.io.IOException;
  * @author cwolfgang
  */
 public interface Autonomous {
-    public void autonomize( CallContext request, Response response ) throws IOException, Throwable;
+    public void autonomize( Request request, Response response ) throws Exception;
 }

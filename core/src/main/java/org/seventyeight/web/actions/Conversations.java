@@ -104,7 +104,7 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
             Conversation conversation = descriptor.newInstance( request, this );
             logger.debug("Conversation is {}", conversation);
             if(conversation != null) {
-                JsonObject json = request.getJsonField();
+                JsonObject json = request.getJson();
                 conversation.updateConfiguration(json);
                 conversation.save();
                 

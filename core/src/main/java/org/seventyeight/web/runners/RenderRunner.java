@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.Runner;
+import org.seventyeight.web.model.RunnerException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -23,11 +24,11 @@ public class RenderRunner implements Runner {
 	}
 	
 	@Override
-	public void run(Response response) {
+	public void run(Response response) throws RunnerException {
 		try {
 			response.getWriter().print(context.getCore().getTemplateManager().getRenderer(context).renderClass( object, imposter, method + ".vm" ) );
 		} catch(Exception e) {
-
+			throw new RunnerException("Unable to run render " + method, e);
 		}
 	}
 

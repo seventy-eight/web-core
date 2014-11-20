@@ -1,9 +1,12 @@
 package org.seventyeight.web.utilities;
 
 import com.google.gson.JsonObject;
+
+import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.model.CallContext;
 
 import java.util.HashMap;
@@ -12,14 +15,17 @@ import java.util.Locale;
 /**
  * @author cwolfgang
  */
-public class Parameters extends HashMap<String, String> implements CallContext {
+public class Parameters implements CallContext {
 
     private User user;
-    private PersistedNode modelObject;
-    private JsonObject json = null;
+    private JsonObject json = new JsonObject();
 
     private Core core;
 
+    private String uri;
+    
+    private StopWatch stopWatch = new StopWatch();
+    
     public Parameters( Core core ) {
         this.core = core;
     }
@@ -34,6 +40,11 @@ public class Parameters extends HashMap<String, String> implements CallContext {
         this.user = user;
     }
 
+    public void setUri(String uri) {
+    	this.uri = uri;
+    }
+    
+    /*
     @Override
     public String getParameter( String key ) {
         return this.get( key );
@@ -71,30 +82,45 @@ public class Parameters extends HashMap<String, String> implements CallContext {
             return defaultValue;
         }
     }
-
+	*/
+    
     @Override
-    public Locale getLocale() {
-        return new Locale( "da", "DK" );
-    }
-
-    @Override
-    public JsonObject getJsonField() {
-        if(json == null) {
-            try {
-                json = JsonUtils.getJsonFromRequest( this );
-                if(user != null) {
-                    json.addProperty( SESSION_USER, user.getIdentifier() );
-                }
-            } catch( JsonException e ) {
-                json = new JsonObject();
-            }
-        }
-
+    public JsonObject getJson() {
         return json;
     }
 
     @Override
     public Core getCore() {
         return core;
+    }
+
+	@Override
+	public MethodType getMethodType() {
+		return null;
+	}
+
+	@Override
+	public Class<? extends CallContext> getRequestClass() {
+		return Parameters.class;
+	}
+
+	@Override
+	public Class<? extends Response> getResponseClass() {
+		return Response.class;
+	}
+
+	@Override
+	public String getUri() {
+		return uri;
+	}
+
+	@Override
+    public void setStopWatch( StopWatch stopWatch ) {
+        this.stopWatch = stopWatch;
+    }
+
+	@Override
+    public StopWatch getStopWatch() {
+        return stopWatch;
     }
 }

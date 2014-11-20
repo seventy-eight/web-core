@@ -51,7 +51,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
     public T newInstance( CallContext request, Node parent ) throws ItemInstantiationException {
         Core core = request.getCore();
-        return newInstance( core, request.getJsonField(), parent );
+        return newInstance( core, request.getJson(), parent );
     }
     
     public T newInstance(Core core, Node parent, String owner, String title) throws ItemInstantiationException {

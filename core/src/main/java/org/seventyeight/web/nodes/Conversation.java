@@ -220,7 +220,7 @@ public class Conversation extends Resource<Conversation> {
         Comment.CommentDescriptor descriptor = core.getDescriptor( Comment.class );
         Comment comment = descriptor.newInstance( request, this );
 
-        JsonObject json = request.getJsonField();
+        JsonObject json = request.getJson();
         comment.updateConfiguration(json);
         
         // Set the correct conversation

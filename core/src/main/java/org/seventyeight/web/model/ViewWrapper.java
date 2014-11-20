@@ -63,7 +63,7 @@ public class ViewWrapper implements Node, Autonomous {
     }
 
     @Override
-    public void autonomize( Request request, Response response ) throws Throwable {
+    public void autonomize( Request request, Response response ) throws IOException {
         logger.debug( "View wrapping " + node + "(" + offset + ")" );
 
         String template;
@@ -76,7 +76,9 @@ public class ViewWrapper implements Node, Autonomous {
         logger.debug( "TEMPLATE=" + template );
 
         try {
-            ExecuteUtils.execute( request, response, node, template, offset );
+            Runner runner = ExecuteUtils.getRunner(request, node, template, offset );
+            runner.injectContext(request);
+            runner.run(response);
             if( offset == null ) {
                 //ExecuteUtils.execute( request, response, node, "index" );
                 //request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( node, template + ".vm" ) );

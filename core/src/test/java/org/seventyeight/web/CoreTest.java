@@ -52,7 +52,8 @@ public class CoreTest {
         User user = d.newInstance( env.getCore(), env.getCore().getRoot(), "owner-0",  username );
 
         Parameters p = new Parameters( env.getCore() );
-        p.put( "username", username );
+        //p.put( "username", username );
+        p.getJson().addProperty("username", username);
 
         user.updateNode( null );
 
