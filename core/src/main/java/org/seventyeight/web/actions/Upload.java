@@ -100,6 +100,7 @@ public class Upload implements Node {
         }
 
         logger.debug( "SERVLET THREAD: " + Thread.currentThread().getId() + " - " + Thread.currentThread().getName() );
+        //logger.debug("The request is {} = {}", request, request.getInputStream());
 
         HttpSession session = request.getSession();
         String lastUploadSession = (String) session.getAttribute("uploadSession");
@@ -112,7 +113,8 @@ public class Upload implements Node {
             return;
         }
         
-        JsonObject json = request.getJson();
+        //JsonObject json = request.getJson(true);
+        JsonObject json = new JsonObject();
         Map<String, String> fields = new HashMap<String, String>();
         
         for( FileItem item : items ) {
@@ -145,6 +147,8 @@ public class Upload implements Node {
                     FileResource fr = null;
                     try {
                         json.addProperty( "title", filename );
+                        
+                        logger.debug("THE JSON: {}", json.toString());
 
                         FileResource.FileDescriptor d = core.getDescriptor( FileResource.class );
                         fr = d.newInstance( core, json, core.getRoot() );

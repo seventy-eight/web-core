@@ -219,27 +219,30 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
     }
     */
     
+    @Override
     public JsonObject getJson() {
-        if(json == null) {
+    	return getJson(false);
+    }
+    
+    public JsonObject getJson(boolean onlyField) {
+        if(json == null && !onlyField) {
             try {
-                logger.fatal( "THE CURRENT SESSION USER IS {}", user );
                 json = JsonUtils.getJsonRequest( this );
+                return json;
             } catch( Exception e ) {
-            	try {
-					json = JsonUtils.getJsonFromField(this);
-				} catch (JsonException e1) {
-	                logger.debug( "No json associated with this request, {}", e.getMessage());
-	                json = new JsonObject();
-				}
+                logger.debug( "No json body associated with this request, {}", e.getMessage());
             }
         }
 
-        // It should not be possible to have json == null
-        if(user != null) {
-            json.addProperty( SESSION_USER, user.getIdentifier() );
-        }
-
-        return json;
+    	try {
+			json = JsonUtils.getJsonFromField(this);
+			return json;
+		} catch (JsonException e) {
+            logger.debug( "No json field associated with this request, {}", e.getMessage());
+		}
+    	
+    	json = new JsonObject();
+    	return json;
     }
 
     public void setTheme( Theme theme ) {

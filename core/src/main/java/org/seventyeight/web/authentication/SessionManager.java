@@ -66,7 +66,8 @@ public class SessionManager implements Node {
         }
 
 		//JsonObject json = request.getJsonBody();
-		JsonObject json = request.getJson();
+		JsonObject json = request.getJson(true);
+		logger.debug("THIS JSON EFLEMENTNT IS {}", json);
 		if(json.has("credentials")) {
 			JsonObject credentials = json.get("credentials").getAsJsonObject();
 			if(credentials.has("username") & credentials.has("password")) {

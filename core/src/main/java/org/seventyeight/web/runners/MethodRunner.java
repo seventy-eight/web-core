@@ -25,8 +25,10 @@ public class MethodRunner implements Runner {
 	public void run(Response response) throws RunnerException {
 		try {
 			method.invoke( object, context, response );
+		} catch(InvocationTargetException e) {
+			throw new RunnerException("Unable to run method, " + method.getName(), (Exception)e.getCause());
 		} catch (Exception e) {
-			throw new RunnerException("Unable to run method, " + method, e);
+			throw new RunnerException("Unable to run method, " + method.getName(), e);
 		}
 	}
 
@@ -38,5 +40,4 @@ public class MethodRunner implements Runner {
 		
 		this.context = (Request) context;
 	}
-
 }
