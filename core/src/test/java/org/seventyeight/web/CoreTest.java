@@ -6,7 +6,7 @@ import org.seventyeight.TokenList;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.utilities.Parameters;
+import org.seventyeight.web.utilities.SimpleContext;
 
 import java.io.UnsupportedEncodingException;
 
@@ -51,7 +51,7 @@ public class CoreTest {
         User.UserDescriptor d = env.getCore().getDescriptor( User.class );
         User user = d.newInstance( env.getCore(), env.getCore().getRoot(), "owner-0",  username );
 
-        Parameters p = new Parameters( env.getCore() );
+        SimpleContext p = new SimpleContext( env.getCore() );
         //p.put( "username", username );
         p.getJson().addProperty("username", username);
 

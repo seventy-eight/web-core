@@ -5,7 +5,7 @@ import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Descriptor;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.utilities.Parameters;
+import org.seventyeight.web.utilities.SimpleContext;
 
 /**
  * @author cwolfgang

@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * @author cwolfgang
  */
-public class Parameters implements CallContext {
+public class SimpleContext implements CallContext {
 
     private User user;
     private JsonObject json = new JsonObject();
@@ -26,7 +26,7 @@ public class Parameters implements CallContext {
     
     private StopWatch stopWatch = new StopWatch();
     
-    public Parameters( Core core ) {
+    public SimpleContext( Core core ) {
         this.core = core;
     }
 
@@ -101,7 +101,7 @@ public class Parameters implements CallContext {
 
 	@Override
 	public Class<? extends CallContext> getRequestClass() {
-		return Parameters.class;
+		return SimpleContext.class;
 	}
 
 	@Override
