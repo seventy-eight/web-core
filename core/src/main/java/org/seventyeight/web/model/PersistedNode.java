@@ -146,7 +146,7 @@ public abstract class PersistedNode implements Node, Savable, Documented {
     }
 
     /**
-     * Update the {@link AbstractNode}'s extensions given a {@link CoreRequest} and a {@link JsonObject}. <br/>
+     * Update the {@link AbstractNode}'s extensions given a {@link CallContext} and a {@link JsonObject}. <br/>
      * The method should not save the node, merely update.
      */
     /*

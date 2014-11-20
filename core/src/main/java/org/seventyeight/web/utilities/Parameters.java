@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.nodes.User;
-import org.seventyeight.web.model.CoreRequest;
+import org.seventyeight.web.model.CallContext;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -12,7 +12,7 @@ import java.util.Locale;
 /**
  * @author cwolfgang
  */
-public class Parameters extends HashMap<String, String> implements CoreRequest {
+public class Parameters extends HashMap<String, String> implements CallContext {
 
     private User user;
     private PersistedNode modelObject;

@@ -21,7 +21,7 @@ import org.seventyeight.web.authorization.BasicResourceBasedSecurity;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.AbstractNode;
 import org.seventyeight.web.model.Comment;
-import org.seventyeight.web.model.CoreRequest;
+import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NodeDescriptor;

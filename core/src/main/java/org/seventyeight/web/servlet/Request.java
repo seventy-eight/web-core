@@ -14,9 +14,10 @@ import org.seventyeight.web.UserAgent;
 import org.seventyeight.web.authentication.NoAuthorizationException;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
+import org.seventyeight.web.model.CallContext.MethodType;
 import org.seventyeight.web.model.PersistedNode;
 import org.seventyeight.web.model.Theme;
-import org.seventyeight.web.model.CoreRequest;
+import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.JsonException;
@@ -38,13 +39,13 @@ import java.util.Map;
 /**
  * @author cwolfgang
  */
-public class Request extends HttpServletRequestWrapper implements CoreRequest {
+public class Request extends HttpServletRequestWrapper implements CallContext {
 
     private static Logger logger = LogManager.getLogger( Request.class );
 
     private static final String __MULTIPART = "multipart/form-data";
 
-    private RequestMethod method = RequestMethod.GET;
+    private MethodType method = MethodType.GET;
     private Theme theme = null;
     private VelocityContext context;
 
@@ -59,20 +60,11 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
     private String[] requestParts;
 
-    private String view;
-
     private Locale locale = new Locale( "da", "DK" );
 
     private StopWatch stopWatch = null;
 
     private JsonObject json = null;
-
-    public enum RequestMethod {
-        GET,
-        POST,
-        DELETE,
-        PUT
-    }
 
     public Request( HttpServletRequest httpServletRequest, String defaultTemplate ) {
         super( httpServletRequest );
@@ -123,23 +115,38 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     }
 
     public void setRequestMethod( String m ) {
-        this.method = RequestMethod.valueOf( m );
+        this.method = MethodType.valueOf( m );
     }
 
     public boolean isRequestPost() {
-        return method.equals( RequestMethod.POST );
+        return method.equals( MethodType.POST );
     }
 
-    public RequestMethod getRequestMethod() {
+    public MethodType getRequestMethod() {
         return method;
     }
 
-    public boolean isRequestPut() {
-        return method.equals( RequestMethod.PUT );
+    @Override
+	public MethodType getMethodType() {
+		return method;
+	}
+
+	@Override
+	public Class<? extends CallContext> getRequestClass() {
+		return Request.class;
+	}
+
+	@Override
+	public Class<? extends Response> getResponseClass() {
+		return Response.class;
+	}
+
+	public boolean isRequestPut() {
+        return method.equals( MethodType.PUT );
     }
 
     public boolean isRequestDelete() {
-        return method.equals( RequestMethod.DELETE );
+        return method.equals( MethodType.DELETE );
     }
 
     public String[] getRequestParts() {
@@ -191,6 +198,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         this.template = template;
     }
 
+    /*
     public JsonObject getJsonField() {
         if(json == null) {
             try {
@@ -209,6 +217,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
 
         return json;
     }
+    */
     
     public JsonObject getJson() {
         if(json == null) {
@@ -227,14 +236,6 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
 
         return json;
-    }
-    
-    public String getView() {
-        return view;
-    }
-
-    public void setView( String view ) {
-        this.view = view;
     }
 
     public void setTheme( Theme theme ) {
@@ -263,12 +264,10 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         this.user = user;
     }
 
-    @Override
     public <T> T getValue( String key ) {
         return (T) this.getParameter( key );
     }
 
-    @Override
     public <T> T getValue( String key, T defaultValue ) {
         if( this.getParameter( key ) != null ) {
             return (T) this.getParameter( key );
@@ -294,6 +293,7 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
     	return def;
 	}
 
+    /*
     @Override
     public Integer getInteger( String key ) {
         return getInteger( key, null );
@@ -307,12 +307,13 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
             try {
                 i = Integer.parseInt( val );
             } catch( NumberFormatException e ) {
-                /* No op, default value is used */
+                // No op, default value is used
             }
         }
 
         return i;
     }
+    */
 
     /**
      * @deprecated use {@link #getInteger} instead
@@ -341,7 +342,12 @@ public class Request extends HttpServletRequestWrapper implements CoreRequest {
         }
     }
 
-    public Locale getLocale() {
+    @Override
+	public String getUri() {
+		return this.getRequestURI();
+	}
+
+	public Locale getLocale() {
         return locale;
     }
 

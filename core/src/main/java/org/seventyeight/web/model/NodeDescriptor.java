@@ -49,7 +49,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
 
-    public T newInstance( CoreRequest request, Node parent ) throws ItemInstantiationException {
+    public T newInstance( CallContext request, Node parent ) throws ItemInstantiationException {
         Core core = request.getCore();
         return newInstance( core, request.getJsonField(), parent );
     }
@@ -57,7 +57,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     public T newInstance(Core core, Node parent, String owner, String title) throws ItemInstantiationException {
     	JsonObject obj = new JsonObject();
     	obj.addProperty("title", title);
-    	obj.addProperty(CoreRequest.SESSION_USER, owner);
+    	obj.addProperty(CallContext.SESSION_USER, owner);
     	
     	return newInstance(core, obj, parent);
     }
@@ -71,7 +71,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
 
         String ownerId = null;
         if(json.has( Request.SESSION_USER )) {
-            ownerId = json.get( CoreRequest.SESSION_USER ).getAsString();
+            ownerId = json.get( CallContext.SESSION_USER ).getAsString();
         }
 
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
