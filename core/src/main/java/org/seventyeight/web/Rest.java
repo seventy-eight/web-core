@@ -7,6 +7,7 @@ import org.seventyeight.utils.StopWatch;
 import org.seventyeight.web.authentication.AuthenticationException;
 import org.seventyeight.web.handlers.template.TemplateException;
 import org.seventyeight.web.model.Autonomous;
+import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -114,7 +115,9 @@ public class Rest extends HttpServlet {
 		
 		    try {
 		        // Render the page
-		        core.render( request, response );
+		        Runner runner = core.render( request );
+		        runner.injectContext(request);
+		        runner.run(response);
 		        request.getUser().setSeen();
 		    } catch( CoreException e ) {
 		        e.printStackTrace();

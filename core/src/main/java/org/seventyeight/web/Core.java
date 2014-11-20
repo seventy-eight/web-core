@@ -20,6 +20,8 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.model.AbstractExtension.ExtensionDescriptor;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.nodes.User;
+import org.seventyeight.web.runners.AutonomousRunner;
+import org.seventyeight.web.runners.RedirectRunner;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.themes.DefaultTheme;
@@ -375,18 +377,17 @@ public abstract class Core implements CoreSystem {
      * Render the path from the URL
      * @throws Throwable 
      */
-    public void render( Request request, Response response ) throws Throwable {
+    public Runner render( CallContext request ) throws Throwable {
 
         request.getStopWatch().start( "Resolve node" );
-        TokenList tokens = new TokenList( request.getRequestURI() );
+        TokenList tokens = new TokenList( request.getUri() );
         Node node = null;
         Exception exception = null;
         try {
             node = resolveNode( tokens, request.getUser() );
             logger.debug("Found node {}", node );
             if( !tokens.isEndsWithSlash() && tokens.isEmpty() ) {
-                response.sendRedirect( request.getRequestURI() + "/" );
-                return;
+                return new RedirectRunner(request.getUri() + "/");
             }
         } catch( NotFoundException e ) {
             logger.debug( "Exception is set to {}", e );
@@ -397,12 +398,9 @@ public abstract class Core implements CoreSystem {
 
         if( node instanceof Autonomous ) {
             logger.debug( "{} is autonomous", node );
-            try {
-                ((Autonomous)node).autonomize( request, response );
-            } catch( IOException e ) {
-                throw new CoreException( e );
-            }
-            return;
+            // Make autonomous runner
+			//((Autonomous)node).autonomize( request, response );
+			return new AutonomousRunner((Autonomous)node);
         }
 
         request.getStopWatch().stop( "Resolve node" );
@@ -414,12 +412,10 @@ public abstract class Core implements CoreSystem {
                 try {
                     if( tokens.isEmpty() && exception == null ) {
                         logger.debug( "Executing last node" );
-                        request.setView( "index" );
-                        ExecuteUtils.execute( request, response, node, "index" );
-                        return;
+                        return ExecuteUtils.getRunner( request, node, "index" );
                     }
 
-                    renderObject( node, exception, request, response, tokens );
+                    return renderObject( node, exception, request, tokens );
                 } catch( CoreException ce ) {
                     throw ce;
                 } catch( Exception e ) {
@@ -436,21 +432,17 @@ public abstract class Core implements CoreSystem {
 
     }
 
-    private void renderObject( Object obj, Exception exception, Request request, Response response, TokenList tokens ) throws Throwable {
+    private Runner renderObject( Object obj, Exception exception, CallContext request, TokenList tokens ) throws Throwable {
         logger.debug( "Rendering object {}, tokens: {}", obj, tokens );
         switch( tokens.left() ) {
                 /* If the last token on the path is a valid node */
             case 0:
-                request.setView( "index" );
-                ExecuteUtils.execute( request, response, obj, "index" );
-                break;
+                return ExecuteUtils.getRunner( request, obj, "index" );
 
                 /* Typically, this happens if a node has an action, either as a view or doSomething */
             case 1:
                 String view = tokens.next();
-                request.setView( view );
-                ExecuteUtils.execute( request, response, obj, view );
-                break;
+                return ExecuteUtils.getRunner( request, obj, view );
 
                 /* Generate a 404 if there are more tokens, because this means, that a valid node was not found */
             default:
@@ -458,7 +450,7 @@ public abstract class Core implements CoreSystem {
                 if( exception != null ) {
                     throw new CoreException( exception );
                 } else {
-                    throw new NotFoundException( request.getRequestURI() );
+                    throw new NotFoundException( request.getUri() );
                 }
         }
     }

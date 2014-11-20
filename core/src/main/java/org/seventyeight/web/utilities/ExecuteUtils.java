@@ -9,7 +9,11 @@ import org.seventyeight.utils.PostMethod;
 import org.seventyeight.utils.PutMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.model.Runner;
+import org.seventyeight.web.runners.MethodRunner;
+import org.seventyeight.web.runners.RenderRunner;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -28,69 +32,67 @@ public class ExecuteUtils {
 
     }
 
-    public static void execute( Request request, Response response, Object object, String urlName ) throws Throwable {
-        execute( request, response, object, urlName, object.getClass() );
+    public static Runner getRunner( CallContext request, Object object, String urlName ) throws Throwable {
+        return getRunner( request, object, urlName, object.getClass() );
     }
 
-    public static void execute( Request request, Response response, Object object, String urlName, Class<?> imposter ) throws Throwable {
+    public static Runner getRunner( CallContext request, Object object, String urlName, Class<?> imposter ) throws Throwable {
         logger.debug( "Executing: {}, {}", object, urlName );
 
         if( imposter == null ) {
             imposter = object.getClass();
         }
 
-        /* First try to find a view, if not a POST */
+        /* First try to find a view, if not a POST???? */
         try {
-            executeMethod( object, request, response, urlName );
-            return;
-        } catch( InvocationTargetException e ) {
-            throw (Throwable)e.getCause();
+            return getMethodRunner( object, request, urlName );
         } catch( ReflectiveOperationException e ) {
             logger.debug( "{} does not have {}, {} ", object, urlName, e.getMessage() );
         }
 
-        if( !request.isRequestPost() ) {
-            render( request, response, object, urlName, imposter );
+        if( request.getMethodType().equals(CallContext.MethodType.GET) ) {
+            return getRenderRunner(object, urlName, imposter );
         }
+        
+        return null;
     }
 
-    public static void render( Request request, Response response, Object object, String method ) throws NotFoundException, TemplateException, IOException {
-        render( request, response, object, method, object.getClass() );
+    public static void render(Object object, String method ) throws NotFoundException, TemplateException, IOException {
+        getRenderRunner(object, method, object.getClass() );
     }
 
-    public static void render( Request request, Response response, Object object, String method, Class<?> imposter ) throws NotFoundException, TemplateException, IOException {
-        Core core = request.getCore();
-        //request.getContext().put( "content", core.getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
-        response.getWriter().print(core.getTemplateManager().getRenderer( request ).renderClass( object, imposter, method + ".vm" ) );
-        //response.getWriter().print( core.getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
+    public static RenderRunner getRenderRunner(Object object, String method, Class<?> imposter ){
+        return new RenderRunner(object, method, imposter);
     }
 
-    private static void executeMethod( Object object, Request request, Response response, String actionMethod ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static MethodRunner getMethodRunner( Object object, CallContext request, String actionMethod ) throws NoSuchMethodException {
         logger.debug( "Executing method : {} on {}", actionMethod, object );
 
-        Method method = getRequestMethod( object, actionMethod, request.getRequestMethod() );
+        Method method = getRequestMethod( object, actionMethod, request);
 
-        method.invoke( object, request, response );
+        return new MethodRunner(method);
+        // Implement MethodRunner
+        //method.invoke( object, request, response );
     }
 
-    private static Method getRequestMethod( Object object, String method, Request.RequestMethod requestMethod ) throws NoSuchMethodException {
+    private static Method getRequestMethod( Object object, String method, CallContext context ) throws NoSuchMethodException {
         String m = "do" + method.substring( 0, 1 ).toUpperCase() + method.substring( 1, method.length() );
 
-        switch( requestMethod ) {
+        switch( context.getMethodType() ) {
         case POST:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PostMethod.class, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PostMethod.class, context.getRequestClass(), context.getResponseClass());
 
         case GET:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, context.getRequestClass(), context.getResponseClass());
 
         case PUT:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PutMethod.class, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PutMethod.class, context.getRequestClass(), context.getResponseClass());
 
         case DELETE:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, DeleteMethod.class, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, DeleteMethod.class, context.getRequestClass(), context.getResponseClass() );
 
         default:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, Request.class, Response.class );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, context.getRequestClass(), context.getResponseClass() );
         }
     }
 }
