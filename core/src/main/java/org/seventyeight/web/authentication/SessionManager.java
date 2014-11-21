@@ -19,6 +19,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.servlet.ServletException;
+
 
 public class SessionManager implements Node {
 	
@@ -65,9 +67,7 @@ public class SessionManager implements Node {
             login.password = request.getValue( Authentication.PASS_KEY );
         }
 
-		//JsonObject json = request.getJsonBody();
-        String noJsonBody = request.getValue("noJsonBody", null);
-        if(login == null && noJsonBody == null) {
+        if(login == null) {
 			JsonObject json = request.getJson();
 			logger.debug("THIS JSON EFLEMENTNT IS {}", json);
 			if(json.has("credentials")) {

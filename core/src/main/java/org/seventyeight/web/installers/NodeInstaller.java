@@ -43,7 +43,7 @@ public abstract class NodeInstaller<T extends AbstractNode<T>> implements DBInst
             JsonObject json = new JsonObject();
             setJson( json );
             try {
-                T instance = getDescriptor().newInstance( core, json, core.getRoot() );
+                T instance = getDescriptor().newInstance( core, core.getRoot(), json );
                 instance.updateConfiguration( json );
                 instance.save();
                 node = instance;

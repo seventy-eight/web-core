@@ -116,8 +116,11 @@ public class ImageUploadsWrapper extends AbstractNode<ImageUploadsWrapper> {
             logger.debug( "IMAGE UPLOADS WRAPPER DOCUMENT: {}", doc );
             if(doc == null || doc.isNull()) {
             */
+        	JsonObject json = new JsonObject();
+        	json.addProperty("title", "Wrapper for " + user.getDisplayName());
+        	
         	if(doSessionUploadThingy(user, uploadSession)) {
-                ImageUploadsWrapper instance = newInstance( core, this, user.getIdentifier(), "Wrapper for " + user.getDisplayName() );
+                ImageUploadsWrapper instance = newInstance( core, this, json, user.getIdentifier() );
                 instance.setOwner( user );
                 instance.getDocument().set("uploadSession", uploadSession);
                 return instance;

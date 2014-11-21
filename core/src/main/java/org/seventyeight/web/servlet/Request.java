@@ -24,6 +24,7 @@ import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -221,27 +222,37 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
     
     @Override
     public JsonObject getJson() {
-    	return getJson(false);
-    }
-    
-    public JsonObject getJson(boolean onlyField) {
-        if(json == null && !onlyField) {
-            try {
-                json = JsonUtils.getJsonRequest( this );
-                return json;
-            } catch( Exception e ) {
-                logger.debug( "No json body associated with this request, {}", e.getMessage());
-            }
-        }
-
-    	try {
-			json = JsonUtils.getJsonFromField(this);
-			return json;
-		} catch (JsonException e) {
-            logger.debug( "No json field associated with this request, {}", e.getMessage());
-		}
+    	if(json == null) {
+	        boolean isMultiPart = true;
+	        try {
+				getParts();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				logger.fatal("The request was not multipart, " + e.getMessage());
+				isMultiPart = false;
+			}
+	        
+	        if(!isMultiPart) {
+	            try {
+	                json = JsonUtils.getJsonRequest( this );
+	                return json;
+	            } catch( Exception e ) {
+	                logger.debug( "No json body associated with this request, {}", e.getMessage());
+	            }
+	        }
+	
+	    	try {
+				json = JsonUtils.getJsonFromField(this);
+				return json;
+			} catch (JsonException e) {
+	            logger.debug( "No json field associated with this request, {}", e.getMessage());
+			}
+	    	
+	    	json = new JsonObject();
+    	}
     	
-    	json = new JsonObject();
     	return json;
     }
 

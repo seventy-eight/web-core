@@ -8,6 +8,8 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.utilities.SimpleContext;
 
+import com.google.gson.JsonObject;
+
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.core.Is.is;
@@ -49,7 +51,9 @@ public class CoreTest {
     public User createUser( String username ) throws ItemInstantiationException, ClassNotFoundException, SavingException {
         //User user = Core.getInstance().createNode( User.class, "users" );
         User.UserDescriptor d = env.getCore().getDescriptor( User.class );
-        User user = d.newInstance( env.getCore(), env.getCore().getRoot(), "owner-0",  username );
+        JsonObject json = new JsonObject();
+        json.addProperty("title", "owner-0");
+        User user = d.newInstance( env.getCore(), env.getCore().getRoot(), json, username );
 
         SimpleContext p = new SimpleContext( env.getCore() );
         //p.put( "username", username );

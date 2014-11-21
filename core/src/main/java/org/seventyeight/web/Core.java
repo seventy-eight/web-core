@@ -582,13 +582,7 @@ public abstract class Core implements CoreSystem {
         this.descriptors.put( descriptor.getClazz(), descriptor );
 
         /* Determine if the descriptor has something to be loaded */
-        if(descriptor instanceof NodeDescriptor<?>) {
-        	logger.debug("PArent before: {}", ((NodeDescriptor<?>) descriptor).getParent());
-        }
         descriptor.loadConfiguration();
-        if(descriptor instanceof NodeDescriptor<?>) {
-        	logger.debug("PArent AFTER: {}", ((NodeDescriptor<?>) descriptor).getParent());
-        }
 
         List<Class<?>> interfaces = ClassUtils.getInterfaces( descriptor.getClazz() );
         interfaces.addAll( ClassUtils.getClasses( descriptor.getClazz() ) );
@@ -603,10 +597,9 @@ public abstract class Core implements CoreSystem {
             list.add( descriptor );
         }
 
+        // Add instances of node descriptors to the root
         if( descriptor instanceof NodeDescriptor ) {
             NodeDescriptor nd = (NodeDescriptor) descriptor;
-            //children.put( nd.getType(), nd );
-            //root.addNode( nd.getType(), nd );
             root.addNode( nd.getUrlName(), nd );
         }
 

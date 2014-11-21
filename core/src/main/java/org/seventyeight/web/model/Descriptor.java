@@ -38,10 +38,14 @@ public abstract class Descriptor<T extends Describable<T>> extends Configurable 
 
     public T newInstance( Core core, Node parent ) throws ItemInstantiationException {
         logger.debug( "New instance for " + clazz );
-        return newInstance( core, null, parent );
+        return newInstance( core, parent, null, null );
+    }
+    
+    public T newInstance( Core core, Node parent, JsonObject json ) throws ItemInstantiationException {
+    	return newInstance(core, parent, json, null);
     }
 	
-    public T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
+    public T newInstance( Core core, Node parent, JsonObject json, String userId ) throws ItemInstantiationException {
         T instance = create( core, parent );
         onNewInstance(instance, core, parent, json);
         return instance;

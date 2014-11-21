@@ -108,7 +108,7 @@ public class ExtensionUtils {
     }
 
     public static Describable<?> getDescribable( Core core, AbstractExtension.ExtensionDescriptor descriptor, PersistedNode node, JsonObject jsonConfiguration ) throws ItemInstantiationException {
-        Describable e = descriptor.newInstance( core, jsonConfiguration, node );
+        Describable e = descriptor.newInstance( core, node, jsonConfiguration );
         e.updateNode( jsonConfiguration );
 
         /* Remove data!? */
@@ -150,7 +150,7 @@ public class ExtensionUtils {
         Descriptor<?> d = core.getDescriptor( clazz );
         logger.debug( "Descriptor is " + d );
 
-        Describable e = d.newInstance( core, jsonConfiguration, node );
+        Describable e = d.newInstance( core, node, jsonConfiguration );
         e.updateNode( jsonConfiguration );
 
         /* Remove data!? */

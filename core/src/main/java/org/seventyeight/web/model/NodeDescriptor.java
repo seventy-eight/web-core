@@ -48,30 +48,16 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         return parent;
     }
 
-
     public T newInstance( CallContext request, Node parent ) throws ItemInstantiationException {
         Core core = request.getCore();
-        return newInstance( core, request.getJson(), parent );
+        return newInstance( core, parent, request.getJson(), request.getUser().getIdentifier() );
     }
     
-    public T newInstance(Core core, Node parent, String owner, String title) throws ItemInstantiationException {
-    	JsonObject obj = new JsonObject();
-    	obj.addProperty("title", title);
-    	obj.addProperty(CallContext.SESSION_USER, owner);
-    	
-    	return newInstance(core, obj, parent);
-    }
-
     @Override
-    public final T newInstance( Core core, JsonObject json, Node parent ) throws ItemInstantiationException {
+    public final T newInstance( Core core, Node parent, JsonObject json, String ownerId ) throws ItemInstantiationException {
         String title = JsonUtils.get( json, "title", null );
         if(title == null) {
             throw new IllegalArgumentException( "Title must be provided" );
-        }
-
-        String ownerId = null;
-        if(json.has( Request.SESSION_USER )) {
-            ownerId = json.get( CallContext.SESSION_USER ).getAsString();
         }
 
         logger.debug( "New instance of " + getType() + " with title " + title + "(" + allowIdenticalNaming() + ")" );
@@ -125,7 +111,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         
         logger.debug( "Creating " + title );
         try {
-        	T instance = newInstance( core, json, this);
+        	T instance = newInstance( core, this, json);
         	instance.updateConfiguration( json );
             instance.save();
             logger.debug("Finally done!!!!");

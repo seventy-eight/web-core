@@ -151,7 +151,7 @@ public class Upload implements Node {
                         logger.debug("THE JSON: {}", json.toString());
 
                         FileResource.FileDescriptor d = core.getDescriptor( FileResource.class );
-                        fr = d.newInstance( core, json, core.getRoot() );
+                        fr = d.newInstance( core, core.getRoot(), json );
                         fr.updateConfiguration(json);
 
                         fr.setPath( uf.relativePath );
