@@ -82,6 +82,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
     }
 
     protected void setOwner( T node, String ownerId ) {
+    	logger.debug("Setting owner to {}", ownerId);
         node.getDocument().set( "owner", ownerId != null ? ownerId : "" );
     }
 
@@ -111,7 +112,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         
         logger.debug( "Creating " + title );
         try {
-        	T instance = newInstance( core, this, json);
+        	T instance = newInstance( request, this);
         	instance.updateConfiguration( json );
             instance.save();
             logger.debug("Finally done!!!!");

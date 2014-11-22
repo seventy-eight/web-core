@@ -100,7 +100,7 @@ public class JsonUtils {
         return jo;
     }
     
-    public static JsonObject getJsonRequest(Request request) throws IOException {
+    public static JsonObject getJsonRequest2(Request request) throws IOException {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         /*
@@ -118,7 +118,7 @@ public class JsonUtils {
         return jo;
     }
     
-    public static JsonObject getJsonRequest2(Request request) throws IOException {
+    public static JsonObject getJsonRequest(Request request) throws IOException {
         StringBuilder sb = new StringBuilder();
         String s;
         while ((s = request.getReader().readLine()) != null) {
