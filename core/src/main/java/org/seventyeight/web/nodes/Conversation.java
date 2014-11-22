@@ -318,7 +318,7 @@ public class Conversation extends Resource<Conversation> {
 		@Override
 		protected void onNewInstance(Conversation instance, Core core, Node parent, JsonObject json) {
             if(parent instanceof PersistedNode) {
-                instance.getDocument().set( PARENT_FIELD, json.get("parent") );
+                instance.getDocument().set( PARENT_FIELD, json.get("parent").getAsString() );
             }
 		}
 

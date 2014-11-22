@@ -28,7 +28,7 @@ public class MethodRunner implements Runner {
 		} catch(InvocationTargetException e) {
 			throw new RunnerException("Unable to run method, " + method.getName(), (Exception)e.getCause());
 		} catch (Exception e) {
-			throw new RunnerException("Unable to run method, " + method.getName(), e);
+			throw new RunnerException("Failed while running " + method.getName(), e);
 		}
 	}
 

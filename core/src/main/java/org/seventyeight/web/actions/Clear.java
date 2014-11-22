@@ -9,6 +9,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
 import org.seventyeight.web.model.Action;
+import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -36,6 +37,7 @@ public class Clear implements Node, AccessControlled {
 		MongoDBCollection.get(Core.NODES_COLLECTION_NAME).truncate();
 		MongoDBCollection.get(Core.NUMBERS_COLLECTION).truncate();
 		MongoDBCollection.get(Core.DESCRIPTOR_COLLECTION_NAME).truncate();
+		MongoDBCollection.get(Comment.COMMENTS_COLLECTION).truncate();
 	}
 
 	@Override
