@@ -220,6 +220,7 @@ public class Comment extends AbstractNode<Comment> {
 		@Override
 		protected void onNewInstance(Comment instance, Core core, Node parent, JsonObject json) {
             if(parent instanceof PersistedNode) {
+            	// The conversation is the actual conversation this comment is a part of
             	instance.getDocument().set( CONVERSATION_FIELD, ((AbstractNode)parent).getIdentifier() );
                 //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
             	instance.getDocument().set( PARENT_FIELD, json.get("parent").getAsString() );

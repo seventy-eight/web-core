@@ -106,6 +106,7 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
             if(conversation != null) {
                 JsonObject json = request.getJson();
                 conversation.updateConfiguration(json);
+                logger.debug("OBJECT IS {}", conversation.getDocument());
                 conversation.save();
                 
                 ((Resource<?>) parent).setUpdatedCall( null );
