@@ -86,243 +86,48 @@ public class Importer {
         }
 	}
 	
-	public static abstract class HTTPAction<T extends HTTPAction<T, R>, R> {
-		protected R result;
-		public abstract T act(CloseableHttpClient httpclient) throws IOException;
-		public R getResult() {
-			return result;
-		}
-	}
+
 	
 	public static abstract class Action {
 		public abstract void act(Connection connection, CloseableHttpClient httpclient) throws SQLException, IOException;
 	}
 	
-	public class TruncateDatabases extends HTTPAction<TruncateDatabases, Boolean> {
 
-		@Override
-		public TruncateDatabases act(CloseableHttpClient httpclient) throws IOException {
-			HttpDelete getRequest = new HttpDelete("http://localhost:8080/clear/");
-			CloseableHttpResponse response = httpclient.execute(getRequest);
-			if(response.getStatusLine().getStatusCode() == 200) {
-				logger.info("Databases truncated");
-			} else {
-				logger.info("Databases WAS NOT truncated");
-			}
-			
-			return this;
-		}
-		
-	}
 	
-	public class CheckUser extends HTTPAction<CheckUser, Boolean> {
+		
 
-		private String username;
-		private int identifier;
-		
-		public CheckUser setUsername(String username) {
-			this.username = username;
-			return this;
-		}
-		
-		public CheckUser setIdentifier(int identifier) {
-			this.identifier = identifier;
-			return this;
-		}
-		
-		@Override
-		public CheckUser act(CloseableHttpClient httpclient) throws IOException {
-			String url = "http://localhost:8080/users/getUsers?term=" + URLEncoder.encode(username, "UTF-8") + "&exact=1";
-			logger.debug("Checking {} at {}", username, url );
-			
-			HttpGet getRequest = new HttpGet(url);
-			CloseableHttpResponse response = httpclient.execute(getRequest);
-			if(response.getStatusLine().getStatusCode() == 200) {
-				
-				BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
 	
-				String output;
-				StringBuilder sb = new StringBuilder();
-				while ((output = br.readLine()) != null) {
-					sb.append(output);
-				}
-				
-		        JsonParser parser = new JsonParser();
-		        try {
-			        JsonArray ja = (JsonArray) parser.parse(sb.toString());
-			        
-			        for(JsonElement je : ja) {
-			        	JsonObject jo = (JsonObject) je;
-				        if(jo.has("username") && jo.get("username").getAsString().equalsIgnoreCase(username)) {
-				        	logger.debug("{} exists", username);
-				        	
-				        	userMap.put(identifier, jo.get("identifier").getAsString());
-				        	
-				        	result = true;
-				        	return this;
-				        }
-			        }
-		        } catch(Exception e) {
-		        	logger.error(e.getMessage());
-		        }
-			} else {
-				
-			}
-			
-			logger.debug("{} does not exist", username);
-			result = false;
-			
-			return this;
-		}	
-	}
-	
-	public class GroupMemberInserter extends HTTPAction<GroupMemberInserter, Boolean> {
 		
-		private String groupId;
-		private String userId;
-		
-		public GroupMemberInserter(String groupId) {
-			this.groupId = groupId;
-		}
-
-		@Override
-		public GroupMemberInserter act(CloseableHttpClient httpclient) throws IOException {
-			logger.debug("Adding members to {}", groupId);
-			
-			
-			HttpPost postRequest = new HttpPost("http://localhost:8080/resource/" + groupId + "/?user=" + userId + "&session=BWAH");
-			CloseableHttpResponse response1 = httpclient.execute(postRequest);
-			
-			JsonObject result = getReturnJsonObject(response1);
-			logger.debug("RESULT: " + result);
-
-			if(response1.getStatusLine().getStatusCode() == 200) {
-				logger.debug("Added {} to {}", userId, groupId);
-			} else {
-				logger.error("Fail to add {} to {}", userId, groupId);
-			}
-			
-			return this;
-		}
-		
-	}
-	
-	public class GroupInserter extends HTTPAction<GroupInserter, Boolean> {
-		
-		private String groupName;
-		private int groupId;
-		private int ownerId;
-		
-		public GroupInserter(String groupName, int groupId, int ownerId) {
-			this.groupName = groupName;
-			this.groupId = groupId;
-			this.ownerId = ownerId;
-		}
-
-		@Override
-		public GroupInserter act(CloseableHttpClient httpclient) throws IOException {
-			logger.debug("Adding {}({}) for {}({})", groupName, groupId, userMap.get(ownerId), ownerId);
-			
-	    	JsonObject json = new JsonObject();
-	    	json.addProperty("title", groupName);
-	    	json.addProperty("owner", userMap.get(ownerId));
-
-	    	JsonObject creds = new JsonObject();
-	    	creds.addProperty("username", "wolle");
-	    	creds.addProperty("password", "pass");
-	    	
-	    	json.add("credentials", creds);
-
-			HttpPost postRequest = new HttpPost("http://localhost:8080/groups/create");
-			StringEntity input = new StringEntity(json.toString());
-			input.setContentType("application/json");
-			postRequest.setEntity(input);
-			CloseableHttpResponse response1 = httpclient.execute(postRequest);
-			
-			JsonObject result = getReturnJsonObject(response1);
-			logger.debug("REULT: " + result);
-			if(result != null && result.has("identifier")) {
-				groupMap.put(groupId, result.get("identifier").getAsString());
-			}
-
-			return this;
-		}
-		
-	}
-	
 	public class GroupImport extends Action {
 
 		@Override
 		public void act(Connection connection, CloseableHttpClient httpclient) throws SQLException, IOException {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM user_groups");
+			
+			GroupInserter gi = new GroupInserter(httpclient, userMap, groupMap);
+			
 			while(rs.next()) {
 				String groupName = rs.getString("group_name");
 				int groupId = rs.getInt("group_id");
 				int ownerId = rs.getInt("owner_id");
 				
 				// Insert
-				new GroupInserter(groupName, groupId, ownerId).act(httpclient);
+				GroupInserter.Arguments args = new GroupInserter.Arguments(groupName, groupId, ownerId);
+				gi.act(args);
 			}
 		}	
 	}
 	
-	public class UserInserter extends HTTPAction<UserInserter, Boolean> {
 		
-		private String username;
-		private String password;
-		private String email;
-		private int userId;
-		
-		public UserInserter(String username, int userId, String password, String email) {
-			this.username = username;
-			this.userId = userId;
-			this.password = password;
-			this.email = email;
-		}
-
-		@Override
-		public UserInserter act(CloseableHttpClient httpclient) throws IOException {
-			JsonObject json = new JsonObject();
-	    	json.addProperty("username", username);
-	    	json.addProperty("title", username);
-	    	json.addProperty("password", password);
-	    	json.addProperty("password_again", password);
-
-	    	if(email == null || email.isEmpty()) {
-	    		email = "noone@example.com";
-	    	}
-	    	json.addProperty("email", email);
-	    	
-	    	JsonObject creds = new JsonObject();
-	    	creds.addProperty("username", "wolle");
-	    	creds.addProperty("password", "pass");
-	    	
-	    	json.add("credentials", creds);
-
-			HttpPost postRequest = new HttpPost("http://localhost:8080/users/create");
-			StringEntity input = new StringEntity(json.toString());
-			input.setContentType("application/json");
-			postRequest.setEntity(input);
-			CloseableHttpResponse response1 = httpclient.execute(postRequest);
-			
-			JsonObject result = getReturnJsonObject(response1);
-			logger.debug("REULT: " + result);
-			if(result != null && result.has("identifier")) {
-				userMap.put(userId, result.get("identifier").getAsString());
-			}
-			
-			return this;
-		}
-		
-	}
-	
 	public class UserImport extends Action {
 		
 		public void act(Connection connection, CloseableHttpClient httpclient) throws SQLException, IOException {
 			Statement stmt = connection.createStatement();
 
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+			
+			UserInserter ui = new UserInserter(httpclient, userMap);
 			
 		    while(rs.next()) {
 		    	String u = rs.getString("username");
@@ -332,9 +137,11 @@ public class Importer {
 		    	logger.info("Username: {}", u);
 		    	
 		    	// Checking
-		    	CheckUser cu = new CheckUser().setUsername(u).act(httpclient);
-		    	if(!cu.getResult()) {
-		    		new UserInserter(u, userId, p, e).act(httpclient);
+		    	CheckUser.Arguments args = new CheckUser.Arguments(u, userId);
+		    	boolean exists = new CheckUser(httpclient, userMap).act(args);
+		    	if(!exists) {
+		    		UserInserter.Arguments a = new UserInserter.Arguments(u, userId, p, e);
+		    		ui.act(a);
 		    	}   	
 		    }
 		}
@@ -353,14 +160,7 @@ public class Importer {
 		}
 	}
 	
-	private List<Provider> providers = new ArrayList<Provider>();
-	
 	public Importer() {
-	}
-	
-	public Importer addProvider(Provider provider) {
-		this.providers.add(provider);
-		return this;
 	}
 	
 	public void execute() throws ClassNotFoundException, SQLException, ClientProtocolException, IOException {
@@ -375,7 +175,7 @@ public class Importer {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 
 
-		new TruncateDatabases().act(httpclient);
+		new TruncateDatabases(httpclient).act("");
 		
 		new UserImport().act(con, httpclient);
 		

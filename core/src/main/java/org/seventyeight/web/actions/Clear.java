@@ -3,18 +3,14 @@ package org.seventyeight.web.actions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
-import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.DeleteMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.authorization.AccessControlled;
-import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-
-import com.google.gson.JsonObject;
 
 public class Clear implements Node, AccessControlled {
 
