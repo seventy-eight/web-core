@@ -1,0 +1,8 @@
+package org.seventyeight.web.importer;
+
+public class ImportException extends Exception {
+
+	public ImportException(String message) {
+		super(message);
+	}
+}
