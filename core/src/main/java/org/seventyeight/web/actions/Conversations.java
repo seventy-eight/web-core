@@ -114,6 +114,7 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
                 Comment comment = conversation.addComment(request);
                 // The special case, needs to set the parent for the comment
                 comment.setConversationParent(conversation.getIdentifier());
+                comment.setResource(conversation.getResource());
                 comment.save();
                 logger.debug("Comment is {}", comment);
 

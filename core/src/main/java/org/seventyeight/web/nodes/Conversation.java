@@ -263,8 +263,9 @@ public class Conversation extends Resource<Conversation> {
 
         //Comment comment = 
         
-        String text = request.getValue( "comment", "" );
+        //String text = request.getValue( "comment", "" );
         //String title = request.getValue( "commentTitle", "" );
+        String text = request.getJson().get("comment").getAsString();
 
         if(text.length() > 1) {
         	Comment comment = addComment(request);
@@ -272,6 +273,7 @@ public class Conversation extends Resource<Conversation> {
 
             comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
 
+            comment.getDocument().set("identifier", comment.getIdentifier());
             PrintWriter writer = response.getWriter();
             writer.write( comment.getDocument().toString() );
         } else {

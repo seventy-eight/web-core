@@ -119,7 +119,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
             instance.save();
             logger.debug("Finally done!!!!");
         	response.setStatus(Response.SC_CREATED);
-            response.getWriter().print("{\"id\":\"" + instance.getIdentifier() + "\"}");
+            response.getWriter().print("{\"identifier\":\"" + instance.getIdentifier() + "\"}");
         } catch(Exception e) {
         	e.printStackTrace();
         	logger.log(Level.WARN, "Unable to create {}, {}", getType(), e);

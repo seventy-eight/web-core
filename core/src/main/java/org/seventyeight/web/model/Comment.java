@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.cache.SessionCache;
@@ -153,6 +154,30 @@ public class Comment extends AbstractNode<Comment> {
     	return document.get("conversation", "");
     }
     
+    public void setResource(String identifier) {
+    	document.set("resource", identifier);
+    }
+    
+    public void setResource(Resource<?> resource) {
+    	if(resource != null) {
+    		document.set("resource", resource.getIdentifier());
+    	}
+    }
+    
+    public Node getResource() {
+    	String identifier = document.get("resource", null);
+    	if(identifier != null) {
+    		try {
+				return core.getNodeById(this, identifier);
+			} catch (Exception e) {
+				logger.log(Level.ERROR, "Unable to find attached resource", e);
+				return null;
+			}
+    	} else {
+    		return null;
+    	}
+    }
+    
     /*
     public Conversation getConversation() {
     	return core.getNodeById(parent, id)
@@ -224,6 +249,14 @@ public class Comment extends AbstractNode<Comment> {
             	instance.getDocument().set( CONVERSATION_FIELD, ((AbstractNode)parent).getIdentifier() );
                 //comment.getDocument().set( PARENT_FIELD, ((AbstractNode)parent).getIdentifier() );
             	instance.getDocument().set( PARENT_FIELD, json.get("parent").getAsString() );
+            	
+            	// Only set the parent if it is valid. If it is not, it is not attached to a resource.
+            	if(json.has("resource")) {
+            		String r = json.get("resource").getAsString();
+            		if(!r.isEmpty()) {
+            			instance.getDocument().set( "resource", json.get("resource").getAsString() );
+            		}
+            	}
                 
                 Comment commentParent = new Comment(core, parent, getComment((String) json.get("parent").getAsString()));
                 if(commentParent.getType().equals(Comment.TYPE_NAME)) {

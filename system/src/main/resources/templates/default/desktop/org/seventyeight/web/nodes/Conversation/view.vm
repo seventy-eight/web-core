@@ -15,7 +15,8 @@
 		if('$!item.getResource()' != "") {
 			var c = new Conversation('$item.getIdentifier()', '$item.getResource().getIdentifier()', 2);
 		} else {
-			alert("Something was not implemented...... Sigh!");
+			//alert("Something was not implemented...... Sigh!");
+			var c = new Conversation('$item.getIdentifier()', undefined, 2);
 		}
 		c.getComments('$root.getIdentifier()');
 	});
