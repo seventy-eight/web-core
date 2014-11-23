@@ -16,13 +16,8 @@ public class GroupInserter extends HTTPAction<GroupInserter.Arguments, Boolean> 
 
 	private static Logger logger = LogManager.getLogger(GroupInserter.class);
 	
-	private Map<Integer, String> userMap;
-	private Map<Integer, String> groupMap;
-	
-	public GroupInserter(CloseableHttpClient httpClient,  Map<Integer, String> userMap, Map<Integer, String> groupMap) {
-		super(httpClient);
-		this.userMap = userMap;
-		this.groupMap = groupMap;
+	public GroupInserter(CloseableHttpClient httpClient,  Context context) {
+		super(httpClient, context);
 	}
 
 	public static class Arguments {
@@ -39,11 +34,11 @@ public class GroupInserter extends HTTPAction<GroupInserter.Arguments, Boolean> 
 
 	@Override
 	public Boolean act(Arguments argument) throws IOException {
-		logger.debug("Adding {}({}) for {}({})", argument.groupName, argument.groupId, userMap.get(argument.ownerId), argument.ownerId);
+		logger.debug("Adding {}({}) for {}({})", argument.groupName, argument.groupId, context.getUserMap().get(argument.ownerId), argument.ownerId);
 		
     	JsonObject json = new JsonObject();
     	json.addProperty("title", argument.groupName);
-    	json.addProperty("owner", userMap.get(argument.ownerId));
+    	json.addProperty("owner", context.getUserMap().get(argument.ownerId));
 
     	JsonObject creds = new JsonObject();
     	creds.addProperty("username", "wolle");
@@ -51,7 +46,7 @@ public class GroupInserter extends HTTPAction<GroupInserter.Arguments, Boolean> 
     	
     	json.add("credentials", creds);
 
-		HttpPost postRequest = new HttpPost("http://localhost:8080/groups/create");
+		HttpPost postRequest = new HttpPost(context.generateUrl("groups/create"));
 		StringEntity input = new StringEntity(json.toString());
 		input.setContentType("application/json");
 		postRequest.setEntity(input);
@@ -60,7 +55,7 @@ public class GroupInserter extends HTTPAction<GroupInserter.Arguments, Boolean> 
 		JsonObject result = Importer.getReturnJsonObject(response1);
 		logger.debug("REULT: " + result);
 		if(result != null && result.has("identifier")) {
-			groupMap.put(argument.groupId, result.get("identifier").getAsString());
+			context.getGroupMap().put(argument.groupId, result.get("identifier").getAsString());
 		}
 
 		return true;

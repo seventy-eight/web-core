@@ -12,15 +12,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
 
-public class ConversationInserter extends HTTPAction<ConversationInserter.Arguments, Boolean> {
+public class ConversationInserter extends HTTPAction<ConversationInserter.Arguments, String> {
 
 	private static Logger logger = LogManager.getLogger(ConversationInserter.class);
 	
-	private Map<Integer, String> userMap;
-	
-	public ConversationInserter(CloseableHttpClient httpClient, Map<Integer, String> userMap) {
-		super(httpClient);
-		this.userMap = userMap;
+	public ConversationInserter(CloseableHttpClient httpClient, Context context) {
+		super(httpClient, context);
 	}
 
 	public static class Arguments {
@@ -34,13 +31,14 @@ public class ConversationInserter extends HTTPAction<ConversationInserter.Argume
 	}
 
 	@Override
-	public Boolean act(Arguments argument) throws IOException {
+	public String act(Arguments argument) throws IOException, ImportException {
 		String url = "http://localhost:8080/conversations/create";
 		HttpPost postRequest = new HttpPost(url);
 		
 		JsonObject request = getJsonRequest();
 		request.addProperty("title", argument.title);
-		request.addProperty("owner", userMap.get(argument.ownerId));
+		
+		request.addProperty("owner", context.getUserMap().get(argument.ownerId));
 		
 		StringEntity input = new StringEntity(request.toString());
 		input.setContentType("application/json");
@@ -48,12 +46,11 @@ public class ConversationInserter extends HTTPAction<ConversationInserter.Argume
 		CloseableHttpResponse response = httpClient.execute(postRequest);
 		
 		JsonObject result = Importer.getReturnJsonObject(response);
-		logger.debug("REULT: " + result);
+		logger.debug("RESULT: " + result);
 		if(result != null && result.has("identifier")) {
-			userMap.put(argument.userId, result.get("identifier").getAsString());
+			return result.get("identifier").getAsString();
+		} else {
+			throw new ImportException("Not a valid result, " + result.toString());
 		}
-		
-		return true;
-	}
-	
+	}	
 }

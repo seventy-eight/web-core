@@ -14,11 +14,8 @@ import com.google.gson.JsonObject;
 
 public class UserInserter extends HTTPAction<UserInserter.Arguments, Boolean> {
 
-	private Map<Integer, String> userMap;
-	
-	public UserInserter(CloseableHttpClient httpClient, Map<Integer, String> userMap) {
-		super(httpClient);
-		this.userMap = userMap;
+	public UserInserter(CloseableHttpClient httpClient, Context context) {
+		super(httpClient, context);
 	}
 
 	private static Logger logger = LogManager.getLogger(UserInserter.class);
@@ -65,7 +62,7 @@ public class UserInserter extends HTTPAction<UserInserter.Arguments, Boolean> {
 		JsonObject result = Importer.getReturnJsonObject(response1);
 		logger.debug("REULT: " + result);
 		if(result != null && result.has("identifier")) {
-			userMap.put(argument.userId, result.get("identifier").getAsString());
+			context.getUserMap().put(argument.userId, result.get("identifier").getAsString());
 		}
 		
 		return true;

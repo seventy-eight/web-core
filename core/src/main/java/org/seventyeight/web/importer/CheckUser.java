@@ -23,9 +23,8 @@ public class CheckUser extends HTTPAction<CheckUser.Arguments, Boolean> {
 
 	private static Logger logger = LogManager.getLogger(CheckUser.class);
 
-	public CheckUser(CloseableHttpClient httpClient, Map<Integer, String> userMap) {
-		super(httpClient);
-		this.userMap = userMap;
+	public CheckUser(CloseableHttpClient httpClient, Context context) {
+		super(httpClient, context);
 	}
 	
 	public static class Arguments {

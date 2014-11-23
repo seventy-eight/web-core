@@ -41,16 +41,16 @@ public class Importer {
 	
 	private static Logger logger = LogManager.getLogger(Importer.class);
 	
-	private Map<Integer, String> userMap = new HashMap<Integer, String>();
-	private Map<Integer, String> groupMap = new HashMap<Integer, String>();
-	
-	
 	//@Option(name="-type", required=true)
 	private String type;
 
 	private String dbHost = "212.97.132.75:3306/cwolfga_gymnerds";
 	
 	private String dbUser = "cwolfga_admin", dbPass = "avenger";
+	
+	private Context context;
+	
+	
 	
 	public static JsonArray getReturnJsonArray(CloseableHttpResponse response) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
@@ -89,14 +89,101 @@ public class Importer {
 
 	
 	public static abstract class Action {
-		public abstract void act(Connection connection, CloseableHttpClient httpclient) throws SQLException, IOException;
+		public abstract void act(Connection connection, CloseableHttpClient httpclient) throws SQLException, IOException, ImportException;
 	}
 	
 
 	
 		
 
-	
+	public class ConversationImport extends Action {
+		
+		private class Topic {
+			public int topicId;
+			public int categoryId;
+			public String conversation;
+			public String title;
+			
+			
+			public Topic(int topicId, int categoryId, String conversation, String title) {
+				this.topicId = topicId;
+				this.categoryId = categoryId;
+				this.conversation = conversation;
+				this.title = title;
+			}
+			
+			@Override
+			public String toString() {
+				return topicId + "/" + categoryId + "/" + conversation + "/" + title;
+			}
+		}
+
+		@Override
+		public void act(Connection connection, CloseableHttpClient httpclient) throws SQLException, IOException, ImportException {
+			
+			
+			// Get all the topics
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM board_topics");
+			
+			ConversationInserter ci = new ConversationInserter(httpclient, context);
+			
+			List<Topic> topics = new ArrayList<Topic>();
+			
+			while(rs.next()) {
+				String title = rs.getString("title");
+				int ownerId = rs.getInt("start_user_id");
+				int topicId = rs.getInt("topic_id");
+				int categoryId = rs.getInt("category_id");
+				
+				// Insert
+				ConversationInserter.Arguments args = new ConversationInserter.Arguments(title, ownerId);
+				String conversation = ci.act(args);
+				
+				//conversations.put(topicId, conversation);
+				topics.add(new Topic(topicId, categoryId, conversation, title));
+				
+				break;
+			}
+			
+			stmt.close();
+			
+			CommentInserter coi = new CommentInserter(httpclient, context);
+			
+			// Get the posts
+			for(Topic topic : topics) {
+				logger.debug(topic);
+				Statement stmt2 = connection.createStatement();
+				ResultSet rs2 = stmt2.executeQuery("SELECT * FROM board_posts WHERE topic_id=" + topic.topicId + " AND category_id=" + topic.categoryId);
+				
+				boolean first = true;
+				String parent = topic.conversation;
+				while(rs2.next()) {
+					String postText = rs2.getString("post_text");
+					int userId = rs2.getInt("user_id");
+					
+					//logger.debug("PARENT: {}", postText);
+					
+					CommentInserter.Arguments ca = new CommentInserter.Arguments(topic.conversation, context.getUserMap().get(userId), topic.title, postText, parent);
+					
+					String id = coi.act(ca);
+					logger.debug("ID={}", id);
+					
+					if(first) {
+						parent = id;
+					}
+					
+					first = false;
+				}
+				
+				stmt2.close();
+				
+				break;
+			}
+			
+		}
+		
+	}
 		
 	public class GroupImport extends Action {
 
@@ -105,7 +192,7 @@ public class Importer {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM user_groups");
 			
-			GroupInserter gi = new GroupInserter(httpclient, userMap, groupMap);
+			GroupInserter gi = new GroupInserter(httpclient, context);
 			
 			while(rs.next()) {
 				String groupName = rs.getString("group_name");
@@ -127,7 +214,7 @@ public class Importer {
 
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
 			
-			UserInserter ui = new UserInserter(httpclient, userMap);
+			UserInserter ui = new UserInserter(httpclient, context);
 			
 		    while(rs.next()) {
 		    	String u = rs.getString("username");
@@ -138,7 +225,7 @@ public class Importer {
 		    	
 		    	// Checking
 		    	CheckUser.Arguments args = new CheckUser.Arguments(u, userId);
-		    	boolean exists = new CheckUser(httpclient, userMap).act(args);
+		    	boolean exists = new CheckUser(httpclient, context).act(args);
 		    	if(!exists) {
 		    		UserInserter.Arguments a = new UserInserter.Arguments(u, userId, p, e);
 		    		ui.act(a);
@@ -147,7 +234,7 @@ public class Importer {
 		}
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, ClientProtocolException, IOException {
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, ClientProtocolException, IOException, ImportException {
 		Importer i = new Importer();
 		CmdLineParser parser = new CmdLineParser(i);
 		try {
@@ -163,7 +250,7 @@ public class Importer {
 	public Importer() {
 	}
 	
-	public void execute() throws ClassNotFoundException, SQLException, ClientProtocolException, IOException {
+	public void execute() throws ClassNotFoundException, SQLException, ClientProtocolException, IOException, ImportException {
 		//UserImport ui = new UserImport("mydb5.surftown.dk:3306/cwolfga_gymnerds", "cwolfga_admin", "avenger");
 		
 		Class.forName("com.mysql.jdbc.Driver");
@@ -173,12 +260,16 @@ public class Importer {
 		Statement stmt = con.createStatement();
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
+		context = new Context("http://localhost:8080/");
 
-
-		new TruncateDatabases(httpclient).act("");
+		new TruncateDatabases(httpclient, context).act("");
 		
 		new UserImport().act(con, httpclient);
 		
-		new GroupImport().act(con, httpclient);
+		logger.fatal("Users: {}", context.getUserMap());
+		
+		//new GroupImport().act(con, httpclient);
+		
+		new ConversationImport().act(con, httpclient);
 	}
 }
