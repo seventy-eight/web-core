@@ -2,6 +2,7 @@ package org.seventyeight.web.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonObject;
@@ -255,6 +256,15 @@ public class Comment extends AbstractNode<Comment> {
             		String r = json.get("resource").getAsString();
             		if(!r.isEmpty()) {
             			instance.getDocument().set( "resource", json.get("resource").getAsString() );
+            		}
+            	}
+            	
+            	if(json.has("advanced")) {
+            		JsonObject advanced = json.get("advanced").getAsJsonObject();
+            		if(advanced.has("timestamp")) {
+            			Date d = new Date(advanced.get("timestamp").getAsLong() * 1000);
+            			instance.getDocument().set("created", d);
+            			instance.setUpdated(d);
             		}
             	}
                 

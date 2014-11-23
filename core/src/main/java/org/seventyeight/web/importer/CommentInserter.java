@@ -26,12 +26,15 @@ public class CommentInserter extends HTTPAction<CommentInserter.Arguments, Strin
 		public String conversation;
 		public String parent;
 		
-		public Arguments(String conversation, String user, String title, String comment, String parent) {
+		public long timestamp;
+		
+		public Arguments(String conversation, String user, String title, String comment, String parent, long timestamp) {
 			this.conversation = conversation;
 			this.user = user;
 			this.title = title;
 			this.comment = comment;
 			this.parent = parent;
+			this.timestamp = timestamp;
 		}
 	}
 
@@ -43,6 +46,10 @@ public class CommentInserter extends HTTPAction<CommentInserter.Arguments, Strin
 		json.addProperty(Comment.TITLE_FIELD, argument.title);
 		json.addProperty(Comment.COMMENT_FIELD, argument.comment);
 		json.addProperty(Comment.PARENT_FIELD, argument.parent);
+		
+		JsonObject advanced = new JsonObject();
+		advanced.addProperty("timestamp", argument.timestamp);
+		json.add("advanced", advanced);
 		
 		logger.debug("REQUEST: {}", json.toString());
 		

@@ -161,10 +161,11 @@ public class Importer {
 				while(rs2.next()) {
 					String postText = rs2.getString("post_text");
 					int userId = rs2.getInt("user_id");
+					long timestamp = rs2.getLong("post_time");
 					
 					//logger.debug("PARENT: {}", postText);
 					
-					CommentInserter.Arguments ca = new CommentInserter.Arguments(topic.conversation, context.getUserMap().get(userId), topic.title, postText, parent);
+					CommentInserter.Arguments ca = new CommentInserter.Arguments(topic.conversation, context.getUserMap().get(userId), topic.title, postText, parent, timestamp);
 					
 					String id = coi.act(ca);
 					logger.debug("ID={}", id);
