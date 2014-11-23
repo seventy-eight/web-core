@@ -12,8 +12,8 @@ public class TruncateDatabases extends HTTPAction<String, Boolean> {
 
 	private static Logger logger = LogManager.getLogger(TruncateDatabases.class);
 
-	public TruncateDatabases(CloseableHttpClient httpClient) {
-		super(httpClient);
+	public TruncateDatabases(CloseableHttpClient httpClient, Context context) {
+		super(httpClient, context);
 	}
 	
 	@Override
