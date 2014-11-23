@@ -349,6 +349,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
         postUpdate();
     }
     
+    @PostMethod
+    public void doChown(Request request, Response response) {
+    	
+    }
+    
     public static final String fullAclField = EXTENSIONS + "." + Descriptor.getJsonId(ACL.class.getName());
     public static final String fullAclReadField = fullAclField + ".read";
     protected static final String aclField = Descriptor.getJsonId(ACL.class.getName());
