@@ -273,6 +273,16 @@ public abstract class Core implements CoreSystem {
             throw new NotFoundException( "Could not find node with id " + id );
         }
     }
+    
+    /*
+    public <T extends Node> T getNode(String title, String type) {
+    	MongoDBQuery query = new MongoDBQuery().is("title", title).is("type", type);
+    	List<MongoDocument> docs = MongoDBCollection.get(NODES_COLLECTION_NAME).find(query);
+    	if() {
+    		
+    	}
+    }
+    */
 
     public void saveNode(AbstractNode<?> node) {
         documentCache.save( node.getDocument(), node.getIdentifier() );

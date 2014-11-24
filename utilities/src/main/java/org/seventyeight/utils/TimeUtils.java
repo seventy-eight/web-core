@@ -1,5 +1,8 @@
 package org.seventyeight.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +13,8 @@ public class TimeUtils {
 
     private static Logger logger = LogManager.getLogger( TimeUtils.class );
 
+    private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    
     private TimeUtils() {}
 
     public final static int SECONDS = 1000;
@@ -59,9 +64,11 @@ public class TimeUtils {
         } else if( millis < WEEKS ) {
             long m = millis / DAYS;
             return m + ( m == 1 ? " day" : " days" );
-        } else {
+        } else if(millis < WEEKS * 8) {
             long m = millis / WEEKS;
             return m + ( m == 1 ? " week" : " weeks" );
+        } else {
+        	return format.format(new Date(System.currentTimeMillis() - millis));
         }
     }
 

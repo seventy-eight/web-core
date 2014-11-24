@@ -57,9 +57,9 @@ Conversation.prototype.getComments = function(rid) {
 	var THIS = this;
 	debugger;
 	if(this.parent) {
-		var url = "/resource/" + this.parent + "/conversations/get/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number;
+		var url = "/resource/" + this.parent + "/conversations/get/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + "&reversed=1";
 	} else {
-		var url = "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number;
+		var url = "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + "&reversed=1";
 	}
 	$.ajax({
         type: "GET",
@@ -68,6 +68,24 @@ Conversation.prototype.getComments = function(rid) {
         	THIS.insertComments(JSON.parse(data), rid);
         	THIS.offset += THIS.number;
         	THIS.hasMore(rid, THIS.offset);
+        },
+        error: function(ajax, text, error) {alert(error)}
+    });
+}
+
+Conversation.prototype.hasOlder = function(id, offset) {
+	var THIS = this;
+	$.ajax({
+        type: "GET",
+        url: "/resource/" + THIS.cid + "/getNumberOfFirstLevelComments",
+        success: function(data, textStatus, jqxhr){
+        	if(data > offset) {
+        		var more = THIS.getMoreDialog(id, "Older");
+        		$("#" + id + "-conversation").append(more);
+        	} else {
+        		// No more
+        		//$("#" + id + "-conversation").append("NO MORE" + data + "<br>");
+        	}
         },
         error: function(ajax, text, error) {alert(error)}
     });
@@ -91,9 +109,10 @@ Conversation.prototype.hasMore = function(id, offset) {
     });
 }
 
-Conversation.prototype.getMoreDialog = function(id) {
+Conversation.prototype.getMoreDialog = function(id, text) {
+	var text = text || "More";
 	var div = document.createElement("div");
-	div.innerHTML = "More";
+	div.innerHTML = text;
 	div.style.border = "2px solid";
 	div.style.textAlign = "center";
 	div.style.backgroundColor = "#998877";
@@ -108,21 +127,15 @@ Conversation.prototype.getMoreDialog = function(id) {
 
 Conversation.prototype.insertComments = function(json, id) {
 	var comments = json[id];
-	//alert("Inserting comments: " + JSON.stringify(comments));
 	if(comments !== undefined) {
         for( i = 0 ; i < comments.length ; i++ ) {
           	$("#" + comments[i].document.parent + "-conversation").append(comments[i].document.view + "<br>");
-          	//alert("ID: " + comments[i].document._id);
           	this.insertComments(json, comments[i].document._id);
         }
     }
 }
 
 Conversations.prototype.addComment = function(json) {
-	//alert("--->" + d);
-    //var json = eval("(" + d + ")");
-    //$("#commentsContainer").append(json.view + "<br>").children(':last').hide().fadeIn(2000);
-    //$(json.view + "<br>").appendTo("#commentsContainer").hide().fadeIn(2000);
     $(json.view + "<br>").appendTo("#" + json.parent + "-container").hide().fadeIn(2000);
 }
 
