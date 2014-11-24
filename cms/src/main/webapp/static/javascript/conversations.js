@@ -120,6 +120,7 @@ Conversation.prototype.getMoreDialog = function(id, reversed) {
 	div.style.border = "2px solid";
 	div.style.textAlign = "center";
 	div.style.backgroundColor = "#998877";
+	div.style.marginBottom = "10px";
 	var THIS = this;
 	$(div).on('click', function(){
 		THIS.getComments(id, reversed);
