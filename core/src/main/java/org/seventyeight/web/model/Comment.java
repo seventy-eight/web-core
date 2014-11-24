@@ -259,15 +259,6 @@ public class Comment extends AbstractNode<Comment> {
             		}
             	}
             	
-            	if(json.has("advanced")) {
-            		JsonObject advanced = json.get("advanced").getAsJsonObject();
-            		if(advanced.has("timestamp")) {
-            			Date d = new Date(advanced.get("timestamp").getAsLong() * 1000);
-            			instance.getDocument().set("created", d);
-            			instance.setUpdated(d);
-            		}
-            	}
-                
                 Comment commentParent = new Comment(core, parent, getComment((String) json.get("parent").getAsString()));
                 if(commentParent.getType().equals(Comment.TYPE_NAME)) {
 	                List<String> ancestors = new ArrayList<String>(commentParent.getAncestors());

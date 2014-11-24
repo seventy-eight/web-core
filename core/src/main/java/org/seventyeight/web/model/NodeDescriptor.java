@@ -75,8 +75,19 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         node.getDocument().set( "title", title );
         //node.getDocument().set( "status", Status.CREATED );
 
-        // TODO possibly have a system user account
-        setOwner( node, ownerId );
+        // Advanced options
+    	if(json.has("advanced")) {
+    		JsonObject advanced = json.get("advanced").getAsJsonObject();
+    		
+    		// Set the date with a timestamp
+    		if(advanced.has("timestamp")) {
+    			Date d = new Date(advanced.get("timestamp").getAsLong() * 1000);
+    			node.getDocument().set("created", d);
+    			node.setUpdated(d);
+    		}
+    	}
+    	
+    	setOwner( node, ownerId );
         
         onNewInstance(node, core, parent, json);
         
