@@ -367,7 +367,10 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     	String ownerId = json.get("newOwner").getAsString();
 		try {
 			User owner = request.getCore().getNodeById(this, ownerId);
+			response.setStatus(Response.SC_OK);
+			response.getWriter().println("{}");
 			this.setOwner(owner);
+			this.save();
 		} catch (Exception e) {
     		response.setStatus(Response.SC_NOT_ACCEPTABLE);
     		response.getWriter().println("No valid owner provided, " + ownerId);

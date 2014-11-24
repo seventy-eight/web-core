@@ -149,6 +149,7 @@ public class Importer {
 			stmt.close();
 			
 			CommentInserter coi = new CommentInserter(httpclient, context);
+			ChangeOwnership co = new ChangeOwnership(httpclient, context);
 			
 			// Get the posts
 			for(Topic topic : topics) {
@@ -169,6 +170,10 @@ public class Importer {
 					
 					String id = coi.act(ca);
 					logger.debug("ID={}", id);
+					
+					ChangeOwnership.Arguments coa = new ChangeOwnership.Arguments(id, context.getUserMap().get(userId));
+					
+					co.act(coa);
 					
 					if(first) {
 						parent = id;
