@@ -350,8 +350,29 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
     
     @PostMethod
-    public void doChown(Request request, Response response) {
+    public void doChown(Request request, Response response) throws IOException {
+    	JsonObject json = request.getJson();
+    	if(json == null) {
+    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
+    		response.getWriter().println("No json provided");
+    		return;
+    	}
     	
+    	if(!json.has("newOwner")) {
+    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
+    		response.getWriter().println("No new owner provided");
+    		return;
+    	}
+    	
+    	String ownerId = json.get("newOwner").getAsString();
+		try {
+			User owner = request.getCore().getNodeById(this, ownerId);
+			this.setOwner(owner);
+		} catch (Exception e) {
+    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
+    		response.getWriter().println("No valid owner provided, " + ownerId);
+    		return;
+    	}
     }
     
     public static final String fullAclField = EXTENSIONS + "." + Descriptor.getJsonId(ACL.class.getName());
