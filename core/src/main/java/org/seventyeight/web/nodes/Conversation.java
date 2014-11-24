@@ -275,7 +275,7 @@ public class Conversation extends Resource<Conversation> {
         //String title = request.getValue( "commentTitle", "" );
         String text = request.getJson().get("comment").getAsString();
 
-        if(text.length() > 1) {
+        if(text.length() >= 0) {
         	Comment comment = addComment(request);
             setUpdatedCall( null );
 

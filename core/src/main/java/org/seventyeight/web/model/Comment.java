@@ -59,6 +59,7 @@ public class Comment extends AbstractNode<Comment> {
     public void updateNode( JsonObject jsonData ) {
     	
         String text = jsonData.getAsJsonPrimitive( "comment" ).getAsString();
+        text = text.replaceAll("\r", "");  
         setText( text );
         
     }

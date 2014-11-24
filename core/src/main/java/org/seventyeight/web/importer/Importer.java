@@ -143,7 +143,7 @@ public class Importer {
 				//conversations.put(topicId, conversation);
 				topics.add(new Topic(topicId, categoryId, conversation, title));
 				
-				break;
+				//break;
 			}
 			
 			stmt.close();
@@ -184,7 +184,6 @@ public class Importer {
 				
 				stmt2.close();
 				
-				break;
 			}
 			
 		}
