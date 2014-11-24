@@ -53,21 +53,25 @@ Conversation.addComment = function(d) {
     $(json.view + "<br>").appendTo("#" + json.parent + "-conversation").hide().fadeIn(2000);
 }
 
-Conversation.prototype.getComments = function(rid) {
+Conversation.prototype.getComments = function(rid, reversed) {
 	var THIS = this;
 	debugger;
 	if(this.parent) {
-		var url = "/resource/" + this.parent + "/conversations/get/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + "&reversed=1";
+		var url = "/resource/" + this.parent + "/conversations/get/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + (reversed ? "&reversed=1" : "");
 	} else {
-		var url = "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + "&reversed=1";
+		var url = "/resource/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + (reversed ? "&reversed=1" : "");
 	}
 	$.ajax({
         type: "GET",
         url: url, 
         success: function(data, textStatus, jqxhr){
-        	THIS.insertComments(JSON.parse(data), rid);
+        	THIS.insertComments(JSON.parse(data), rid, reversed);
         	THIS.offset += THIS.number;
-        	THIS.hasMore(rid, THIS.offset);
+        	if(reversed) {
+        		THIS.hasOlder(rid, THIS.offset);
+        	} else {
+        		THIS.hasMore(rid, THIS.offset);
+        	}
         },
         error: function(ajax, text, error) {alert(error)}
     });
@@ -81,7 +85,7 @@ Conversation.prototype.hasOlder = function(id, offset) {
         success: function(data, textStatus, jqxhr){
         	if(data > offset) {
         		var more = THIS.getMoreDialog(id, "Older");
-        		$("#" + id + "-conversation").append(more);
+        		$("#" + id + "-conversation").prepend(more);
         	} else {
         		// No more
         		//$("#" + id + "-conversation").append("NO MORE" + data + "<br>");
@@ -109,8 +113,8 @@ Conversation.prototype.hasMore = function(id, offset) {
     });
 }
 
-Conversation.prototype.getMoreDialog = function(id, text) {
-	var text = text || "More";
+Conversation.prototype.getMoreDialog = function(id, reversed) {
+	var text = reversed ? "Older" : "newer";
 	var div = document.createElement("div");
 	div.innerHTML = text;
 	div.style.border = "2px solid";
@@ -118,18 +122,24 @@ Conversation.prototype.getMoreDialog = function(id, text) {
 	div.style.backgroundColor = "#998877";
 	var THIS = this;
 	$(div).on('click', function(){
-		THIS.getComments(id);
+		THIS.getComments(id, reversed);
 		$(this).remove();
 	});
 	
 	return div;
 }
 
-Conversation.prototype.insertComments = function(json, id) {
+Conversation.prototype.insertComments = function(json, id, reversed) {
 	var comments = json[id];
 	if(comments !== undefined) {
         for( i = 0 ; i < comments.length ; i++ ) {
-          	$("#" + comments[i].document.parent + "-conversation").append(comments[i].document.view + "<br>");
+        	var e = "#" + comments[i].document.parent + "-conversation";
+        	var h = comments[i].document.view + "<br>";
+        	if(reversed) {
+        		$(e).prepend(h);
+        	} else {
+        		$(e).append(h);
+        	}
           	this.insertComments(json, comments[i].document._id);
         }
     }

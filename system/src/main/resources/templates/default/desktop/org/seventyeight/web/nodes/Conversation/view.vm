@@ -18,6 +18,6 @@
 			//alert("Something was not implemented...... Sigh!");
 			var c = new Conversation('$item.getIdentifier()', undefined, 2);
 		}
-		c.getComments('$root.getIdentifier()');
+		c.getComments('$root.getIdentifier()', true);
 	});
 </script>

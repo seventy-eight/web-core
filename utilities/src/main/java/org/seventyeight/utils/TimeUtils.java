@@ -13,7 +13,7 @@ public class TimeUtils {
 
     private static Logger logger = LogManager.getLogger( TimeUtils.class );
 
-    private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     private TimeUtils() {}
 

@@ -135,7 +135,7 @@ public class Conversation extends Resource<Conversation> {
         //MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
         MongoDBQuery flquery = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", rootCommentId);
         logger.debug("QUERY: {}", flquery);
-        MongoDocument sort = new MongoDocument().set( "created", (reversed ? 0 : 1) );
+        MongoDocument sort = new MongoDocument().set( "created", (reversed ? -1 : 1) );
         List<MongoDocument> docs = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).find( flquery, offset, number, sort );
         
         logger.debug("Number of docs: {}", docs.size());
