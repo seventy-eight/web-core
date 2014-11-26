@@ -11,9 +11,14 @@ public enum  MarkUpType {
     italic,
     bold,
     italicAndBold,
+    underline,
+    
+    quote,
 
     unorderedList,
     orderedList,
+    
+    link,
 
     newLine
 }

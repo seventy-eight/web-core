@@ -47,6 +47,8 @@ public class CommentInserter extends HTTPAction<CommentInserter.Arguments, Strin
 		json.addProperty(Comment.COMMENT_FIELD, argument.comment);
 		json.addProperty(Comment.PARENT_FIELD, argument.parent);
 		
+		json.addProperty("parser", "old");
+		
 		JsonObject advanced = new JsonObject();
 		advanced.addProperty("timestamp", argument.timestamp);
 		json.add("advanced", advanced);

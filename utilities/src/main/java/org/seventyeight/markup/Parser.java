@@ -174,7 +174,7 @@ public abstract class Parser {
 
     private boolean parseSequence( String text, MarkUp markUp, int idx ) {
         for( int i = 1 ; i < markUp.sequence.length ; i++ ) {
-            if( markUp.sequence[i] != text.charAt( idx + i ) ) {
+            if( idx + 1 >= text.length() || markUp.sequence[i] != text.charAt( idx + i ) ) {
                 return false;
             }
         }

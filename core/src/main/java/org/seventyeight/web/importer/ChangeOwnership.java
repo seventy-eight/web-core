@@ -40,7 +40,7 @@ public class ChangeOwnership extends HTTPAction<ChangeOwnership.Arguments, Boole
 		CloseableHttpResponse response = httpClient.execute(postRequest);
 		
 		JsonObject result = Importer.getReturnJsonObject(response);
-		logger.debug("CHOWN: " + result);
+		logger.debug("CHOWN({}): {}", argument.user, result);
 		if(result != null) {
 			return true;
 		} else {

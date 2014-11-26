@@ -14,6 +14,8 @@ import org.seventyeight.cache.SessionCache;
 import org.seventyeight.database.mongodb.MongoDatabaseStrategy;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.markup.HtmlGenerator;
+import org.seventyeight.markup.OldParser;
+import org.seventyeight.markup.Parser;
 import org.seventyeight.markup.SimpleParser;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.nodes.Conversation;
@@ -28,6 +30,7 @@ public class Comment extends AbstractNode<Comment> {
     private static Logger logger = LogManager.getLogger( Comment.class );
 
     private static SimpleParser textParser = new SimpleParser( new HtmlGenerator() );
+    private static OldParser oldtextParser = new OldParser( new HtmlGenerator() );
     
     public static final String TYPE_NAME = "comment";
     
@@ -57,10 +60,14 @@ public class Comment extends AbstractNode<Comment> {
 
     @Override
     public void updateNode( JsonObject jsonData ) {
-    	
         String text = jsonData.getAsJsonPrimitive( "comment" ).getAsString();
-        text = text.replaceAll("\r", "");  
-        setText( text );
+        
+        if(jsonData.has("parser") && jsonData.get("parser").getAsString().equals("old")) {
+        	logger.debug("Using old parser");
+        	setText( text, oldtextParser );
+        } else {
+        	setText( text );
+        }
         
     }
 
@@ -113,8 +120,12 @@ public class Comment extends AbstractNode<Comment> {
             throw new IllegalStateException( TEXT_FIELD + " field was not found!" );
         }
     }
-
+    
     public Comment setText(String text) {
+    	return setText(text, textParser);
+    }
+
+    public Comment setText(String text, Parser parser) {
         MongoDocument texts = document.getSubDocument( TEXT_FIELD, null );
         if( texts == null ) {
             logger.debug( "Creating text field" );
@@ -122,7 +133,7 @@ public class Comment extends AbstractNode<Comment> {
             document.set( TEXT_FIELD, texts );
         }
 
-        StringBuilder output = textParser.parse( text );
+        StringBuilder output = parser.parse( text );
 
         // Set the version of the parser and generator
         String version = textParser.getVersion() + ":" + textParser.getGeneratorVersion();
