@@ -74,27 +74,7 @@ public class Conversation extends Resource<Conversation> {
 			}
 		}
 	}
-	
-	@PostMethod
-	public void doIndex(Request request, Response response) throws IOException {
-    	JsonObject json = request.getJson();
-        
-        if(json == null) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No data provided");
-        	return;
-        }
-        
-        if(!json.has("comment") || json.get("comment").getAsString().length() < 2) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No comment provided");
-        	return;
-        }
-
-    	response.setStatus(Response.SC_ACCEPTED);
-    	response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
-	}
-	
+		
 	public Comment getRootComment() {
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
         MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);
@@ -236,8 +216,8 @@ public class Conversation extends Resource<Conversation> {
         
         comment.save();
         
-        if(json.has("resource") && !json.get("resource").getAsString().isEmpty()) {
         	String resourceId = json.get("resource").getAsString();
+        	if(json.has("resource") && !json.get("resource").getAsString().isEmpty()) {
         	try {
 				Resource<?> r = core.getNodeById(this, resourceId);
 				r.touch();
@@ -265,31 +245,36 @@ public class Conversation extends Resource<Conversation> {
     	}
     }
 
-    @PostMethod
-    public void doAddComment(Request request, Response response) throws ItemInstantiationException, IOException, TemplateException, ClassNotFoundException, JsonException, NotFoundException {
-        response.setRenderType( Response.RenderType.NONE );
-
-        //Comment comment = 
+	@PostMethod
+	public void doIndex(Request request, Response response) throws IOException, ClassNotFoundException, ItemInstantiationException, TemplateException {
+    	JsonObject json = request.getJson();
         
-        //String text = request.getValue( "comment", "" );
-        //String title = request.getValue( "commentTitle", "" );
-        String text = request.getJson().get("comment").getAsString();
-
-        if(text.length() >= 0) {
-        	Comment comment = addComment(request);
-            //setUpdatedCall( null );
-        	setUpdated(null);
-        	save();
-
-            comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
-
-            comment.getDocument().set("identifier", comment.getIdentifier());
-            PrintWriter writer = response.getWriter();
-            writer.write( comment.getDocument().toString() );
-        } else {
-            throw new IllegalStateException( "No text provided!" );
+        if(json == null) {
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No data provided");
+        	return;
         }
-    }
+        
+        if(!json.has("comment") || json.get("comment").getAsString().length() < 0) {
+        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	response.getWriter().print("No comment provided");
+        	return;
+        }
+
+    	Comment comment = addComment(request);
+        //setUpdatedCall( null );
+    	setUpdated(null);
+    	save();
+
+        comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
+
+        comment.getDocument().set("identifier", comment.getIdentifier());
+        PrintWriter writer = response.getWriter();
+        writer.write( comment.getDocument().toString() );
+        
+    	response.setStatus(Response.SC_ACCEPTED);
+    	//response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+	}
 
     public static long getNumberOfConversations(Resource<?> resource) {
     	MongoDBQuery query = new MongoDBQuery().is(PARENT_FIELD, resource.getIdentifier()).is("type", TYPE_NAME);

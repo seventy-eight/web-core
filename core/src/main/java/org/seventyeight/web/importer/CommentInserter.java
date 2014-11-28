@@ -55,7 +55,7 @@ public class CommentInserter extends HTTPAction<CommentInserter.Arguments, Strin
 		
 		logger.debug("REQUEST: {}", json.toString());
 		
-		HttpPost postRequest = getPostRequest("resource/" + argument.conversation + "/addComment", json);
+		HttpPost postRequest = getPostRequest("resource/" + argument.conversation + "/", json);
 		
 		CloseableHttpResponse response = httpClient.execute(postRequest);
 		

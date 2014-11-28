@@ -222,7 +222,7 @@ $(document).on("click", '.commentSubmit', function(event) {
     var c = $(form).children("input[name='conversation']").val();
     $.ajax({
         type: "POST",
-        url: "/resource/" + c + "/addComment",
+        url: "/resource/" + c + "/",
         data: form.serialize(),
         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
         success: function(data, textStatus, jqxhr){$(form).parent().hide();form[0].reset();Conversation.addComment(data)},
