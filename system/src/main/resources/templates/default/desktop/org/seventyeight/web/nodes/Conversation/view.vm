@@ -17,7 +17,7 @@
 		} else {
 			//alert("Something was not implemented...... Sigh!");
 			var c = new Conversation('$item.getIdentifier()', undefined, 10);
-
+			$('.container').toggle();
 		}
 		c.getComments('$root.getIdentifier()', true);
 	});
