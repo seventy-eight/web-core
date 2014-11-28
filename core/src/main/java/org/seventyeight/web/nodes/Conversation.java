@@ -236,7 +236,7 @@ public class Conversation extends Resource<Conversation> {
         
         comment.save();
         
-        if(json.has("resource")) {
+        if(json.has("resource") && !json.get("resource").getAsString().isEmpty()) {
         	String resourceId = json.get("resource").getAsString();
         	try {
 				Resource<?> r = core.getNodeById(this, resourceId);
@@ -277,7 +277,9 @@ public class Conversation extends Resource<Conversation> {
 
         if(text.length() >= 0) {
         	Comment comment = addComment(request);
-            setUpdatedCall( null );
+            //setUpdatedCall( null );
+        	setUpdated(null);
+        	save();
 
             comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
 
