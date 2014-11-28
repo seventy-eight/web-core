@@ -13,10 +13,11 @@
 <script type="text/javascript">
 	$(function() {
 		if('$!item.getResource()' != "") {
-			var c = new Conversation('$item.getIdentifier()', '$item.getResource().getIdentifier()', 2);
+			var c = new Conversation('$item.getIdentifier()', '$item.getResource().getIdentifier()', 10);
 		} else {
 			//alert("Something was not implemented...... Sigh!");
-			var c = new Conversation('$item.getIdentifier()', undefined, 2);
+			var c = new Conversation('$item.getIdentifier()', undefined, 10);
+
 		}
 		c.getComments('$root.getIdentifier()', true);
 	});

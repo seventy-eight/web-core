@@ -55,7 +55,7 @@ Conversation.addComment = function(d) {
 
 Conversation.prototype.getComments = function(rid, reversed) {
 	var THIS = this;
-	debugger;
+	//debugger;
 	if(this.parent) {
 		var url = "/resource/" + this.parent + "/conversations/get/" + this.cid + "/getComments?offset=" + THIS.offset + "&number=" + THIS.number + (reversed ? "&reversed=1" : "");
 	} else {
@@ -120,7 +120,7 @@ Conversation.prototype.getMoreDialog = function(id, reversed) {
 	div.style.border = "2px solid";
 	div.style.textAlign = "center";
 	div.style.backgroundColor = "#998877";
-	div.style.marginBottom = "10px";
+	div.style.paddingBottom = "10px";
 	var THIS = this;
 	$(div).on('click', function(){
 		THIS.getComments(id, reversed);
@@ -133,7 +133,7 @@ Conversation.prototype.getMoreDialog = function(id, reversed) {
 Conversation.prototype.insertComments = function(json, id, reversed) {
 	var comments = json[id];
 	if(comments !== undefined) {
-        for( i = 0 ; i < comments.length ; i++ ) {
+        for( var i = 0 ; i < comments.length ; i++ ) {
         	var e = "#" + comments[i].document.parent + "-conversation";
         	var h = comments[i].document.view + "<br>";
         	if(reversed) {
@@ -141,7 +141,8 @@ Conversation.prototype.insertComments = function(json, id, reversed) {
         	} else {
         		$(e).append(h);
         	}
-          	this.insertComments(json, comments[i].document._id);
+        	var child = comments[i].document._id;
+          	this.insertComments(json, child);
         }
     }
 }
